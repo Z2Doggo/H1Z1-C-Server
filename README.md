@@ -4,7 +4,7 @@
 
 ## Current Status
 
-- [x] Complie for use send and receive packets
+- [x] Compile for use send and receive packets
 - [x] Handle Client connection request (you'll still be on the loading screen but the `BaseApi` is setup & connected)
 - [x] Send Session, Fingerprint and Encryption
 - [x] Make sure the client gets the right data to get to the server list screen
