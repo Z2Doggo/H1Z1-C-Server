@@ -1,6 +1,6 @@
 ![alt text](https://upload.wikimedia.org/wikipedia/en/d/dd/Just_Survive_logo.jpg)
 
-# A Just Survive Server made in the C programming language (PRIVATE)
+# An H1Z1: Survive Server made in the C programming language (PRIVATE)
 
 ## Current Status
 
