@@ -1,6 +1,6 @@
 ![alt text](https://cdn.akamai.steamstatic.com/steam/apps/295110/header.jpg?t=1540317442)
 
-# An H1Z1: Survive Server made in the C programming language (PRIVATE)
+# An 'H1Z1: Just Survive' server made in the C programming language (PRIVATE)
 
 ## Current Status
 
