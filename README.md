@@ -8,7 +8,7 @@
 - [x] Handle Client connection request (you'll still be on the loading screen but the `BaseApi` is setup & connected)
 - [x] Send Session, Fingerprint and Encryption
 - [x] Make sure the client gets the right data to get to the server list screen
-- [x] Zone in-to the game with the character
+- [x] Zone in-to the game with a character
 - [ ] Reverse all vital packets in-order to function is it was then in 2016
 
 ## Permission to use
