@@ -34,7 +34,7 @@ DirectX June 2010 Redist [Download from Guru3D](https://www.guru3d.com/files-get
 
 
 ## How to Download
-WARNING: This will only work if you have bought the H1Z1 Package from steam!
+WARNING: This will only work if you have bought the H1Z1: Just Survive from steam before the game was shutdown!
 
 Use [DepotDownloader](https://github.com/SteamRE/DepotDownloader)
 
