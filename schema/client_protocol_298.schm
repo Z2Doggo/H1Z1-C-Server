@@ -1,0 +1,830 @@
+group Zone
+
+packet 0x1 BaseServerPacket
+
+packet 0x2 ClientFinishedLoading
+
+packet 0x3 SendSelfToClient
+
+packet 0x4 ClientIsReady
+
+packet 0x5 ZoneDoneSendingInitialData
+
+packet 0x6 0:u16 ChatBase
+packet 0x6 0x1:u16 Chat_Chat
+u16 unk_u16
+u16 channel
+u64 character_id
+u64 character_id2
+
+u32 unk_u32
+u32 unk_u32_2
+u32 unk_u32_3
+string:u32 character_first_name
+string:u32 character_last_name
+string:u32 unk_string
+string:u32 character_name
+u64 unk_u64
+
+u32 unk_u32_4
+u32 unk_u32_5
+u32 unk_u32_6
+string:u32 character_first_name_2
+string:u32 character_last_name_2
+string:u32 unk_string_2
+string:u32 character_name_2
+u64 unk_u64_2
+ 
+string:u32 message
+vec4 position
+u64 unk_guid
+u32 unk_u32_7
+u32 color_1
+u32 color_2
+u8 unk_u8
+u8 unk_u8_2
+
+packet 0x6 0x5:u16 Chat_ChatText
+string:u32 message
+u32 unk_u32
+u32 color
+u32 unk_u32_2
+u8 unk_u8
+u8 unk_u8_2
+
+packet 0x7 ClientLogout
+packet 0x8 TargetClientNotOnline
+packet 0x9 0x45:u32 CommandItemDefinitionRequest
+u32 id
+
+packet 0x9 0x46:u32 CommandItemDefinitionReply
+stream:u32 item_def_reply_1
+{
+	u8 bitflags1
+	u8 bitflags2
+	u32 name_id
+	u32 description_id
+	u32 content_id
+	u32 image_set_id
+	u32 tint_id
+	u32 hud_image_set_id
+	u32 unk_dword_1
+	u32 unk_dword_2
+	u32 cost
+	u32 item_class
+	u32 profile_override
+	string:u32 model_name
+	string:u32 texture_alias
+	u32 gender_usage
+	u32 item_type
+	u32 category_id
+	u32 weapon_trail_effect_id
+	u32 composite_effect_id
+	u32 power_rating
+	u32 min_profile_rank
+	u32 rarity
+	u32 activatable_ability_id
+	u32 activatable_ability_set_id
+	u32 passive_ability_id
+	u32 passive_ability_set_id
+	u32 max_stack_size
+	u32 min_stack_size
+	string:u32 tint_alias
+	u32 tint_group_id
+	u32 member_discount
+	u32 vip_rank_required
+	u32 race_set_id
+	u32 ui_model_camera_id_1
+	u32 equip_count_max
+	i32 curreny_type
+	u32 datasheet_id
+	u32 item_type_1
+	u32 skill_set_id
+	string:u32 overlay_texture
+	string:u32 decal_slot
+	u32 overlay_adjustment
+	u32 trial_duration_sec
+	u32 next_trial_delay_sec
+	u32 client_use_requirement
+	string:u32 override_appearance
+	u32 override_camera_id
+	u32 unk_dword_3
+	u32 unk_dword_4
+	u32 unk_dword_5
+	u32 bulk
+	u32 active_equip_slot_id
+	u32 passive_equip_slot_id
+	u32 passive_equip_slot_group_id
+	u32 unk_dword_6
+	u32 grinder_reward_set_id
+	u32 build_bar_group_id
+	string:u32 unk_string_1
+	b8 unk_bool_1
+	b8 is_armor
+	u32 unk_dword_7
+	u32 param1
+	u32 param2
+	u32 param3
+	string:u32 string_param1
+	u32 ui_model_camera_id_2
+	u32 unk_dword_8
+	i32 scrap_value_override
+
+	list:u32 stats_item_def_1
+	{
+		u32 unk_dword_9
+		u32 stat_id
+		f32 base
+		f32 modifier
+		u32 unk_dword_10
+	}
+}
+
+packet 0x9 0x47:u32 CommandItemDefinitions
+stream:u32 item_def_reply_2
+{
+	u8 bitflags1
+	u8 bitflags2
+	u32 name_id
+	u32 description_id
+	u32 content_id
+	u32 image_set_id
+	u32 tint_id
+	u32 hud_image_set_id
+	u32 unk_dword_1
+	u32 unk_dword_2
+	u32 cost
+	u32 item_class
+	u32 profile_override
+	string:u32 model_name
+	string:u32 texture_alias
+	u32 gender_usage
+	u32 item_type
+	u32 category_id
+	u32 weapon_trail_effect_id
+	u32 composite_effect_id
+	u32 power_rating
+	u32 min_profile_rank
+	u32 rarity
+	u32 activatable_ability_id
+	u32 activatable_ability_set_id
+	u32 passive_ability_id
+	u32 passive_ability_set_id
+	u32 max_stack_size
+	u32 min_stack_size
+	string:u32 tint_alias
+	u32 tint_group_id
+	u32 member_discount
+	u32 vip_rank_required
+	u32 race_set_id
+	u32 ui_model_camera_id_1
+	u32 equip_count_max
+	i32 curreny_type
+	u32 datasheet_id
+	u32 item_type_1
+	u32 skill_set_id
+	string:u32 overlay_texture
+	string:u32 decal_slot
+	u32 overlay_adjustment
+	u32 trial_duration_sec
+	u32 next_trial_delay_sec
+	u32 client_use_requirement
+	string:u32 override_appearance
+	u32 override_camera_id
+	u32 unk_dword_3
+	u32 unk_dword_4
+	u32 unk_dword_5
+	u32 bulk
+	u32 active_equip_slot_id
+	u32 passive_equip_slot_id
+	u32 passive_equip_slot_group_id
+	u32 unk_dword_6
+	u32 grinder_reward_set_id
+	u32 build_bar_group_id
+	string:u32 unk_string_1
+	b8 unk_bool_1
+	b8 is_armor
+	u32 unk_dword_7
+	u32 param1
+	u32 param2
+	u32 param3
+	string:u32 string_param1
+	u32 ui_model_camera_id_2
+	u32 unk_dword_8
+	i32 scrap_value_override
+
+	list:u32 stats_item_def_2
+	{
+		u32 unk_dword_9
+		u32 stat_id
+		f32 base
+		f32 modifier
+		u32 unk_dword_10
+	}
+}
+
+packet 0xa 0:u16 AdminBase
+packet 0xb ClientBeginZoning
+packet 0xc 0:u16 CombatBase
+packet 0xd ProjectileDebug
+packet 0xe 0:u16 MailBase
+
+packet 0xf 0:u16 CharacterBase
+packet 0xf 0x1:u16 Character_RemovePlayer
+u64 character_id
+u16 unk_u16
+u8 unk_u8
+u32 unk_u32
+u32 effect_delay
+u32 effect_id
+u32 sticky_effect_id
+u32 time_to_disappear
+
+packet 0xf 0x2:u16 Character_Knockback
+packet 0xf 0x3:u16 Character_UpdateHitpoints
+packet 0xf 0x4:u16 Character_PlayAnimation
+packet 0xf 0x5:u16 Character_UpdateScale
+u64 character_id
+vec4 scale
+
+packet 0xf 0x6:u16 Character_UpdateTemporaryAppearance
+packet 0xf 0x7:u16 Character_RemoveTemporaryAppearance
+packet 0xf 0x8:u16 Character_SetLookAt
+packet 0xf 0x9:u16 Character_RenamePlayer
+
+packet 0xf 0x20:u16 Character_WeaponStance
+u64 character_id
+u32 stance
+
+packet 0xf 0x3f:u16 Character_CharacterStateDelta
+u64 guid_1
+u64 guid_2
+u64 guid_3
+u64 guid_4
+u32 game_time
+
+packet 0x10 0:u16 AbilityBase
+
+packet 0x11 0:u16 ClientUpdateBase
+packet 0x11 0x1:u16 ClientUpdate_Hitpoints
+packet 0x11 0x2:u16 ClientUpdate_ItemAdd
+packet 0x11 0x3:u16 ClientUpdate_ItemUpdate
+packet 0x11 0x4:u16 ClientUpdate_ItemDelete
+packet 0x11 0x5:u16 ClientUpdate_UpdateStat
+packet 0x11 0x6:u16 ClientUpdate_CollectionStart
+packet 0x11 0x7:u16 ClientUpdate_CollectionRemove
+packet 0x11 0x8:u16 ClientUpdate_CollectionAddEntry
+packet 0x11 0x9:u16 ClientUpdate_CollectionRemoveEntry
+packet 0x11 0xa:u16 ClientUpdate_UpdateLocation
+packet 0x11 0xb:u16 ClientUpdate_Mana
+packet 0x11 0xc:u16 ClientUpdate_UpdateProfileExperience
+packet 0x11 0xd:u16 ClientUpdate_AddProfileAbilitySetApl
+packet 0x11 0xe:u16 ClientUpdate_AddEffectTag
+packet 0x11 0xf:u16 ClientUpdate_RemoveEffectTag
+packet 0x11 0x10:u16 ClientUpdate_UpdateProfileRank
+packet 0x11 0x11:u16 ClientUpdate_CoinCount
+packet 0x11 0x12:u16 ClientUpdate_DeleteProfile
+packet 0x11 0x13:u16 ClientUpdate_ActivateProfile
+packet 0x11 0x14:u16 ClientUpdate_AddAbility
+packet 0x11 0x15:u16 ClientUpdate_NotifyPlayer
+packet 0x11 0x16:u16 ClientUpdate_UpdateProfileAbilitySetApl
+packet 0x11 0x17:u16 ClientUpdate_RemoveActionBars
+packet 0x11 0x18:u16 ClientUpdate_UpdateActionBarSlot
+
+packet 0x11 0x19:u16 ClientUpdate_DoneSendingPreloadCharacters
+b8 is_done
+
+packet 0x11 0x1a:u16 ClientUpdate_SetGrandfatheredStatus
+packet 0x11 0x1b:u16 ClientUpdate_UpdateActionBarSlotUsed
+packet 0x11 0x1c:u16 ClientUpdate_PhaseChange
+packet 0x11 0x1d:u16 ClientUpdate_UpdateKingdomExperience
+packet 0x11 0x1e:u16 ClientUpdate_UpdatePacketDamageInfo
+packet 0x11 0x1f:u16 ClientUpdate_RespawnLocations
+packet 0x11 0x20:u16 ClientUpdate_ModifyMovementSpeed
+packet 0x11 0x21:u16 ClientUpdate_ModifyTurnRate
+packet 0x11 0x22:u16 ClientUpdate_ModifyStrafeSpeed
+packet 0x11 0x23:u16 ClientUpdate_UpdateManagedLocation
+packet 0x11 0x24:u16 ClientUpdate_ManagedMovementVersion
+packet 0x11 0x25:u16 ClientUpdate_UpdateWeaponAddClips
+packet 0x11 0x26:u16 ClientUpdate_SpotProbation
+packet 0x11 0x27:u16 ClientUpdate_DailyRibbonCount
+packet 0x11 0x29:u16 ClientUpdate_DespawnNpcUpdate
+packet 0x11 0x2a:u16 ClientUpdate_LoyaltyPoints
+packet 0x11 0x2b:u16 ClientUpdate_ResetMissionRespawnTimer
+packet 0x11 0x2c:u16 ClientUpdate_Freeze
+packet 0x11 0x2d:u16 ClientUpdate_InGamePurchaseResult
+packet 0x11 0x2e:u16 ClientUpdate_QuizComplete
+packet 0x11 0x2f:u16 ClientUpdate_StartTimer
+packet 0x11 0x30:u16 ClientUpdate_CompleteLogoutProcess
+packet 0x11 0x31:u16 ClientUpdate_ProximateItems
+
+packet 0x11 0x32:u16 ClientUpdate_TextAlert
+string message
+
+packet 0x11 0x33:u16 ClientUpdate_ClearEntitlementValues
+packet 0x11 0x34:u16 ClientUpdate_AddEntitlementValue
+
+packet 0x11 0x35:u16 ClientUpdate_NetworkProximityUpdatesComplete
+
+packet 0x11 0x36:u16 ClientUpdate_FileValidationRequest
+packet 0x11 0x37:u16 ClientUpdate_FileValidationResponse
+packet 0x11 0x38:u16 ClientUpdate_DeathMetrics
+packet 0x11 0x3c:u16 ClientUpdate_SetCurrentAdventure
+packet 0x11 0x3d:u16 ClientUpdate_CharacterSlot
+packet 0x11 0x39:u16 ClientUpdate_ManagedObjectRequestControl
+packet 0x11 0x3a:u16 ClientUpdate_ManagedObjectResponseControl
+packet 0x11 0x3b:u16 ClientUpdate_ManagedObjectReleaseControl
+packet 0x11 0x3e:u16 ClientUpdate_CustomizationData
+packet 0x11 0x3f:u16 ClientUpdate_UpdateCurrency
+packet 0x11 0x40:u16 ClientUpdate_AddNotifications
+packet 0x11 0x41:u16 ClientUpdate_RemoveNotifications
+packet 0x11 0x42:u16 ClientUpdate_NpcRelevance
+packet 0x11 0x43:u16 ClientUpdate_InitiateNameChange
+packet 0x11 0x44:u16 ClientUpdate_NameChangeResult
+packet 0x11 0x45:u16 ClientUpdate_MonitorTimeDrift
+u32 time_drift
+
+packet 0x11 0x46:u16 ClientUpdate_NotifyServerOfStalledEvent
+packet 0x11 0x47:u16 ClientUpdate_UpdateSights
+packet 0x11 0x49:u16 ClientUpdate_UpdateRewardAndGrinderState
+packet 0x11 0x4b:u16 ClientUpdate_UpdateActivityMetrics
+packet 0x11 0x4c:u16 ClientUpdate_StopWithError
+packet 0x11 0x4d:u16 ClientUpdate_SetWorldWipeTimer
+packet 0x11 0x4e:u16 ClientUpdate_UpdateLockoutTimes
+packet 0x11 0x4f:u16 ClientUpdate_ZoneStatus
+packet 0x11 0x50:u16 ClientUpdate_SetDataCenter
+packet 0x11 0x51:u16 ClientUpdate_UpdateBattlEyeRegistration
+
+packet 0x13 GroupsBase
+packet 0x14 EncounterBase
+packet 0x15 InventoryBase
+
+
+packet 0x16 SendZoneDetails
+string:u32	zone_name
+u32        	zone_type
+u8         	unk_bool
+f32 		unknownDword1
+f32 		fog_density
+f32 		fog_floor
+f32 		fog_gradient
+f32 		rain
+f32 		temp
+f32 		color_gradient
+f32 		unknown_dword8
+f32 		unknown_dword9
+f32 		unknown_dword10
+f32 		unknown_dword11
+f32 		unknown_dword12
+f32 		sun_axis_x
+f32 		sun_axis_y
+f32 		unknown_dword15
+f32 		disable_trees
+f32 		disable_trees1
+f32 		disable_trees2
+f32 		wind
+f32 		unknown_dword20
+f32 		unknown_dword21
+string:u32 	name
+f32 		unknown_dword22
+f32 		unknown_dword23
+f32 		unknown_dword24
+f32 		unknown_dword25
+f32 		unknown_dword26
+f32 		unknown_dword27
+f32 		unknown_dword28
+f32 		unknown_dword29
+f32 		ao_size
+f32 		ao_gamma
+f32 		ao_blackpoint
+f32 		unknown_dword33
+
+u32        	zone_id
+u32        	zone_id_2?
+u32        	name_id
+u8         	unk_bool2
+string:u32 	lighting
+u8         	unk_bool3
+
+
+packet 0x17 ReferenceDataBase
+packet 0x18 ObjectiveBase
+packet 0x19 DebugBase
+packet 0x1a UiBase
+packet 0x1b QuestBase
+packet 0x1c RewardBase
+
+packet 0x1d GameTimeSync
+u64 time
+f32 cycle_speed
+b8 unk_bool
+
+packet 0x1e PetBase
+packet 0x1f PointOfInterestDefinitionRequest
+packet 0x20 PointOfInterestDefinitionReply
+packet 0x21 WorldTeleportRequest
+packet 0x22 TradeBase
+packet 0x23 EscrowGivePackage
+packet 0x24 EscrowGotPackage
+packet 0x25 UpdateEncounterDataCommon
+packet 0x26 RecipeBase
+packet 0x27 InGamePurchaseBase
+packet 0x28 QuickChatBase
+packet 0x29 ReportBase
+packet 0x2a LiveGamerBase
+packet 0x2b AcquaintanceBase
+packet 0x2c ClientServerShuttingDown
+packet 0x2d FriendBase
+packet 0x2e BroadcastBase
+packet 0x2f ClientKickedFromServer
+packet 0x30 UpdateClientSessionData
+packet 0x31 BugSubmissionBase
+packet 0x32 WorldDisplayInfo
+packet 0x33 MOTD
+
+packet 0x34 SetLocale
+string:u32  locale
+
+packet 0x35 SetClientArea
+packet 0x36 ZoneTeleportRequest
+packet 0x37 TradingCardBase
+packet 0x38 WorldShutdownNotice
+packet 0x39 LoadWelcomeScreen
+packet 0x3a ShipCombatBase
+packet 0x3c KeepAlive
+u32 game_time
+
+packet 0x3d ClientExitLaunchUri
+packet 0x3e ClientPath
+packet 0x3f ClientPendingKickFromServer
+packet 0x40 ClientMembershipActivation
+packet 0x41 LobbyBase
+packet 0x42 LobbyGameDefinitionBase
+packet 0x43 ShowSystemMessage
+packet 0x44 POIChangeMessage
+packet 0x45 ClientMetrics
+packet 0x46 FirstTimeEventBase
+packet 0x47 ClaimBase
+
+packet 0x48 ClientLog
+string:u32 file
+string:u32 message
+
+packet 0x49 IgnoreBase
+packet 0x4a SnoopedPlayerBase
+packet 0x4b PromotionalBase
+packet 0x4c AddClientPortraitCrc
+packet 0x4d 0:u16 ObjectiveTargetBase
+packet 0x4e CommerceSessionRequest
+packet 0x4f CommerceSessionResponse
+packet 0x50 TrackedEvent
+packet 0x51 ClientLoginFailed
+packet 0x52 LoginToUChat
+packet 0x53 ZoneSafeTeleportRequest
+packet 0x54 RemoteInteractionRequest
+packet 0x57 UpdateCamera
+packet 0x59 GuildBase
+packet 0x5a 0:u16 AdminGuildBase
+packet 0x5b 0:u16 BattleMagesBase
+packet 0x5c 0:u16 WorldToWorldBase
+packet 0x5d PerformAction
+packet 0x5e 0:u16 EncounterMatchmakingBase
+packet 0x5f 0:u16 ClientLuaMetrics
+packet 0x60 0:u16 RepeatingActivityBase
+
+packet 0x61 ClientGameSettings
+u32			unk_u32
+u32			interact_glow_and_dist
+u8			unk_bool
+f32			timescale
+u32			enable_weapons
+u32			unk_u32_2
+f32			unk_float1
+f32			unk_float2
+f32			damage_multiplier
+
+packet 0x62 ClientTrialProfileUpsell
+packet 0x63 ActivityManagerBase
+packet 0x64 RequestSendItemDefinitionsToClient
+packet 0x65 0:u16 InspectBase
+packet 0x66 0:u16 AchievementBase
+packet 0x67 0:u16 PlayerTitleBase
+packet 0x68 0:u16 MatchHistoryBase
+packet 0x69 UpdateUserAge
+packet 0x6a 0:u16 LootBase
+packet 0x6b 0:u16 ActionBarManagerBase
+packet 0x6c ClientTrialProfileUpsellRequest
+packet 0x6d PlayerUpdateJump
+packet 0x6e 0:u16 CoinStoreBase
+
+packet 0x6f InitializationParameters
+string:u32 environment
+string:u32 unk_string_1
+list:u32 ruleset_definitions
+{
+    u32 unk_u32_1
+    u32 unk_u32_2
+    string:u32 ruleset
+    string:u32 unk_string_2
+	
+	list:u32 rulesets
+    {
+        u32 ID
+		//data
+        u32 data_id
+        u32 ruleset_id
+        u32 content_pack_id
+        u32 content_pack_action_id
+    }
+}
+
+
+packet 0x70 0:u16 ActivityBase
+
+
+packet 0x71 MountBase
+packet 0x71 0x1:u16 Mount_MountRequest
+packet 0x71 0x2:u16 Mount_MountResponse
+packet 0x71 0x3:u16 Mount_DismountRequest
+packet 0x71 0x4:u16 Mount_DismountResponse
+packet 0x71 0x5:u16 Mount_MountList
+packet 0x71 0x6:u16 Mount_MountSpawn
+packet 0x71 0x7:u16 Mount_MountDespawn
+packet 0x71 0x8:u16 Mount_MountSpawnByItemDefinitionId
+packet 0x71 0x9:u16 Mount_MountOfferUpsell
+packet 0x71 0xa:u16 Mount_SeatChangeRequest
+packet 0x71 0xb:u16 Mount_SeatChangeResponse
+packet 0x71 0xc:u16 Mount_SeatSwapRequest
+packet 0x71 0xd:u16 Mount_SeatSwapResponse
+packet 0x71 0xf:u16 Mount_MountPacketTypeCount
+packet 0x71 0xe:u16 Mount_FlipMount
+
+packet 0x72 ClientInitializationDetails
+u32 unk_u32_1
+
+packet 0x73 ClientAreaTimer
+packet 0x74 0:u16 LoyaltyRewardBase
+packet 0x75 0:u16 RatingBase
+packet 0x76 0:u16 ClientActivityLaunchBase
+packet 0x77 0:u16 ServerActivityLaunchBase
+packet 0x78 ClientFlashTimer
+packet 0x79 PlayerUpdatePosition
+packet 0x7a InviteAndStartMiniGame
+packet 0x7b QuizBase
+packet 0x7c PlayerUpdatePositionOnPlatform
+packet 0x7d ClientMembershipVipInfo
+packet 0x7e 0:u16 TargetBase
+packet 0x80 GuideStoneBase
+packet 0x81 0:u16 RaidsBase
+packet 0x82 0:u16 VoiceBase
+packet 0x83 0:u16 WeaponBase
+packet 0x84 MatchScheduleBase
+
+packet 0x85 0:u16 FacilityBase
+packet 0x85 0x1:u16 Facility_ReferenceData
+packet 0x85 0x2:u16 Facility_FacilityData
+packet 0x85 0x3:u16 Facility_CurrentFacilityUpdate
+packet 0x85 0x4:u16 Facility_SpawnDataRequest
+packet 0x85 0x5:u16 Facility_FacilitySpawnData
+packet 0x85 0x6:u16 Facility_FacilityUpdate
+packet 0x85 0x7:u16 Facility_FacilitySpawnStatus
+packet 0x85 0x8:u16 Facility_FacilitySpawnStatusTracked
+packet 0x85 0x9:u16 Facility_NotificationFacilityCaptured
+packet 0x85 0xa:u16 Facility_NotificationFacilitySignificantCaptureProgress
+packet 0x85 0xb:u16 Facility_NotificationFacilityCloseToCapture
+packet 0x85 0xc:u16 Facility_NotificationFacilitySpawnBeginCapture
+packet 0x85 0xd:u16 Facility_NotificationFacilitySpawnFinishCapture
+packet 0x85 0xe:u16 Facility_NotificationLeavingFacilityDuringContention
+packet 0x85 0xf:u16 Facility_ProximitySpawnCaptureUpdate
+packet 0x85 0x10:u16 Facility_ClearProximitySpawn
+packet 0x85 0x11:u16 Facility_GridStabilizeTimerUpdated
+packet 0x85 0x12:u16 Facility_SpawnCollisionChanged
+packet 0x85 0x13:u16 Facility_NotificationFacilitySecondaryObjectiveEventPacket
+packet 0x85 0x14:u16 Facility_PenetrateShieldEffect
+packet 0x85 0x15:u16 Facility_SpawnUpdateGuid
+packet 0x85 0x16:u16 Facility_FacilityUpdateRequest
+packet 0x85 0x17:u16 Facility_EmpireScoreValueUpdate
+
+packet 0x86 0:u16 SkillsBase
+packet 0x87 0:u16 LoadoutsBase
+packet 0x88 0:u16 ExperienceBase
+
+packet 0x89 0:u16 VehicleBase
+packet 0x89 0x1:u16 Vehicle_Owner
+packet 0x89 0x2:u16 Vehicle_Occupy
+packet 0x89 0x3:u16 Vehicle_StateData
+packet 0x89 0x4:u16 Vehicle_StateDamage
+packet 0x89 0x5:u16 Vehicle_PlayerManager
+packet 0x89 0x6:u16 Vehicle_Spawn
+packet 0x89 0x7:u16 Vehicle_Tint
+packet 0x89 0x8:u16 Vehicle_LoadVehicleTerminalDefinitionManager
+packet 0x89 0x9:u16 Vehicle_ActiveWeapon
+packet 0x89 0xa:u16 Vehicle_Stats
+packet 0x89 0xb:u16 Vehicle_DamageInfo
+packet 0x89 0xc:u16 Vehicle_StatUpdate
+packet 0x89 0xd:u16 Vehicle_UpdateWeapon
+packet 0x89 0xe:u16 Vehicle_RemovedFromQueue
+packet 0x89 0xf:u16 Vehicle_UpdateQueuePosition
+packet 0x89 0x10:u16 Vehicle_PadDestroyNotify
+packet 0x89 0x11:u16 Vehicle_SetAutoDrive
+packet 0x89 0x12:u16 Vehicle_LockOnInfo
+packet 0x89 0x13:u16 Vehicle_LockOnState
+packet 0x89 0x14:u16 Vehicle_TrackingState
+packet 0x89 0x15:u16 Vehicle_CounterMeasureState
+packet 0x89 0x16:u16 Vehicle_LoadVehicleDefinitionManager
+packet 0x89 0x17:u16 Vehicle_AcquireState
+packet 0x89 0x18:u16 Vehicle_Dismiss
+packet 0x89 0x19:u16 Vehicle_AutoMount
+packet 0x89 0x1a:u16 Vehicle_Deploy
+packet 0x89 0x1b:u16 Vehicle_Engine
+packet 0x89 0x1c:u16 Vehicle_AccessType
+packet 0x89 0x1d:u16 Vehicle_KickPlayer
+packet 0x89 0x1e:u16 Vehicle_HealthUpdateOwner
+packet 0x89 0x1f:u16 Vehicle_OwnerPassengerList
+packet 0x89 0x20:u16 Vehicle_KickPacket
+packet 0x89 0x21:u16 Vehicle_NoAccessPacket
+packet 0x89 0x22:u16 Vehicle_ExpirationPacket
+packet 0x89 0x23:u16 Vehicle_GroupPacket
+packet 0x89 0x24:u16 Vehicle_DeployResponsePacket
+packet 0x89 0x25:u16 Vehicle_ExitPoints
+packet 0x89 0x26:u16 Vehicle_ControllerLogOut
+packet 0x89 0x27:u16 Vehicle_CurrentMoveMode
+packet 0x89 0x28:u16 Vehicle_ItemDefinitionRequest
+packet 0x89 0x29:u16 Vehicle_ItemDefinitionReply
+packet 0x89 0x2a:u16 Vehicle_InventoryItems
+
+packet 0x8a GriefBase
+packet 0x8b SpotPlayer
+packet 0x8c FactionsBase
+packet 0x8d Synchronization
+u64 client_hours_ms
+u64 client_hours_ms2
+u64 client_time
+u64 server_time
+u64 unk_time
+
+packet 0x8e ResourceEventBase
+packet 0x8f CollisionBase
+packet 0x90 LeaderboardBase
+packet 0x91 PlayerUpdateManagedPosition
+uint2b transient_id
+
+packet 0x93 PlayerUpdateVehicleWeapon
+packet 0x94 ProfileStatsBase
+
+packet 0x95 0x01:u16 EquipmentSetCharacterEquipment
+u32 profile_id
+u64 character_id
+u32 unk_dword_1
+string:u32 unk_string_1
+string:u32 unk_string_2
+
+list:u32 equipment_slot_array
+{
+u32 equipment_slot_id_1
+u32 equipment_slot_id_2
+u64 guid
+string:u32 tint_alias
+string:u32 decal_alias
+}
+
+list:u32 attachments_data_1
+{
+string:u32 model_name
+string:u32 texture_alias
+string:u32 tint_alias
+string:u32 decal_alias
+u32 unk_dword_1
+u32 unk_dword_2
+u32 effect_id
+u32 slot_id
+u32 unk_dword_3
+
+list:u32 unk_array_1337
+{
+u32 unk_dword_4
+}
+b8 unk_bool_1
+}
+
+b8 unk_bool_2
+
+packet 0x96 DefinitionFiltersBase
+packet 0x97 ContinentBattleInfo
+packet 0x99 SendSecurityPacketAndSelfDestruct
+packet 0x98 GetContinentBattleInfo
+packet 0x9a GetRespawnLocations
+
+packet 0x9b 0:u16 WallOfDataBase
+
+packet 0x9b 0x5:u16 WallOfData_UIEvent
+string:u32 object
+string:u32 function
+string:u32 argument
+
+packet 0x9b 0x6:u16 WallOfData_ClientSystemInfo
+string:u32 info
+
+packet 0x9b 0x7:u16 WallOfData_VoiceChatEvent
+packet 0x9b 0x9:u16 WallOfData_NudgeEvent
+packet 0x9b 0xa:u16 WallOfData_LaunchPadFingerprint
+packet 0x9b 0xb:u16 WallOfData_VideoCapture
+
+packet 0x9b 0xc:u16 WallOfData_ClientTransition
+u32 old_state
+u32 new_state
+u32 ms_elapsed
+
+packet 0x9c 0:u16 ImplantsBase
+packet 0x9d InGamePurchase
+packet 0x9e 0:u16 MissionsBase
+packet 0x9f 0:u16 EffectsBase
+packet 0xa0 0:u16 RewardBuffsBase
+packet 0xa1 0:u16 AbilitiesBase
+packet 0xa2 0:u16 DeployableBase
+packet 0xa3 Security
+packet 0xa4 MapRegionBase
+packet 0xa5 HudManagerBase
+packet 0xa6 AcquireTimersBase
+packet 0xa7 LoginBase
+packet 0xa8 ServerPopulationInfo
+packet 0xa9 GetServerPopulationInfo
+packet 0xaa PlayerUpdateVehicleCollision
+packet 0xab PlayerStop
+packet 0xac CurrencyBase
+packet 0xad ItemsBase
+packet 0xae PlayerUpdateAttachObject
+packet 0xaf PlayerUpdateDetachObject
+packet 0xb0 ClientSettings
+packet 0xb1 RewardBuffInfo
+packet 0xb2 GetRewardBuffInfo
+packet 0xb3 CaisBase
+packet 0xb4 ZoneSettingBase
+packet 0xb5 RequestPromoEligibilityUpdate
+packet 0xb6 PromoEligibilityReply
+packet 0xb7 MetaGameEventBase
+packet 0xb8 RequestWalletTopupUpdate
+packet 0xb9 StationCashActivePromoRequestUpdate
+packet 0xbc OperationBase
+packet 0xbd WordFilterBase
+
+packet 0xbe StaticFacilityInfoBase
+packet 0xbe 0x1:u16 FacilityInfo_Request
+packet 0xbe 0x2:u16 FacilityInfo_Reply
+packet 0xbe 0x3:u16 FacilityInfo_AllZones
+
+packet 0xbf ProxiedPlayerBase
+packet 0xc0 ResistsBase
+packet 0xc1 InGamePurchasingBase
+packet 0xc2 BusinessEnvironments
+packet 0xc3 EmpireScorePacketBase
+packet 0xc4 CharacterSelectSessionRequest
+packet 0xc5 CharacterSelectSessionResponse
+packet 0xc6 StatsBase
+packet 0xc7 ScoreBase
+packet 0xc8 ResourcesBase
+packet 0xca ConstructionBase
+packet 0xcb UpdateWeatherData
+packet 0xcc NavGenBase
+packet 0xcd LocksBase
+packet 0xce RagdollBase
+packet 0xd0 CharacterStateBase
+packet 0xd1 TimedGrantBase
+packet 0xd2 WeatherBase
+packet 0xd3 GameEscrowBase
+packet 0xd4 PlayCompositeEffect
+packet 0xd5 SetSpotted
+packet 0xd6 AddLightweightPc
+packet 0xd7 AddLightweightNpc
+packet 0xd8 AddLightweightVehicle
+packet 0xd9 AddProxiedObject
+packet 0x92 AddSimpleNpc
+packet 0xda LightweightToFullPc
+packet 0xdb LightweightToFullNpc
+packet 0xdc LightweightToFullVehicle
+packet 0xde CheckLocalValues
+packet 0xdf ChronicleBase
+packet 0xe0 GrinderBase
+packet 0xe1 RequestObject
+packet 0xe2 ScreenEffectBase
+packet 0xe3 SpectatorBase
+packet 0xe4 WhitelistBase
+packet 0xe5 NpcFoundationPermissionsManagerBase
+packet 0xe6 BattlEyeData
+packet 0xe7 OnlineIdBase
+packet 0xe8 Ps4PlayGoBase
+packet 0xe9 SynchronizedTeleportBase
+packet 0xea StaticViewBase
+packet 0xeb ReplicationBase
+packet 0xec DatasheetsBase
+packet 0xed PlayerWorldTransferRequest
+packet 0xee PlayerWorldTransferReply
+packet 0xef CancelQueueOnWorld
+packet 0xf0 DeclineEnterGameOnWorld
+packet 0xf1 AccessedCharacterBase
+packet 0xf2 ShaderParameterOverrideBase
+packet 0xf3 VehicleSkinBase
+packet 0xf5 WeaponLagLockParameters
+packet 0xf6 CrateOpeningBase
+packet 0xf7 PlayerHeatWarning
+packet 0xf8 AnimationBase
