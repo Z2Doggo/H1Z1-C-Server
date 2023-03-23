@@ -1129,6 +1129,51 @@ packet 0xc5 CharacterSelectSessionResponse
 packet 0xc6 StatsBase
 packet 0xc7 ScoreBase
 packet 0xc8 ResourcesBase
+
+packet 0xc9 0x02:u32 ContainerInitEquippedContainers
+u64 ignore_this
+u64 character_id
+
+list:u32 container_list
+{
+	u32 loadout_slot_id
+
+	u64 guid_1
+	u32 defs_id
+	u64 associated_character_id
+	u32 slots
+
+	list:u32 items_list
+	{
+		u32 item_defs_id_1
+
+		u32 item_defs_id_2
+		u32 tint_id 
+		u64 guid_2
+		u32 count 
+
+		u64 unk_qword_1
+		u32 unk_dword_1
+		u32 unk_dword_2
+
+		u64 container_guid
+		u32 contain_def_id
+		u32 container_slot_id
+		u32 base_durability
+		u32 current_durability
+		u32 max_durability_from_defs
+		b8 unk_bool_1
+		u64 owner_character_id
+		u32 unk_dword_3
+	}
+
+	b8 show_bulk
+	u32 max_bulk
+	u32 unk_dword_4
+	u32 bulk_used
+	b8 has_bulk_limit
+}
+
 packet 0xca ConstructionBase
 packet 0xcb UpdateWeatherData
 packet 0xcc NavGenBase
