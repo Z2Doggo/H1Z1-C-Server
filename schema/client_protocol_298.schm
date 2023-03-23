@@ -725,7 +725,7 @@ stream:u32 weapon_byteswithlength
 	u32 projectile_definition_id
 	}
 
-	list:u32 aim_assit_defs
+	list:u32 aim_assist_defs
 	{
 	u32 id12
 	f32 cone_angle

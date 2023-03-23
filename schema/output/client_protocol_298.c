@@ -1947,8 +1947,8 @@ u32 id11;
 u32 index;
 u32 projectile_definition_id;
 }* fire_mode_projectile_mapping_data;
-u32 aim_assit_defs_count;
-struct aim_assit_defs_s
+u32 aim_assist_defs_count;
+struct aim_assist_defs_s
 {
 u32 id12;
 f32 cone_angle;
@@ -1974,7 +1974,7 @@ f32 magnet_max_angle;
 f32 magnet_dist_for_max_angle;
 f32 min_input_strafe_arrive_time;
 f32 max_input_strafe_arrive_time;
-}* aim_assit_defs;
+}* aim_assist_defs;
 }* weapon_byteswithlength;
 };
 
@@ -6192,134 +6192,134 @@ printf("-- projectile_definition_id\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byt
 
 } // fire_mode_projectile_mapping_data
 
-// list aim_assit_defs
-endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count);
+// list aim_assist_defs
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs_count);
 offset += sizeof(u32);
-printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs_count, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs_count, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs_count);
 
-for (u32 aim_assit_defs_iter = 0; aim_assit_defs_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count; aim_assit_defs_iter++)
+for (u32 aim_assist_defs_iter = 0; aim_assist_defs_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs_count; aim_assist_defs_iter++)
 {
 // u32 id12
-endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].id12);
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].id12);
 offset += sizeof(u32);
-printf("-- id12                    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].id12, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].id12, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].id12);
+printf("-- id12                    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].id12, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].id12, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].id12);
 
 // f32 cone_angle
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_angle);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].cone_angle);
 offset += sizeof(f32);
-printf("-- cone_angle              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_angle);
+printf("-- cone_angle              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].cone_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].cone_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].cone_angle);
 
 // f32 cone_range
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_range);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].cone_range);
 offset += sizeof(f32);
-printf("-- cone_range              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_range);
+printf("-- cone_range              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].cone_range);
 
 // f32 fall_off_cone_range
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].fall_off_cone_range);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].fall_off_cone_range);
 offset += sizeof(f32);
-printf("-- fall_off_cone_range     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].fall_off_cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].fall_off_cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].fall_off_cone_range);
+printf("-- fall_off_cone_range     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].fall_off_cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].fall_off_cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].fall_off_cone_range);
 
 // f32 magnet_cone_angle
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_angle);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_cone_angle);
 offset += sizeof(f32);
-printf("-- magnet_cone_angle       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_angle);
+printf("-- magnet_cone_angle       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_cone_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_cone_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_cone_angle);
 
 // f32 magnet_cone_range
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_range);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_cone_range);
 offset += sizeof(f32);
-printf("-- magnet_cone_range       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_range);
+printf("-- magnet_cone_range       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_cone_range);
 
 // f32 target_override_delay
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_override_delay);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_override_delay);
 offset += sizeof(f32);
-printf("-- target_override_delay   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_override_delay, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_override_delay, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_override_delay);
+printf("-- target_override_delay   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_override_delay, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_override_delay, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_override_delay);
 
 // f32 target_oos_delay
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_oos_delay);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_oos_delay);
 offset += sizeof(f32);
-printf("-- target_oos_delay        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_oos_delay, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_oos_delay, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_oos_delay);
+printf("-- target_oos_delay        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_oos_delay, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_oos_delay, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_oos_delay);
 
 // f32 arrive_time
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].arrive_time);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].arrive_time);
 offset += sizeof(f32);
-printf("-- arrive_time             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].arrive_time);
+printf("-- arrive_time             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].arrive_time);
 
 // f32 target_motion_update_time
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_motion_update_time);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_motion_update_time);
 offset += sizeof(f32);
-printf("-- target_motion_update_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_motion_update_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_motion_update_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_motion_update_time);
+printf("-- target_motion_update_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_motion_update_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_motion_update_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_motion_update_time);
 
 // f32 weight
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].weight);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].weight);
 offset += sizeof(f32);
-printf("-- weight                  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].weight, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].weight, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].weight);
+printf("-- weight                  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].weight, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].weight, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].weight);
 
 // f32 min_input_weight_delay_in
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_in);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_weight_delay_in);
 offset += sizeof(f32);
-printf("-- min_input_weight_delay_in\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_in, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_in, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_in);
+printf("-- min_input_weight_delay_in\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_weight_delay_in, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_weight_delay_in, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_weight_delay_in);
 
 // f32 max_input_weight_delay_in
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_in);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_weight_delay_in);
 offset += sizeof(f32);
-printf("-- max_input_weight_delay_in\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_in, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_in, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_in);
+printf("-- max_input_weight_delay_in\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_weight_delay_in, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_weight_delay_in, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_weight_delay_in);
 
 // f32 min_input_weight_delay_out
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_out);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_weight_delay_out);
 offset += sizeof(f32);
-printf("-- min_input_weight_delay_out\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_out, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_out, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_out);
+printf("-- min_input_weight_delay_out\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_weight_delay_out, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_weight_delay_out, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_weight_delay_out);
 
 // f32 max_input_weight_delay_out
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_out);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_weight_delay_out);
 offset += sizeof(f32);
-printf("-- max_input_weight_delay_out\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_out, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_out, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_out);
+printf("-- max_input_weight_delay_out\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_weight_delay_out, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_weight_delay_out, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_weight_delay_out);
 
 // f32 min_input_actor
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_actor);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_actor);
 offset += sizeof(f32);
-printf("-- min_input_actor         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_actor, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_actor, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_actor);
+printf("-- min_input_actor         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_actor, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_actor, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_actor);
 
 // f32 max_input_actor
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_actor);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_actor);
 offset += sizeof(f32);
-printf("-- max_input_actor         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_actor, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_actor, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_actor);
+printf("-- max_input_actor         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_actor, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_actor, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_actor);
 
 // u32 requirement_id
-endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].requirement_id);
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].requirement_id);
 offset += sizeof(u32);
-printf("-- requirement_id          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].requirement_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].requirement_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].requirement_id);
+printf("-- requirement_id          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].requirement_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].requirement_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].requirement_id);
 
 // f32 magnet_min_angle
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_min_angle);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_min_angle);
 offset += sizeof(f32);
-printf("-- magnet_min_angle        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_min_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_min_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_min_angle);
+printf("-- magnet_min_angle        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_min_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_min_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_min_angle);
 
 // f32 magnet_dist_for_min_angle
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_min_angle);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_dist_for_min_angle);
 offset += sizeof(f32);
-printf("-- magnet_dist_for_min_angle\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_min_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_min_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_min_angle);
+printf("-- magnet_dist_for_min_angle\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_dist_for_min_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_dist_for_min_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_dist_for_min_angle);
 
 // f32 magnet_max_angle
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_max_angle);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_max_angle);
 offset += sizeof(f32);
-printf("-- magnet_max_angle        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_max_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_max_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_max_angle);
+printf("-- magnet_max_angle        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_max_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_max_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_max_angle);
 
 // f32 magnet_dist_for_max_angle
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_max_angle);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_dist_for_max_angle);
 offset += sizeof(f32);
-printf("-- magnet_dist_for_max_angle\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_max_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_max_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_max_angle);
+printf("-- magnet_dist_for_max_angle\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_dist_for_max_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_dist_for_max_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_dist_for_max_angle);
 
 // f32 min_input_strafe_arrive_time
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_strafe_arrive_time);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_strafe_arrive_time);
 offset += sizeof(f32);
-printf("-- min_input_strafe_arrive_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_strafe_arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_strafe_arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_strafe_arrive_time);
+printf("-- min_input_strafe_arrive_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_strafe_arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_strafe_arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_strafe_arrive_time);
 
 // f32 max_input_strafe_arrive_time
-endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_strafe_arrive_time);
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_strafe_arrive_time);
 offset += sizeof(f32);
-printf("-- max_input_strafe_arrive_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_strafe_arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_strafe_arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_strafe_arrive_time);
+printf("-- max_input_strafe_arrive_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_strafe_arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_strafe_arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_strafe_arrive_time);
 
-} // aim_assit_defs
+} // aim_assist_defs
 
 } // weapon_byteswithlength
 endian_write_u32_little((u8*)weapon_byteswithlength_length_ptr, (u32)((uptr)buffer + (uptr)offset - (uptr)weapon_byteswithlength_length_ptr - sizeof(u32)));
@@ -12530,134 +12530,134 @@ printf("-- projectile_definition_id\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byt
 
 } // fire_mode_projectile_mapping_data
 
-// list aim_assit_defs
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count = endian_read_u32_little(data + offset);
+// list aim_assist_defs
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs_count = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs = memory_arena_push_length(arena, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count * sizeof(packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[0]));
-printf("-- LIST_COUNT              \t%d\n", packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count);
-for (u32 aim_assit_defs_iter = 0; aim_assit_defs_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count; aim_assit_defs_iter++)
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs = memory_arena_push_length(arena, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs_count * sizeof(packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs_count);
+for (u32 aim_assist_defs_iter = 0; aim_assist_defs_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs_count; aim_assist_defs_iter++)
 {
 // u32 id12
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].id12 = endian_read_u32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].id12 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- id12                    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].id12, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].id12, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].id12);
+printf("-- id12                    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].id12, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].id12, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].id12);
 
 // f32 cone_angle
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_angle = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].cone_angle = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- cone_angle              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_angle);
+printf("-- cone_angle              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].cone_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].cone_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].cone_angle);
 
 // f32 cone_range
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_range = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].cone_range = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- cone_range              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_range);
+printf("-- cone_range              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].cone_range);
 
 // f32 fall_off_cone_range
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].fall_off_cone_range = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].fall_off_cone_range = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- fall_off_cone_range     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].fall_off_cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].fall_off_cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].fall_off_cone_range);
+printf("-- fall_off_cone_range     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].fall_off_cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].fall_off_cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].fall_off_cone_range);
 
 // f32 magnet_cone_angle
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_angle = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_cone_angle = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- magnet_cone_angle       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_angle);
+printf("-- magnet_cone_angle       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_cone_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_cone_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_cone_angle);
 
 // f32 magnet_cone_range
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_range = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_cone_range = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- magnet_cone_range       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_range);
+printf("-- magnet_cone_range       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_cone_range);
 
 // f32 target_override_delay
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_override_delay = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_override_delay = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- target_override_delay   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_override_delay, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_override_delay, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_override_delay);
+printf("-- target_override_delay   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_override_delay, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_override_delay, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_override_delay);
 
 // f32 target_oos_delay
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_oos_delay = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_oos_delay = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- target_oos_delay        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_oos_delay, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_oos_delay, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_oos_delay);
+printf("-- target_oos_delay        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_oos_delay, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_oos_delay, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_oos_delay);
 
 // f32 arrive_time
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].arrive_time = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].arrive_time = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- arrive_time             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].arrive_time);
+printf("-- arrive_time             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].arrive_time);
 
 // f32 target_motion_update_time
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_motion_update_time = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_motion_update_time = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- target_motion_update_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_motion_update_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_motion_update_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_motion_update_time);
+printf("-- target_motion_update_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_motion_update_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_motion_update_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].target_motion_update_time);
 
 // f32 weight
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].weight = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].weight = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- weight                  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].weight, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].weight, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].weight);
+printf("-- weight                  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].weight, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].weight, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].weight);
 
 // f32 min_input_weight_delay_in
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_in = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_weight_delay_in = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- min_input_weight_delay_in\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_in, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_in, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_in);
+printf("-- min_input_weight_delay_in\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_weight_delay_in, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_weight_delay_in, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_weight_delay_in);
 
 // f32 max_input_weight_delay_in
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_in = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_weight_delay_in = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- max_input_weight_delay_in\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_in, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_in, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_in);
+printf("-- max_input_weight_delay_in\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_weight_delay_in, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_weight_delay_in, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_weight_delay_in);
 
 // f32 min_input_weight_delay_out
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_out = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_weight_delay_out = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- min_input_weight_delay_out\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_out, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_out, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_out);
+printf("-- min_input_weight_delay_out\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_weight_delay_out, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_weight_delay_out, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_weight_delay_out);
 
 // f32 max_input_weight_delay_out
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_out = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_weight_delay_out = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- max_input_weight_delay_out\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_out, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_out, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_out);
+printf("-- max_input_weight_delay_out\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_weight_delay_out, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_weight_delay_out, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_weight_delay_out);
 
 // f32 min_input_actor
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_actor = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_actor = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- min_input_actor         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_actor, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_actor, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_actor);
+printf("-- min_input_actor         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_actor, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_actor, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_actor);
 
 // f32 max_input_actor
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_actor = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_actor = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- max_input_actor         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_actor, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_actor, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_actor);
+printf("-- max_input_actor         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_actor, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_actor, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_actor);
 
 // u32 requirement_id
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].requirement_id = endian_read_u32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].requirement_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- requirement_id          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].requirement_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].requirement_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].requirement_id);
+printf("-- requirement_id          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].requirement_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].requirement_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].requirement_id);
 
 // f32 magnet_min_angle
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_min_angle = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_min_angle = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- magnet_min_angle        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_min_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_min_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_min_angle);
+printf("-- magnet_min_angle        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_min_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_min_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_min_angle);
 
 // f32 magnet_dist_for_min_angle
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_min_angle = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_dist_for_min_angle = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- magnet_dist_for_min_angle\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_min_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_min_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_min_angle);
+printf("-- magnet_dist_for_min_angle\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_dist_for_min_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_dist_for_min_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_dist_for_min_angle);
 
 // f32 magnet_max_angle
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_max_angle = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_max_angle = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- magnet_max_angle        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_max_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_max_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_max_angle);
+printf("-- magnet_max_angle        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_max_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_max_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_max_angle);
 
 // f32 magnet_dist_for_max_angle
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_max_angle = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_dist_for_max_angle = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- magnet_dist_for_max_angle\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_max_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_max_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_max_angle);
+printf("-- magnet_dist_for_max_angle\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_dist_for_max_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_dist_for_max_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].magnet_dist_for_max_angle);
 
 // f32 min_input_strafe_arrive_time
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_strafe_arrive_time = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_strafe_arrive_time = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- min_input_strafe_arrive_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_strafe_arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_strafe_arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_strafe_arrive_time);
+printf("-- min_input_strafe_arrive_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_strafe_arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_strafe_arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].min_input_strafe_arrive_time);
 
 // f32 max_input_strafe_arrive_time
-packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_strafe_arrive_time = endian_read_f32_little(data + offset);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_strafe_arrive_time = endian_read_f32_little(data + offset);
 offset += sizeof(f32);
-printf("-- max_input_strafe_arrive_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_strafe_arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_strafe_arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_strafe_arrive_time);
+printf("-- max_input_strafe_arrive_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_strafe_arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_strafe_arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assist_defs[aim_assist_defs_iter].max_input_strafe_arrive_time);
 
-} // aim_assit_defs
+} // aim_assist_defs
 
 } // weapon_byteswithlength
 
