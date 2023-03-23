@@ -49,6 +49,8 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 	{
 		.environment_length = 4,
 		.environment = "LIVE",
+		.unk_string_1_length = 0,
+		.unk_string_1 = "",
 	};
 
 	Zone_Packet_SendZoneDetails send_zone_details =
@@ -89,7 +91,130 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 	};
 
 	Zone_Packet_CommandItemDefinitions item_defs = 
-	{ 0 };
+	{
+		.item_def_reply_2 =
+			(struct item_def_reply_2_s[1]) {
+			[0] =
+			{
+				.item_defs_count = 1,
+				.item_defs =
+					(struct item_defs_s[1]) {
+					[0] =
+					{
+						.defs_id = 0,
+						
+						.bitflags1 = 0,
+						.bitflags2 = 0,
+
+						.name_id = 0,
+						.description_id = 0,
+						.content_id = 0,
+						.image_set_id = 0,
+						.tint_id = 0,
+						.hud_image_set_id = 0,
+						.unk_dword_1 = 921,
+						.unk_dword_2 = 922,
+						.cost = 0,
+						.item_class = 0,
+						.profile_override = 0,
+
+						.model_name_length = 0,
+
+						.texture_alias_length = 0,
+
+						.gender_usage = 0,
+						.item_type = 0,
+						.category_id = 0,
+						.weapon_trail_effect_id = 0,
+						.composite_effect_id = 0,
+						.power_rating = 0,
+						.min_profile_rank = 0,
+						.rarity = 0,
+						.activatable_ability_id = 0,
+						.activatable_ability_set_id = 0,
+						.passive_ability_id = 0,
+						.passive_ability_set_id = 0,
+						.max_stack_size = 0,
+						.min_stack_size = 0,
+
+						.tint_alias_length = 0,
+
+						.tint_group_id = 0,
+						.member_discount = 0,
+						.vip_rank_required = 0,
+						.race_set_id = 0,
+						.ui_model_camera_id_1 = 0,
+						.equip_count_max = 0,
+						.curreny_type = 0,
+						.datasheet_id = 0,
+						.item_type_1 = 0,
+						.skill_set_id = 0,
+
+						.overlay_texture_length = 0,
+
+						.decal_slot_length = 0,
+
+						.overlay_adjustment = 0,
+						.trial_duration_sec = 0,
+						.next_trial_delay_sec = 0,
+						.client_use_requirement = 0,
+
+						.override_appearance_length = 0,
+
+						.override_camera_id = 0,
+						.unk_dword_3 = 28,
+						.unk_dword_4 = 28,
+						.unk_dword_5 = 28,
+						.bulk = 0,
+						.active_equip_slot_id = 0,
+						.passive_equip_slot_id = 0,
+						.passive_equip_slot_group_id = 0,
+						.unk_dword_6 = 927,
+						.grinder_reward_set_id = 0,
+						.build_bar_group_id = 0,
+
+						.unk_string_1_length = 13,
+						.unk_string_1 = "testStringAAA",
+
+						.unk_bool_1 = TRUE,
+						.is_armor = FALSE,
+						.unk_dword_7 = 28,
+						.param1 = 0,
+						.param2 = 0,
+						.param3 = 0,
+
+						.string_param1_length = 0,
+							
+						.ui_model_camera_id_2 = 0,
+						.unk_dword_8 = 932,
+						.scrap_value_override = 0,
+
+						.stats_item_def_2_count = 1,
+						.stats_item_def_2 =
+							(struct stats_item_def_2_s[1]) {
+							[0] =
+							{
+								.unk_dword_9 = 0,
+
+								.stat_id = 0,
+								.base = 0,
+								.modifier = 0,
+
+								.unk_dword_10 = 0,
+							},
+						},
+					},
+				},
+			},
+		},
+	};
+
+	/*
+	Zone_Packet_ReferenceDataWeaponDefinitions weapon_defs =
+	{
+
+	};
+	*/
 
 	Zone_Packet_ClientGameSettings game_settings =
 	{
@@ -124,11 +249,15 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 	*/
 
 	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
+	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
+	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_CommandItemDefinitions, &item_defs);
+	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientGameSettings, &game_settings);
+	//zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(40), Zone_Packet_Kind_SendSelfToClient, &send_self);
 
-	zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "1.bin");
-	zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "2.bin");
+	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "1.bin");
+	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "2.bin");
 	zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(40), "C:\\Users\\Lane\\Desktop\\send_self\\" "3.bin");
-	zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "4.bin");
+	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "4.bin");
 	zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(40), "C:\\Users\\Lane\\Desktop\\send_self\\" "5.bin");
 	zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "6.bin");
 	zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "7.bin");

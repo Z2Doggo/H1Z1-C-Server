@@ -112,7 +112,7 @@
 #define ZONE_ENCOUNTERBASE_ID 0x14
 #define ZONE_INVENTORYBASE_ID 0x15
 #define ZONE_SENDZONEDETAILS_ID 0x16
-#define ZONE_REFERENCEDATABASE_ID 0x17
+#define ZONE_REFERENCEDATAWEAPONDEFINITIONS_ID 0x170004
 #define ZONE_OBJECTIVEBASE_ID 0x18
 #define ZONE_DEBUGBASE_ID 0x19
 #define ZONE_UIBASE_ID 0x1a
@@ -534,7 +534,7 @@ ZONE_PACKET_KIND(Zone_Packet_Kind_GroupsBase, "GroupsBase"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_EncounterBase, "EncounterBase"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_InventoryBase, "InventoryBase"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_SendZoneDetails, "SendZoneDetails"), \
-ZONE_PACKET_KIND(Zone_Packet_Kind_ReferenceDataBase, "ReferenceDataBase"), \
+ZONE_PACKET_KIND(Zone_Packet_Kind_ReferenceDataWeaponDefinitions, "ReferenceDataWeaponDefinitions"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_ObjectiveBase, "ObjectiveBase"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_DebugBase, "DebugBase"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_UiBase, "UiBase"), \
@@ -972,7 +972,7 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_EncounterBase] = 0x14,
 [Zone_Packet_Kind_InventoryBase] = 0x15,
 [Zone_Packet_Kind_SendZoneDetails] = 0x16,
-[Zone_Packet_Kind_ReferenceDataBase] = 0x17,
+[Zone_Packet_Kind_ReferenceDataWeaponDefinitions] = 0x170004,
 [Zone_Packet_Kind_ObjectiveBase] = 0x18,
 [Zone_Packet_Kind_DebugBase] = 0x19,
 [Zone_Packet_Kind_UiBase] = 0x1a,
@@ -1445,6 +1445,10 @@ struct Zone_Packet_CommandItemDefinitions
 u32 item_def_reply_2_length;
 struct item_def_reply_2_s
 {
+u32 item_defs_count;
+struct item_defs_s
+{
+u32 defs_id;
 u8 bitflags1;
 u8 bitflags2;
 u32 name_id;
@@ -1527,10 +1531,11 @@ struct stats_item_def_2_s
 {
 u32 unk_dword_9;
 u32 stat_id;
-f32 base;
-f32 modifier;
+u32 base;
+u32 modifier;
 u32 unk_dword_10;
 }* stats_item_def_2;
+}* item_defs;
 }* item_def_reply_2;
 };
 
@@ -1647,6 +1652,330 @@ u8 unk_bool2;
 u32 lighting_length;
 char* lighting;
 u8 unk_bool3;
+};
+
+
+typedef struct Zone_Packet_ReferenceDataWeaponDefinitions Zone_Packet_ReferenceDataWeaponDefinitions;
+struct Zone_Packet_ReferenceDataWeaponDefinitions
+{
+u32 weapon_byteswithlength_length;
+struct weapon_byteswithlength_s
+{
+u32 weapon_defs_count;
+struct weapon_defs_s
+{
+u32 id1;
+u32 id2;
+u32 weapon_group_id;
+u8 flags1;
+u32 equip_ms;
+u32 unequip_ms;
+u32 from_passive_ms;
+u32 to_passive_ms;
+u32 xp_category;
+u32 to_iron_sights_ms;
+u32 from_iron_sights_ms;
+u32 to_iron_sights_anim_ms;
+u32 from_iron_sights_anim_ms;
+u32 sprint_recovery_ms;
+u32 next_use_delay_msec;
+f32 turn_rate_modifier;
+f32 movement_speed_modifier;
+u32 propulsion_type;
+u32 heat_bleed_off_rate;
+u32 heat_capacity;
+u32 overheat_penalty_ms;
+u32 range_string_id;
+u32 melee_detect_width;
+u32 melee_detect_height;
+u32 anim_set_name_length;
+char* anim_set_name;
+u32 vehicle_fp_camera_id;
+u32 vehicle_tp_camera_id;
+u32 overheat_effect_id;
+f32 min_pitch;
+f32 max_pitch;
+u32 audio_game_object;
+u32 ammo_slots_count;
+struct ammo_slots_s
+{
+u32 ammo_id;
+u32 clip_size;
+u32 capacity;
+b8 start_empty;
+u32 refill_ammo_per_tick;
+u32 refill_ammo_delay_ms;
+u32 clip_attachment_slot;
+u32 clip_model_name_length;
+char* clip_model_name;
+u32 reload_weapon_bone_length;
+char* reload_weapon_bone;
+u32 reload_character_bone_length;
+char* reload_character_bone;
+}* ammo_slots;
+u32 fire_groups_count;
+struct fire_groups_s
+{
+u32 fire_group_id;
+}* fire_groups;
+}* weapon_defs;
+u32 fire_group_defs_count;
+struct fire_group_defs_s
+{
+u32 id3;
+u32 id4;
+u32 fire_mode_list_count;
+struct fire_mode_list_s
+{
+u32 fire_mode_1;
+}* fire_mode_list;
+u8 flags2;
+u32 chamber_duration_ms;
+u32 image_set_override;
+u32 transition_duration_ms;
+u32 anim_actor_slot_override;
+u32 deployable_id;
+u32 spin_up_time_ms;
+u32 spin_up_movement_modifier;
+u32 spin_up_turn_rate_modifier;
+u32 spool_up_time_ms;
+u32 spool_up_initial_refire_ms;
+}* fire_group_defs;
+u32 fire_mode_defs_count;
+struct fire_mode_defs_s
+{
+u32 id5;
+u32 id6;
+u8 flag1;
+u8 flag2;
+u8 flag3;
+u8 type;
+u32 ammo_item_id;
+u8 ammo_slot;
+u8 burst_count;
+u16 fire_duration_ms;
+u16 fire_cooldown_duration_ms;
+u16 refire_time_ms;
+u16 auto_fire_time_ms;
+u16 cook_time_ms;
+f32 range;
+u8 ammo_per_shot;
+u16 reload_time_ms;
+u16 reload_chamber_time_ms;
+u16 reload_ammo_fill_time_ms;
+u16 reload_loop_start_time_ms;
+u16 reload_loop_end_time_ms;
+u8 pellets_per_shot;
+f32 pellet_spread;
+f32 cof_recoil;
+f32 cof_scalar;
+f32 cof_scalar_moving;
+f32 cof_override;
+f32 recoil_angle_min;
+f32 recoil_angle_max;
+f32 recoil_horizontal_tolerance;
+f32 recoil_horizontal_min;
+f32 recoil_horizontal_max;
+f32 recoil_magnitude_min;
+f32 recoil_magnitude_max;
+u16 recoil_recovery_delay_ms;
+f32 recoil_recovery_rate;
+f32 recoil_recovery_acceleration;
+u8 recoil_shots_at_min_magnitude;
+f32 recoil_max_total_magnitude;
+f32 recoil_increase;
+f32 recoil_increase_crouched;
+f32 recoil_first_shot_modifier;
+f32 recoil_horizontal_min_increase;
+f32 recoil_horizontal_max_increase;
+u16 fire_detect_range;
+f32 effect_group;
+f32 player_state_group_id;
+f32 movement_modifier;
+f32 turn_modifier;
+f32 lock_on_icon_id;
+f32 lock_on_angle;
+f32 lock_on_radius;
+f32 lock_on_range;
+f32 lock_on_range_close;
+f32 lock_on_range_far;
+u16 lock_on_acquire_time_ms;
+u16 lock_on_acquire_time_close_ms;
+u16 lock_on_acquire_time_far_ms;
+u16 lock_on_lose_time_ms;
+f32 default_zoom;
+f32 fp_offset_x;
+f32 fp_offset_y;
+f32 fp_offset_z;
+u8 reticle_id;
+u8 full_screen_effect;
+u32 heat_per_shot;
+u32 heat_threshold;
+u16 heat_recovery_delay_ms;
+f32 sway_amplitude_x;
+f32 sway_amplitude_y;
+f32 sway_period_x;
+f32 sway_period_y;
+f32 sway_initial_y_offset;
+f32 arms_fov_scalar;
+f32 anim_kick_magnitude;
+f32 anim_recoil_magnitude;
+u32 description_id;
+u32 indirect_effect;
+f32 bullet_arc_kick_angle;
+f32 projectile_speed_override;
+u32 inherit_from_id;
+f32 inherit_from_charge_power;
+u32 hud_image_id;
+u32 target_requirement;
+u32 fire_anim_duration_ms;
+u8 sequential_fire_anim_start;
+u8 sequential_fire_anim_count;
+f32 cylof_recoil;
+f32 cylof_scalar;
+f32 cylof_scalar_moving;
+f32 cylof_override;
+u32 melee_composite_effect_id;
+u32 melee_ability_id;
+f32 sway_crouch_scalar;
+f32 sway_prone_scalar;
+f32 launch_pitch_additive_degrees;
+b8 tp_force_camera_overrides;
+f32 tp_camera_look_offset_x;
+f32 tp_camera_look_offset_y;
+f32 tp_camera_look_offset_z;
+f32 tp_camera_position_offset_x;
+f32 tp_camera_position_offset_y;
+f32 tp_camera_position_offset_z;
+f32 tp_camera_fov;
+b8 fp_force_camera_overrides;
+f32 tp_extra_lead_from_pitch_a;
+f32 tp_extra_lead_from_pitch_b;
+f32 tp_extra_lead_pitch_a;
+f32 tp_extra_lead_pitch_b;
+f32 tp_extra_height_from_pitch_a;
+f32 tp_extra_height_from_pitch_b;
+f32 tp_extra_height_pitch_a;
+f32 tp_extra_height_pitch_b;
+f32 fp_camera_fov;
+f32 tp_cr_camera_look_offset_x;
+f32 tp_cr_camera_look_offset_y;
+f32 tp_cr_camera_look_offset_z;
+f32 tp_cr_camera_position_offset_x;
+f32 tp_cr_camera_position_offset_y;
+f32 tp_cr_camera_position_offset_z;
+f32 tp_pr_camera_look_offset_x;
+f32 tp_pr_camera_look_offset_y;
+f32 tp_pr_camera_look_offset_z;
+f32 tp_pr_camera_position_offset_x;
+f32 tp_pr_camera_position_offset_y;
+f32 tp_pr_camera_position_offset_z;
+f32 tp_cr_extra_lead_from_pitch_a;
+f32 tp_cr_extra_lead_from_pitch_b;
+f32 tp_cr_extra_lead_pitch_a;
+f32 tp_cr_extra_lead_pitch_b;
+f32 tp_cr_extra_height_from_pitch_a;
+f32 tp_cr_extra_height_from_pitch_b;
+f32 tp_cr_extra_height_pitch_a;
+f32 tp_cr_extra_height_pitch_b;
+f32 tp_pr_extra_lead_from_pitch_a;
+f32 tp_pr_extra_lead_from_pitch_b;
+f32 tp_pr_extra_lead_pitch_a;
+f32 tp_pr_extra_lead_pitch_b;
+f32 tp_pr_extra_height_from_pitch_a;
+f32 tp_pr_extra_height_from_pitch_b;
+f32 tp_pr_extra_height_pitch_a;
+f32 tp_pr_extra_height_pitch_b;
+f32 tp_camera_distance;
+f32 tp_cr_camera_distance;
+f32 tp_pr_camera_distance;
+f32 tp_cr_camera_fov;
+f32 tp_pr_camera_fov;
+f32 fp_cr_camera_fov;
+f32 fp_pr_camera_fov;
+b8 force_fp_scope;
+u32 aim_assist_config;
+b8 allow_depth_adjustment;
+f32 tp_extra_draw_from_pitch_a;
+f32 tp_extra_draw_from_pitch_b;
+f32 tp_extra_draw_pitch_a;
+f32 tp_extra_draw_pitch_b;
+f32 tp_cr_extra_draw_from_pitch_a;
+f32 tp_cr_extra_draw_from_pitch_b;
+f32 tp_cr_extra_draw_pitch_a;
+f32 tp_cr_extra_draw_pitch_b;
+f32 tp_camera_pos_offset_y_mov;
+f32 tp_camera_look_offset_y_mov;
+f32 tp_cr_camera_pos_offset_y_mov;
+f32 tp_cr_camera_look_offset_y_mov;
+b8 tp_allow_move_heights;
+}* fire_mode_defs;
+u32 player_state_group_defs_count;
+struct player_state_group_defs_s
+{
+u32 id7;
+u32 _id8;
+u32 player_state_properties_count;
+struct player_state_properties_s
+{
+u32 group_id;
+u32 id9;
+u8 flags3;
+f32 min_cof;
+f32 max_cof;
+f32 cof_recovery_rate;
+f32 cof_turn_penalty;
+u32 shots_before_cof_penalty;
+f32 cof_recovery_delay_threshold;
+u32 cof_recovery_delay_ms;
+f32 cof_grow_rate;
+f32 min_cyl_of_fire;
+f32 max_cyl_of_fire;
+f32 cylof_recovery_rate;
+f32 cylof_turn_penalty;
+u32 shots_before_cylof_penalty;
+f32 cylof_recovery_delay_threshold;
+u32 cylof_recovery_delay_ms;
+f32 cylof_grow_rate;
+}* player_state_properties;
+}* player_state_group_defs;
+u32 fire_mode_projectile_mapping_data_count;
+struct fire_mode_projectile_mapping_data_s
+{
+u32 id10;
+u32 id11;
+u32 index;
+u32 projectile_definition_id;
+}* fire_mode_projectile_mapping_data;
+u32 aim_assit_defs_count;
+struct aim_assit_defs_s
+{
+u32 id12;
+f32 cone_angle;
+f32 cone_range;
+f32 fall_off_cone_range;
+f32 magnet_cone_angle;
+f32 magnet_cone_range;
+f32 target_override_delay;
+f32 target_oos_delay;
+f32 arrive_time;
+f32 target_motion_update_time;
+f32 weight;
+f32 min_input_weight_delay_in;
+f32 max_input_weight_delay_in;
+f32 min_input_weight_delay_out;
+f32 max_input_weight_delay_out;
+f32 min_input_actor;
+f32 max_input_actor;
+u32 requirement_id;
+f32 magnet_min_angle;
+f32 magnet_dist_for_min_angle;
+f32 magnet_max_angle;
+f32 magnet_dist_for_max_angle;
+f32 min_input_strafe_arrive_time;
+f32 max_input_strafe_arrive_time;
+}* aim_assit_defs;
+}* weapon_byteswithlength;
 };
 
 
@@ -2631,424 +2960,438 @@ printf("-- STREAM_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_r
 u32 will_pack_item_def_reply_2 = packet->item_def_reply_2_length == ~(u32)0 ? 0 : 1;
 for (u32 item_def_reply_2_iter = 0; item_def_reply_2_iter < will_pack_item_def_reply_2; item_def_reply_2_iter++)
 {
+// list item_defs
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs_count);
+offset += sizeof(u32);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs_count, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs_count, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs_count);
+
+for (u32 item_defs_iter = 0; item_defs_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs_count; item_defs_iter++)
+{
+// u32 defs_id
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].defs_id);
+offset += sizeof(u32);
+printf("-- defs_id                 \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].defs_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].defs_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].defs_id);
+
 // u8 bitflags1
-endian_write_u8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].bitflags1);
+endian_write_u8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bitflags1);
 offset += sizeof(u8);
-printf("-- bitflags1               \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].bitflags1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].bitflags1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].bitflags1);
+printf("-- bitflags1               \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bitflags1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bitflags1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bitflags1);
 
 // u8 bitflags2
-endian_write_u8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].bitflags2);
+endian_write_u8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bitflags2);
 offset += sizeof(u8);
-printf("-- bitflags2               \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].bitflags2, (u64)packet->item_def_reply_2[item_def_reply_2_iter].bitflags2, (f64)packet->item_def_reply_2[item_def_reply_2_iter].bitflags2);
+printf("-- bitflags2               \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bitflags2, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bitflags2, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bitflags2);
 
 // u32 name_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].name_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].name_id);
 offset += sizeof(u32);
-printf("-- name_id                 \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].name_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].name_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].name_id);
+printf("-- name_id                 \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].name_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].name_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].name_id);
 
 // u32 description_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].description_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].description_id);
 offset += sizeof(u32);
-printf("-- description_id          \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].description_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].description_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].description_id);
+printf("-- description_id          \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].description_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].description_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].description_id);
 
 // u32 content_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].content_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].content_id);
 offset += sizeof(u32);
-printf("-- content_id              \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].content_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].content_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].content_id);
+printf("-- content_id              \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].content_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].content_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].content_id);
 
 // u32 image_set_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].image_set_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].image_set_id);
 offset += sizeof(u32);
-printf("-- image_set_id            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].image_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].image_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].image_set_id);
+printf("-- image_set_id            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].image_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].image_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].image_set_id);
 
 // u32 tint_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].tint_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_id);
 offset += sizeof(u32);
-printf("-- tint_id                 \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].tint_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].tint_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].tint_id);
+printf("-- tint_id                 \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_id);
 
 // u32 hud_image_set_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].hud_image_set_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].hud_image_set_id);
 offset += sizeof(u32);
-printf("-- hud_image_set_id        \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].hud_image_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].hud_image_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].hud_image_set_id);
+printf("-- hud_image_set_id        \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].hud_image_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].hud_image_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].hud_image_set_id);
 
 // u32 unk_dword_1
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_1);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_1);
 offset += sizeof(u32);
-printf("-- unk_dword_1             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_1);
+printf("-- unk_dword_1             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_1);
 
 // u32 unk_dword_2
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_2);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_2);
 offset += sizeof(u32);
-printf("-- unk_dword_2             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_2, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_2, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_2);
+printf("-- unk_dword_2             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_2, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_2, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_2);
 
 // u32 cost
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].cost);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].cost);
 offset += sizeof(u32);
-printf("-- cost                    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].cost, (u64)packet->item_def_reply_2[item_def_reply_2_iter].cost, (f64)packet->item_def_reply_2[item_def_reply_2_iter].cost);
+printf("-- cost                    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].cost, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].cost, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].cost);
 
 // u32 item_class
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_class);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_class);
 offset += sizeof(u32);
-printf("-- item_class              \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_class, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_class, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_class);
+printf("-- item_class              \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_class, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_class, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_class);
 
 // u32 profile_override
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].profile_override);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].profile_override);
 offset += sizeof(u32);
-printf("-- profile_override        \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].profile_override, (u64)packet->item_def_reply_2[item_def_reply_2_iter].profile_override, (f64)packet->item_def_reply_2[item_def_reply_2_iter].profile_override);
+printf("-- profile_override        \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].profile_override, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].profile_override, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].profile_override);
 
 // string model_name
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].model_name_length);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].model_name_length);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].model_name_length, (u64)packet->item_def_reply_2[item_def_reply_2_iter].model_name_length, (f64)packet->item_def_reply_2[item_def_reply_2_iter].model_name_length);
-for (u32 model_name_iter = 0; model_name_iter < packet->item_def_reply_2[item_def_reply_2_iter].model_name_length; model_name_iter++)
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].model_name_length, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].model_name_length, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].model_name_length);
+for (u32 model_name_iter = 0; model_name_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].model_name_length; model_name_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].model_name[model_name_iter]);
+endian_write_i8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].model_name[model_name_iter]);
 offset++;
 }
 
 // string texture_alias
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].texture_alias_length);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].texture_alias_length);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].texture_alias_length, (u64)packet->item_def_reply_2[item_def_reply_2_iter].texture_alias_length, (f64)packet->item_def_reply_2[item_def_reply_2_iter].texture_alias_length);
-for (u32 texture_alias_iter = 0; texture_alias_iter < packet->item_def_reply_2[item_def_reply_2_iter].texture_alias_length; texture_alias_iter++)
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].texture_alias_length, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].texture_alias_length, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].texture_alias_length);
+for (u32 texture_alias_iter = 0; texture_alias_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].texture_alias_length; texture_alias_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].texture_alias[texture_alias_iter]);
+endian_write_i8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].texture_alias[texture_alias_iter]);
 offset++;
 }
 
 // u32 gender_usage
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].gender_usage);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].gender_usage);
 offset += sizeof(u32);
-printf("-- gender_usage            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].gender_usage, (u64)packet->item_def_reply_2[item_def_reply_2_iter].gender_usage, (f64)packet->item_def_reply_2[item_def_reply_2_iter].gender_usage);
+printf("-- gender_usage            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].gender_usage, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].gender_usage, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].gender_usage);
 
 // u32 item_type
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_type);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_type);
 offset += sizeof(u32);
-printf("-- item_type               \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_type, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_type, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_type);
+printf("-- item_type               \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_type, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_type, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_type);
 
 // u32 category_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].category_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].category_id);
 offset += sizeof(u32);
-printf("-- category_id             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].category_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].category_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].category_id);
+printf("-- category_id             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].category_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].category_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].category_id);
 
 // u32 weapon_trail_effect_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].weapon_trail_effect_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].weapon_trail_effect_id);
 offset += sizeof(u32);
-printf("-- weapon_trail_effect_id  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].weapon_trail_effect_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].weapon_trail_effect_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].weapon_trail_effect_id);
+printf("-- weapon_trail_effect_id  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].weapon_trail_effect_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].weapon_trail_effect_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].weapon_trail_effect_id);
 
 // u32 composite_effect_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].composite_effect_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].composite_effect_id);
 offset += sizeof(u32);
-printf("-- composite_effect_id     \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].composite_effect_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].composite_effect_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].composite_effect_id);
+printf("-- composite_effect_id     \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].composite_effect_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].composite_effect_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].composite_effect_id);
 
 // u32 power_rating
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].power_rating);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].power_rating);
 offset += sizeof(u32);
-printf("-- power_rating            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].power_rating, (u64)packet->item_def_reply_2[item_def_reply_2_iter].power_rating, (f64)packet->item_def_reply_2[item_def_reply_2_iter].power_rating);
+printf("-- power_rating            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].power_rating, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].power_rating, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].power_rating);
 
 // u32 min_profile_rank
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].min_profile_rank);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].min_profile_rank);
 offset += sizeof(u32);
-printf("-- min_profile_rank        \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].min_profile_rank, (u64)packet->item_def_reply_2[item_def_reply_2_iter].min_profile_rank, (f64)packet->item_def_reply_2[item_def_reply_2_iter].min_profile_rank);
+printf("-- min_profile_rank        \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].min_profile_rank, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].min_profile_rank, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].min_profile_rank);
 
 // u32 rarity
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].rarity);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].rarity);
 offset += sizeof(u32);
-printf("-- rarity                  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].rarity, (u64)packet->item_def_reply_2[item_def_reply_2_iter].rarity, (f64)packet->item_def_reply_2[item_def_reply_2_iter].rarity);
+printf("-- rarity                  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].rarity, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].rarity, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].rarity);
 
 // u32 activatable_ability_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].activatable_ability_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].activatable_ability_id);
 offset += sizeof(u32);
-printf("-- activatable_ability_id  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].activatable_ability_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].activatable_ability_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].activatable_ability_id);
+printf("-- activatable_ability_id  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].activatable_ability_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].activatable_ability_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].activatable_ability_id);
 
 // u32 activatable_ability_set_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].activatable_ability_set_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].activatable_ability_set_id);
 offset += sizeof(u32);
-printf("-- activatable_ability_set_id\t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].activatable_ability_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].activatable_ability_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].activatable_ability_set_id);
+printf("-- activatable_ability_set_id\t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].activatable_ability_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].activatable_ability_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].activatable_ability_set_id);
 
 // u32 passive_ability_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].passive_ability_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_ability_id);
 offset += sizeof(u32);
-printf("-- passive_ability_id      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].passive_ability_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].passive_ability_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].passive_ability_id);
+printf("-- passive_ability_id      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_ability_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_ability_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_ability_id);
 
 // u32 passive_ability_set_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].passive_ability_set_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_ability_set_id);
 offset += sizeof(u32);
-printf("-- passive_ability_set_id  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].passive_ability_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].passive_ability_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].passive_ability_set_id);
+printf("-- passive_ability_set_id  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_ability_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_ability_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_ability_set_id);
 
 // u32 max_stack_size
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].max_stack_size);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].max_stack_size);
 offset += sizeof(u32);
-printf("-- max_stack_size          \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].max_stack_size, (u64)packet->item_def_reply_2[item_def_reply_2_iter].max_stack_size, (f64)packet->item_def_reply_2[item_def_reply_2_iter].max_stack_size);
+printf("-- max_stack_size          \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].max_stack_size, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].max_stack_size, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].max_stack_size);
 
 // u32 min_stack_size
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].min_stack_size);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].min_stack_size);
 offset += sizeof(u32);
-printf("-- min_stack_size          \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].min_stack_size, (u64)packet->item_def_reply_2[item_def_reply_2_iter].min_stack_size, (f64)packet->item_def_reply_2[item_def_reply_2_iter].min_stack_size);
+printf("-- min_stack_size          \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].min_stack_size, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].min_stack_size, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].min_stack_size);
 
 // string tint_alias
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].tint_alias_length);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_alias_length);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].tint_alias_length, (u64)packet->item_def_reply_2[item_def_reply_2_iter].tint_alias_length, (f64)packet->item_def_reply_2[item_def_reply_2_iter].tint_alias_length);
-for (u32 tint_alias_iter = 0; tint_alias_iter < packet->item_def_reply_2[item_def_reply_2_iter].tint_alias_length; tint_alias_iter++)
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_alias_length, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_alias_length, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_alias_length);
+for (u32 tint_alias_iter = 0; tint_alias_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_alias_length; tint_alias_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].tint_alias[tint_alias_iter]);
+endian_write_i8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_alias[tint_alias_iter]);
 offset++;
 }
 
 // u32 tint_group_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].tint_group_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_group_id);
 offset += sizeof(u32);
-printf("-- tint_group_id           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].tint_group_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].tint_group_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].tint_group_id);
+printf("-- tint_group_id           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_group_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_group_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_group_id);
 
 // u32 member_discount
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].member_discount);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].member_discount);
 offset += sizeof(u32);
-printf("-- member_discount         \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].member_discount, (u64)packet->item_def_reply_2[item_def_reply_2_iter].member_discount, (f64)packet->item_def_reply_2[item_def_reply_2_iter].member_discount);
+printf("-- member_discount         \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].member_discount, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].member_discount, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].member_discount);
 
 // u32 vip_rank_required
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].vip_rank_required);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].vip_rank_required);
 offset += sizeof(u32);
-printf("-- vip_rank_required       \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].vip_rank_required, (u64)packet->item_def_reply_2[item_def_reply_2_iter].vip_rank_required, (f64)packet->item_def_reply_2[item_def_reply_2_iter].vip_rank_required);
+printf("-- vip_rank_required       \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].vip_rank_required, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].vip_rank_required, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].vip_rank_required);
 
 // u32 race_set_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].race_set_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].race_set_id);
 offset += sizeof(u32);
-printf("-- race_set_id             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].race_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].race_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].race_set_id);
+printf("-- race_set_id             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].race_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].race_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].race_set_id);
 
 // u32 ui_model_camera_id_1
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].ui_model_camera_id_1);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].ui_model_camera_id_1);
 offset += sizeof(u32);
-printf("-- ui_model_camera_id_1    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].ui_model_camera_id_1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].ui_model_camera_id_1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].ui_model_camera_id_1);
+printf("-- ui_model_camera_id_1    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].ui_model_camera_id_1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].ui_model_camera_id_1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].ui_model_camera_id_1);
 
 // u32 equip_count_max
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].equip_count_max);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].equip_count_max);
 offset += sizeof(u32);
-printf("-- equip_count_max         \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].equip_count_max, (u64)packet->item_def_reply_2[item_def_reply_2_iter].equip_count_max, (f64)packet->item_def_reply_2[item_def_reply_2_iter].equip_count_max);
+printf("-- equip_count_max         \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].equip_count_max, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].equip_count_max, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].equip_count_max);
 
 // i32 curreny_type
-endian_write_i32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].curreny_type);
+endian_write_i32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].curreny_type);
 offset += sizeof(i32);
-printf("-- curreny_type            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].curreny_type, (u64)packet->item_def_reply_2[item_def_reply_2_iter].curreny_type, (f64)packet->item_def_reply_2[item_def_reply_2_iter].curreny_type);
+printf("-- curreny_type            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].curreny_type, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].curreny_type, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].curreny_type);
 
 // u32 datasheet_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].datasheet_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].datasheet_id);
 offset += sizeof(u32);
-printf("-- datasheet_id            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].datasheet_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].datasheet_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].datasheet_id);
+printf("-- datasheet_id            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].datasheet_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].datasheet_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].datasheet_id);
 
 // u32 item_type_1
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_type_1);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_type_1);
 offset += sizeof(u32);
-printf("-- item_type_1             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_type_1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_type_1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_type_1);
+printf("-- item_type_1             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_type_1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_type_1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_type_1);
 
 // u32 skill_set_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].skill_set_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].skill_set_id);
 offset += sizeof(u32);
-printf("-- skill_set_id            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].skill_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].skill_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].skill_set_id);
+printf("-- skill_set_id            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].skill_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].skill_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].skill_set_id);
 
 // string overlay_texture
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].overlay_texture_length);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_texture_length);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].overlay_texture_length, (u64)packet->item_def_reply_2[item_def_reply_2_iter].overlay_texture_length, (f64)packet->item_def_reply_2[item_def_reply_2_iter].overlay_texture_length);
-for (u32 overlay_texture_iter = 0; overlay_texture_iter < packet->item_def_reply_2[item_def_reply_2_iter].overlay_texture_length; overlay_texture_iter++)
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_texture_length, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_texture_length, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_texture_length);
+for (u32 overlay_texture_iter = 0; overlay_texture_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_texture_length; overlay_texture_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].overlay_texture[overlay_texture_iter]);
+endian_write_i8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_texture[overlay_texture_iter]);
 offset++;
 }
 
 // string decal_slot
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].decal_slot_length);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].decal_slot_length);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].decal_slot_length, (u64)packet->item_def_reply_2[item_def_reply_2_iter].decal_slot_length, (f64)packet->item_def_reply_2[item_def_reply_2_iter].decal_slot_length);
-for (u32 decal_slot_iter = 0; decal_slot_iter < packet->item_def_reply_2[item_def_reply_2_iter].decal_slot_length; decal_slot_iter++)
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].decal_slot_length, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].decal_slot_length, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].decal_slot_length);
+for (u32 decal_slot_iter = 0; decal_slot_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].decal_slot_length; decal_slot_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].decal_slot[decal_slot_iter]);
+endian_write_i8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].decal_slot[decal_slot_iter]);
 offset++;
 }
 
 // u32 overlay_adjustment
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].overlay_adjustment);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_adjustment);
 offset += sizeof(u32);
-printf("-- overlay_adjustment      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].overlay_adjustment, (u64)packet->item_def_reply_2[item_def_reply_2_iter].overlay_adjustment, (f64)packet->item_def_reply_2[item_def_reply_2_iter].overlay_adjustment);
+printf("-- overlay_adjustment      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_adjustment, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_adjustment, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_adjustment);
 
 // u32 trial_duration_sec
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].trial_duration_sec);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].trial_duration_sec);
 offset += sizeof(u32);
-printf("-- trial_duration_sec      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].trial_duration_sec, (u64)packet->item_def_reply_2[item_def_reply_2_iter].trial_duration_sec, (f64)packet->item_def_reply_2[item_def_reply_2_iter].trial_duration_sec);
+printf("-- trial_duration_sec      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].trial_duration_sec, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].trial_duration_sec, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].trial_duration_sec);
 
 // u32 next_trial_delay_sec
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].next_trial_delay_sec);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].next_trial_delay_sec);
 offset += sizeof(u32);
-printf("-- next_trial_delay_sec    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].next_trial_delay_sec, (u64)packet->item_def_reply_2[item_def_reply_2_iter].next_trial_delay_sec, (f64)packet->item_def_reply_2[item_def_reply_2_iter].next_trial_delay_sec);
+printf("-- next_trial_delay_sec    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].next_trial_delay_sec, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].next_trial_delay_sec, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].next_trial_delay_sec);
 
 // u32 client_use_requirement
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].client_use_requirement);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].client_use_requirement);
 offset += sizeof(u32);
-printf("-- client_use_requirement  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].client_use_requirement, (u64)packet->item_def_reply_2[item_def_reply_2_iter].client_use_requirement, (f64)packet->item_def_reply_2[item_def_reply_2_iter].client_use_requirement);
+printf("-- client_use_requirement  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].client_use_requirement, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].client_use_requirement, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].client_use_requirement);
 
 // string override_appearance
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].override_appearance_length);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_appearance_length);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].override_appearance_length, (u64)packet->item_def_reply_2[item_def_reply_2_iter].override_appearance_length, (f64)packet->item_def_reply_2[item_def_reply_2_iter].override_appearance_length);
-for (u32 override_appearance_iter = 0; override_appearance_iter < packet->item_def_reply_2[item_def_reply_2_iter].override_appearance_length; override_appearance_iter++)
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_appearance_length, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_appearance_length, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_appearance_length);
+for (u32 override_appearance_iter = 0; override_appearance_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_appearance_length; override_appearance_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].override_appearance[override_appearance_iter]);
+endian_write_i8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_appearance[override_appearance_iter]);
 offset++;
 }
 
 // u32 override_camera_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].override_camera_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_camera_id);
 offset += sizeof(u32);
-printf("-- override_camera_id      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].override_camera_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].override_camera_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].override_camera_id);
+printf("-- override_camera_id      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_camera_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_camera_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_camera_id);
 
 // u32 unk_dword_3
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_3);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_3);
 offset += sizeof(u32);
-printf("-- unk_dword_3             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_3, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_3, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_3);
+printf("-- unk_dword_3             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_3, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_3, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_3);
 
 // u32 unk_dword_4
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_4);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_4);
 offset += sizeof(u32);
-printf("-- unk_dword_4             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_4, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_4, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_4);
+printf("-- unk_dword_4             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_4, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_4, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_4);
 
 // u32 unk_dword_5
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_5);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_5);
 offset += sizeof(u32);
-printf("-- unk_dword_5             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_5, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_5, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_5);
+printf("-- unk_dword_5             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_5, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_5, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_5);
 
 // u32 bulk
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].bulk);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bulk);
 offset += sizeof(u32);
-printf("-- bulk                    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].bulk, (u64)packet->item_def_reply_2[item_def_reply_2_iter].bulk, (f64)packet->item_def_reply_2[item_def_reply_2_iter].bulk);
+printf("-- bulk                    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bulk, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bulk, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bulk);
 
 // u32 active_equip_slot_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].active_equip_slot_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].active_equip_slot_id);
 offset += sizeof(u32);
-printf("-- active_equip_slot_id    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].active_equip_slot_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].active_equip_slot_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].active_equip_slot_id);
+printf("-- active_equip_slot_id    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].active_equip_slot_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].active_equip_slot_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].active_equip_slot_id);
 
 // u32 passive_equip_slot_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].passive_equip_slot_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_equip_slot_id);
 offset += sizeof(u32);
-printf("-- passive_equip_slot_id   \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].passive_equip_slot_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].passive_equip_slot_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].passive_equip_slot_id);
+printf("-- passive_equip_slot_id   \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_equip_slot_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_equip_slot_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_equip_slot_id);
 
 // u32 passive_equip_slot_group_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].passive_equip_slot_group_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_equip_slot_group_id);
 offset += sizeof(u32);
-printf("-- passive_equip_slot_group_id\t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].passive_equip_slot_group_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].passive_equip_slot_group_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].passive_equip_slot_group_id);
+printf("-- passive_equip_slot_group_id\t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_equip_slot_group_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_equip_slot_group_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_equip_slot_group_id);
 
 // u32 unk_dword_6
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_6);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_6);
 offset += sizeof(u32);
-printf("-- unk_dword_6             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_6, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_6, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_6);
+printf("-- unk_dword_6             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_6, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_6, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_6);
 
 // u32 grinder_reward_set_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].grinder_reward_set_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].grinder_reward_set_id);
 offset += sizeof(u32);
-printf("-- grinder_reward_set_id   \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].grinder_reward_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].grinder_reward_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].grinder_reward_set_id);
+printf("-- grinder_reward_set_id   \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].grinder_reward_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].grinder_reward_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].grinder_reward_set_id);
 
 // u32 build_bar_group_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].build_bar_group_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].build_bar_group_id);
 offset += sizeof(u32);
-printf("-- build_bar_group_id      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].build_bar_group_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].build_bar_group_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].build_bar_group_id);
+printf("-- build_bar_group_id      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].build_bar_group_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].build_bar_group_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].build_bar_group_id);
 
 // string unk_string_1
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].unk_string_1_length);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_string_1_length);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_string_1_length, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_string_1_length, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_string_1_length);
-for (u32 unk_string_1_iter = 0; unk_string_1_iter < packet->item_def_reply_2[item_def_reply_2_iter].unk_string_1_length; unk_string_1_iter++)
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_string_1_length, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_string_1_length, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_string_1_length);
+for (u32 unk_string_1_iter = 0; unk_string_1_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_string_1_length; unk_string_1_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].unk_string_1[unk_string_1_iter]);
+endian_write_i8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_string_1[unk_string_1_iter]);
 offset++;
 }
 
 // b8 unk_bool_1
-endian_write_b8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].unk_bool_1);
+endian_write_b8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_bool_1);
 offset += sizeof(b8);
-printf("-- unk_bool_1              \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_bool_1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_bool_1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_bool_1);
+printf("-- unk_bool_1              \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_bool_1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_bool_1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_bool_1);
 
 // b8 is_armor
-endian_write_b8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].is_armor);
+endian_write_b8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].is_armor);
 offset += sizeof(b8);
-printf("-- is_armor                \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].is_armor, (u64)packet->item_def_reply_2[item_def_reply_2_iter].is_armor, (f64)packet->item_def_reply_2[item_def_reply_2_iter].is_armor);
+printf("-- is_armor                \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].is_armor, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].is_armor, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].is_armor);
 
 // u32 unk_dword_7
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_7);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_7);
 offset += sizeof(u32);
-printf("-- unk_dword_7             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_7, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_7, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_7);
+printf("-- unk_dword_7             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_7, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_7, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_7);
 
 // u32 param1
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].param1);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param1);
 offset += sizeof(u32);
-printf("-- param1                  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].param1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].param1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].param1);
+printf("-- param1                  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param1);
 
 // u32 param2
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].param2);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param2);
 offset += sizeof(u32);
-printf("-- param2                  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].param2, (u64)packet->item_def_reply_2[item_def_reply_2_iter].param2, (f64)packet->item_def_reply_2[item_def_reply_2_iter].param2);
+printf("-- param2                  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param2, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param2, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param2);
 
 // u32 param3
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].param3);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param3);
 offset += sizeof(u32);
-printf("-- param3                  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].param3, (u64)packet->item_def_reply_2[item_def_reply_2_iter].param3, (f64)packet->item_def_reply_2[item_def_reply_2_iter].param3);
+printf("-- param3                  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param3, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param3, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param3);
 
 // string string_param1
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].string_param1_length);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].string_param1_length);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].string_param1_length, (u64)packet->item_def_reply_2[item_def_reply_2_iter].string_param1_length, (f64)packet->item_def_reply_2[item_def_reply_2_iter].string_param1_length);
-for (u32 string_param1_iter = 0; string_param1_iter < packet->item_def_reply_2[item_def_reply_2_iter].string_param1_length; string_param1_iter++)
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].string_param1_length, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].string_param1_length, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].string_param1_length);
+for (u32 string_param1_iter = 0; string_param1_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].string_param1_length; string_param1_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].string_param1[string_param1_iter]);
+endian_write_i8_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].string_param1[string_param1_iter]);
 offset++;
 }
 
 // u32 ui_model_camera_id_2
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].ui_model_camera_id_2);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].ui_model_camera_id_2);
 offset += sizeof(u32);
-printf("-- ui_model_camera_id_2    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].ui_model_camera_id_2, (u64)packet->item_def_reply_2[item_def_reply_2_iter].ui_model_camera_id_2, (f64)packet->item_def_reply_2[item_def_reply_2_iter].ui_model_camera_id_2);
+printf("-- ui_model_camera_id_2    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].ui_model_camera_id_2, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].ui_model_camera_id_2, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].ui_model_camera_id_2);
 
 // u32 unk_dword_8
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_8);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_8);
 offset += sizeof(u32);
-printf("-- unk_dword_8             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_8, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_8, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_8);
+printf("-- unk_dword_8             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_8, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_8, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_8);
 
 // i32 scrap_value_override
-endian_write_i32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].scrap_value_override);
+endian_write_i32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].scrap_value_override);
 offset += sizeof(i32);
-printf("-- scrap_value_override    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].scrap_value_override, (u64)packet->item_def_reply_2[item_def_reply_2_iter].scrap_value_override, (f64)packet->item_def_reply_2[item_def_reply_2_iter].scrap_value_override);
+printf("-- scrap_value_override    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].scrap_value_override, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].scrap_value_override, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].scrap_value_override);
 
 // list stats_item_def_2
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2_count);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2_count);
 offset += sizeof(u32);
-printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2_count, (u64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2_count, (f64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2_count);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2_count, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2_count, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2_count);
 
-for (u32 stats_item_def_2_iter = 0; stats_item_def_2_iter < packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2_count; stats_item_def_2_iter++)
+for (u32 stats_item_def_2_iter = 0; stats_item_def_2_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2_count; stats_item_def_2_iter++)
 {
 // u32 unk_dword_9
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9);
 offset += sizeof(u32);
-printf("-- unk_dword_9             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9, (u64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9, (f64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9);
+printf("-- unk_dword_9             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9);
 
 // u32 stat_id
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].stat_id);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].stat_id);
 offset += sizeof(u32);
-printf("-- stat_id                 \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].stat_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].stat_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].stat_id);
+printf("-- stat_id                 \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].stat_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].stat_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].stat_id);
 
-// f32 base
-endian_write_f32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].base);
-offset += sizeof(f32);
-printf("-- base                    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].base, (u64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].base, (f64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].base);
+// u32 base
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].base);
+offset += sizeof(u32);
+printf("-- base                    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].base, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].base, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].base);
 
-// f32 modifier
-endian_write_f32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].modifier);
-offset += sizeof(f32);
-printf("-- modifier                \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].modifier, (u64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].modifier, (f64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].modifier);
+// u32 modifier
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].modifier);
+offset += sizeof(u32);
+printf("-- modifier                \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].modifier, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].modifier, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].modifier);
 
 // u32 unk_dword_10
-endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10);
+endian_write_u32_little(buffer + offset, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10);
 offset += sizeof(u32);
-printf("-- unk_dword_10            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10, (u64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10, (f64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10);
+printf("-- unk_dword_10            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10);
 
 } // stats_item_def_2
+
+} // item_defs
 
 } // item_def_reply_2
 endian_write_u32_little((u8*)item_def_reply_2_length_ptr, (u32)((uptr)buffer + (uptr)offset - (uptr)item_def_reply_2_length_ptr - sizeof(u32)));
@@ -4499,11 +4842,1487 @@ printf("-- unk_bool3               \t%lld\t%llxh\t%f\n", (i64)packet->unk_bool3,
 
 } break;
 
-case Zone_Packet_Kind_ReferenceDataBase:
+case Zone_Packet_Kind_ReferenceDataWeaponDefinitions:
 {
-printf("[*] Packing ReferenceDataBase...\n");
+printf("[*] Packing ReferenceDataWeaponDefinitions...\n");
+Zone_Packet_ReferenceDataWeaponDefinitions* packet = packet_ptr;
+
 endian_write_u8_little(buffer + offset, 0x17);
 offset += sizeof(u8);
+
+endian_write_u16_little(buffer + offset, 0x4);
+offset += sizeof(u16);
+
+// stream weapon_byteswithlength
+void* weapon_byteswithlength_length_ptr = buffer + offset;
+offset += sizeof(u32);
+printf("-- STREAM_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength_length, (u64)packet->weapon_byteswithlength_length, (f64)packet->weapon_byteswithlength_length);
+
+u32 will_pack_weapon_byteswithlength = packet->weapon_byteswithlength_length == ~(u32)0 ? 0 : 1;
+for (u32 weapon_byteswithlength_iter = 0; weapon_byteswithlength_iter < will_pack_weapon_byteswithlength; weapon_byteswithlength_iter++)
+{
+// list weapon_defs
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs_count);
+offset += sizeof(u32);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs_count, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs_count, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs_count);
+
+for (u32 weapon_defs_iter = 0; weapon_defs_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs_count; weapon_defs_iter++)
+{
+// u32 id1
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].id1);
+offset += sizeof(u32);
+printf("-- id1                     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].id1, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].id1, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].id1);
+
+// u32 id2
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].id2);
+offset += sizeof(u32);
+printf("-- id2                     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].id2, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].id2, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].id2);
+
+// u32 weapon_group_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].weapon_group_id);
+offset += sizeof(u32);
+printf("-- weapon_group_id         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].weapon_group_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].weapon_group_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].weapon_group_id);
+
+// u8 flags1
+endian_write_u8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].flags1);
+offset += sizeof(u8);
+printf("-- flags1                  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].flags1, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].flags1, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].flags1);
+
+// u32 equip_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].equip_ms);
+offset += sizeof(u32);
+printf("-- equip_ms                \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].equip_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].equip_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].equip_ms);
+
+// u32 unequip_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].unequip_ms);
+offset += sizeof(u32);
+printf("-- unequip_ms              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].unequip_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].unequip_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].unequip_ms);
+
+// u32 from_passive_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_passive_ms);
+offset += sizeof(u32);
+printf("-- from_passive_ms         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_passive_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_passive_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_passive_ms);
+
+// u32 to_passive_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_passive_ms);
+offset += sizeof(u32);
+printf("-- to_passive_ms           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_passive_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_passive_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_passive_ms);
+
+// u32 xp_category
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].xp_category);
+offset += sizeof(u32);
+printf("-- xp_category             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].xp_category, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].xp_category, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].xp_category);
+
+// u32 to_iron_sights_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_iron_sights_ms);
+offset += sizeof(u32);
+printf("-- to_iron_sights_ms       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_iron_sights_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_iron_sights_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_iron_sights_ms);
+
+// u32 from_iron_sights_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_iron_sights_ms);
+offset += sizeof(u32);
+printf("-- from_iron_sights_ms     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_iron_sights_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_iron_sights_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_iron_sights_ms);
+
+// u32 to_iron_sights_anim_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_iron_sights_anim_ms);
+offset += sizeof(u32);
+printf("-- to_iron_sights_anim_ms  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_iron_sights_anim_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_iron_sights_anim_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_iron_sights_anim_ms);
+
+// u32 from_iron_sights_anim_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_iron_sights_anim_ms);
+offset += sizeof(u32);
+printf("-- from_iron_sights_anim_ms\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_iron_sights_anim_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_iron_sights_anim_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_iron_sights_anim_ms);
+
+// u32 sprint_recovery_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].sprint_recovery_ms);
+offset += sizeof(u32);
+printf("-- sprint_recovery_ms      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].sprint_recovery_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].sprint_recovery_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].sprint_recovery_ms);
+
+// u32 next_use_delay_msec
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].next_use_delay_msec);
+offset += sizeof(u32);
+printf("-- next_use_delay_msec     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].next_use_delay_msec, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].next_use_delay_msec, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].next_use_delay_msec);
+
+// f32 turn_rate_modifier
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].turn_rate_modifier);
+offset += sizeof(f32);
+printf("-- turn_rate_modifier      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].turn_rate_modifier, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].turn_rate_modifier, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].turn_rate_modifier);
+
+// f32 movement_speed_modifier
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].movement_speed_modifier);
+offset += sizeof(f32);
+printf("-- movement_speed_modifier \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].movement_speed_modifier, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].movement_speed_modifier, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].movement_speed_modifier);
+
+// u32 propulsion_type
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].propulsion_type);
+offset += sizeof(u32);
+printf("-- propulsion_type         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].propulsion_type, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].propulsion_type, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].propulsion_type);
+
+// u32 heat_bleed_off_rate
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].heat_bleed_off_rate);
+offset += sizeof(u32);
+printf("-- heat_bleed_off_rate     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].heat_bleed_off_rate, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].heat_bleed_off_rate, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].heat_bleed_off_rate);
+
+// u32 heat_capacity
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].heat_capacity);
+offset += sizeof(u32);
+printf("-- heat_capacity           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].heat_capacity, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].heat_capacity, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].heat_capacity);
+
+// u32 overheat_penalty_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].overheat_penalty_ms);
+offset += sizeof(u32);
+printf("-- overheat_penalty_ms     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].overheat_penalty_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].overheat_penalty_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].overheat_penalty_ms);
+
+// u32 range_string_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].range_string_id);
+offset += sizeof(u32);
+printf("-- range_string_id         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].range_string_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].range_string_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].range_string_id);
+
+// u32 melee_detect_width
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].melee_detect_width);
+offset += sizeof(u32);
+printf("-- melee_detect_width      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].melee_detect_width, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].melee_detect_width, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].melee_detect_width);
+
+// u32 melee_detect_height
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].melee_detect_height);
+offset += sizeof(u32);
+printf("-- melee_detect_height     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].melee_detect_height, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].melee_detect_height, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].melee_detect_height);
+
+// string anim_set_name
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].anim_set_name_length);
+offset += sizeof(u32);
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].anim_set_name_length, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].anim_set_name_length, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].anim_set_name_length);
+for (u32 anim_set_name_iter = 0; anim_set_name_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].anim_set_name_length; anim_set_name_iter++)
+{
+endian_write_i8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].anim_set_name[anim_set_name_iter]);
+offset++;
+}
+
+// u32 vehicle_fp_camera_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].vehicle_fp_camera_id);
+offset += sizeof(u32);
+printf("-- vehicle_fp_camera_id    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].vehicle_fp_camera_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].vehicle_fp_camera_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].vehicle_fp_camera_id);
+
+// u32 vehicle_tp_camera_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].vehicle_tp_camera_id);
+offset += sizeof(u32);
+printf("-- vehicle_tp_camera_id    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].vehicle_tp_camera_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].vehicle_tp_camera_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].vehicle_tp_camera_id);
+
+// u32 overheat_effect_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].overheat_effect_id);
+offset += sizeof(u32);
+printf("-- overheat_effect_id      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].overheat_effect_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].overheat_effect_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].overheat_effect_id);
+
+// f32 min_pitch
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].min_pitch);
+offset += sizeof(f32);
+printf("-- min_pitch               \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].min_pitch, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].min_pitch, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].min_pitch);
+
+// f32 max_pitch
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].max_pitch);
+offset += sizeof(f32);
+printf("-- max_pitch               \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].max_pitch, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].max_pitch, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].max_pitch);
+
+// u32 audio_game_object
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].audio_game_object);
+offset += sizeof(u32);
+printf("-- audio_game_object       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].audio_game_object, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].audio_game_object, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].audio_game_object);
+
+// list ammo_slots
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots_count);
+offset += sizeof(u32);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots_count, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots_count, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots_count);
+
+for (u32 ammo_slots_iter = 0; ammo_slots_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots_count; ammo_slots_iter++)
+{
+// u32 ammo_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].ammo_id);
+offset += sizeof(u32);
+printf("-- ammo_id                 \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].ammo_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].ammo_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].ammo_id);
+
+// u32 clip_size
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_size);
+offset += sizeof(u32);
+printf("-- clip_size               \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_size, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_size, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_size);
+
+// u32 capacity
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].capacity);
+offset += sizeof(u32);
+printf("-- capacity                \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].capacity, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].capacity, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].capacity);
+
+// b8 start_empty
+endian_write_b8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].start_empty);
+offset += sizeof(b8);
+printf("-- start_empty             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].start_empty, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].start_empty, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].start_empty);
+
+// u32 refill_ammo_per_tick
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].refill_ammo_per_tick);
+offset += sizeof(u32);
+printf("-- refill_ammo_per_tick    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].refill_ammo_per_tick, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].refill_ammo_per_tick, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].refill_ammo_per_tick);
+
+// u32 refill_ammo_delay_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].refill_ammo_delay_ms);
+offset += sizeof(u32);
+printf("-- refill_ammo_delay_ms    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].refill_ammo_delay_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].refill_ammo_delay_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].refill_ammo_delay_ms);
+
+// u32 clip_attachment_slot
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_attachment_slot);
+offset += sizeof(u32);
+printf("-- clip_attachment_slot    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_attachment_slot, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_attachment_slot, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_attachment_slot);
+
+// string clip_model_name
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_model_name_length);
+offset += sizeof(u32);
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_model_name_length, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_model_name_length, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_model_name_length);
+for (u32 clip_model_name_iter = 0; clip_model_name_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_model_name_length; clip_model_name_iter++)
+{
+endian_write_i8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_model_name[clip_model_name_iter]);
+offset++;
+}
+
+// string reload_weapon_bone
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_weapon_bone_length);
+offset += sizeof(u32);
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_weapon_bone_length, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_weapon_bone_length, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_weapon_bone_length);
+for (u32 reload_weapon_bone_iter = 0; reload_weapon_bone_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_weapon_bone_length; reload_weapon_bone_iter++)
+{
+endian_write_i8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_weapon_bone[reload_weapon_bone_iter]);
+offset++;
+}
+
+// string reload_character_bone
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_character_bone_length);
+offset += sizeof(u32);
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_character_bone_length, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_character_bone_length, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_character_bone_length);
+for (u32 reload_character_bone_iter = 0; reload_character_bone_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_character_bone_length; reload_character_bone_iter++)
+{
+endian_write_i8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_character_bone[reload_character_bone_iter]);
+offset++;
+}
+
+} // ammo_slots
+
+// list fire_groups
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups_count);
+offset += sizeof(u32);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups_count, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups_count, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups_count);
+
+for (u32 fire_groups_iter = 0; fire_groups_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups_count; fire_groups_iter++)
+{
+// u32 fire_group_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups[fire_groups_iter].fire_group_id);
+offset += sizeof(u32);
+printf("-- fire_group_id           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups[fire_groups_iter].fire_group_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups[fire_groups_iter].fire_group_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups[fire_groups_iter].fire_group_id);
+
+} // fire_groups
+
+} // weapon_defs
+
+// list fire_group_defs
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs_count);
+offset += sizeof(u32);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs_count, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs_count, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs_count);
+
+for (u32 fire_group_defs_iter = 0; fire_group_defs_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs_count; fire_group_defs_iter++)
+{
+// u32 id3
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].id3);
+offset += sizeof(u32);
+printf("-- id3                     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].id3, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].id3, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].id3);
+
+// u32 id4
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].id4);
+offset += sizeof(u32);
+printf("-- id4                     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].id4, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].id4, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].id4);
+
+// list fire_mode_list
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list_count);
+offset += sizeof(u32);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list_count, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list_count, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list_count);
+
+for (u32 fire_mode_list_iter = 0; fire_mode_list_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list_count; fire_mode_list_iter++)
+{
+// u32 fire_mode_1
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list[fire_mode_list_iter].fire_mode_1);
+offset += sizeof(u32);
+printf("-- fire_mode_1             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list[fire_mode_list_iter].fire_mode_1, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list[fire_mode_list_iter].fire_mode_1, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list[fire_mode_list_iter].fire_mode_1);
+
+} // fire_mode_list
+
+// u8 flags2
+endian_write_u8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].flags2);
+offset += sizeof(u8);
+printf("-- flags2                  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].flags2, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].flags2, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].flags2);
+
+// u32 chamber_duration_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].chamber_duration_ms);
+offset += sizeof(u32);
+printf("-- chamber_duration_ms     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].chamber_duration_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].chamber_duration_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].chamber_duration_ms);
+
+// u32 image_set_override
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].image_set_override);
+offset += sizeof(u32);
+printf("-- image_set_override      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].image_set_override, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].image_set_override, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].image_set_override);
+
+// u32 transition_duration_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].transition_duration_ms);
+offset += sizeof(u32);
+printf("-- transition_duration_ms  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].transition_duration_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].transition_duration_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].transition_duration_ms);
+
+// u32 anim_actor_slot_override
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].anim_actor_slot_override);
+offset += sizeof(u32);
+printf("-- anim_actor_slot_override\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].anim_actor_slot_override, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].anim_actor_slot_override, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].anim_actor_slot_override);
+
+// u32 deployable_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].deployable_id);
+offset += sizeof(u32);
+printf("-- deployable_id           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].deployable_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].deployable_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].deployable_id);
+
+// u32 spin_up_time_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_time_ms);
+offset += sizeof(u32);
+printf("-- spin_up_time_ms         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_time_ms);
+
+// u32 spin_up_movement_modifier
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_movement_modifier);
+offset += sizeof(u32);
+printf("-- spin_up_movement_modifier\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_movement_modifier, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_movement_modifier, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_movement_modifier);
+
+// u32 spin_up_turn_rate_modifier
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_turn_rate_modifier);
+offset += sizeof(u32);
+printf("-- spin_up_turn_rate_modifier\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_turn_rate_modifier, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_turn_rate_modifier, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_turn_rate_modifier);
+
+// u32 spool_up_time_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spool_up_time_ms);
+offset += sizeof(u32);
+printf("-- spool_up_time_ms        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spool_up_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spool_up_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spool_up_time_ms);
+
+// u32 spool_up_initial_refire_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spool_up_initial_refire_ms);
+offset += sizeof(u32);
+printf("-- spool_up_initial_refire_ms\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spool_up_initial_refire_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spool_up_initial_refire_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spool_up_initial_refire_ms);
+
+} // fire_group_defs
+
+// list fire_mode_defs
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs_count);
+offset += sizeof(u32);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs_count, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs_count, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs_count);
+
+for (u32 fire_mode_defs_iter = 0; fire_mode_defs_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs_count; fire_mode_defs_iter++)
+{
+// u32 id5
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].id5);
+offset += sizeof(u32);
+printf("-- id5                     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].id5, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].id5, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].id5);
+
+// u32 id6
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].id6);
+offset += sizeof(u32);
+printf("-- id6                     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].id6, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].id6, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].id6);
+
+// u8 flag1
+endian_write_u8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag1);
+offset += sizeof(u8);
+printf("-- flag1                   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag1, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag1, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag1);
+
+// u8 flag2
+endian_write_u8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag2);
+offset += sizeof(u8);
+printf("-- flag2                   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag2, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag2, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag2);
+
+// u8 flag3
+endian_write_u8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag3);
+offset += sizeof(u8);
+printf("-- flag3                   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag3, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag3, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag3);
+
+// u8 type
+endian_write_u8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].type);
+offset += sizeof(u8);
+printf("-- type                    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].type, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].type, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].type);
+
+// u32 ammo_item_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_item_id);
+offset += sizeof(u32);
+printf("-- ammo_item_id            \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_item_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_item_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_item_id);
+
+// u8 ammo_slot
+endian_write_u8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_slot);
+offset += sizeof(u8);
+printf("-- ammo_slot               \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_slot, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_slot, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_slot);
+
+// u8 burst_count
+endian_write_u8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].burst_count);
+offset += sizeof(u8);
+printf("-- burst_count             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].burst_count, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].burst_count, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].burst_count);
+
+// u16 fire_duration_ms
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_duration_ms);
+offset += sizeof(u16);
+printf("-- fire_duration_ms        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_duration_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_duration_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_duration_ms);
+
+// u16 fire_cooldown_duration_ms
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_cooldown_duration_ms);
+offset += sizeof(u16);
+printf("-- fire_cooldown_duration_ms\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_cooldown_duration_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_cooldown_duration_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_cooldown_duration_ms);
+
+// u16 refire_time_ms
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].refire_time_ms);
+offset += sizeof(u16);
+printf("-- refire_time_ms          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].refire_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].refire_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].refire_time_ms);
+
+// u16 auto_fire_time_ms
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].auto_fire_time_ms);
+offset += sizeof(u16);
+printf("-- auto_fire_time_ms       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].auto_fire_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].auto_fire_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].auto_fire_time_ms);
+
+// u16 cook_time_ms
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cook_time_ms);
+offset += sizeof(u16);
+printf("-- cook_time_ms            \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cook_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cook_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cook_time_ms);
+
+// f32 range
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].range);
+offset += sizeof(f32);
+printf("-- range                   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].range);
+
+// u8 ammo_per_shot
+endian_write_u8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_per_shot);
+offset += sizeof(u8);
+printf("-- ammo_per_shot           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_per_shot, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_per_shot, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_per_shot);
+
+// u16 reload_time_ms
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_time_ms);
+offset += sizeof(u16);
+printf("-- reload_time_ms          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_time_ms);
+
+// u16 reload_chamber_time_ms
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_chamber_time_ms);
+offset += sizeof(u16);
+printf("-- reload_chamber_time_ms  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_chamber_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_chamber_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_chamber_time_ms);
+
+// u16 reload_ammo_fill_time_ms
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_ammo_fill_time_ms);
+offset += sizeof(u16);
+printf("-- reload_ammo_fill_time_ms\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_ammo_fill_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_ammo_fill_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_ammo_fill_time_ms);
+
+// u16 reload_loop_start_time_ms
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_loop_start_time_ms);
+offset += sizeof(u16);
+printf("-- reload_loop_start_time_ms\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_loop_start_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_loop_start_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_loop_start_time_ms);
+
+// u16 reload_loop_end_time_ms
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_loop_end_time_ms);
+offset += sizeof(u16);
+printf("-- reload_loop_end_time_ms \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_loop_end_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_loop_end_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_loop_end_time_ms);
+
+// u8 pellets_per_shot
+endian_write_u8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].pellets_per_shot);
+offset += sizeof(u8);
+printf("-- pellets_per_shot        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].pellets_per_shot, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].pellets_per_shot, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].pellets_per_shot);
+
+// f32 pellet_spread
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].pellet_spread);
+offset += sizeof(f32);
+printf("-- pellet_spread           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].pellet_spread, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].pellet_spread, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].pellet_spread);
+
+// f32 cof_recoil
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_recoil);
+offset += sizeof(f32);
+printf("-- cof_recoil              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_recoil, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_recoil, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_recoil);
+
+// f32 cof_scalar
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_scalar);
+offset += sizeof(f32);
+printf("-- cof_scalar              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_scalar, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_scalar, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_scalar);
+
+// f32 cof_scalar_moving
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_scalar_moving);
+offset += sizeof(f32);
+printf("-- cof_scalar_moving       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_scalar_moving, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_scalar_moving, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_scalar_moving);
+
+// f32 cof_override
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_override);
+offset += sizeof(f32);
+printf("-- cof_override            \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_override, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_override, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_override);
+
+// f32 recoil_angle_min
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_angle_min);
+offset += sizeof(f32);
+printf("-- recoil_angle_min        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_angle_min, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_angle_min, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_angle_min);
+
+// f32 recoil_angle_max
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_angle_max);
+offset += sizeof(f32);
+printf("-- recoil_angle_max        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_angle_max, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_angle_max, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_angle_max);
+
+// f32 recoil_horizontal_tolerance
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_tolerance);
+offset += sizeof(f32);
+printf("-- recoil_horizontal_tolerance\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_tolerance, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_tolerance, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_tolerance);
+
+// f32 recoil_horizontal_min
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_min);
+offset += sizeof(f32);
+printf("-- recoil_horizontal_min   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_min, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_min, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_min);
+
+// f32 recoil_horizontal_max
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_max);
+offset += sizeof(f32);
+printf("-- recoil_horizontal_max   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_max, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_max, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_max);
+
+// f32 recoil_magnitude_min
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_magnitude_min);
+offset += sizeof(f32);
+printf("-- recoil_magnitude_min    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_magnitude_min, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_magnitude_min, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_magnitude_min);
+
+// f32 recoil_magnitude_max
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_magnitude_max);
+offset += sizeof(f32);
+printf("-- recoil_magnitude_max    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_magnitude_max, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_magnitude_max, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_magnitude_max);
+
+// u16 recoil_recovery_delay_ms
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_delay_ms);
+offset += sizeof(u16);
+printf("-- recoil_recovery_delay_ms\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_delay_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_delay_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_delay_ms);
+
+// f32 recoil_recovery_rate
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_rate);
+offset += sizeof(f32);
+printf("-- recoil_recovery_rate    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_rate, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_rate, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_rate);
+
+// f32 recoil_recovery_acceleration
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_acceleration);
+offset += sizeof(f32);
+printf("-- recoil_recovery_acceleration\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_acceleration, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_acceleration, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_acceleration);
+
+// u8 recoil_shots_at_min_magnitude
+endian_write_u8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_shots_at_min_magnitude);
+offset += sizeof(u8);
+printf("-- recoil_shots_at_min_magnitude\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_shots_at_min_magnitude, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_shots_at_min_magnitude, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_shots_at_min_magnitude);
+
+// f32 recoil_max_total_magnitude
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_max_total_magnitude);
+offset += sizeof(f32);
+printf("-- recoil_max_total_magnitude\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_max_total_magnitude, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_max_total_magnitude, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_max_total_magnitude);
+
+// f32 recoil_increase
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_increase);
+offset += sizeof(f32);
+printf("-- recoil_increase         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_increase, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_increase, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_increase);
+
+// f32 recoil_increase_crouched
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_increase_crouched);
+offset += sizeof(f32);
+printf("-- recoil_increase_crouched\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_increase_crouched, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_increase_crouched, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_increase_crouched);
+
+// f32 recoil_first_shot_modifier
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_first_shot_modifier);
+offset += sizeof(f32);
+printf("-- recoil_first_shot_modifier\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_first_shot_modifier, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_first_shot_modifier, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_first_shot_modifier);
+
+// f32 recoil_horizontal_min_increase
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_min_increase);
+offset += sizeof(f32);
+printf("-- recoil_horizontal_min_increase\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_min_increase, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_min_increase, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_min_increase);
+
+// f32 recoil_horizontal_max_increase
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_max_increase);
+offset += sizeof(f32);
+printf("-- recoil_horizontal_max_increase\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_max_increase, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_max_increase, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_max_increase);
+
+// u16 fire_detect_range
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_detect_range);
+offset += sizeof(u16);
+printf("-- fire_detect_range       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_detect_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_detect_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_detect_range);
+
+// f32 effect_group
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].effect_group);
+offset += sizeof(f32);
+printf("-- effect_group            \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].effect_group, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].effect_group, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].effect_group);
+
+// f32 player_state_group_id
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].player_state_group_id);
+offset += sizeof(f32);
+printf("-- player_state_group_id   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].player_state_group_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].player_state_group_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].player_state_group_id);
+
+// f32 movement_modifier
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].movement_modifier);
+offset += sizeof(f32);
+printf("-- movement_modifier       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].movement_modifier, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].movement_modifier, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].movement_modifier);
+
+// f32 turn_modifier
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].turn_modifier);
+offset += sizeof(f32);
+printf("-- turn_modifier           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].turn_modifier, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].turn_modifier, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].turn_modifier);
+
+// f32 lock_on_icon_id
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_icon_id);
+offset += sizeof(f32);
+printf("-- lock_on_icon_id         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_icon_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_icon_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_icon_id);
+
+// f32 lock_on_angle
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_angle);
+offset += sizeof(f32);
+printf("-- lock_on_angle           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_angle);
+
+// f32 lock_on_radius
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_radius);
+offset += sizeof(f32);
+printf("-- lock_on_radius          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_radius, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_radius, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_radius);
+
+// f32 lock_on_range
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range);
+offset += sizeof(f32);
+printf("-- lock_on_range           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range);
+
+// f32 lock_on_range_close
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range_close);
+offset += sizeof(f32);
+printf("-- lock_on_range_close     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range_close, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range_close, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range_close);
+
+// f32 lock_on_range_far
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range_far);
+offset += sizeof(f32);
+printf("-- lock_on_range_far       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range_far, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range_far, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range_far);
+
+// u16 lock_on_acquire_time_ms
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_ms);
+offset += sizeof(u16);
+printf("-- lock_on_acquire_time_ms \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_ms);
+
+// u16 lock_on_acquire_time_close_ms
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_close_ms);
+offset += sizeof(u16);
+printf("-- lock_on_acquire_time_close_ms\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_close_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_close_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_close_ms);
+
+// u16 lock_on_acquire_time_far_ms
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_far_ms);
+offset += sizeof(u16);
+printf("-- lock_on_acquire_time_far_ms\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_far_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_far_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_far_ms);
+
+// u16 lock_on_lose_time_ms
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_lose_time_ms);
+offset += sizeof(u16);
+printf("-- lock_on_lose_time_ms    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_lose_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_lose_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_lose_time_ms);
+
+// f32 default_zoom
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].default_zoom);
+offset += sizeof(f32);
+printf("-- default_zoom            \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].default_zoom, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].default_zoom, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].default_zoom);
+
+// f32 fp_offset_x
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_x);
+offset += sizeof(f32);
+printf("-- fp_offset_x             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_x);
+
+// f32 fp_offset_y
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_y);
+offset += sizeof(f32);
+printf("-- fp_offset_y             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_y);
+
+// f32 fp_offset_z
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_z);
+offset += sizeof(f32);
+printf("-- fp_offset_z             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_z, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_z, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_z);
+
+// u8 reticle_id
+endian_write_u8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reticle_id);
+offset += sizeof(u8);
+printf("-- reticle_id              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reticle_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reticle_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reticle_id);
+
+// u8 full_screen_effect
+endian_write_u8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].full_screen_effect);
+offset += sizeof(u8);
+printf("-- full_screen_effect      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].full_screen_effect, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].full_screen_effect, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].full_screen_effect);
+
+// u32 heat_per_shot
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_per_shot);
+offset += sizeof(u32);
+printf("-- heat_per_shot           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_per_shot, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_per_shot, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_per_shot);
+
+// u32 heat_threshold
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_threshold);
+offset += sizeof(u32);
+printf("-- heat_threshold          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_threshold, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_threshold, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_threshold);
+
+// u16 heat_recovery_delay_ms
+endian_write_u16_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_recovery_delay_ms);
+offset += sizeof(u16);
+printf("-- heat_recovery_delay_ms  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_recovery_delay_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_recovery_delay_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_recovery_delay_ms);
+
+// f32 sway_amplitude_x
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_amplitude_x);
+offset += sizeof(f32);
+printf("-- sway_amplitude_x        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_amplitude_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_amplitude_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_amplitude_x);
+
+// f32 sway_amplitude_y
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_amplitude_y);
+offset += sizeof(f32);
+printf("-- sway_amplitude_y        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_amplitude_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_amplitude_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_amplitude_y);
+
+// f32 sway_period_x
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_period_x);
+offset += sizeof(f32);
+printf("-- sway_period_x           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_period_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_period_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_period_x);
+
+// f32 sway_period_y
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_period_y);
+offset += sizeof(f32);
+printf("-- sway_period_y           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_period_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_period_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_period_y);
+
+// f32 sway_initial_y_offset
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_initial_y_offset);
+offset += sizeof(f32);
+printf("-- sway_initial_y_offset   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_initial_y_offset, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_initial_y_offset, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_initial_y_offset);
+
+// f32 arms_fov_scalar
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].arms_fov_scalar);
+offset += sizeof(f32);
+printf("-- arms_fov_scalar         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].arms_fov_scalar, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].arms_fov_scalar, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].arms_fov_scalar);
+
+// f32 anim_kick_magnitude
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].anim_kick_magnitude);
+offset += sizeof(f32);
+printf("-- anim_kick_magnitude     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].anim_kick_magnitude, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].anim_kick_magnitude, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].anim_kick_magnitude);
+
+// f32 anim_recoil_magnitude
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].anim_recoil_magnitude);
+offset += sizeof(f32);
+printf("-- anim_recoil_magnitude   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].anim_recoil_magnitude, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].anim_recoil_magnitude, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].anim_recoil_magnitude);
+
+// u32 description_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].description_id);
+offset += sizeof(u32);
+printf("-- description_id          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].description_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].description_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].description_id);
+
+// u32 indirect_effect
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].indirect_effect);
+offset += sizeof(u32);
+printf("-- indirect_effect         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].indirect_effect, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].indirect_effect, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].indirect_effect);
+
+// f32 bullet_arc_kick_angle
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].bullet_arc_kick_angle);
+offset += sizeof(f32);
+printf("-- bullet_arc_kick_angle   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].bullet_arc_kick_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].bullet_arc_kick_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].bullet_arc_kick_angle);
+
+// f32 projectile_speed_override
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].projectile_speed_override);
+offset += sizeof(f32);
+printf("-- projectile_speed_override\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].projectile_speed_override, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].projectile_speed_override, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].projectile_speed_override);
+
+// u32 inherit_from_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].inherit_from_id);
+offset += sizeof(u32);
+printf("-- inherit_from_id         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].inherit_from_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].inherit_from_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].inherit_from_id);
+
+// f32 inherit_from_charge_power
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].inherit_from_charge_power);
+offset += sizeof(f32);
+printf("-- inherit_from_charge_power\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].inherit_from_charge_power, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].inherit_from_charge_power, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].inherit_from_charge_power);
+
+// u32 hud_image_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].hud_image_id);
+offset += sizeof(u32);
+printf("-- hud_image_id            \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].hud_image_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].hud_image_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].hud_image_id);
+
+// u32 target_requirement
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].target_requirement);
+offset += sizeof(u32);
+printf("-- target_requirement      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].target_requirement, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].target_requirement, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].target_requirement);
+
+// u32 fire_anim_duration_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_anim_duration_ms);
+offset += sizeof(u32);
+printf("-- fire_anim_duration_ms   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_anim_duration_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_anim_duration_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_anim_duration_ms);
+
+// u8 sequential_fire_anim_start
+endian_write_u8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sequential_fire_anim_start);
+offset += sizeof(u8);
+printf("-- sequential_fire_anim_start\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sequential_fire_anim_start, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sequential_fire_anim_start, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sequential_fire_anim_start);
+
+// u8 sequential_fire_anim_count
+endian_write_u8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sequential_fire_anim_count);
+offset += sizeof(u8);
+printf("-- sequential_fire_anim_count\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sequential_fire_anim_count, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sequential_fire_anim_count, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sequential_fire_anim_count);
+
+// f32 cylof_recoil
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_recoil);
+offset += sizeof(f32);
+printf("-- cylof_recoil            \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_recoil, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_recoil, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_recoil);
+
+// f32 cylof_scalar
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_scalar);
+offset += sizeof(f32);
+printf("-- cylof_scalar            \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_scalar, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_scalar, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_scalar);
+
+// f32 cylof_scalar_moving
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_scalar_moving);
+offset += sizeof(f32);
+printf("-- cylof_scalar_moving     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_scalar_moving, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_scalar_moving, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_scalar_moving);
+
+// f32 cylof_override
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_override);
+offset += sizeof(f32);
+printf("-- cylof_override          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_override, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_override, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_override);
+
+// u32 melee_composite_effect_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].melee_composite_effect_id);
+offset += sizeof(u32);
+printf("-- melee_composite_effect_id\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].melee_composite_effect_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].melee_composite_effect_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].melee_composite_effect_id);
+
+// u32 melee_ability_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].melee_ability_id);
+offset += sizeof(u32);
+printf("-- melee_ability_id        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].melee_ability_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].melee_ability_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].melee_ability_id);
+
+// f32 sway_crouch_scalar
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_crouch_scalar);
+offset += sizeof(f32);
+printf("-- sway_crouch_scalar      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_crouch_scalar, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_crouch_scalar, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_crouch_scalar);
+
+// f32 sway_prone_scalar
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_prone_scalar);
+offset += sizeof(f32);
+printf("-- sway_prone_scalar       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_prone_scalar, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_prone_scalar, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_prone_scalar);
+
+// f32 launch_pitch_additive_degrees
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].launch_pitch_additive_degrees);
+offset += sizeof(f32);
+printf("-- launch_pitch_additive_degrees\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].launch_pitch_additive_degrees, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].launch_pitch_additive_degrees, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].launch_pitch_additive_degrees);
+
+// b8 tp_force_camera_overrides
+endian_write_b8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_force_camera_overrides);
+offset += sizeof(b8);
+printf("-- tp_force_camera_overrides\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_force_camera_overrides, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_force_camera_overrides, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_force_camera_overrides);
+
+// f32 tp_camera_look_offset_x
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_x);
+offset += sizeof(f32);
+printf("-- tp_camera_look_offset_x \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_x);
+
+// f32 tp_camera_look_offset_y
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_y);
+offset += sizeof(f32);
+printf("-- tp_camera_look_offset_y \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_y);
+
+// f32 tp_camera_look_offset_z
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_z);
+offset += sizeof(f32);
+printf("-- tp_camera_look_offset_z \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_z, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_z, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_z);
+
+// f32 tp_camera_position_offset_x
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_x);
+offset += sizeof(f32);
+printf("-- tp_camera_position_offset_x\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_x);
+
+// f32 tp_camera_position_offset_y
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_y);
+offset += sizeof(f32);
+printf("-- tp_camera_position_offset_y\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_y);
+
+// f32 tp_camera_position_offset_z
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_z);
+offset += sizeof(f32);
+printf("-- tp_camera_position_offset_z\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_z, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_z, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_z);
+
+// f32 tp_camera_fov
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_fov);
+offset += sizeof(f32);
+printf("-- tp_camera_fov           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_fov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_fov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_fov);
+
+// b8 fp_force_camera_overrides
+endian_write_b8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_force_camera_overrides);
+offset += sizeof(b8);
+printf("-- fp_force_camera_overrides\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_force_camera_overrides, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_force_camera_overrides, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_force_camera_overrides);
+
+// f32 tp_extra_lead_from_pitch_a
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_from_pitch_a);
+offset += sizeof(f32);
+printf("-- tp_extra_lead_from_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_from_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_from_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_from_pitch_a);
+
+// f32 tp_extra_lead_from_pitch_b
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_from_pitch_b);
+offset += sizeof(f32);
+printf("-- tp_extra_lead_from_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_from_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_from_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_from_pitch_b);
+
+// f32 tp_extra_lead_pitch_a
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_pitch_a);
+offset += sizeof(f32);
+printf("-- tp_extra_lead_pitch_a   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_pitch_a);
+
+// f32 tp_extra_lead_pitch_b
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_pitch_b);
+offset += sizeof(f32);
+printf("-- tp_extra_lead_pitch_b   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_pitch_b);
+
+// f32 tp_extra_height_from_pitch_a
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_from_pitch_a);
+offset += sizeof(f32);
+printf("-- tp_extra_height_from_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_from_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_from_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_from_pitch_a);
+
+// f32 tp_extra_height_from_pitch_b
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_from_pitch_b);
+offset += sizeof(f32);
+printf("-- tp_extra_height_from_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_from_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_from_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_from_pitch_b);
+
+// f32 tp_extra_height_pitch_a
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_pitch_a);
+offset += sizeof(f32);
+printf("-- tp_extra_height_pitch_a \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_pitch_a);
+
+// f32 tp_extra_height_pitch_b
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_pitch_b);
+offset += sizeof(f32);
+printf("-- tp_extra_height_pitch_b \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_pitch_b);
+
+// f32 fp_camera_fov
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_camera_fov);
+offset += sizeof(f32);
+printf("-- fp_camera_fov           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_camera_fov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_camera_fov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_camera_fov);
+
+// f32 tp_cr_camera_look_offset_x
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_x);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_look_offset_x\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_x);
+
+// f32 tp_cr_camera_look_offset_y
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_y);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_look_offset_y\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_y);
+
+// f32 tp_cr_camera_look_offset_z
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_z);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_look_offset_z\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_z, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_z, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_z);
+
+// f32 tp_cr_camera_position_offset_x
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_x);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_position_offset_x\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_x);
+
+// f32 tp_cr_camera_position_offset_y
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_y);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_position_offset_y\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_y);
+
+// f32 tp_cr_camera_position_offset_z
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_z);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_position_offset_z\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_z, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_z, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_z);
+
+// f32 tp_pr_camera_look_offset_x
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_x);
+offset += sizeof(f32);
+printf("-- tp_pr_camera_look_offset_x\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_x);
+
+// f32 tp_pr_camera_look_offset_y
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_y);
+offset += sizeof(f32);
+printf("-- tp_pr_camera_look_offset_y\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_y);
+
+// f32 tp_pr_camera_look_offset_z
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_z);
+offset += sizeof(f32);
+printf("-- tp_pr_camera_look_offset_z\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_z, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_z, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_z);
+
+// f32 tp_pr_camera_position_offset_x
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_x);
+offset += sizeof(f32);
+printf("-- tp_pr_camera_position_offset_x\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_x);
+
+// f32 tp_pr_camera_position_offset_y
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_y);
+offset += sizeof(f32);
+printf("-- tp_pr_camera_position_offset_y\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_y);
+
+// f32 tp_pr_camera_position_offset_z
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_z);
+offset += sizeof(f32);
+printf("-- tp_pr_camera_position_offset_z\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_z, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_z, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_z);
+
+// f32 tp_cr_extra_lead_from_pitch_a
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_from_pitch_a);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_lead_from_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_from_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_from_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_from_pitch_a);
+
+// f32 tp_cr_extra_lead_from_pitch_b
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_from_pitch_b);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_lead_from_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_from_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_from_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_from_pitch_b);
+
+// f32 tp_cr_extra_lead_pitch_a
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_pitch_a);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_lead_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_pitch_a);
+
+// f32 tp_cr_extra_lead_pitch_b
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_pitch_b);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_lead_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_pitch_b);
+
+// f32 tp_cr_extra_height_from_pitch_a
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_from_pitch_a);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_height_from_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_from_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_from_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_from_pitch_a);
+
+// f32 tp_cr_extra_height_from_pitch_b
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_from_pitch_b);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_height_from_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_from_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_from_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_from_pitch_b);
+
+// f32 tp_cr_extra_height_pitch_a
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_pitch_a);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_height_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_pitch_a);
+
+// f32 tp_cr_extra_height_pitch_b
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_pitch_b);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_height_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_pitch_b);
+
+// f32 tp_pr_extra_lead_from_pitch_a
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_from_pitch_a);
+offset += sizeof(f32);
+printf("-- tp_pr_extra_lead_from_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_from_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_from_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_from_pitch_a);
+
+// f32 tp_pr_extra_lead_from_pitch_b
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_from_pitch_b);
+offset += sizeof(f32);
+printf("-- tp_pr_extra_lead_from_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_from_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_from_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_from_pitch_b);
+
+// f32 tp_pr_extra_lead_pitch_a
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_pitch_a);
+offset += sizeof(f32);
+printf("-- tp_pr_extra_lead_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_pitch_a);
+
+// f32 tp_pr_extra_lead_pitch_b
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_pitch_b);
+offset += sizeof(f32);
+printf("-- tp_pr_extra_lead_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_pitch_b);
+
+// f32 tp_pr_extra_height_from_pitch_a
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_from_pitch_a);
+offset += sizeof(f32);
+printf("-- tp_pr_extra_height_from_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_from_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_from_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_from_pitch_a);
+
+// f32 tp_pr_extra_height_from_pitch_b
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_from_pitch_b);
+offset += sizeof(f32);
+printf("-- tp_pr_extra_height_from_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_from_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_from_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_from_pitch_b);
+
+// f32 tp_pr_extra_height_pitch_a
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_pitch_a);
+offset += sizeof(f32);
+printf("-- tp_pr_extra_height_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_pitch_a);
+
+// f32 tp_pr_extra_height_pitch_b
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_pitch_b);
+offset += sizeof(f32);
+printf("-- tp_pr_extra_height_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_pitch_b);
+
+// f32 tp_camera_distance
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_distance);
+offset += sizeof(f32);
+printf("-- tp_camera_distance      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_distance, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_distance, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_distance);
+
+// f32 tp_cr_camera_distance
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_distance);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_distance   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_distance, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_distance, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_distance);
+
+// f32 tp_pr_camera_distance
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_distance);
+offset += sizeof(f32);
+printf("-- tp_pr_camera_distance   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_distance, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_distance, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_distance);
+
+// f32 tp_cr_camera_fov
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_fov);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_fov        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_fov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_fov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_fov);
+
+// f32 tp_pr_camera_fov
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_fov);
+offset += sizeof(f32);
+printf("-- tp_pr_camera_fov        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_fov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_fov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_fov);
+
+// f32 fp_cr_camera_fov
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_cr_camera_fov);
+offset += sizeof(f32);
+printf("-- fp_cr_camera_fov        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_cr_camera_fov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_cr_camera_fov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_cr_camera_fov);
+
+// f32 fp_pr_camera_fov
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_pr_camera_fov);
+offset += sizeof(f32);
+printf("-- fp_pr_camera_fov        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_pr_camera_fov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_pr_camera_fov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_pr_camera_fov);
+
+// b8 force_fp_scope
+endian_write_b8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].force_fp_scope);
+offset += sizeof(b8);
+printf("-- force_fp_scope          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].force_fp_scope, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].force_fp_scope, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].force_fp_scope);
+
+// u32 aim_assist_config
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].aim_assist_config);
+offset += sizeof(u32);
+printf("-- aim_assist_config       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].aim_assist_config, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].aim_assist_config, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].aim_assist_config);
+
+// b8 allow_depth_adjustment
+endian_write_b8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].allow_depth_adjustment);
+offset += sizeof(b8);
+printf("-- allow_depth_adjustment  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].allow_depth_adjustment, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].allow_depth_adjustment, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].allow_depth_adjustment);
+
+// f32 tp_extra_draw_from_pitch_a
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_from_pitch_a);
+offset += sizeof(f32);
+printf("-- tp_extra_draw_from_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_from_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_from_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_from_pitch_a);
+
+// f32 tp_extra_draw_from_pitch_b
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_from_pitch_b);
+offset += sizeof(f32);
+printf("-- tp_extra_draw_from_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_from_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_from_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_from_pitch_b);
+
+// f32 tp_extra_draw_pitch_a
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_pitch_a);
+offset += sizeof(f32);
+printf("-- tp_extra_draw_pitch_a   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_pitch_a);
+
+// f32 tp_extra_draw_pitch_b
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_pitch_b);
+offset += sizeof(f32);
+printf("-- tp_extra_draw_pitch_b   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_pitch_b);
+
+// f32 tp_cr_extra_draw_from_pitch_a
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_from_pitch_a);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_draw_from_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_from_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_from_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_from_pitch_a);
+
+// f32 tp_cr_extra_draw_from_pitch_b
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_from_pitch_b);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_draw_from_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_from_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_from_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_from_pitch_b);
+
+// f32 tp_cr_extra_draw_pitch_a
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_pitch_a);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_draw_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_pitch_a);
+
+// f32 tp_cr_extra_draw_pitch_b
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_pitch_b);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_draw_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_pitch_b);
+
+// f32 tp_camera_pos_offset_y_mov
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_pos_offset_y_mov);
+offset += sizeof(f32);
+printf("-- tp_camera_pos_offset_y_mov\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_pos_offset_y_mov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_pos_offset_y_mov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_pos_offset_y_mov);
+
+// f32 tp_camera_look_offset_y_mov
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_y_mov);
+offset += sizeof(f32);
+printf("-- tp_camera_look_offset_y_mov\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_y_mov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_y_mov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_y_mov);
+
+// f32 tp_cr_camera_pos_offset_y_mov
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_pos_offset_y_mov);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_pos_offset_y_mov\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_pos_offset_y_mov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_pos_offset_y_mov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_pos_offset_y_mov);
+
+// f32 tp_cr_camera_look_offset_y_mov
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_y_mov);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_look_offset_y_mov\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_y_mov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_y_mov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_y_mov);
+
+// b8 tp_allow_move_heights
+endian_write_b8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_allow_move_heights);
+offset += sizeof(b8);
+printf("-- tp_allow_move_heights   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_allow_move_heights, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_allow_move_heights, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_allow_move_heights);
+
+} // fire_mode_defs
+
+// list player_state_group_defs
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs_count);
+offset += sizeof(u32);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs_count, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs_count, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs_count);
+
+for (u32 player_state_group_defs_iter = 0; player_state_group_defs_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs_count; player_state_group_defs_iter++)
+{
+// u32 id7
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].id7);
+offset += sizeof(u32);
+printf("-- id7                     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].id7, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].id7, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].id7);
+
+// u32 _id8
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter]._id8);
+offset += sizeof(u32);
+printf("-- _id8                    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter]._id8, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter]._id8, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter]._id8);
+
+// list player_state_properties
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties_count);
+offset += sizeof(u32);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties_count, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties_count, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties_count);
+
+for (u32 player_state_properties_iter = 0; player_state_properties_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties_count; player_state_properties_iter++)
+{
+// u32 group_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].group_id);
+offset += sizeof(u32);
+printf("-- group_id                \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].group_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].group_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].group_id);
+
+// u32 id9
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].id9);
+offset += sizeof(u32);
+printf("-- id9                     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].id9, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].id9, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].id9);
+
+// u8 flags3
+endian_write_u8_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].flags3);
+offset += sizeof(u8);
+printf("-- flags3                  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].flags3, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].flags3, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].flags3);
+
+// f32 min_cof
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].min_cof);
+offset += sizeof(f32);
+printf("-- min_cof                 \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].min_cof, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].min_cof, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].min_cof);
+
+// f32 max_cof
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].max_cof);
+offset += sizeof(f32);
+printf("-- max_cof                 \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].max_cof, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].max_cof, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].max_cof);
+
+// f32 cof_recovery_rate
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_rate);
+offset += sizeof(f32);
+printf("-- cof_recovery_rate       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_rate, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_rate, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_rate);
+
+// f32 cof_turn_penalty
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_turn_penalty);
+offset += sizeof(f32);
+printf("-- cof_turn_penalty        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_turn_penalty, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_turn_penalty, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_turn_penalty);
+
+// u32 shots_before_cof_penalty
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].shots_before_cof_penalty);
+offset += sizeof(u32);
+printf("-- shots_before_cof_penalty\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].shots_before_cof_penalty, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].shots_before_cof_penalty, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].shots_before_cof_penalty);
+
+// f32 cof_recovery_delay_threshold
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_delay_threshold);
+offset += sizeof(f32);
+printf("-- cof_recovery_delay_threshold\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_delay_threshold, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_delay_threshold, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_delay_threshold);
+
+// u32 cof_recovery_delay_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_delay_ms);
+offset += sizeof(u32);
+printf("-- cof_recovery_delay_ms   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_delay_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_delay_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_delay_ms);
+
+// f32 cof_grow_rate
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_grow_rate);
+offset += sizeof(f32);
+printf("-- cof_grow_rate           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_grow_rate, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_grow_rate, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_grow_rate);
+
+// f32 min_cyl_of_fire
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].min_cyl_of_fire);
+offset += sizeof(f32);
+printf("-- min_cyl_of_fire         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].min_cyl_of_fire, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].min_cyl_of_fire, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].min_cyl_of_fire);
+
+// f32 max_cyl_of_fire
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].max_cyl_of_fire);
+offset += sizeof(f32);
+printf("-- max_cyl_of_fire         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].max_cyl_of_fire, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].max_cyl_of_fire, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].max_cyl_of_fire);
+
+// f32 cylof_recovery_rate
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_rate);
+offset += sizeof(f32);
+printf("-- cylof_recovery_rate     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_rate, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_rate, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_rate);
+
+// f32 cylof_turn_penalty
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_turn_penalty);
+offset += sizeof(f32);
+printf("-- cylof_turn_penalty      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_turn_penalty, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_turn_penalty, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_turn_penalty);
+
+// u32 shots_before_cylof_penalty
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].shots_before_cylof_penalty);
+offset += sizeof(u32);
+printf("-- shots_before_cylof_penalty\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].shots_before_cylof_penalty, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].shots_before_cylof_penalty, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].shots_before_cylof_penalty);
+
+// f32 cylof_recovery_delay_threshold
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_delay_threshold);
+offset += sizeof(f32);
+printf("-- cylof_recovery_delay_threshold\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_delay_threshold, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_delay_threshold, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_delay_threshold);
+
+// u32 cylof_recovery_delay_ms
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_delay_ms);
+offset += sizeof(u32);
+printf("-- cylof_recovery_delay_ms \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_delay_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_delay_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_delay_ms);
+
+// f32 cylof_grow_rate
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_grow_rate);
+offset += sizeof(f32);
+printf("-- cylof_grow_rate         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_grow_rate, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_grow_rate, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_grow_rate);
+
+} // player_state_properties
+
+} // player_state_group_defs
+
+// list fire_mode_projectile_mapping_data
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data_count);
+offset += sizeof(u32);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data_count, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data_count, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data_count);
+
+for (u32 fire_mode_projectile_mapping_data_iter = 0; fire_mode_projectile_mapping_data_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data_count; fire_mode_projectile_mapping_data_iter++)
+{
+// u32 id10
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].id10);
+offset += sizeof(u32);
+printf("-- id10                    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].id10, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].id10, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].id10);
+
+// u32 id11
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].id11);
+offset += sizeof(u32);
+printf("-- id11                    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].id11, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].id11, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].id11);
+
+// u32 index
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].index);
+offset += sizeof(u32);
+printf("-- index                   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].index, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].index, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].index);
+
+// u32 projectile_definition_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].projectile_definition_id);
+offset += sizeof(u32);
+printf("-- projectile_definition_id\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].projectile_definition_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].projectile_definition_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].projectile_definition_id);
+
+} // fire_mode_projectile_mapping_data
+
+// list aim_assit_defs
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count);
+offset += sizeof(u32);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count);
+
+for (u32 aim_assit_defs_iter = 0; aim_assit_defs_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count; aim_assit_defs_iter++)
+{
+// u32 id12
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].id12);
+offset += sizeof(u32);
+printf("-- id12                    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].id12, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].id12, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].id12);
+
+// f32 cone_angle
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_angle);
+offset += sizeof(f32);
+printf("-- cone_angle              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_angle);
+
+// f32 cone_range
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_range);
+offset += sizeof(f32);
+printf("-- cone_range              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_range);
+
+// f32 fall_off_cone_range
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].fall_off_cone_range);
+offset += sizeof(f32);
+printf("-- fall_off_cone_range     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].fall_off_cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].fall_off_cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].fall_off_cone_range);
+
+// f32 magnet_cone_angle
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_angle);
+offset += sizeof(f32);
+printf("-- magnet_cone_angle       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_angle);
+
+// f32 magnet_cone_range
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_range);
+offset += sizeof(f32);
+printf("-- magnet_cone_range       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_range);
+
+// f32 target_override_delay
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_override_delay);
+offset += sizeof(f32);
+printf("-- target_override_delay   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_override_delay, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_override_delay, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_override_delay);
+
+// f32 target_oos_delay
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_oos_delay);
+offset += sizeof(f32);
+printf("-- target_oos_delay        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_oos_delay, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_oos_delay, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_oos_delay);
+
+// f32 arrive_time
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].arrive_time);
+offset += sizeof(f32);
+printf("-- arrive_time             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].arrive_time);
+
+// f32 target_motion_update_time
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_motion_update_time);
+offset += sizeof(f32);
+printf("-- target_motion_update_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_motion_update_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_motion_update_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_motion_update_time);
+
+// f32 weight
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].weight);
+offset += sizeof(f32);
+printf("-- weight                  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].weight, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].weight, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].weight);
+
+// f32 min_input_weight_delay_in
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_in);
+offset += sizeof(f32);
+printf("-- min_input_weight_delay_in\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_in, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_in, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_in);
+
+// f32 max_input_weight_delay_in
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_in);
+offset += sizeof(f32);
+printf("-- max_input_weight_delay_in\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_in, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_in, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_in);
+
+// f32 min_input_weight_delay_out
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_out);
+offset += sizeof(f32);
+printf("-- min_input_weight_delay_out\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_out, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_out, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_out);
+
+// f32 max_input_weight_delay_out
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_out);
+offset += sizeof(f32);
+printf("-- max_input_weight_delay_out\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_out, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_out, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_out);
+
+// f32 min_input_actor
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_actor);
+offset += sizeof(f32);
+printf("-- min_input_actor         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_actor, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_actor, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_actor);
+
+// f32 max_input_actor
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_actor);
+offset += sizeof(f32);
+printf("-- max_input_actor         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_actor, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_actor, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_actor);
+
+// u32 requirement_id
+endian_write_u32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].requirement_id);
+offset += sizeof(u32);
+printf("-- requirement_id          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].requirement_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].requirement_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].requirement_id);
+
+// f32 magnet_min_angle
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_min_angle);
+offset += sizeof(f32);
+printf("-- magnet_min_angle        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_min_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_min_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_min_angle);
+
+// f32 magnet_dist_for_min_angle
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_min_angle);
+offset += sizeof(f32);
+printf("-- magnet_dist_for_min_angle\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_min_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_min_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_min_angle);
+
+// f32 magnet_max_angle
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_max_angle);
+offset += sizeof(f32);
+printf("-- magnet_max_angle        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_max_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_max_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_max_angle);
+
+// f32 magnet_dist_for_max_angle
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_max_angle);
+offset += sizeof(f32);
+printf("-- magnet_dist_for_max_angle\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_max_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_max_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_max_angle);
+
+// f32 min_input_strafe_arrive_time
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_strafe_arrive_time);
+offset += sizeof(f32);
+printf("-- min_input_strafe_arrive_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_strafe_arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_strafe_arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_strafe_arrive_time);
+
+// f32 max_input_strafe_arrive_time
+endian_write_f32_little(buffer + offset, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_strafe_arrive_time);
+offset += sizeof(f32);
+printf("-- max_input_strafe_arrive_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_strafe_arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_strafe_arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_strafe_arrive_time);
+
+} // aim_assit_defs
+
+} // weapon_byteswithlength
+endian_write_u32_little((u8*)weapon_byteswithlength_length_ptr, (u32)((uptr)buffer + (uptr)offset - (uptr)weapon_byteswithlength_length_ptr - sizeof(u32)));
 
 } break;
 
@@ -8524,432 +10343,446 @@ packet->item_def_reply_2 = memory_arena_push_length(arena, packet->item_def_repl
 printf("-- STREAM_LENGTH           \t%d\n", packet->item_def_reply_2_length);
 for (u32 item_def_reply_2_iter = 0; item_def_reply_2_iter < (packet->item_def_reply_2_length > (u32)0 ? (u32)1 : (u32)0); item_def_reply_2_iter++)
 {
+// list item_defs
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs_count = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].item_defs_count * sizeof(packet->item_def_reply_2[item_def_reply_2_iter].item_defs[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].item_defs_count);
+for (u32 item_defs_iter = 0; item_defs_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs_count; item_defs_iter++)
+{
+// u32 defs_id
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].defs_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- defs_id                 \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].defs_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].defs_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].defs_id);
+
 // u8 bitflags1
-packet->item_def_reply_2[item_def_reply_2_iter].bitflags1 = endian_read_u8_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bitflags1 = endian_read_u8_little(data + offset);
 offset += sizeof(u8);
-printf("-- bitflags1               \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].bitflags1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].bitflags1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].bitflags1);
+printf("-- bitflags1               \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bitflags1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bitflags1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bitflags1);
 
 // u8 bitflags2
-packet->item_def_reply_2[item_def_reply_2_iter].bitflags2 = endian_read_u8_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bitflags2 = endian_read_u8_little(data + offset);
 offset += sizeof(u8);
-printf("-- bitflags2               \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].bitflags2, (u64)packet->item_def_reply_2[item_def_reply_2_iter].bitflags2, (f64)packet->item_def_reply_2[item_def_reply_2_iter].bitflags2);
+printf("-- bitflags2               \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bitflags2, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bitflags2, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bitflags2);
 
 // u32 name_id
-packet->item_def_reply_2[item_def_reply_2_iter].name_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].name_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- name_id                 \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].name_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].name_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].name_id);
+printf("-- name_id                 \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].name_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].name_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].name_id);
 
 // u32 description_id
-packet->item_def_reply_2[item_def_reply_2_iter].description_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].description_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- description_id          \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].description_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].description_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].description_id);
+printf("-- description_id          \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].description_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].description_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].description_id);
 
 // u32 content_id
-packet->item_def_reply_2[item_def_reply_2_iter].content_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].content_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- content_id              \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].content_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].content_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].content_id);
+printf("-- content_id              \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].content_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].content_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].content_id);
 
 // u32 image_set_id
-packet->item_def_reply_2[item_def_reply_2_iter].image_set_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].image_set_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- image_set_id            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].image_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].image_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].image_set_id);
+printf("-- image_set_id            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].image_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].image_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].image_set_id);
 
 // u32 tint_id
-packet->item_def_reply_2[item_def_reply_2_iter].tint_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- tint_id                 \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].tint_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].tint_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].tint_id);
+printf("-- tint_id                 \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_id);
 
 // u32 hud_image_set_id
-packet->item_def_reply_2[item_def_reply_2_iter].hud_image_set_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].hud_image_set_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- hud_image_set_id        \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].hud_image_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].hud_image_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].hud_image_set_id);
+printf("-- hud_image_set_id        \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].hud_image_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].hud_image_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].hud_image_set_id);
 
 // u32 unk_dword_1
-packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_1 = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_1 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unk_dword_1             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_1);
+printf("-- unk_dword_1             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_1);
 
 // u32 unk_dword_2
-packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_2 = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_2 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unk_dword_2             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_2, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_2, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_2);
+printf("-- unk_dword_2             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_2, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_2, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_2);
 
 // u32 cost
-packet->item_def_reply_2[item_def_reply_2_iter].cost = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].cost = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- cost                    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].cost, (u64)packet->item_def_reply_2[item_def_reply_2_iter].cost, (f64)packet->item_def_reply_2[item_def_reply_2_iter].cost);
+printf("-- cost                    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].cost, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].cost, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].cost);
 
 // u32 item_class
-packet->item_def_reply_2[item_def_reply_2_iter].item_class = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_class = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- item_class              \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_class, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_class, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_class);
+printf("-- item_class              \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_class, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_class, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_class);
 
 // u32 profile_override
-packet->item_def_reply_2[item_def_reply_2_iter].profile_override = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].profile_override = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- profile_override        \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].profile_override, (u64)packet->item_def_reply_2[item_def_reply_2_iter].profile_override, (f64)packet->item_def_reply_2[item_def_reply_2_iter].profile_override);
+printf("-- profile_override        \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].profile_override, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].profile_override, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].profile_override);
 
 // string model_name
-packet->item_def_reply_2[item_def_reply_2_iter].model_name_length = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].model_name_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->item_def_reply_2[item_def_reply_2_iter].model_name = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].model_name_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].model_name_length);
-for (u32 model_name_iter = 0; model_name_iter < packet->item_def_reply_2[item_def_reply_2_iter].model_name_length; model_name_iter++)
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].model_name = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].model_name_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].model_name_length);
+for (u32 model_name_iter = 0; model_name_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].model_name_length; model_name_iter++)
 {
-packet->item_def_reply_2[item_def_reply_2_iter].model_name[model_name_iter] = *(i8*)((uptr)data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].model_name[model_name_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
 // string texture_alias
-packet->item_def_reply_2[item_def_reply_2_iter].texture_alias_length = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].texture_alias_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->item_def_reply_2[item_def_reply_2_iter].texture_alias = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].texture_alias_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].texture_alias_length);
-for (u32 texture_alias_iter = 0; texture_alias_iter < packet->item_def_reply_2[item_def_reply_2_iter].texture_alias_length; texture_alias_iter++)
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].texture_alias = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].texture_alias_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].texture_alias_length);
+for (u32 texture_alias_iter = 0; texture_alias_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].texture_alias_length; texture_alias_iter++)
 {
-packet->item_def_reply_2[item_def_reply_2_iter].texture_alias[texture_alias_iter] = *(i8*)((uptr)data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].texture_alias[texture_alias_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
 // u32 gender_usage
-packet->item_def_reply_2[item_def_reply_2_iter].gender_usage = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].gender_usage = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- gender_usage            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].gender_usage, (u64)packet->item_def_reply_2[item_def_reply_2_iter].gender_usage, (f64)packet->item_def_reply_2[item_def_reply_2_iter].gender_usage);
+printf("-- gender_usage            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].gender_usage, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].gender_usage, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].gender_usage);
 
 // u32 item_type
-packet->item_def_reply_2[item_def_reply_2_iter].item_type = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_type = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- item_type               \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_type, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_type, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_type);
+printf("-- item_type               \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_type, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_type, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_type);
 
 // u32 category_id
-packet->item_def_reply_2[item_def_reply_2_iter].category_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].category_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- category_id             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].category_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].category_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].category_id);
+printf("-- category_id             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].category_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].category_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].category_id);
 
 // u32 weapon_trail_effect_id
-packet->item_def_reply_2[item_def_reply_2_iter].weapon_trail_effect_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].weapon_trail_effect_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- weapon_trail_effect_id  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].weapon_trail_effect_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].weapon_trail_effect_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].weapon_trail_effect_id);
+printf("-- weapon_trail_effect_id  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].weapon_trail_effect_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].weapon_trail_effect_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].weapon_trail_effect_id);
 
 // u32 composite_effect_id
-packet->item_def_reply_2[item_def_reply_2_iter].composite_effect_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].composite_effect_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- composite_effect_id     \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].composite_effect_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].composite_effect_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].composite_effect_id);
+printf("-- composite_effect_id     \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].composite_effect_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].composite_effect_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].composite_effect_id);
 
 // u32 power_rating
-packet->item_def_reply_2[item_def_reply_2_iter].power_rating = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].power_rating = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- power_rating            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].power_rating, (u64)packet->item_def_reply_2[item_def_reply_2_iter].power_rating, (f64)packet->item_def_reply_2[item_def_reply_2_iter].power_rating);
+printf("-- power_rating            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].power_rating, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].power_rating, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].power_rating);
 
 // u32 min_profile_rank
-packet->item_def_reply_2[item_def_reply_2_iter].min_profile_rank = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].min_profile_rank = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- min_profile_rank        \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].min_profile_rank, (u64)packet->item_def_reply_2[item_def_reply_2_iter].min_profile_rank, (f64)packet->item_def_reply_2[item_def_reply_2_iter].min_profile_rank);
+printf("-- min_profile_rank        \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].min_profile_rank, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].min_profile_rank, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].min_profile_rank);
 
 // u32 rarity
-packet->item_def_reply_2[item_def_reply_2_iter].rarity = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].rarity = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- rarity                  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].rarity, (u64)packet->item_def_reply_2[item_def_reply_2_iter].rarity, (f64)packet->item_def_reply_2[item_def_reply_2_iter].rarity);
+printf("-- rarity                  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].rarity, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].rarity, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].rarity);
 
 // u32 activatable_ability_id
-packet->item_def_reply_2[item_def_reply_2_iter].activatable_ability_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].activatable_ability_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- activatable_ability_id  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].activatable_ability_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].activatable_ability_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].activatable_ability_id);
+printf("-- activatable_ability_id  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].activatable_ability_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].activatable_ability_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].activatable_ability_id);
 
 // u32 activatable_ability_set_id
-packet->item_def_reply_2[item_def_reply_2_iter].activatable_ability_set_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].activatable_ability_set_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- activatable_ability_set_id\t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].activatable_ability_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].activatable_ability_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].activatable_ability_set_id);
+printf("-- activatable_ability_set_id\t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].activatable_ability_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].activatable_ability_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].activatable_ability_set_id);
 
 // u32 passive_ability_id
-packet->item_def_reply_2[item_def_reply_2_iter].passive_ability_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_ability_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- passive_ability_id      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].passive_ability_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].passive_ability_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].passive_ability_id);
+printf("-- passive_ability_id      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_ability_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_ability_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_ability_id);
 
 // u32 passive_ability_set_id
-packet->item_def_reply_2[item_def_reply_2_iter].passive_ability_set_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_ability_set_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- passive_ability_set_id  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].passive_ability_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].passive_ability_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].passive_ability_set_id);
+printf("-- passive_ability_set_id  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_ability_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_ability_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_ability_set_id);
 
 // u32 max_stack_size
-packet->item_def_reply_2[item_def_reply_2_iter].max_stack_size = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].max_stack_size = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- max_stack_size          \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].max_stack_size, (u64)packet->item_def_reply_2[item_def_reply_2_iter].max_stack_size, (f64)packet->item_def_reply_2[item_def_reply_2_iter].max_stack_size);
+printf("-- max_stack_size          \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].max_stack_size, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].max_stack_size, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].max_stack_size);
 
 // u32 min_stack_size
-packet->item_def_reply_2[item_def_reply_2_iter].min_stack_size = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].min_stack_size = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- min_stack_size          \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].min_stack_size, (u64)packet->item_def_reply_2[item_def_reply_2_iter].min_stack_size, (f64)packet->item_def_reply_2[item_def_reply_2_iter].min_stack_size);
+printf("-- min_stack_size          \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].min_stack_size, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].min_stack_size, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].min_stack_size);
 
 // string tint_alias
-packet->item_def_reply_2[item_def_reply_2_iter].tint_alias_length = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_alias_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->item_def_reply_2[item_def_reply_2_iter].tint_alias = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].tint_alias_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].tint_alias_length);
-for (u32 tint_alias_iter = 0; tint_alias_iter < packet->item_def_reply_2[item_def_reply_2_iter].tint_alias_length; tint_alias_iter++)
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_alias = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_alias_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_alias_length);
+for (u32 tint_alias_iter = 0; tint_alias_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_alias_length; tint_alias_iter++)
 {
-packet->item_def_reply_2[item_def_reply_2_iter].tint_alias[tint_alias_iter] = *(i8*)((uptr)data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_alias[tint_alias_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
 // u32 tint_group_id
-packet->item_def_reply_2[item_def_reply_2_iter].tint_group_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_group_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- tint_group_id           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].tint_group_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].tint_group_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].tint_group_id);
+printf("-- tint_group_id           \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_group_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_group_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].tint_group_id);
 
 // u32 member_discount
-packet->item_def_reply_2[item_def_reply_2_iter].member_discount = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].member_discount = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- member_discount         \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].member_discount, (u64)packet->item_def_reply_2[item_def_reply_2_iter].member_discount, (f64)packet->item_def_reply_2[item_def_reply_2_iter].member_discount);
+printf("-- member_discount         \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].member_discount, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].member_discount, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].member_discount);
 
 // u32 vip_rank_required
-packet->item_def_reply_2[item_def_reply_2_iter].vip_rank_required = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].vip_rank_required = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- vip_rank_required       \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].vip_rank_required, (u64)packet->item_def_reply_2[item_def_reply_2_iter].vip_rank_required, (f64)packet->item_def_reply_2[item_def_reply_2_iter].vip_rank_required);
+printf("-- vip_rank_required       \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].vip_rank_required, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].vip_rank_required, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].vip_rank_required);
 
 // u32 race_set_id
-packet->item_def_reply_2[item_def_reply_2_iter].race_set_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].race_set_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- race_set_id             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].race_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].race_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].race_set_id);
+printf("-- race_set_id             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].race_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].race_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].race_set_id);
 
 // u32 ui_model_camera_id_1
-packet->item_def_reply_2[item_def_reply_2_iter].ui_model_camera_id_1 = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].ui_model_camera_id_1 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- ui_model_camera_id_1    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].ui_model_camera_id_1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].ui_model_camera_id_1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].ui_model_camera_id_1);
+printf("-- ui_model_camera_id_1    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].ui_model_camera_id_1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].ui_model_camera_id_1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].ui_model_camera_id_1);
 
 // u32 equip_count_max
-packet->item_def_reply_2[item_def_reply_2_iter].equip_count_max = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].equip_count_max = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- equip_count_max         \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].equip_count_max, (u64)packet->item_def_reply_2[item_def_reply_2_iter].equip_count_max, (f64)packet->item_def_reply_2[item_def_reply_2_iter].equip_count_max);
+printf("-- equip_count_max         \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].equip_count_max, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].equip_count_max, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].equip_count_max);
 
 // i32 curreny_type
-packet->item_def_reply_2[item_def_reply_2_iter].curreny_type = endian_read_i32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].curreny_type = endian_read_i32_little(data + offset);
 offset += sizeof(i32);
-printf("-- curreny_type            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].curreny_type, (u64)packet->item_def_reply_2[item_def_reply_2_iter].curreny_type, (f64)packet->item_def_reply_2[item_def_reply_2_iter].curreny_type);
+printf("-- curreny_type            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].curreny_type, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].curreny_type, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].curreny_type);
 
 // u32 datasheet_id
-packet->item_def_reply_2[item_def_reply_2_iter].datasheet_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].datasheet_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- datasheet_id            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].datasheet_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].datasheet_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].datasheet_id);
+printf("-- datasheet_id            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].datasheet_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].datasheet_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].datasheet_id);
 
 // u32 item_type_1
-packet->item_def_reply_2[item_def_reply_2_iter].item_type_1 = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_type_1 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- item_type_1             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_type_1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_type_1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_type_1);
+printf("-- item_type_1             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_type_1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_type_1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].item_type_1);
 
 // u32 skill_set_id
-packet->item_def_reply_2[item_def_reply_2_iter].skill_set_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].skill_set_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- skill_set_id            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].skill_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].skill_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].skill_set_id);
+printf("-- skill_set_id            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].skill_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].skill_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].skill_set_id);
 
 // string overlay_texture
-packet->item_def_reply_2[item_def_reply_2_iter].overlay_texture_length = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_texture_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->item_def_reply_2[item_def_reply_2_iter].overlay_texture = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].overlay_texture_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].overlay_texture_length);
-for (u32 overlay_texture_iter = 0; overlay_texture_iter < packet->item_def_reply_2[item_def_reply_2_iter].overlay_texture_length; overlay_texture_iter++)
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_texture = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_texture_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_texture_length);
+for (u32 overlay_texture_iter = 0; overlay_texture_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_texture_length; overlay_texture_iter++)
 {
-packet->item_def_reply_2[item_def_reply_2_iter].overlay_texture[overlay_texture_iter] = *(i8*)((uptr)data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_texture[overlay_texture_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
 // string decal_slot
-packet->item_def_reply_2[item_def_reply_2_iter].decal_slot_length = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].decal_slot_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->item_def_reply_2[item_def_reply_2_iter].decal_slot = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].decal_slot_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].decal_slot_length);
-for (u32 decal_slot_iter = 0; decal_slot_iter < packet->item_def_reply_2[item_def_reply_2_iter].decal_slot_length; decal_slot_iter++)
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].decal_slot = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].decal_slot_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].decal_slot_length);
+for (u32 decal_slot_iter = 0; decal_slot_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].decal_slot_length; decal_slot_iter++)
 {
-packet->item_def_reply_2[item_def_reply_2_iter].decal_slot[decal_slot_iter] = *(i8*)((uptr)data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].decal_slot[decal_slot_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
 // u32 overlay_adjustment
-packet->item_def_reply_2[item_def_reply_2_iter].overlay_adjustment = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_adjustment = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- overlay_adjustment      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].overlay_adjustment, (u64)packet->item_def_reply_2[item_def_reply_2_iter].overlay_adjustment, (f64)packet->item_def_reply_2[item_def_reply_2_iter].overlay_adjustment);
+printf("-- overlay_adjustment      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_adjustment, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_adjustment, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].overlay_adjustment);
 
 // u32 trial_duration_sec
-packet->item_def_reply_2[item_def_reply_2_iter].trial_duration_sec = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].trial_duration_sec = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- trial_duration_sec      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].trial_duration_sec, (u64)packet->item_def_reply_2[item_def_reply_2_iter].trial_duration_sec, (f64)packet->item_def_reply_2[item_def_reply_2_iter].trial_duration_sec);
+printf("-- trial_duration_sec      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].trial_duration_sec, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].trial_duration_sec, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].trial_duration_sec);
 
 // u32 next_trial_delay_sec
-packet->item_def_reply_2[item_def_reply_2_iter].next_trial_delay_sec = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].next_trial_delay_sec = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- next_trial_delay_sec    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].next_trial_delay_sec, (u64)packet->item_def_reply_2[item_def_reply_2_iter].next_trial_delay_sec, (f64)packet->item_def_reply_2[item_def_reply_2_iter].next_trial_delay_sec);
+printf("-- next_trial_delay_sec    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].next_trial_delay_sec, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].next_trial_delay_sec, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].next_trial_delay_sec);
 
 // u32 client_use_requirement
-packet->item_def_reply_2[item_def_reply_2_iter].client_use_requirement = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].client_use_requirement = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- client_use_requirement  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].client_use_requirement, (u64)packet->item_def_reply_2[item_def_reply_2_iter].client_use_requirement, (f64)packet->item_def_reply_2[item_def_reply_2_iter].client_use_requirement);
+printf("-- client_use_requirement  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].client_use_requirement, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].client_use_requirement, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].client_use_requirement);
 
 // string override_appearance
-packet->item_def_reply_2[item_def_reply_2_iter].override_appearance_length = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_appearance_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->item_def_reply_2[item_def_reply_2_iter].override_appearance = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].override_appearance_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].override_appearance_length);
-for (u32 override_appearance_iter = 0; override_appearance_iter < packet->item_def_reply_2[item_def_reply_2_iter].override_appearance_length; override_appearance_iter++)
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_appearance = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_appearance_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_appearance_length);
+for (u32 override_appearance_iter = 0; override_appearance_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_appearance_length; override_appearance_iter++)
 {
-packet->item_def_reply_2[item_def_reply_2_iter].override_appearance[override_appearance_iter] = *(i8*)((uptr)data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_appearance[override_appearance_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
 // u32 override_camera_id
-packet->item_def_reply_2[item_def_reply_2_iter].override_camera_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_camera_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- override_camera_id      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].override_camera_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].override_camera_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].override_camera_id);
+printf("-- override_camera_id      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_camera_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_camera_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].override_camera_id);
 
 // u32 unk_dword_3
-packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_3 = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_3 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unk_dword_3             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_3, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_3, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_3);
+printf("-- unk_dword_3             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_3, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_3, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_3);
 
 // u32 unk_dword_4
-packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_4 = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_4 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unk_dword_4             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_4, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_4, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_4);
+printf("-- unk_dword_4             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_4, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_4, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_4);
 
 // u32 unk_dword_5
-packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_5 = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_5 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unk_dword_5             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_5, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_5, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_5);
+printf("-- unk_dword_5             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_5, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_5, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_5);
 
 // u32 bulk
-packet->item_def_reply_2[item_def_reply_2_iter].bulk = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bulk = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- bulk                    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].bulk, (u64)packet->item_def_reply_2[item_def_reply_2_iter].bulk, (f64)packet->item_def_reply_2[item_def_reply_2_iter].bulk);
+printf("-- bulk                    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bulk, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bulk, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].bulk);
 
 // u32 active_equip_slot_id
-packet->item_def_reply_2[item_def_reply_2_iter].active_equip_slot_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].active_equip_slot_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- active_equip_slot_id    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].active_equip_slot_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].active_equip_slot_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].active_equip_slot_id);
+printf("-- active_equip_slot_id    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].active_equip_slot_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].active_equip_slot_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].active_equip_slot_id);
 
 // u32 passive_equip_slot_id
-packet->item_def_reply_2[item_def_reply_2_iter].passive_equip_slot_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_equip_slot_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- passive_equip_slot_id   \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].passive_equip_slot_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].passive_equip_slot_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].passive_equip_slot_id);
+printf("-- passive_equip_slot_id   \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_equip_slot_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_equip_slot_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_equip_slot_id);
 
 // u32 passive_equip_slot_group_id
-packet->item_def_reply_2[item_def_reply_2_iter].passive_equip_slot_group_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_equip_slot_group_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- passive_equip_slot_group_id\t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].passive_equip_slot_group_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].passive_equip_slot_group_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].passive_equip_slot_group_id);
+printf("-- passive_equip_slot_group_id\t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_equip_slot_group_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_equip_slot_group_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].passive_equip_slot_group_id);
 
 // u32 unk_dword_6
-packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_6 = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_6 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unk_dword_6             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_6, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_6, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_6);
+printf("-- unk_dword_6             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_6, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_6, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_6);
 
 // u32 grinder_reward_set_id
-packet->item_def_reply_2[item_def_reply_2_iter].grinder_reward_set_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].grinder_reward_set_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- grinder_reward_set_id   \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].grinder_reward_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].grinder_reward_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].grinder_reward_set_id);
+printf("-- grinder_reward_set_id   \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].grinder_reward_set_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].grinder_reward_set_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].grinder_reward_set_id);
 
 // u32 build_bar_group_id
-packet->item_def_reply_2[item_def_reply_2_iter].build_bar_group_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].build_bar_group_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- build_bar_group_id      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].build_bar_group_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].build_bar_group_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].build_bar_group_id);
+printf("-- build_bar_group_id      \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].build_bar_group_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].build_bar_group_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].build_bar_group_id);
 
 // string unk_string_1
-packet->item_def_reply_2[item_def_reply_2_iter].unk_string_1_length = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_string_1_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->item_def_reply_2[item_def_reply_2_iter].unk_string_1 = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].unk_string_1_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].unk_string_1_length);
-for (u32 unk_string_1_iter = 0; unk_string_1_iter < packet->item_def_reply_2[item_def_reply_2_iter].unk_string_1_length; unk_string_1_iter++)
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_string_1 = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_string_1_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_string_1_length);
+for (u32 unk_string_1_iter = 0; unk_string_1_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_string_1_length; unk_string_1_iter++)
 {
-packet->item_def_reply_2[item_def_reply_2_iter].unk_string_1[unk_string_1_iter] = *(i8*)((uptr)data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_string_1[unk_string_1_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
 // b8 unk_bool_1
-packet->item_def_reply_2[item_def_reply_2_iter].unk_bool_1 = endian_read_b8_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_bool_1 = endian_read_b8_little(data + offset);
 offset += sizeof(b8);
-printf("-- unk_bool_1              \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_bool_1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_bool_1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_bool_1);
+printf("-- unk_bool_1              \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_bool_1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_bool_1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_bool_1);
 
 // b8 is_armor
-packet->item_def_reply_2[item_def_reply_2_iter].is_armor = endian_read_b8_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].is_armor = endian_read_b8_little(data + offset);
 offset += sizeof(b8);
-printf("-- is_armor                \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].is_armor, (u64)packet->item_def_reply_2[item_def_reply_2_iter].is_armor, (f64)packet->item_def_reply_2[item_def_reply_2_iter].is_armor);
+printf("-- is_armor                \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].is_armor, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].is_armor, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].is_armor);
 
 // u32 unk_dword_7
-packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_7 = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_7 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unk_dword_7             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_7, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_7, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_7);
+printf("-- unk_dword_7             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_7, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_7, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_7);
 
 // u32 param1
-packet->item_def_reply_2[item_def_reply_2_iter].param1 = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param1 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- param1                  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].param1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].param1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].param1);
+printf("-- param1                  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param1, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param1, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param1);
 
 // u32 param2
-packet->item_def_reply_2[item_def_reply_2_iter].param2 = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param2 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- param2                  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].param2, (u64)packet->item_def_reply_2[item_def_reply_2_iter].param2, (f64)packet->item_def_reply_2[item_def_reply_2_iter].param2);
+printf("-- param2                  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param2, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param2, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param2);
 
 // u32 param3
-packet->item_def_reply_2[item_def_reply_2_iter].param3 = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param3 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- param3                  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].param3, (u64)packet->item_def_reply_2[item_def_reply_2_iter].param3, (f64)packet->item_def_reply_2[item_def_reply_2_iter].param3);
+printf("-- param3                  \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param3, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param3, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].param3);
 
 // string string_param1
-packet->item_def_reply_2[item_def_reply_2_iter].string_param1_length = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].string_param1_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->item_def_reply_2[item_def_reply_2_iter].string_param1 = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].string_param1_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].string_param1_length);
-for (u32 string_param1_iter = 0; string_param1_iter < packet->item_def_reply_2[item_def_reply_2_iter].string_param1_length; string_param1_iter++)
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].string_param1 = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].string_param1_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].string_param1_length);
+for (u32 string_param1_iter = 0; string_param1_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].string_param1_length; string_param1_iter++)
 {
-packet->item_def_reply_2[item_def_reply_2_iter].string_param1[string_param1_iter] = *(i8*)((uptr)data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].string_param1[string_param1_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
 // u32 ui_model_camera_id_2
-packet->item_def_reply_2[item_def_reply_2_iter].ui_model_camera_id_2 = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].ui_model_camera_id_2 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- ui_model_camera_id_2    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].ui_model_camera_id_2, (u64)packet->item_def_reply_2[item_def_reply_2_iter].ui_model_camera_id_2, (f64)packet->item_def_reply_2[item_def_reply_2_iter].ui_model_camera_id_2);
+printf("-- ui_model_camera_id_2    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].ui_model_camera_id_2, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].ui_model_camera_id_2, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].ui_model_camera_id_2);
 
 // u32 unk_dword_8
-packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_8 = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_8 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unk_dword_8             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_8, (u64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_8, (f64)packet->item_def_reply_2[item_def_reply_2_iter].unk_dword_8);
+printf("-- unk_dword_8             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_8, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_8, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].unk_dword_8);
 
 // i32 scrap_value_override
-packet->item_def_reply_2[item_def_reply_2_iter].scrap_value_override = endian_read_i32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].scrap_value_override = endian_read_i32_little(data + offset);
 offset += sizeof(i32);
-printf("-- scrap_value_override    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].scrap_value_override, (u64)packet->item_def_reply_2[item_def_reply_2_iter].scrap_value_override, (f64)packet->item_def_reply_2[item_def_reply_2_iter].scrap_value_override);
+printf("-- scrap_value_override    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].scrap_value_override, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].scrap_value_override, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].scrap_value_override);
 
 // list stats_item_def_2
-packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2_count = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2_count = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2 = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2_count * sizeof(packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[0]));
-printf("-- LIST_COUNT              \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2_count);
-for (u32 stats_item_def_2_iter = 0; stats_item_def_2_iter < packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2_count; stats_item_def_2_iter++)
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2 = memory_arena_push_length(arena, packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2_count * sizeof(packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2_count);
+for (u32 stats_item_def_2_iter = 0; stats_item_def_2_iter < packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2_count; stats_item_def_2_iter++)
 {
 // u32 unk_dword_9
-packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9 = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unk_dword_9             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9, (u64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9, (f64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9);
+printf("-- unk_dword_9             \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9);
 
 // u32 stat_id
-packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].stat_id = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].stat_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- stat_id                 \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].stat_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].stat_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].stat_id);
+printf("-- stat_id                 \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].stat_id, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].stat_id, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].stat_id);
 
-// f32 base
-packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].base = endian_read_f32_little(data + offset);
-offset += sizeof(f32);
-printf("-- base                    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].base, (u64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].base, (f64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].base);
+// u32 base
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].base = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- base                    \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].base, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].base, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].base);
 
-// f32 modifier
-packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].modifier = endian_read_f32_little(data + offset);
-offset += sizeof(f32);
-printf("-- modifier                \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].modifier, (u64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].modifier, (f64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].modifier);
+// u32 modifier
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].modifier = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- modifier                \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].modifier, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].modifier, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].modifier);
 
 // u32 unk_dword_10
-packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10 = endian_read_u32_little(data + offset);
+packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unk_dword_10            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10, (u64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10, (f64)packet->item_def_reply_2[item_def_reply_2_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10);
+printf("-- unk_dword_10            \t%lld\t%llxh\t%f\n", (i64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10, (u64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10, (f64)packet->item_def_reply_2[item_def_reply_2_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10);
 
 } // stats_item_def_2
+
+} // item_defs
 
 } // item_def_reply_2
 
@@ -9347,6 +11180,1486 @@ offset++;
 packet->unk_bool3 = endian_read_u8_little(data + offset);
 offset += sizeof(u8);
 printf("-- unk_bool3               \t%lld\t%llxh\t%f\n", (i64)packet->unk_bool3, (u64)packet->unk_bool3, (f64)packet->unk_bool3);
+
+} break;
+
+case Zone_Packet_Kind_ReferenceDataWeaponDefinitions:
+{
+printf("[*] Unpacking ReferenceDataWeaponDefinitions...\n");
+Zone_Packet_ReferenceDataWeaponDefinitions* packet = packet_ptr;
+
+// stream weapon_byteswithlength
+packet->weapon_byteswithlength_length = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->weapon_byteswithlength = memory_arena_push_length(arena, packet->weapon_byteswithlength_length * sizeof(packet->weapon_byteswithlength[0]));
+printf("-- STREAM_LENGTH           \t%d\n", packet->weapon_byteswithlength_length);
+for (u32 weapon_byteswithlength_iter = 0; weapon_byteswithlength_iter < (packet->weapon_byteswithlength_length > (u32)0 ? (u32)1 : (u32)0); weapon_byteswithlength_iter++)
+{
+// list weapon_defs
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs_count = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs = memory_arena_push_length(arena, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs_count * sizeof(packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs_count);
+for (u32 weapon_defs_iter = 0; weapon_defs_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs_count; weapon_defs_iter++)
+{
+// u32 id1
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].id1 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- id1                     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].id1, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].id1, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].id1);
+
+// u32 id2
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].id2 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- id2                     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].id2, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].id2, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].id2);
+
+// u32 weapon_group_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].weapon_group_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- weapon_group_id         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].weapon_group_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].weapon_group_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].weapon_group_id);
+
+// u8 flags1
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].flags1 = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- flags1                  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].flags1, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].flags1, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].flags1);
+
+// u32 equip_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].equip_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- equip_ms                \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].equip_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].equip_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].equip_ms);
+
+// u32 unequip_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].unequip_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- unequip_ms              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].unequip_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].unequip_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].unequip_ms);
+
+// u32 from_passive_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_passive_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- from_passive_ms         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_passive_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_passive_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_passive_ms);
+
+// u32 to_passive_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_passive_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- to_passive_ms           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_passive_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_passive_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_passive_ms);
+
+// u32 xp_category
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].xp_category = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- xp_category             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].xp_category, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].xp_category, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].xp_category);
+
+// u32 to_iron_sights_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_iron_sights_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- to_iron_sights_ms       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_iron_sights_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_iron_sights_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_iron_sights_ms);
+
+// u32 from_iron_sights_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_iron_sights_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- from_iron_sights_ms     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_iron_sights_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_iron_sights_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_iron_sights_ms);
+
+// u32 to_iron_sights_anim_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_iron_sights_anim_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- to_iron_sights_anim_ms  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_iron_sights_anim_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_iron_sights_anim_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].to_iron_sights_anim_ms);
+
+// u32 from_iron_sights_anim_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_iron_sights_anim_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- from_iron_sights_anim_ms\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_iron_sights_anim_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_iron_sights_anim_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].from_iron_sights_anim_ms);
+
+// u32 sprint_recovery_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].sprint_recovery_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- sprint_recovery_ms      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].sprint_recovery_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].sprint_recovery_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].sprint_recovery_ms);
+
+// u32 next_use_delay_msec
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].next_use_delay_msec = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- next_use_delay_msec     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].next_use_delay_msec, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].next_use_delay_msec, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].next_use_delay_msec);
+
+// f32 turn_rate_modifier
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].turn_rate_modifier = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- turn_rate_modifier      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].turn_rate_modifier, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].turn_rate_modifier, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].turn_rate_modifier);
+
+// f32 movement_speed_modifier
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].movement_speed_modifier = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- movement_speed_modifier \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].movement_speed_modifier, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].movement_speed_modifier, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].movement_speed_modifier);
+
+// u32 propulsion_type
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].propulsion_type = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- propulsion_type         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].propulsion_type, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].propulsion_type, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].propulsion_type);
+
+// u32 heat_bleed_off_rate
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].heat_bleed_off_rate = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- heat_bleed_off_rate     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].heat_bleed_off_rate, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].heat_bleed_off_rate, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].heat_bleed_off_rate);
+
+// u32 heat_capacity
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].heat_capacity = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- heat_capacity           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].heat_capacity, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].heat_capacity, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].heat_capacity);
+
+// u32 overheat_penalty_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].overheat_penalty_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- overheat_penalty_ms     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].overheat_penalty_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].overheat_penalty_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].overheat_penalty_ms);
+
+// u32 range_string_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].range_string_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- range_string_id         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].range_string_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].range_string_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].range_string_id);
+
+// u32 melee_detect_width
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].melee_detect_width = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- melee_detect_width      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].melee_detect_width, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].melee_detect_width, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].melee_detect_width);
+
+// u32 melee_detect_height
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].melee_detect_height = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- melee_detect_height     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].melee_detect_height, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].melee_detect_height, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].melee_detect_height);
+
+// string anim_set_name
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].anim_set_name_length = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].anim_set_name = memory_arena_push_length(arena, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].anim_set_name_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].anim_set_name_length);
+for (u32 anim_set_name_iter = 0; anim_set_name_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].anim_set_name_length; anim_set_name_iter++)
+{
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].anim_set_name[anim_set_name_iter] = *(i8*)((uptr)data + offset);
+offset++;
+}
+
+// u32 vehicle_fp_camera_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].vehicle_fp_camera_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- vehicle_fp_camera_id    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].vehicle_fp_camera_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].vehicle_fp_camera_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].vehicle_fp_camera_id);
+
+// u32 vehicle_tp_camera_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].vehicle_tp_camera_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- vehicle_tp_camera_id    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].vehicle_tp_camera_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].vehicle_tp_camera_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].vehicle_tp_camera_id);
+
+// u32 overheat_effect_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].overheat_effect_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- overheat_effect_id      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].overheat_effect_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].overheat_effect_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].overheat_effect_id);
+
+// f32 min_pitch
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].min_pitch = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- min_pitch               \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].min_pitch, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].min_pitch, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].min_pitch);
+
+// f32 max_pitch
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].max_pitch = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- max_pitch               \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].max_pitch, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].max_pitch, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].max_pitch);
+
+// u32 audio_game_object
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].audio_game_object = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- audio_game_object       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].audio_game_object, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].audio_game_object, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].audio_game_object);
+
+// list ammo_slots
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots_count = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots = memory_arena_push_length(arena, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots_count * sizeof(packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots_count);
+for (u32 ammo_slots_iter = 0; ammo_slots_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots_count; ammo_slots_iter++)
+{
+// u32 ammo_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].ammo_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- ammo_id                 \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].ammo_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].ammo_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].ammo_id);
+
+// u32 clip_size
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_size = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- clip_size               \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_size, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_size, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_size);
+
+// u32 capacity
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].capacity = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- capacity                \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].capacity, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].capacity, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].capacity);
+
+// b8 start_empty
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].start_empty = endian_read_b8_little(data + offset);
+offset += sizeof(b8);
+printf("-- start_empty             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].start_empty, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].start_empty, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].start_empty);
+
+// u32 refill_ammo_per_tick
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].refill_ammo_per_tick = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- refill_ammo_per_tick    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].refill_ammo_per_tick, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].refill_ammo_per_tick, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].refill_ammo_per_tick);
+
+// u32 refill_ammo_delay_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].refill_ammo_delay_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- refill_ammo_delay_ms    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].refill_ammo_delay_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].refill_ammo_delay_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].refill_ammo_delay_ms);
+
+// u32 clip_attachment_slot
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_attachment_slot = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- clip_attachment_slot    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_attachment_slot, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_attachment_slot, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_attachment_slot);
+
+// string clip_model_name
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_model_name_length = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_model_name = memory_arena_push_length(arena, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_model_name_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_model_name_length);
+for (u32 clip_model_name_iter = 0; clip_model_name_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_model_name_length; clip_model_name_iter++)
+{
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].clip_model_name[clip_model_name_iter] = *(i8*)((uptr)data + offset);
+offset++;
+}
+
+// string reload_weapon_bone
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_weapon_bone_length = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_weapon_bone = memory_arena_push_length(arena, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_weapon_bone_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_weapon_bone_length);
+for (u32 reload_weapon_bone_iter = 0; reload_weapon_bone_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_weapon_bone_length; reload_weapon_bone_iter++)
+{
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_weapon_bone[reload_weapon_bone_iter] = *(i8*)((uptr)data + offset);
+offset++;
+}
+
+// string reload_character_bone
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_character_bone_length = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_character_bone = memory_arena_push_length(arena, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_character_bone_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_character_bone_length);
+for (u32 reload_character_bone_iter = 0; reload_character_bone_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_character_bone_length; reload_character_bone_iter++)
+{
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].ammo_slots[ammo_slots_iter].reload_character_bone[reload_character_bone_iter] = *(i8*)((uptr)data + offset);
+offset++;
+}
+
+} // ammo_slots
+
+// list fire_groups
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups_count = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups = memory_arena_push_length(arena, packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups_count * sizeof(packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups_count);
+for (u32 fire_groups_iter = 0; fire_groups_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups_count; fire_groups_iter++)
+{
+// u32 fire_group_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups[fire_groups_iter].fire_group_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- fire_group_id           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups[fire_groups_iter].fire_group_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups[fire_groups_iter].fire_group_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].weapon_defs[weapon_defs_iter].fire_groups[fire_groups_iter].fire_group_id);
+
+} // fire_groups
+
+} // weapon_defs
+
+// list fire_group_defs
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs_count = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs = memory_arena_push_length(arena, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs_count * sizeof(packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs_count);
+for (u32 fire_group_defs_iter = 0; fire_group_defs_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs_count; fire_group_defs_iter++)
+{
+// u32 id3
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].id3 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- id3                     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].id3, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].id3, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].id3);
+
+// u32 id4
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].id4 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- id4                     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].id4, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].id4, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].id4);
+
+// list fire_mode_list
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list_count = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list = memory_arena_push_length(arena, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list_count * sizeof(packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list_count);
+for (u32 fire_mode_list_iter = 0; fire_mode_list_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list_count; fire_mode_list_iter++)
+{
+// u32 fire_mode_1
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list[fire_mode_list_iter].fire_mode_1 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- fire_mode_1             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list[fire_mode_list_iter].fire_mode_1, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list[fire_mode_list_iter].fire_mode_1, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].fire_mode_list[fire_mode_list_iter].fire_mode_1);
+
+} // fire_mode_list
+
+// u8 flags2
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].flags2 = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- flags2                  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].flags2, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].flags2, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].flags2);
+
+// u32 chamber_duration_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].chamber_duration_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- chamber_duration_ms     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].chamber_duration_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].chamber_duration_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].chamber_duration_ms);
+
+// u32 image_set_override
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].image_set_override = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- image_set_override      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].image_set_override, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].image_set_override, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].image_set_override);
+
+// u32 transition_duration_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].transition_duration_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- transition_duration_ms  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].transition_duration_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].transition_duration_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].transition_duration_ms);
+
+// u32 anim_actor_slot_override
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].anim_actor_slot_override = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- anim_actor_slot_override\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].anim_actor_slot_override, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].anim_actor_slot_override, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].anim_actor_slot_override);
+
+// u32 deployable_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].deployable_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- deployable_id           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].deployable_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].deployable_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].deployable_id);
+
+// u32 spin_up_time_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_time_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- spin_up_time_ms         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_time_ms);
+
+// u32 spin_up_movement_modifier
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_movement_modifier = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- spin_up_movement_modifier\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_movement_modifier, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_movement_modifier, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_movement_modifier);
+
+// u32 spin_up_turn_rate_modifier
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_turn_rate_modifier = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- spin_up_turn_rate_modifier\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_turn_rate_modifier, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_turn_rate_modifier, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spin_up_turn_rate_modifier);
+
+// u32 spool_up_time_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spool_up_time_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- spool_up_time_ms        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spool_up_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spool_up_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spool_up_time_ms);
+
+// u32 spool_up_initial_refire_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spool_up_initial_refire_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- spool_up_initial_refire_ms\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spool_up_initial_refire_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spool_up_initial_refire_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_group_defs[fire_group_defs_iter].spool_up_initial_refire_ms);
+
+} // fire_group_defs
+
+// list fire_mode_defs
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs_count = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs = memory_arena_push_length(arena, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs_count * sizeof(packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs_count);
+for (u32 fire_mode_defs_iter = 0; fire_mode_defs_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs_count; fire_mode_defs_iter++)
+{
+// u32 id5
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].id5 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- id5                     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].id5, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].id5, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].id5);
+
+// u32 id6
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].id6 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- id6                     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].id6, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].id6, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].id6);
+
+// u8 flag1
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag1 = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- flag1                   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag1, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag1, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag1);
+
+// u8 flag2
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag2 = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- flag2                   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag2, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag2, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag2);
+
+// u8 flag3
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag3 = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- flag3                   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag3, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag3, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].flag3);
+
+// u8 type
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].type = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- type                    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].type, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].type, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].type);
+
+// u32 ammo_item_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_item_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- ammo_item_id            \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_item_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_item_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_item_id);
+
+// u8 ammo_slot
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_slot = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- ammo_slot               \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_slot, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_slot, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_slot);
+
+// u8 burst_count
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].burst_count = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- burst_count             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].burst_count, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].burst_count, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].burst_count);
+
+// u16 fire_duration_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_duration_ms = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- fire_duration_ms        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_duration_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_duration_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_duration_ms);
+
+// u16 fire_cooldown_duration_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_cooldown_duration_ms = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- fire_cooldown_duration_ms\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_cooldown_duration_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_cooldown_duration_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_cooldown_duration_ms);
+
+// u16 refire_time_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].refire_time_ms = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- refire_time_ms          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].refire_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].refire_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].refire_time_ms);
+
+// u16 auto_fire_time_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].auto_fire_time_ms = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- auto_fire_time_ms       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].auto_fire_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].auto_fire_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].auto_fire_time_ms);
+
+// u16 cook_time_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cook_time_ms = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- cook_time_ms            \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cook_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cook_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cook_time_ms);
+
+// f32 range
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].range = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- range                   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].range);
+
+// u8 ammo_per_shot
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_per_shot = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- ammo_per_shot           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_per_shot, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_per_shot, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].ammo_per_shot);
+
+// u16 reload_time_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_time_ms = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- reload_time_ms          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_time_ms);
+
+// u16 reload_chamber_time_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_chamber_time_ms = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- reload_chamber_time_ms  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_chamber_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_chamber_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_chamber_time_ms);
+
+// u16 reload_ammo_fill_time_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_ammo_fill_time_ms = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- reload_ammo_fill_time_ms\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_ammo_fill_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_ammo_fill_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_ammo_fill_time_ms);
+
+// u16 reload_loop_start_time_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_loop_start_time_ms = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- reload_loop_start_time_ms\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_loop_start_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_loop_start_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_loop_start_time_ms);
+
+// u16 reload_loop_end_time_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_loop_end_time_ms = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- reload_loop_end_time_ms \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_loop_end_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_loop_end_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reload_loop_end_time_ms);
+
+// u8 pellets_per_shot
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].pellets_per_shot = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- pellets_per_shot        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].pellets_per_shot, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].pellets_per_shot, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].pellets_per_shot);
+
+// f32 pellet_spread
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].pellet_spread = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- pellet_spread           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].pellet_spread, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].pellet_spread, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].pellet_spread);
+
+// f32 cof_recoil
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_recoil = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cof_recoil              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_recoil, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_recoil, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_recoil);
+
+// f32 cof_scalar
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_scalar = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cof_scalar              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_scalar, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_scalar, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_scalar);
+
+// f32 cof_scalar_moving
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_scalar_moving = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cof_scalar_moving       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_scalar_moving, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_scalar_moving, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_scalar_moving);
+
+// f32 cof_override
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_override = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cof_override            \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_override, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_override, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cof_override);
+
+// f32 recoil_angle_min
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_angle_min = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- recoil_angle_min        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_angle_min, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_angle_min, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_angle_min);
+
+// f32 recoil_angle_max
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_angle_max = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- recoil_angle_max        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_angle_max, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_angle_max, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_angle_max);
+
+// f32 recoil_horizontal_tolerance
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_tolerance = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- recoil_horizontal_tolerance\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_tolerance, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_tolerance, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_tolerance);
+
+// f32 recoil_horizontal_min
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_min = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- recoil_horizontal_min   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_min, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_min, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_min);
+
+// f32 recoil_horizontal_max
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_max = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- recoil_horizontal_max   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_max, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_max, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_max);
+
+// f32 recoil_magnitude_min
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_magnitude_min = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- recoil_magnitude_min    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_magnitude_min, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_magnitude_min, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_magnitude_min);
+
+// f32 recoil_magnitude_max
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_magnitude_max = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- recoil_magnitude_max    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_magnitude_max, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_magnitude_max, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_magnitude_max);
+
+// u16 recoil_recovery_delay_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_delay_ms = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- recoil_recovery_delay_ms\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_delay_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_delay_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_delay_ms);
+
+// f32 recoil_recovery_rate
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_rate = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- recoil_recovery_rate    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_rate, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_rate, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_rate);
+
+// f32 recoil_recovery_acceleration
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_acceleration = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- recoil_recovery_acceleration\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_acceleration, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_acceleration, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_recovery_acceleration);
+
+// u8 recoil_shots_at_min_magnitude
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_shots_at_min_magnitude = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- recoil_shots_at_min_magnitude\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_shots_at_min_magnitude, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_shots_at_min_magnitude, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_shots_at_min_magnitude);
+
+// f32 recoil_max_total_magnitude
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_max_total_magnitude = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- recoil_max_total_magnitude\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_max_total_magnitude, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_max_total_magnitude, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_max_total_magnitude);
+
+// f32 recoil_increase
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_increase = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- recoil_increase         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_increase, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_increase, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_increase);
+
+// f32 recoil_increase_crouched
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_increase_crouched = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- recoil_increase_crouched\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_increase_crouched, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_increase_crouched, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_increase_crouched);
+
+// f32 recoil_first_shot_modifier
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_first_shot_modifier = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- recoil_first_shot_modifier\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_first_shot_modifier, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_first_shot_modifier, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_first_shot_modifier);
+
+// f32 recoil_horizontal_min_increase
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_min_increase = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- recoil_horizontal_min_increase\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_min_increase, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_min_increase, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_min_increase);
+
+// f32 recoil_horizontal_max_increase
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_max_increase = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- recoil_horizontal_max_increase\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_max_increase, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_max_increase, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].recoil_horizontal_max_increase);
+
+// u16 fire_detect_range
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_detect_range = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- fire_detect_range       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_detect_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_detect_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_detect_range);
+
+// f32 effect_group
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].effect_group = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- effect_group            \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].effect_group, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].effect_group, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].effect_group);
+
+// f32 player_state_group_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].player_state_group_id = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- player_state_group_id   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].player_state_group_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].player_state_group_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].player_state_group_id);
+
+// f32 movement_modifier
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].movement_modifier = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- movement_modifier       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].movement_modifier, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].movement_modifier, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].movement_modifier);
+
+// f32 turn_modifier
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].turn_modifier = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- turn_modifier           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].turn_modifier, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].turn_modifier, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].turn_modifier);
+
+// f32 lock_on_icon_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_icon_id = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- lock_on_icon_id         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_icon_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_icon_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_icon_id);
+
+// f32 lock_on_angle
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_angle = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- lock_on_angle           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_angle);
+
+// f32 lock_on_radius
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_radius = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- lock_on_radius          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_radius, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_radius, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_radius);
+
+// f32 lock_on_range
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- lock_on_range           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range);
+
+// f32 lock_on_range_close
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range_close = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- lock_on_range_close     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range_close, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range_close, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range_close);
+
+// f32 lock_on_range_far
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range_far = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- lock_on_range_far       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range_far, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range_far, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_range_far);
+
+// u16 lock_on_acquire_time_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_ms = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- lock_on_acquire_time_ms \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_ms);
+
+// u16 lock_on_acquire_time_close_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_close_ms = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- lock_on_acquire_time_close_ms\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_close_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_close_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_close_ms);
+
+// u16 lock_on_acquire_time_far_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_far_ms = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- lock_on_acquire_time_far_ms\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_far_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_far_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_acquire_time_far_ms);
+
+// u16 lock_on_lose_time_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_lose_time_ms = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- lock_on_lose_time_ms    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_lose_time_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_lose_time_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].lock_on_lose_time_ms);
+
+// f32 default_zoom
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].default_zoom = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- default_zoom            \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].default_zoom, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].default_zoom, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].default_zoom);
+
+// f32 fp_offset_x
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_x = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- fp_offset_x             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_x);
+
+// f32 fp_offset_y
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_y = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- fp_offset_y             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_y);
+
+// f32 fp_offset_z
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_z = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- fp_offset_z             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_z, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_z, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_offset_z);
+
+// u8 reticle_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reticle_id = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- reticle_id              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reticle_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reticle_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].reticle_id);
+
+// u8 full_screen_effect
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].full_screen_effect = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- full_screen_effect      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].full_screen_effect, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].full_screen_effect, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].full_screen_effect);
+
+// u32 heat_per_shot
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_per_shot = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- heat_per_shot           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_per_shot, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_per_shot, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_per_shot);
+
+// u32 heat_threshold
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_threshold = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- heat_threshold          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_threshold, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_threshold, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_threshold);
+
+// u16 heat_recovery_delay_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_recovery_delay_ms = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
+printf("-- heat_recovery_delay_ms  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_recovery_delay_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_recovery_delay_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].heat_recovery_delay_ms);
+
+// f32 sway_amplitude_x
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_amplitude_x = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- sway_amplitude_x        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_amplitude_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_amplitude_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_amplitude_x);
+
+// f32 sway_amplitude_y
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_amplitude_y = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- sway_amplitude_y        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_amplitude_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_amplitude_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_amplitude_y);
+
+// f32 sway_period_x
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_period_x = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- sway_period_x           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_period_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_period_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_period_x);
+
+// f32 sway_period_y
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_period_y = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- sway_period_y           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_period_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_period_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_period_y);
+
+// f32 sway_initial_y_offset
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_initial_y_offset = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- sway_initial_y_offset   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_initial_y_offset, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_initial_y_offset, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_initial_y_offset);
+
+// f32 arms_fov_scalar
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].arms_fov_scalar = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- arms_fov_scalar         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].arms_fov_scalar, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].arms_fov_scalar, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].arms_fov_scalar);
+
+// f32 anim_kick_magnitude
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].anim_kick_magnitude = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- anim_kick_magnitude     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].anim_kick_magnitude, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].anim_kick_magnitude, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].anim_kick_magnitude);
+
+// f32 anim_recoil_magnitude
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].anim_recoil_magnitude = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- anim_recoil_magnitude   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].anim_recoil_magnitude, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].anim_recoil_magnitude, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].anim_recoil_magnitude);
+
+// u32 description_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].description_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- description_id          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].description_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].description_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].description_id);
+
+// u32 indirect_effect
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].indirect_effect = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- indirect_effect         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].indirect_effect, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].indirect_effect, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].indirect_effect);
+
+// f32 bullet_arc_kick_angle
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].bullet_arc_kick_angle = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- bullet_arc_kick_angle   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].bullet_arc_kick_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].bullet_arc_kick_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].bullet_arc_kick_angle);
+
+// f32 projectile_speed_override
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].projectile_speed_override = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- projectile_speed_override\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].projectile_speed_override, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].projectile_speed_override, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].projectile_speed_override);
+
+// u32 inherit_from_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].inherit_from_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- inherit_from_id         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].inherit_from_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].inherit_from_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].inherit_from_id);
+
+// f32 inherit_from_charge_power
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].inherit_from_charge_power = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- inherit_from_charge_power\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].inherit_from_charge_power, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].inherit_from_charge_power, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].inherit_from_charge_power);
+
+// u32 hud_image_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].hud_image_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- hud_image_id            \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].hud_image_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].hud_image_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].hud_image_id);
+
+// u32 target_requirement
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].target_requirement = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- target_requirement      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].target_requirement, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].target_requirement, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].target_requirement);
+
+// u32 fire_anim_duration_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_anim_duration_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- fire_anim_duration_ms   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_anim_duration_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_anim_duration_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fire_anim_duration_ms);
+
+// u8 sequential_fire_anim_start
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sequential_fire_anim_start = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- sequential_fire_anim_start\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sequential_fire_anim_start, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sequential_fire_anim_start, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sequential_fire_anim_start);
+
+// u8 sequential_fire_anim_count
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sequential_fire_anim_count = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- sequential_fire_anim_count\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sequential_fire_anim_count, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sequential_fire_anim_count, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sequential_fire_anim_count);
+
+// f32 cylof_recoil
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_recoil = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cylof_recoil            \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_recoil, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_recoil, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_recoil);
+
+// f32 cylof_scalar
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_scalar = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cylof_scalar            \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_scalar, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_scalar, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_scalar);
+
+// f32 cylof_scalar_moving
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_scalar_moving = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cylof_scalar_moving     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_scalar_moving, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_scalar_moving, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_scalar_moving);
+
+// f32 cylof_override
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_override = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cylof_override          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_override, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_override, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].cylof_override);
+
+// u32 melee_composite_effect_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].melee_composite_effect_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- melee_composite_effect_id\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].melee_composite_effect_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].melee_composite_effect_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].melee_composite_effect_id);
+
+// u32 melee_ability_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].melee_ability_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- melee_ability_id        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].melee_ability_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].melee_ability_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].melee_ability_id);
+
+// f32 sway_crouch_scalar
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_crouch_scalar = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- sway_crouch_scalar      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_crouch_scalar, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_crouch_scalar, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_crouch_scalar);
+
+// f32 sway_prone_scalar
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_prone_scalar = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- sway_prone_scalar       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_prone_scalar, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_prone_scalar, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].sway_prone_scalar);
+
+// f32 launch_pitch_additive_degrees
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].launch_pitch_additive_degrees = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- launch_pitch_additive_degrees\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].launch_pitch_additive_degrees, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].launch_pitch_additive_degrees, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].launch_pitch_additive_degrees);
+
+// b8 tp_force_camera_overrides
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_force_camera_overrides = endian_read_b8_little(data + offset);
+offset += sizeof(b8);
+printf("-- tp_force_camera_overrides\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_force_camera_overrides, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_force_camera_overrides, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_force_camera_overrides);
+
+// f32 tp_camera_look_offset_x
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_x = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_camera_look_offset_x \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_x);
+
+// f32 tp_camera_look_offset_y
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_y = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_camera_look_offset_y \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_y);
+
+// f32 tp_camera_look_offset_z
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_z = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_camera_look_offset_z \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_z, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_z, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_z);
+
+// f32 tp_camera_position_offset_x
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_x = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_camera_position_offset_x\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_x);
+
+// f32 tp_camera_position_offset_y
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_y = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_camera_position_offset_y\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_y);
+
+// f32 tp_camera_position_offset_z
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_z = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_camera_position_offset_z\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_z, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_z, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_position_offset_z);
+
+// f32 tp_camera_fov
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_fov = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_camera_fov           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_fov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_fov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_fov);
+
+// b8 fp_force_camera_overrides
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_force_camera_overrides = endian_read_b8_little(data + offset);
+offset += sizeof(b8);
+printf("-- fp_force_camera_overrides\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_force_camera_overrides, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_force_camera_overrides, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_force_camera_overrides);
+
+// f32 tp_extra_lead_from_pitch_a
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_from_pitch_a = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_extra_lead_from_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_from_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_from_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_from_pitch_a);
+
+// f32 tp_extra_lead_from_pitch_b
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_from_pitch_b = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_extra_lead_from_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_from_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_from_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_from_pitch_b);
+
+// f32 tp_extra_lead_pitch_a
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_pitch_a = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_extra_lead_pitch_a   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_pitch_a);
+
+// f32 tp_extra_lead_pitch_b
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_pitch_b = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_extra_lead_pitch_b   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_lead_pitch_b);
+
+// f32 tp_extra_height_from_pitch_a
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_from_pitch_a = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_extra_height_from_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_from_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_from_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_from_pitch_a);
+
+// f32 tp_extra_height_from_pitch_b
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_from_pitch_b = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_extra_height_from_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_from_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_from_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_from_pitch_b);
+
+// f32 tp_extra_height_pitch_a
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_pitch_a = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_extra_height_pitch_a \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_pitch_a);
+
+// f32 tp_extra_height_pitch_b
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_pitch_b = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_extra_height_pitch_b \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_height_pitch_b);
+
+// f32 fp_camera_fov
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_camera_fov = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- fp_camera_fov           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_camera_fov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_camera_fov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_camera_fov);
+
+// f32 tp_cr_camera_look_offset_x
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_x = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_look_offset_x\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_x);
+
+// f32 tp_cr_camera_look_offset_y
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_y = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_look_offset_y\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_y);
+
+// f32 tp_cr_camera_look_offset_z
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_z = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_look_offset_z\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_z, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_z, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_z);
+
+// f32 tp_cr_camera_position_offset_x
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_x = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_position_offset_x\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_x);
+
+// f32 tp_cr_camera_position_offset_y
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_y = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_position_offset_y\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_y);
+
+// f32 tp_cr_camera_position_offset_z
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_z = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_position_offset_z\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_z, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_z, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_position_offset_z);
+
+// f32 tp_pr_camera_look_offset_x
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_x = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_pr_camera_look_offset_x\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_x);
+
+// f32 tp_pr_camera_look_offset_y
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_y = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_pr_camera_look_offset_y\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_y);
+
+// f32 tp_pr_camera_look_offset_z
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_z = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_pr_camera_look_offset_z\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_z, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_z, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_look_offset_z);
+
+// f32 tp_pr_camera_position_offset_x
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_x = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_pr_camera_position_offset_x\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_x, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_x, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_x);
+
+// f32 tp_pr_camera_position_offset_y
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_y = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_pr_camera_position_offset_y\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_y, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_y, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_y);
+
+// f32 tp_pr_camera_position_offset_z
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_z = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_pr_camera_position_offset_z\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_z, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_z, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_position_offset_z);
+
+// f32 tp_cr_extra_lead_from_pitch_a
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_from_pitch_a = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_lead_from_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_from_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_from_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_from_pitch_a);
+
+// f32 tp_cr_extra_lead_from_pitch_b
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_from_pitch_b = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_lead_from_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_from_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_from_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_from_pitch_b);
+
+// f32 tp_cr_extra_lead_pitch_a
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_pitch_a = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_lead_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_pitch_a);
+
+// f32 tp_cr_extra_lead_pitch_b
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_pitch_b = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_lead_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_lead_pitch_b);
+
+// f32 tp_cr_extra_height_from_pitch_a
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_from_pitch_a = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_height_from_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_from_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_from_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_from_pitch_a);
+
+// f32 tp_cr_extra_height_from_pitch_b
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_from_pitch_b = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_height_from_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_from_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_from_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_from_pitch_b);
+
+// f32 tp_cr_extra_height_pitch_a
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_pitch_a = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_height_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_pitch_a);
+
+// f32 tp_cr_extra_height_pitch_b
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_pitch_b = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_height_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_height_pitch_b);
+
+// f32 tp_pr_extra_lead_from_pitch_a
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_from_pitch_a = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_pr_extra_lead_from_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_from_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_from_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_from_pitch_a);
+
+// f32 tp_pr_extra_lead_from_pitch_b
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_from_pitch_b = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_pr_extra_lead_from_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_from_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_from_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_from_pitch_b);
+
+// f32 tp_pr_extra_lead_pitch_a
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_pitch_a = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_pr_extra_lead_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_pitch_a);
+
+// f32 tp_pr_extra_lead_pitch_b
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_pitch_b = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_pr_extra_lead_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_lead_pitch_b);
+
+// f32 tp_pr_extra_height_from_pitch_a
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_from_pitch_a = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_pr_extra_height_from_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_from_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_from_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_from_pitch_a);
+
+// f32 tp_pr_extra_height_from_pitch_b
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_from_pitch_b = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_pr_extra_height_from_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_from_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_from_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_from_pitch_b);
+
+// f32 tp_pr_extra_height_pitch_a
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_pitch_a = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_pr_extra_height_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_pitch_a);
+
+// f32 tp_pr_extra_height_pitch_b
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_pitch_b = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_pr_extra_height_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_extra_height_pitch_b);
+
+// f32 tp_camera_distance
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_distance = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_camera_distance      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_distance, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_distance, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_distance);
+
+// f32 tp_cr_camera_distance
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_distance = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_distance   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_distance, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_distance, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_distance);
+
+// f32 tp_pr_camera_distance
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_distance = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_pr_camera_distance   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_distance, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_distance, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_distance);
+
+// f32 tp_cr_camera_fov
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_fov = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_fov        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_fov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_fov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_fov);
+
+// f32 tp_pr_camera_fov
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_fov = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_pr_camera_fov        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_fov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_fov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_pr_camera_fov);
+
+// f32 fp_cr_camera_fov
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_cr_camera_fov = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- fp_cr_camera_fov        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_cr_camera_fov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_cr_camera_fov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_cr_camera_fov);
+
+// f32 fp_pr_camera_fov
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_pr_camera_fov = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- fp_pr_camera_fov        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_pr_camera_fov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_pr_camera_fov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].fp_pr_camera_fov);
+
+// b8 force_fp_scope
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].force_fp_scope = endian_read_b8_little(data + offset);
+offset += sizeof(b8);
+printf("-- force_fp_scope          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].force_fp_scope, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].force_fp_scope, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].force_fp_scope);
+
+// u32 aim_assist_config
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].aim_assist_config = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- aim_assist_config       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].aim_assist_config, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].aim_assist_config, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].aim_assist_config);
+
+// b8 allow_depth_adjustment
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].allow_depth_adjustment = endian_read_b8_little(data + offset);
+offset += sizeof(b8);
+printf("-- allow_depth_adjustment  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].allow_depth_adjustment, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].allow_depth_adjustment, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].allow_depth_adjustment);
+
+// f32 tp_extra_draw_from_pitch_a
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_from_pitch_a = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_extra_draw_from_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_from_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_from_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_from_pitch_a);
+
+// f32 tp_extra_draw_from_pitch_b
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_from_pitch_b = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_extra_draw_from_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_from_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_from_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_from_pitch_b);
+
+// f32 tp_extra_draw_pitch_a
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_pitch_a = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_extra_draw_pitch_a   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_pitch_a);
+
+// f32 tp_extra_draw_pitch_b
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_pitch_b = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_extra_draw_pitch_b   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_extra_draw_pitch_b);
+
+// f32 tp_cr_extra_draw_from_pitch_a
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_from_pitch_a = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_draw_from_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_from_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_from_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_from_pitch_a);
+
+// f32 tp_cr_extra_draw_from_pitch_b
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_from_pitch_b = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_draw_from_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_from_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_from_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_from_pitch_b);
+
+// f32 tp_cr_extra_draw_pitch_a
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_pitch_a = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_draw_pitch_a\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_pitch_a, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_pitch_a, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_pitch_a);
+
+// f32 tp_cr_extra_draw_pitch_b
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_pitch_b = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_extra_draw_pitch_b\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_pitch_b, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_pitch_b, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_extra_draw_pitch_b);
+
+// f32 tp_camera_pos_offset_y_mov
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_pos_offset_y_mov = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_camera_pos_offset_y_mov\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_pos_offset_y_mov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_pos_offset_y_mov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_pos_offset_y_mov);
+
+// f32 tp_camera_look_offset_y_mov
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_y_mov = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_camera_look_offset_y_mov\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_y_mov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_y_mov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_camera_look_offset_y_mov);
+
+// f32 tp_cr_camera_pos_offset_y_mov
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_pos_offset_y_mov = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_pos_offset_y_mov\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_pos_offset_y_mov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_pos_offset_y_mov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_pos_offset_y_mov);
+
+// f32 tp_cr_camera_look_offset_y_mov
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_y_mov = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- tp_cr_camera_look_offset_y_mov\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_y_mov, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_y_mov, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_cr_camera_look_offset_y_mov);
+
+// b8 tp_allow_move_heights
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_allow_move_heights = endian_read_b8_little(data + offset);
+offset += sizeof(b8);
+printf("-- tp_allow_move_heights   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_allow_move_heights, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_allow_move_heights, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_defs[fire_mode_defs_iter].tp_allow_move_heights);
+
+} // fire_mode_defs
+
+// list player_state_group_defs
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs_count = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs = memory_arena_push_length(arena, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs_count * sizeof(packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs_count);
+for (u32 player_state_group_defs_iter = 0; player_state_group_defs_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs_count; player_state_group_defs_iter++)
+{
+// u32 id7
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].id7 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- id7                     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].id7, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].id7, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].id7);
+
+// u32 _id8
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter]._id8 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- _id8                    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter]._id8, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter]._id8, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter]._id8);
+
+// list player_state_properties
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties_count = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties = memory_arena_push_length(arena, packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties_count * sizeof(packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties_count);
+for (u32 player_state_properties_iter = 0; player_state_properties_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties_count; player_state_properties_iter++)
+{
+// u32 group_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].group_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- group_id                \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].group_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].group_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].group_id);
+
+// u32 id9
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].id9 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- id9                     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].id9, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].id9, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].id9);
+
+// u8 flags3
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].flags3 = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- flags3                  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].flags3, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].flags3, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].flags3);
+
+// f32 min_cof
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].min_cof = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- min_cof                 \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].min_cof, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].min_cof, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].min_cof);
+
+// f32 max_cof
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].max_cof = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- max_cof                 \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].max_cof, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].max_cof, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].max_cof);
+
+// f32 cof_recovery_rate
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_rate = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cof_recovery_rate       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_rate, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_rate, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_rate);
+
+// f32 cof_turn_penalty
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_turn_penalty = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cof_turn_penalty        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_turn_penalty, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_turn_penalty, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_turn_penalty);
+
+// u32 shots_before_cof_penalty
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].shots_before_cof_penalty = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- shots_before_cof_penalty\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].shots_before_cof_penalty, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].shots_before_cof_penalty, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].shots_before_cof_penalty);
+
+// f32 cof_recovery_delay_threshold
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_delay_threshold = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cof_recovery_delay_threshold\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_delay_threshold, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_delay_threshold, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_delay_threshold);
+
+// u32 cof_recovery_delay_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_delay_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- cof_recovery_delay_ms   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_delay_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_delay_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_recovery_delay_ms);
+
+// f32 cof_grow_rate
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_grow_rate = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cof_grow_rate           \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_grow_rate, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_grow_rate, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cof_grow_rate);
+
+// f32 min_cyl_of_fire
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].min_cyl_of_fire = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- min_cyl_of_fire         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].min_cyl_of_fire, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].min_cyl_of_fire, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].min_cyl_of_fire);
+
+// f32 max_cyl_of_fire
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].max_cyl_of_fire = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- max_cyl_of_fire         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].max_cyl_of_fire, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].max_cyl_of_fire, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].max_cyl_of_fire);
+
+// f32 cylof_recovery_rate
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_rate = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cylof_recovery_rate     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_rate, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_rate, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_rate);
+
+// f32 cylof_turn_penalty
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_turn_penalty = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cylof_turn_penalty      \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_turn_penalty, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_turn_penalty, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_turn_penalty);
+
+// u32 shots_before_cylof_penalty
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].shots_before_cylof_penalty = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- shots_before_cylof_penalty\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].shots_before_cylof_penalty, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].shots_before_cylof_penalty, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].shots_before_cylof_penalty);
+
+// f32 cylof_recovery_delay_threshold
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_delay_threshold = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cylof_recovery_delay_threshold\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_delay_threshold, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_delay_threshold, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_delay_threshold);
+
+// u32 cylof_recovery_delay_ms
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_delay_ms = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- cylof_recovery_delay_ms \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_delay_ms, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_delay_ms, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_recovery_delay_ms);
+
+// f32 cylof_grow_rate
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_grow_rate = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cylof_grow_rate         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_grow_rate, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_grow_rate, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].player_state_group_defs[player_state_group_defs_iter].player_state_properties[player_state_properties_iter].cylof_grow_rate);
+
+} // player_state_properties
+
+} // player_state_group_defs
+
+// list fire_mode_projectile_mapping_data
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data_count = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data = memory_arena_push_length(arena, packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data_count * sizeof(packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data_count);
+for (u32 fire_mode_projectile_mapping_data_iter = 0; fire_mode_projectile_mapping_data_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data_count; fire_mode_projectile_mapping_data_iter++)
+{
+// u32 id10
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].id10 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- id10                    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].id10, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].id10, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].id10);
+
+// u32 id11
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].id11 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- id11                    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].id11, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].id11, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].id11);
+
+// u32 index
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].index = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- index                   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].index, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].index, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].index);
+
+// u32 projectile_definition_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].projectile_definition_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- projectile_definition_id\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].projectile_definition_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].projectile_definition_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].fire_mode_projectile_mapping_data[fire_mode_projectile_mapping_data_iter].projectile_definition_id);
+
+} // fire_mode_projectile_mapping_data
+
+// list aim_assit_defs
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs = memory_arena_push_length(arena, packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count * sizeof(packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count);
+for (u32 aim_assit_defs_iter = 0; aim_assit_defs_iter < packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs_count; aim_assit_defs_iter++)
+{
+// u32 id12
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].id12 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- id12                    \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].id12, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].id12, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].id12);
+
+// f32 cone_angle
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_angle = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cone_angle              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_angle);
+
+// f32 cone_range
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_range = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- cone_range              \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].cone_range);
+
+// f32 fall_off_cone_range
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].fall_off_cone_range = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- fall_off_cone_range     \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].fall_off_cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].fall_off_cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].fall_off_cone_range);
+
+// f32 magnet_cone_angle
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_angle = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- magnet_cone_angle       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_angle);
+
+// f32 magnet_cone_range
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_range = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- magnet_cone_range       \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_range, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_range, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_cone_range);
+
+// f32 target_override_delay
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_override_delay = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- target_override_delay   \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_override_delay, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_override_delay, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_override_delay);
+
+// f32 target_oos_delay
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_oos_delay = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- target_oos_delay        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_oos_delay, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_oos_delay, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_oos_delay);
+
+// f32 arrive_time
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].arrive_time = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- arrive_time             \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].arrive_time);
+
+// f32 target_motion_update_time
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_motion_update_time = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- target_motion_update_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_motion_update_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_motion_update_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].target_motion_update_time);
+
+// f32 weight
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].weight = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- weight                  \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].weight, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].weight, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].weight);
+
+// f32 min_input_weight_delay_in
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_in = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- min_input_weight_delay_in\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_in, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_in, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_in);
+
+// f32 max_input_weight_delay_in
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_in = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- max_input_weight_delay_in\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_in, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_in, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_in);
+
+// f32 min_input_weight_delay_out
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_out = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- min_input_weight_delay_out\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_out, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_out, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_weight_delay_out);
+
+// f32 max_input_weight_delay_out
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_out = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- max_input_weight_delay_out\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_out, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_out, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_weight_delay_out);
+
+// f32 min_input_actor
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_actor = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- min_input_actor         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_actor, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_actor, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_actor);
+
+// f32 max_input_actor
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_actor = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- max_input_actor         \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_actor, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_actor, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_actor);
+
+// u32 requirement_id
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].requirement_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- requirement_id          \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].requirement_id, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].requirement_id, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].requirement_id);
+
+// f32 magnet_min_angle
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_min_angle = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- magnet_min_angle        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_min_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_min_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_min_angle);
+
+// f32 magnet_dist_for_min_angle
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_min_angle = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- magnet_dist_for_min_angle\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_min_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_min_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_min_angle);
+
+// f32 magnet_max_angle
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_max_angle = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- magnet_max_angle        \t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_max_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_max_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_max_angle);
+
+// f32 magnet_dist_for_max_angle
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_max_angle = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- magnet_dist_for_max_angle\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_max_angle, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_max_angle, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].magnet_dist_for_max_angle);
+
+// f32 min_input_strafe_arrive_time
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_strafe_arrive_time = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- min_input_strafe_arrive_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_strafe_arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_strafe_arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].min_input_strafe_arrive_time);
+
+// f32 max_input_strafe_arrive_time
+packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_strafe_arrive_time = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- max_input_strafe_arrive_time\t%lld\t%llxh\t%f\n", (i64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_strafe_arrive_time, (u64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_strafe_arrive_time, (f64)packet->weapon_byteswithlength[weapon_byteswithlength_iter].aim_assit_defs[aim_assit_defs_iter].max_input_strafe_arrive_time);
+
+} // aim_assit_defs
+
+} // weapon_byteswithlength
 
 } break;
 
