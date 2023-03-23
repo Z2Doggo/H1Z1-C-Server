@@ -603,19 +603,74 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 	};
 	*/
 
+	Zone_Packet_ContainerInitEquippedContainers init_equipped_containers = 
+	{
+		.ignore_this = 0,
+		.character_id = session_state->character_id,
+
+		.container_list_count = 1,
+		.container_list = 
+		(struct container_list_s[1]) {
+			[0] =
+			{
+				.loadout_slot_id = 0,
+
+				.guid_1 = session_state->character_id,
+				.defs_id = 0,
+				.associated_character_id = session_state->character_id,
+				.slots = 0,
+
+				.items_list_count = 1,
+				.items_list = 
+				(struct items_list_s[1]) {
+					[0] = 
+					{
+						.item_defs_id_1 = 0,
+
+						.item_defs_id_2 = 0,
+						.tint_id = 0,
+						.guid_2 = session_state->character_id,
+						.count = 1,
+
+						.unk_qword_1 = 0,
+						.unk_dword_1 = 0,
+						.unk_dword_2 = 0,
+
+						.container_guid = 0,
+						.contain_def_id = 0,
+						.container_slot_id = 0,
+						.base_durability = 0,
+						.current_durability = 0,
+						.max_durability_from_defs = 0,
+						.unk_bool_1 = FALSE,
+						.owner_character_id = session_state->character_id,
+						.unk_dword_3 = 0,
+					},
+				},
+
+				.show_bulk = TRUE,
+				.max_bulk = 0,
+				.unk_dword_4 = 0,
+				.bulk_used = 0,
+				.has_bulk_limit = TRUE,
+			},
+		},
+	};
+
 	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
 	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
 	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_CommandItemDefinitions, &item_defs);
 	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(40), Zone_Packet_Kind_ReferenceDataWeaponDefinitions, &weapon_defs);
 	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientGameSettings, &game_settings);
 	//zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(40), Zone_Packet_Kind_SendSelfToClient, &send_self);
+	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ContainerInitEquippedContainers, &init_equipped_containers);
 
 	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "1.bin");
 	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "2.bin");
 	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(40), "C:\\Users\\Lane\\Desktop\\send_self\\" "3.bin");
 	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "4.bin");
 	zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(40), "C:\\Users\\Lane\\Desktop\\send_self\\" "5.bin");
-	zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "6.bin");
+	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "6.bin");
 	zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "7.bin");
 	zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "8.bin");
 	zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "9.bin");

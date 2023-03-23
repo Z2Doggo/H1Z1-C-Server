@@ -372,6 +372,7 @@
 #define ZONE_STATSBASE_ID 0xc6
 #define ZONE_SCOREBASE_ID 0xc7
 #define ZONE_RESOURCESBASE_ID 0xc8
+#define ZONE_CONTAINERINITEQUIPPEDCONTAINERS_ID 0xc900000002
 #define ZONE_CONSTRUCTIONBASE_ID 0xca
 #define ZONE_UPDATEWEATHERDATA_ID 0xcb
 #define ZONE_NAVGENBASE_ID 0xcc
@@ -794,6 +795,7 @@ ZONE_PACKET_KIND(Zone_Packet_Kind_CharacterSelectSessionResponse, "CharacterSele
 ZONE_PACKET_KIND(Zone_Packet_Kind_StatsBase, "StatsBase"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_ScoreBase, "ScoreBase"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_ResourcesBase, "ResourcesBase"), \
+ZONE_PACKET_KIND(Zone_Packet_Kind_ContainerInitEquippedContainers, "ContainerInitEquippedContainers"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_ConstructionBase, "ConstructionBase"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_UpdateWeatherData, "UpdateWeatherData"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_NavGenBase, "NavGenBase"), \
@@ -1232,6 +1234,7 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_StatsBase] = 0xc6,
 [Zone_Packet_Kind_ScoreBase] = 0xc7,
 [Zone_Packet_Kind_ResourcesBase] = 0xc8,
+[Zone_Packet_Kind_ContainerInitEquippedContainers] = 0xc900000002,
 [Zone_Packet_Kind_ConstructionBase] = 0xca,
 [Zone_Packet_Kind_UpdateWeatherData] = 0xcb,
 [Zone_Packet_Kind_NavGenBase] = 0xcc,
@@ -2156,6 +2159,49 @@ struct Zone_Packet_WallOfData_ClientTransition
 u32 old_state;
 u32 new_state;
 u32 ms_elapsed;
+};
+
+
+typedef struct Zone_Packet_ContainerInitEquippedContainers Zone_Packet_ContainerInitEquippedContainers;
+struct Zone_Packet_ContainerInitEquippedContainers
+{
+u64 ignore_this;
+u64 character_id;
+u32 container_list_count;
+struct container_list_s
+{
+u32 loadout_slot_id;
+u64 guid_1;
+u32 defs_id;
+u64 associated_character_id;
+u32 slots;
+u32 items_list_count;
+struct items_list_s
+{
+u32 item_defs_id_1;
+u32 item_defs_id_2;
+u32 tint_id;
+u64 guid_2;
+u32 count;
+u64 unk_qword_1;
+u32 unk_dword_1;
+u32 unk_dword_2;
+u64 container_guid;
+u32 contain_def_id;
+u32 container_slot_id;
+u32 base_durability;
+u32 current_durability;
+u32 max_durability_from_defs;
+b8 unk_bool_1;
+u64 owner_character_id;
+u32 unk_dword_3;
+}* items_list;
+b8 show_bulk;
+u32 max_bulk;
+u32 unk_dword_4;
+u32 bulk_used;
+b8 has_bulk_limit;
+}* container_list;
 };
 
 
@@ -9256,6 +9302,182 @@ offset += sizeof(u8);
 
 } break;
 
+case Zone_Packet_Kind_ContainerInitEquippedContainers:
+{
+printf("[*] Packing ContainerInitEquippedContainers...\n");
+Zone_Packet_ContainerInitEquippedContainers* packet = packet_ptr;
+
+endian_write_u8_little(buffer + offset, 0xc9);
+offset += sizeof(u8);
+
+endian_write_u32_little(buffer + offset, 0x2);
+offset += sizeof(u32);
+
+// u64 ignore_this
+endian_write_u64_little(buffer + offset, packet->ignore_this);
+offset += sizeof(u64);
+printf("-- ignore_this             \t%lld\t%llxh\t%f\n", (i64)packet->ignore_this, (u64)packet->ignore_this, (f64)packet->ignore_this);
+
+// u64 character_id
+endian_write_u64_little(buffer + offset, packet->character_id);
+offset += sizeof(u64);
+printf("-- character_id            \t%lld\t%llxh\t%f\n", (i64)packet->character_id, (u64)packet->character_id, (f64)packet->character_id);
+
+// list container_list
+endian_write_u32_little(buffer + offset, packet->container_list_count);
+offset += sizeof(u32);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->container_list_count, (u64)packet->container_list_count, (f64)packet->container_list_count);
+
+for (u32 container_list_iter = 0; container_list_iter < packet->container_list_count; container_list_iter++)
+{
+// u32 loadout_slot_id
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].loadout_slot_id);
+offset += sizeof(u32);
+printf("-- loadout_slot_id         \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].loadout_slot_id, (u64)packet->container_list[container_list_iter].loadout_slot_id, (f64)packet->container_list[container_list_iter].loadout_slot_id);
+
+// u64 guid_1
+endian_write_u64_little(buffer + offset, packet->container_list[container_list_iter].guid_1);
+offset += sizeof(u64);
+printf("-- guid_1                  \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].guid_1, (u64)packet->container_list[container_list_iter].guid_1, (f64)packet->container_list[container_list_iter].guid_1);
+
+// u32 defs_id
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].defs_id);
+offset += sizeof(u32);
+printf("-- defs_id                 \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].defs_id, (u64)packet->container_list[container_list_iter].defs_id, (f64)packet->container_list[container_list_iter].defs_id);
+
+// u64 associated_character_id
+endian_write_u64_little(buffer + offset, packet->container_list[container_list_iter].associated_character_id);
+offset += sizeof(u64);
+printf("-- associated_character_id \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].associated_character_id, (u64)packet->container_list[container_list_iter].associated_character_id, (f64)packet->container_list[container_list_iter].associated_character_id);
+
+// u32 slots
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].slots);
+offset += sizeof(u32);
+printf("-- slots                   \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].slots, (u64)packet->container_list[container_list_iter].slots, (f64)packet->container_list[container_list_iter].slots);
+
+// list items_list
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].items_list_count);
+offset += sizeof(u32);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list_count, (u64)packet->container_list[container_list_iter].items_list_count, (f64)packet->container_list[container_list_iter].items_list_count);
+
+for (u32 items_list_iter = 0; items_list_iter < packet->container_list[container_list_iter].items_list_count; items_list_iter++)
+{
+// u32 item_defs_id_1
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].item_defs_id_1);
+offset += sizeof(u32);
+printf("-- item_defs_id_1          \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].item_defs_id_1, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].item_defs_id_1, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].item_defs_id_1);
+
+// u32 item_defs_id_2
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].item_defs_id_2);
+offset += sizeof(u32);
+printf("-- item_defs_id_2          \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].item_defs_id_2, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].item_defs_id_2, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].item_defs_id_2);
+
+// u32 tint_id
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].tint_id);
+offset += sizeof(u32);
+printf("-- tint_id                 \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].tint_id, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].tint_id, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].tint_id);
+
+// u64 guid_2
+endian_write_u64_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].guid_2);
+offset += sizeof(u64);
+printf("-- guid_2                  \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].guid_2, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].guid_2, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].guid_2);
+
+// u32 count
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].count);
+offset += sizeof(u32);
+printf("-- count                   \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].count, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].count, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].count);
+
+// u64 unk_qword_1
+endian_write_u64_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].unk_qword_1);
+offset += sizeof(u64);
+printf("-- unk_qword_1             \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_qword_1, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_qword_1, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_qword_1);
+
+// u32 unk_dword_1
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_1);
+offset += sizeof(u32);
+printf("-- unk_dword_1             \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_1, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_1, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_1);
+
+// u32 unk_dword_2
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_2);
+offset += sizeof(u32);
+printf("-- unk_dword_2             \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_2, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_2, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_2);
+
+// u64 container_guid
+endian_write_u64_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].container_guid);
+offset += sizeof(u64);
+printf("-- container_guid          \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].container_guid, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].container_guid, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].container_guid);
+
+// u32 contain_def_id
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].contain_def_id);
+offset += sizeof(u32);
+printf("-- contain_def_id          \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].contain_def_id, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].contain_def_id, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].contain_def_id);
+
+// u32 container_slot_id
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].container_slot_id);
+offset += sizeof(u32);
+printf("-- container_slot_id       \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].container_slot_id, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].container_slot_id, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].container_slot_id);
+
+// u32 base_durability
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].base_durability);
+offset += sizeof(u32);
+printf("-- base_durability         \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].base_durability, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].base_durability, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].base_durability);
+
+// u32 current_durability
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].current_durability);
+offset += sizeof(u32);
+printf("-- current_durability      \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].current_durability, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].current_durability, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].current_durability);
+
+// u32 max_durability_from_defs
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].max_durability_from_defs);
+offset += sizeof(u32);
+printf("-- max_durability_from_defs\t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].max_durability_from_defs, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].max_durability_from_defs, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].max_durability_from_defs);
+
+// b8 unk_bool_1
+endian_write_b8_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].unk_bool_1);
+offset += sizeof(b8);
+printf("-- unk_bool_1              \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_bool_1, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_bool_1, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_bool_1);
+
+// u64 owner_character_id
+endian_write_u64_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].owner_character_id);
+offset += sizeof(u64);
+printf("-- owner_character_id      \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].owner_character_id, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].owner_character_id, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].owner_character_id);
+
+// u32 unk_dword_3
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_3);
+offset += sizeof(u32);
+printf("-- unk_dword_3             \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_3, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_3, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_3);
+
+} // items_list
+
+// b8 show_bulk
+endian_write_b8_little(buffer + offset, packet->container_list[container_list_iter].show_bulk);
+offset += sizeof(b8);
+printf("-- show_bulk               \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].show_bulk, (u64)packet->container_list[container_list_iter].show_bulk, (f64)packet->container_list[container_list_iter].show_bulk);
+
+// u32 max_bulk
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].max_bulk);
+offset += sizeof(u32);
+printf("-- max_bulk                \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].max_bulk, (u64)packet->container_list[container_list_iter].max_bulk, (f64)packet->container_list[container_list_iter].max_bulk);
+
+// u32 unk_dword_4
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].unk_dword_4);
+offset += sizeof(u32);
+printf("-- unk_dword_4             \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].unk_dword_4, (u64)packet->container_list[container_list_iter].unk_dword_4, (f64)packet->container_list[container_list_iter].unk_dword_4);
+
+// u32 bulk_used
+endian_write_u32_little(buffer + offset, packet->container_list[container_list_iter].bulk_used);
+offset += sizeof(u32);
+printf("-- bulk_used               \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].bulk_used, (u64)packet->container_list[container_list_iter].bulk_used, (f64)packet->container_list[container_list_iter].bulk_used);
+
+// b8 has_bulk_limit
+endian_write_b8_little(buffer + offset, packet->container_list[container_list_iter].has_bulk_limit);
+offset += sizeof(b8);
+printf("-- has_bulk_limit          \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].has_bulk_limit, (u64)packet->container_list[container_list_iter].has_bulk_limit, (f64)packet->container_list[container_list_iter].has_bulk_limit);
+
+} // container_list
+
+} break;
+
 case Zone_Packet_Kind_ConstructionBase:
 {
 printf("[*] Packing ConstructionBase...\n");
@@ -13225,6 +13447,176 @@ printf("-- new_state               \t%lld\t%llxh\t%f\n", (i64)packet->new_state,
 packet->ms_elapsed = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
 printf("-- ms_elapsed              \t%lld\t%llxh\t%f\n", (i64)packet->ms_elapsed, (u64)packet->ms_elapsed, (f64)packet->ms_elapsed);
+
+} break;
+
+case Zone_Packet_Kind_ContainerInitEquippedContainers:
+{
+printf("[*] Unpacking ContainerInitEquippedContainers...\n");
+Zone_Packet_ContainerInitEquippedContainers* packet = packet_ptr;
+
+// u64 ignore_this
+packet->ignore_this = endian_read_u64_little(data + offset);
+offset += sizeof(u64);
+printf("-- ignore_this             \t%lld\t%llxh\t%f\n", (i64)packet->ignore_this, (u64)packet->ignore_this, (f64)packet->ignore_this);
+
+// u64 character_id
+packet->character_id = endian_read_u64_little(data + offset);
+offset += sizeof(u64);
+printf("-- character_id            \t%lld\t%llxh\t%f\n", (i64)packet->character_id, (u64)packet->character_id, (f64)packet->character_id);
+
+// list container_list
+packet->container_list_count = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->container_list = memory_arena_push_length(arena, packet->container_list_count * sizeof(packet->container_list[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->container_list_count);
+for (u32 container_list_iter = 0; container_list_iter < packet->container_list_count; container_list_iter++)
+{
+// u32 loadout_slot_id
+packet->container_list[container_list_iter].loadout_slot_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- loadout_slot_id         \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].loadout_slot_id, (u64)packet->container_list[container_list_iter].loadout_slot_id, (f64)packet->container_list[container_list_iter].loadout_slot_id);
+
+// u64 guid_1
+packet->container_list[container_list_iter].guid_1 = endian_read_u64_little(data + offset);
+offset += sizeof(u64);
+printf("-- guid_1                  \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].guid_1, (u64)packet->container_list[container_list_iter].guid_1, (f64)packet->container_list[container_list_iter].guid_1);
+
+// u32 defs_id
+packet->container_list[container_list_iter].defs_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- defs_id                 \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].defs_id, (u64)packet->container_list[container_list_iter].defs_id, (f64)packet->container_list[container_list_iter].defs_id);
+
+// u64 associated_character_id
+packet->container_list[container_list_iter].associated_character_id = endian_read_u64_little(data + offset);
+offset += sizeof(u64);
+printf("-- associated_character_id \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].associated_character_id, (u64)packet->container_list[container_list_iter].associated_character_id, (f64)packet->container_list[container_list_iter].associated_character_id);
+
+// u32 slots
+packet->container_list[container_list_iter].slots = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- slots                   \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].slots, (u64)packet->container_list[container_list_iter].slots, (f64)packet->container_list[container_list_iter].slots);
+
+// list items_list
+packet->container_list[container_list_iter].items_list_count = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->container_list[container_list_iter].items_list = memory_arena_push_length(arena, packet->container_list[container_list_iter].items_list_count * sizeof(packet->container_list[container_list_iter].items_list[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->container_list[container_list_iter].items_list_count);
+for (u32 items_list_iter = 0; items_list_iter < packet->container_list[container_list_iter].items_list_count; items_list_iter++)
+{
+// u32 item_defs_id_1
+packet->container_list[container_list_iter].items_list[items_list_iter].item_defs_id_1 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- item_defs_id_1          \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].item_defs_id_1, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].item_defs_id_1, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].item_defs_id_1);
+
+// u32 item_defs_id_2
+packet->container_list[container_list_iter].items_list[items_list_iter].item_defs_id_2 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- item_defs_id_2          \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].item_defs_id_2, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].item_defs_id_2, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].item_defs_id_2);
+
+// u32 tint_id
+packet->container_list[container_list_iter].items_list[items_list_iter].tint_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- tint_id                 \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].tint_id, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].tint_id, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].tint_id);
+
+// u64 guid_2
+packet->container_list[container_list_iter].items_list[items_list_iter].guid_2 = endian_read_u64_little(data + offset);
+offset += sizeof(u64);
+printf("-- guid_2                  \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].guid_2, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].guid_2, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].guid_2);
+
+// u32 count
+packet->container_list[container_list_iter].items_list[items_list_iter].count = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- count                   \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].count, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].count, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].count);
+
+// u64 unk_qword_1
+packet->container_list[container_list_iter].items_list[items_list_iter].unk_qword_1 = endian_read_u64_little(data + offset);
+offset += sizeof(u64);
+printf("-- unk_qword_1             \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_qword_1, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_qword_1, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_qword_1);
+
+// u32 unk_dword_1
+packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_1 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- unk_dword_1             \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_1, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_1, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_1);
+
+// u32 unk_dword_2
+packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_2 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- unk_dword_2             \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_2, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_2, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_2);
+
+// u64 container_guid
+packet->container_list[container_list_iter].items_list[items_list_iter].container_guid = endian_read_u64_little(data + offset);
+offset += sizeof(u64);
+printf("-- container_guid          \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].container_guid, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].container_guid, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].container_guid);
+
+// u32 contain_def_id
+packet->container_list[container_list_iter].items_list[items_list_iter].contain_def_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- contain_def_id          \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].contain_def_id, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].contain_def_id, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].contain_def_id);
+
+// u32 container_slot_id
+packet->container_list[container_list_iter].items_list[items_list_iter].container_slot_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- container_slot_id       \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].container_slot_id, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].container_slot_id, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].container_slot_id);
+
+// u32 base_durability
+packet->container_list[container_list_iter].items_list[items_list_iter].base_durability = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- base_durability         \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].base_durability, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].base_durability, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].base_durability);
+
+// u32 current_durability
+packet->container_list[container_list_iter].items_list[items_list_iter].current_durability = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- current_durability      \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].current_durability, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].current_durability, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].current_durability);
+
+// u32 max_durability_from_defs
+packet->container_list[container_list_iter].items_list[items_list_iter].max_durability_from_defs = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- max_durability_from_defs\t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].max_durability_from_defs, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].max_durability_from_defs, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].max_durability_from_defs);
+
+// b8 unk_bool_1
+packet->container_list[container_list_iter].items_list[items_list_iter].unk_bool_1 = endian_read_b8_little(data + offset);
+offset += sizeof(b8);
+printf("-- unk_bool_1              \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_bool_1, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_bool_1, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_bool_1);
+
+// u64 owner_character_id
+packet->container_list[container_list_iter].items_list[items_list_iter].owner_character_id = endian_read_u64_little(data + offset);
+offset += sizeof(u64);
+printf("-- owner_character_id      \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].owner_character_id, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].owner_character_id, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].owner_character_id);
+
+// u32 unk_dword_3
+packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_3 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- unk_dword_3             \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_3, (u64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_3, (f64)packet->container_list[container_list_iter].items_list[items_list_iter].unk_dword_3);
+
+} // items_list
+
+// b8 show_bulk
+packet->container_list[container_list_iter].show_bulk = endian_read_b8_little(data + offset);
+offset += sizeof(b8);
+printf("-- show_bulk               \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].show_bulk, (u64)packet->container_list[container_list_iter].show_bulk, (f64)packet->container_list[container_list_iter].show_bulk);
+
+// u32 max_bulk
+packet->container_list[container_list_iter].max_bulk = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- max_bulk                \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].max_bulk, (u64)packet->container_list[container_list_iter].max_bulk, (f64)packet->container_list[container_list_iter].max_bulk);
+
+// u32 unk_dword_4
+packet->container_list[container_list_iter].unk_dword_4 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- unk_dword_4             \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].unk_dword_4, (u64)packet->container_list[container_list_iter].unk_dword_4, (f64)packet->container_list[container_list_iter].unk_dword_4);
+
+// u32 bulk_used
+packet->container_list[container_list_iter].bulk_used = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- bulk_used               \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].bulk_used, (u64)packet->container_list[container_list_iter].bulk_used, (f64)packet->container_list[container_list_iter].bulk_used);
+
+// b8 has_bulk_limit
+packet->container_list[container_list_iter].has_bulk_limit = endian_read_b8_little(data + offset);
+offset += sizeof(b8);
+printf("-- has_bulk_limit          \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].has_bulk_limit, (u64)packet->container_list[container_list_iter].has_bulk_limit, (f64)packet->container_list[container_list_iter].has_bulk_limit);
+
+} // container_list
 
 } break;
 
