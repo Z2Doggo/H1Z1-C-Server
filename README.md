@@ -50,10 +50,9 @@ Remove the line ~~Server=Lvshaa-liv-l02.h1z1.net:20042;Lvshaa-liv-l02.h1z1.net:2
 
 Add the following:
 
-World=None
-Server=127.0.0.1:20042
-usenewui=1
-sessionId=0
+- World=None
+- Server=127.0.0.1:20042
+- sessionId=0
 
 At the beginning of this file.
 
