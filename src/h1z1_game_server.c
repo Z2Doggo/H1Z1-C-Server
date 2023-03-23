@@ -606,7 +606,7 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
 	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
 	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_CommandItemDefinitions, &item_defs);
-	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ReferenceDataWeaponDefinitions, &weapon_defs);
+	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(40), Zone_Packet_Kind_ReferenceDataWeaponDefinitions, &weapon_defs);
 	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientGameSettings, &game_settings);
 	//zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(40), Zone_Packet_Kind_SendSelfToClient, &send_self);
 
