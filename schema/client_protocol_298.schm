@@ -143,8 +143,30 @@ stream:u32 item_def_reply_1
 packet 0x9 0x47:u32 CommandItemDefinitions
 stream:u32 item_def_reply_2
 {
+	list:u32 item_defs
+	{
+	u32 defs_id
+
 	u8 bitflags1
+	////  X------- NO_TRADE
+	////  -X------ COMBAT_ONLY
+	////  --X----- NO_LIVE_GAMER
+	////  ---X---- SINGLE_USE
+	////  ----X--- NON_MINI_GAME
+	////  -----X-- MEMBERS_ONLY
+	////  ------X- NO_SALE
+	////  -------X FORCE_DISABLE_PREVIEW
+	
 	u8 bitflags2
+	////  X------- PERSIST_PROFILE_SWITCH
+	////  -X------ FLAG_QUICK_USE
+	////  --X----- FLAG_NO_DRAG_DROP
+	////  ---X---- FLAG_ACCOUNT_SCOPE
+	////  ----X--- FLAG_CAN_EQUIP
+	////  -----X-- bit5
+	////  ------X- bit6
+	////  -------X bit7
+	
 	u32 name_id
 	u32 description_id
 	u32 content_id
@@ -217,12 +239,12 @@ stream:u32 item_def_reply_2
 	{
 		u32 unk_dword_9
 		u32 stat_id
-		f32 base
-		f32 modifier
+		u32 base
+		u32 modifier
 		u32 unk_dword_10
+	}	
 	}
 }
-
 packet 0xa 0:u16 AdminBase
 packet 0xb ClientBeginZoning
 packet 0xc 0:u16 CombatBase
@@ -407,7 +429,331 @@ string:u32 	lighting
 u8         	unk_bool3
 
 
-packet 0x17 ReferenceDataBase
+packet 0x17 0x04:u16 ReferenceDataWeaponDefinitions
+stream:u32 weapon_byteswithlength
+{
+	list:u32 weapon_defs
+	{
+	u32 id1
+	u32 id2
+	u32 weapon_group_id
+	u8 flags1
+	u32 equip_ms
+	u32 unequip_ms
+	u32 from_passive_ms
+	u32 to_passive_ms
+	u32 xp_category
+	u32 to_iron_sights_ms
+	u32 from_iron_sights_ms
+	u32 to_iron_sights_anim_ms
+	u32 from_iron_sights_anim_ms
+	u32 sprint_recovery_ms
+	u32 next_use_delay_msec
+	f32 turn_rate_modifier
+	f32 movement_speed_modifier
+	u32 propulsion_type
+	u32 heat_bleed_off_rate
+	u32 heat_capacity
+	u32 overheat_penalty_ms
+	u32 range_string_id
+	
+	u32 melee_detect_width
+	u32 melee_detect_height
+
+	string:u32 anim_set_name
+	u32 vehicle_fp_camera_id
+	u32 vehicle_tp_camera_id
+	u32 overheat_effect_id
+	f32 min_pitch
+	f32 max_pitch
+	u32 audio_game_object
+
+	list:u32 ammo_slots
+	{
+	u32 ammo_id
+	u32 clip_size
+	u32 capacity
+	b8 start_empty
+	u32 refill_ammo_per_tick
+	u32 refill_ammo_delay_ms
+	u32 clip_attachment_slot
+	string:u32 clip_model_name
+	string:u32 reload_weapon_bone
+	string:u32 reload_character_bone
+	}
+
+	list:u32 fire_groups
+	{
+	u32 fire_group_id
+	}
+	}
+
+	list:u32 fire_group_defs
+	{
+	u32 id3
+	u32 id4
+
+	list:u32 fire_mode_list
+	{
+	u32 fire_mode_1
+	}
+
+	u8 flags2
+	u32 chamber_duration_ms
+	u32 image_set_override
+	u32 transition_duration_ms
+	u32 anim_actor_slot_override
+	u32 deployable_id
+	u32 spin_up_time_ms
+	u32 spin_up_movement_modifier
+	u32 spin_up_turn_rate_modifier
+	u32 spool_up_time_ms
+	u32 spool_up_initial_refire_ms
+	}
+
+	list:u32 fire_mode_defs
+	{
+	u32 id5
+	u32 id6
+
+	u8 flag1
+	u8 flag2
+	u8 flag3
+
+	u8 type
+	u32 ammo_item_id
+	u8 ammo_slot
+	u8 burst_count
+	u16 fire_duration_ms
+	u16 fire_cooldown_duration_ms
+	u16 refire_time_ms
+	u16 auto_fire_time_ms
+	u16 cook_time_ms
+	f32 range
+	u8 ammo_per_shot
+	u16 reload_time_ms
+	u16 reload_chamber_time_ms
+	u16 reload_ammo_fill_time_ms
+	u16 reload_loop_start_time_ms
+	u16 reload_loop_end_time_ms
+	u8 pellets_per_shot
+	f32 pellet_spread
+	f32 cof_recoil
+	f32 cof_scalar
+	f32 cof_scalar_moving
+	f32 cof_override
+	f32 recoil_angle_min
+	f32 recoil_angle_max
+	f32 recoil_horizontal_tolerance
+	f32 recoil_horizontal_min
+	f32 recoil_horizontal_max
+	f32 recoil_magnitude_min
+	f32 recoil_magnitude_max
+	u16 recoil_recovery_delay_ms
+	f32 recoil_recovery_rate
+	f32 recoil_recovery_acceleration
+	u8 recoil_shots_at_min_magnitude
+	f32 recoil_max_total_magnitude
+	f32 recoil_increase
+	f32 recoil_increase_crouched
+	f32 recoil_first_shot_modifier
+	f32 recoil_horizontal_min_increase
+  	f32 recoil_horizontal_max_increase
+	u16 fire_detect_range
+	f32 effect_group
+	f32 player_state_group_id
+	f32 movement_modifier
+	f32 turn_modifier
+	f32 lock_on_icon_id
+	f32 lock_on_angle
+	f32 lock_on_radius
+	f32 lock_on_range
+	f32 lock_on_range_close
+	f32 lock_on_range_far
+	u16 lock_on_acquire_time_ms
+	u16 lock_on_acquire_time_close_ms
+	u16 lock_on_acquire_time_far_ms
+	u16 lock_on_lose_time_ms
+	f32 default_zoom
+
+	f32 fp_offset_x
+	f32 fp_offset_y
+	f32 fp_offset_z
+
+	u8 reticle_id
+	u8 full_screen_effect
+	u32 heat_per_shot
+	u32 heat_threshold
+	u16 heat_recovery_delay_ms
+
+	f32 sway_amplitude_x
+	f32 sway_amplitude_y
+
+	f32 sway_period_x
+	f32 sway_period_y
+
+	f32 sway_initial_y_offset
+	f32 arms_fov_scalar
+	f32 anim_kick_magnitude
+	f32 anim_recoil_magnitude
+	u32 description_id
+	u32 indirect_effect
+	f32 bullet_arc_kick_angle
+	f32 projectile_speed_override
+	u32 inherit_from_id
+	f32 inherit_from_charge_power
+	u32 hud_image_id
+	u32 target_requirement
+	u32 fire_anim_duration_ms
+	u8 sequential_fire_anim_start
+	u8 sequential_fire_anim_count
+	f32 cylof_recoil
+	f32 cylof_scalar
+	f32 cylof_scalar_moving
+	f32 cylof_override
+	u32 melee_composite_effect_id
+	u32 melee_ability_id
+	f32 sway_crouch_scalar
+	f32 sway_prone_scalar
+	f32 launch_pitch_additive_degrees
+	b8 tp_force_camera_overrides
+	f32 tp_camera_look_offset_x
+	f32 tp_camera_look_offset_y
+	f32 tp_camera_look_offset_z
+	f32 tp_camera_position_offset_x
+	f32 tp_camera_position_offset_y
+	f32 tp_camera_position_offset_z
+	f32 tp_camera_fov
+	b8 fp_force_camera_overrides
+	f32 tp_extra_lead_from_pitch_a
+	f32 tp_extra_lead_from_pitch_b
+	f32 tp_extra_lead_pitch_a
+	f32 tp_extra_lead_pitch_b
+	f32 tp_extra_height_from_pitch_a
+	f32 tp_extra_height_from_pitch_b
+	f32 tp_extra_height_pitch_a
+	f32 tp_extra_height_pitch_b
+	f32 fp_camera_fov
+	f32 tp_cr_camera_look_offset_x
+	f32 tp_cr_camera_look_offset_y
+	f32 tp_cr_camera_look_offset_z
+	f32 tp_cr_camera_position_offset_x
+	f32 tp_cr_camera_position_offset_y
+	f32 tp_cr_camera_position_offset_z
+	f32 tp_pr_camera_look_offset_x
+	f32 tp_pr_camera_look_offset_y
+	f32 tp_pr_camera_look_offset_z
+	f32 tp_pr_camera_position_offset_x
+	f32 tp_pr_camera_position_offset_y
+	f32 tp_pr_camera_position_offset_z
+	f32 tp_cr_extra_lead_from_pitch_a
+	f32 tp_cr_extra_lead_from_pitch_b
+	f32 tp_cr_extra_lead_pitch_a
+	f32 tp_cr_extra_lead_pitch_b
+	f32 tp_cr_extra_height_from_pitch_a
+	f32 tp_cr_extra_height_from_pitch_b
+	f32 tp_cr_extra_height_pitch_a
+	f32 tp_cr_extra_height_pitch_b
+	f32 tp_pr_extra_lead_from_pitch_a
+	f32 tp_pr_extra_lead_from_pitch_b
+	f32 tp_pr_extra_lead_pitch_a
+	f32 tp_pr_extra_lead_pitch_b
+	f32 tp_pr_extra_height_from_pitch_a
+	f32 tp_pr_extra_height_from_pitch_b
+	f32 tp_pr_extra_height_pitch_a
+	f32 tp_pr_extra_height_pitch_b
+	f32 tp_camera_distance
+	f32 tp_cr_camera_distance
+	f32 tp_pr_camera_distance
+	f32 tp_cr_camera_fov
+	f32 tp_pr_camera_fov
+	f32 fp_cr_camera_fov
+	f32 fp_pr_camera_fov
+	b8 force_fp_scope
+	u32 aim_assist_config
+	b8 allow_depth_adjustment
+	f32 tp_extra_draw_from_pitch_a
+	f32 tp_extra_draw_from_pitch_b
+	f32 tp_extra_draw_pitch_a
+	f32 tp_extra_draw_pitch_b
+	f32 tp_cr_extra_draw_from_pitch_a
+	f32 tp_cr_extra_draw_from_pitch_b
+	f32 tp_cr_extra_draw_pitch_a
+	f32 tp_cr_extra_draw_pitch_b
+	f32 tp_camera_pos_offset_y_mov
+	f32 tp_camera_look_offset_y_mov
+	f32 tp_cr_camera_pos_offset_y_mov
+	f32 tp_cr_camera_look_offset_y_mov
+	b8 tp_allow_move_heights
+	}
+
+	list:u32 player_state_group_defs
+	{
+	u32 id7
+	u32 _id8
+
+	list:u32 player_state_properties
+	{
+	u32 group_id
+	
+	u32 id9
+	u8 flags3
+	f32 min_cof
+	f32 max_cof
+	f32 cof_recovery_rate
+	f32 cof_turn_penalty
+	u32 shots_before_cof_penalty
+	f32 cof_recovery_delay_threshold
+	u32 cof_recovery_delay_ms
+	f32 cof_grow_rate
+	f32 min_cyl_of_fire
+	f32 max_cyl_of_fire
+	f32 cylof_recovery_rate
+	f32 cylof_turn_penalty
+	u32 shots_before_cylof_penalty
+	f32 cylof_recovery_delay_threshold
+	u32 cylof_recovery_delay_ms
+	f32 cylof_grow_rate
+	}
+	}
+
+	list:u32 fire_mode_projectile_mapping_data
+	{
+	u32 id10
+	u32 id11
+	u32 index
+	u32 projectile_definition_id
+	}
+
+	list:u32 aim_assit_defs
+	{
+	u32 id12
+	f32 cone_angle
+	f32 cone_range
+	f32 fall_off_cone_range
+	f32 magnet_cone_angle
+	f32 magnet_cone_range
+	f32 target_override_delay
+	f32 target_oos_delay
+	f32 arrive_time
+	f32 target_motion_update_time
+	f32 weight
+	f32 min_input_weight_delay_in
+	f32 max_input_weight_delay_in
+	f32 min_input_weight_delay_out
+	f32 max_input_weight_delay_out
+	f32 min_input_actor
+	f32 max_input_actor
+	u32 requirement_id
+	f32 magnet_min_angle
+	f32 magnet_dist_for_min_angle
+	f32 magnet_max_angle
+	f32 magnet_dist_for_max_angle
+	f32 min_input_strafe_arrive_time
+	f32 max_input_strafe_arrive_time
+	}
+}
+
 packet 0x18 ObjectiveBase
 packet 0x19 DebugBase
 packet 0x1a UiBase
