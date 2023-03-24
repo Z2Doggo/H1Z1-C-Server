@@ -657,30 +657,47 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 		},
 	};
 
-	/*
+	
 	Zone_Packet_UpdateWeatherData updt_weather_data =
 	{
-		.name				= "sky_Z_clouds.dds",
+		.unknownDword1 = 1,
+		.fog_density = 0.0001733333,
+		.fog_floor = 10,
+		.fog_gradient = 0.0144,
+		.rain = 0,
+		.temp = 75,
+		.color_gradient = 0,
+		.unknown_dword8 = 0.05,
+		.unknown_dword9 = 0,
+		.unknown_dword10 = 0.05,
+		.unknown_dword11 = 0.15,
+		.unknown_dword12 = 0,
+		.sun_axis_x = 0,
+		.sun_axis_y = 0,
+		.unknown_dword15 = 0,
+		.disable_trees = -1,
+		.disable_trees1 = -0.05,
+		.disable_trees2 = -1,
+		.wind = 3,
+		.unknown_dword20 = 0,
+		.unknown_dword21 = 1,
 
-		.color_gradient		= 0.,
-		.unknown_dword8		= 0.05,
-		.unknown_dword10	= 0.05,
-		.unknown_dword11	= 0.15,
-		.wind			 	= 3,
-		.unknown_dword21 	= 1,
-		.unknown_dword22 	= 0.3,
-		.unknown_dword23 	= -0.002,
-		.unknown_dword24 	= 0,
-		.unknown_dword25 	= 1000,
-		.unknown_dword26 	= 0.2,
-		.unknown_dword28 	= 0.002,
-		.unknown_dword29 	= 8000,
-		.ao_size 			= 0,
-		.ao_gamma 			= 0.25,
-		.ao_blackpoint 		= 7,
-		.unknown_dword33 	= 0.5,
+		.name_length = 16,
+		.name = "sky_Z_clouds.dds",
+
+		.unknown_dword22 = 0.3,
+		.unknown_dword23 = -0.002,
+		.unknown_dword24 = 0,
+		.unknown_dword25 = 1000,
+		.unknown_dword26 = 0.2,
+		.unknown_dword27 = 0,
+		.unknown_dword28 = 0.002,
+		.unknown_dword29 = 8000,
+		.ao_size = 0,
+		.ao_gamma = 0.25,
+		.ao_blackpoint = 7,
+		.unknown_dword33 = 0.5,
 	};
-	*/
 
 	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
 	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
@@ -689,8 +706,7 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientGameSettings, &game_settings);
 	//zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(40), Zone_Packet_Kind_SendSelfToClient, &send_self);
 	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ContainerInitEquippedContainers, &init_equipped_containers);
-	//zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ContinentBattleInfo, &battle_info);
-	//zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_UpdateWeatherData, &updt_weather_data);
+	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_UpdateWeatherData, &updt_weather_data);
 
 	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "1.bin");
 	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "2.bin");
@@ -700,7 +716,7 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "6.bin");
 	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "7.bin");
 	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "8.bin");
-	zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "9.bin");
+	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "9.bin");
 	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "10.bin");
 }
 
