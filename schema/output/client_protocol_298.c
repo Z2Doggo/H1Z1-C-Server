@@ -318,7 +318,6 @@
 #define ZONE_SENDSECURITYPACKETANDSELFDESTRUCT_ID 0x99
 #define ZONE_GETCONTINENTBATTLEINFO_ID 0x98
 #define ZONE_GETRESPAWNLOCATIONS_ID 0x9a
-#define ZONE_WALLOFDATABASE_ID 0x9b0000
 #define ZONE_WALLOFDATA_UIEVENT_ID 0x9b0005
 #define ZONE_WALLOFDATA_CLIENTSYSTEMINFO_ID 0x9b0006
 #define ZONE_WALLOFDATA_VOICECHATEVENT_ID 0x9b0007
@@ -741,7 +740,6 @@ ZONE_PACKET_KIND(Zone_Packet_Kind_ContinentBattleInfo, "ContinentBattleInfo"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_SendSecurityPacketAndSelfDestruct, "SendSecurityPacketAndSelfDestruct"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_GetContinentBattleInfo, "GetContinentBattleInfo"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_GetRespawnLocations, "GetRespawnLocations"), \
-ZONE_PACKET_KIND(Zone_Packet_Kind_WallOfDataBase, "WallOfDataBase"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_WallOfData_UIEvent, "WallOfData_UIEvent"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_WallOfData_ClientSystemInfo, "WallOfData_ClientSystemInfo"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_WallOfData_VoiceChatEvent, "WallOfData_VoiceChatEvent"), \
@@ -1180,7 +1178,6 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_SendSecurityPacketAndSelfDestruct] = 0x99,
 [Zone_Packet_Kind_GetContinentBattleInfo] = 0x98,
 [Zone_Packet_Kind_GetRespawnLocations] = 0x9a,
-[Zone_Packet_Kind_WallOfDataBase] = 0x9b0000,
 [Zone_Packet_Kind_WallOfData_UIEvent] = 0x9b0005,
 [Zone_Packet_Kind_WallOfData_ClientSystemInfo] = 0x9b0006,
 [Zone_Packet_Kind_WallOfData_VoiceChatEvent] = 0x9b0007,
@@ -2133,6 +2130,27 @@ b8 unk_bool_2;
 };
 
 
+typedef struct Zone_Packet_ContinentBattleInfo Zone_Packet_ContinentBattleInfo;
+struct Zone_Packet_ContinentBattleInfo
+{
+u32 zones_count;
+struct zones_s
+{
+u32 continent_id;
+u32 info_name_id;
+u32 zone_description_id;
+u8 population;
+u8 regionPercent;
+u8 populationBuff;
+u8 populationTargetPercent;
+u32 zone_name_length;
+char* zone_name;
+f32 hex_size;
+u8 is_production_zone;
+}* zones;
+};
+
+
 typedef struct Zone_Packet_WallOfData_UIEvent Zone_Packet_WallOfData_UIEvent;
 struct Zone_Packet_WallOfData_UIEvent
 {
@@ -2159,6 +2177,24 @@ struct Zone_Packet_WallOfData_ClientTransition
 u32 old_state;
 u32 new_state;
 u32 ms_elapsed;
+};
+
+
+typedef struct Zone_Packet_RewardBuffInfo Zone_Packet_RewardBuffInfo;
+struct Zone_Packet_RewardBuffInfo
+{
+f32 unk_float_1;
+f32 unk_float_2;
+f32 unk_float_3;
+f32 unk_float_4;
+f32 unk_float_5;
+f32 unk_float_6;
+f32 unk_float_7;
+f32 unk_float_8;
+f32 unk_float_9;
+f32 unk_float_10;
+f32 unk_float_11;
+f32 unk_float_12;
 };
 
 
@@ -2202,6 +2238,47 @@ u32 unk_dword_4;
 u32 bulk_used;
 b8 has_bulk_limit;
 }* container_list;
+};
+
+
+typedef struct Zone_Packet_UpdateWeatherData Zone_Packet_UpdateWeatherData;
+struct Zone_Packet_UpdateWeatherData
+{
+f32 unknownDword1;
+f32 fog_density;
+f32 fog_floor;
+f32 fog_gradient;
+f32 rain;
+f32 temp;
+f32 color_gradient;
+f32 unknown_dword8;
+f32 unknown_dword9;
+f32 unknown_dword10;
+f32 unknown_dword11;
+f32 unknown_dword12;
+f32 sun_axis_x;
+f32 sun_axis_y;
+f32 unknown_dword15;
+f32 disable_trees;
+f32 disable_trees1;
+f32 disable_trees2;
+f32 wind;
+f32 unknown_dword20;
+f32 unknown_dword21;
+u32 name_length;
+char* name;
+f32 unknown_dword22;
+f32 unknown_dword23;
+f32 unknown_dword24;
+f32 unknown_dword25;
+f32 unknown_dword26;
+f32 unknown_dword27;
+f32 unknown_dword28;
+f32 unknown_dword29;
+f32 ao_size;
+f32 ao_gamma;
+f32 ao_blackpoint;
+f32 unknown_dword33;
 };
 
 
@@ -8729,8 +8806,74 @@ offset += sizeof(u8);
 case Zone_Packet_Kind_ContinentBattleInfo:
 {
 printf("[*] Packing ContinentBattleInfo...\n");
+Zone_Packet_ContinentBattleInfo* packet = packet_ptr;
+
 endian_write_u8_little(buffer + offset, 0x97);
 offset += sizeof(u8);
+
+// list zones
+endian_write_u32_little(buffer + offset, packet->zones_count);
+offset += sizeof(u32);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->zones_count, (u64)packet->zones_count, (f64)packet->zones_count);
+
+for (u32 zones_iter = 0; zones_iter < packet->zones_count; zones_iter++)
+{
+// u32 continent_id
+endian_write_u32_little(buffer + offset, packet->zones[zones_iter].continent_id);
+offset += sizeof(u32);
+printf("-- continent_id            \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].continent_id, (u64)packet->zones[zones_iter].continent_id, (f64)packet->zones[zones_iter].continent_id);
+
+// u32 info_name_id
+endian_write_u32_little(buffer + offset, packet->zones[zones_iter].info_name_id);
+offset += sizeof(u32);
+printf("-- info_name_id            \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].info_name_id, (u64)packet->zones[zones_iter].info_name_id, (f64)packet->zones[zones_iter].info_name_id);
+
+// u32 zone_description_id
+endian_write_u32_little(buffer + offset, packet->zones[zones_iter].zone_description_id);
+offset += sizeof(u32);
+printf("-- zone_description_id     \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].zone_description_id, (u64)packet->zones[zones_iter].zone_description_id, (f64)packet->zones[zones_iter].zone_description_id);
+
+// u8 population
+endian_write_u8_little(buffer + offset, packet->zones[zones_iter].population);
+offset += sizeof(u8);
+printf("-- population              \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].population, (u64)packet->zones[zones_iter].population, (f64)packet->zones[zones_iter].population);
+
+// u8 regionPercent
+endian_write_u8_little(buffer + offset, packet->zones[zones_iter].regionPercent);
+offset += sizeof(u8);
+printf("-- regionPercent           \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].regionPercent, (u64)packet->zones[zones_iter].regionPercent, (f64)packet->zones[zones_iter].regionPercent);
+
+// u8 populationBuff
+endian_write_u8_little(buffer + offset, packet->zones[zones_iter].populationBuff);
+offset += sizeof(u8);
+printf("-- populationBuff          \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].populationBuff, (u64)packet->zones[zones_iter].populationBuff, (f64)packet->zones[zones_iter].populationBuff);
+
+// u8 populationTargetPercent
+endian_write_u8_little(buffer + offset, packet->zones[zones_iter].populationTargetPercent);
+offset += sizeof(u8);
+printf("-- populationTargetPercent \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].populationTargetPercent, (u64)packet->zones[zones_iter].populationTargetPercent, (f64)packet->zones[zones_iter].populationTargetPercent);
+
+// string zone_name
+endian_write_u32_little(buffer + offset, packet->zones[zones_iter].zone_name_length);
+offset += sizeof(u32);
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].zone_name_length, (u64)packet->zones[zones_iter].zone_name_length, (f64)packet->zones[zones_iter].zone_name_length);
+for (u32 zone_name_iter = 0; zone_name_iter < packet->zones[zones_iter].zone_name_length; zone_name_iter++)
+{
+endian_write_i8_little(buffer + offset, packet->zones[zones_iter].zone_name[zone_name_iter]);
+offset++;
+}
+
+// f32 hex_size
+endian_write_f32_little(buffer + offset, packet->zones[zones_iter].hex_size);
+offset += sizeof(f32);
+printf("-- hex_size                \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].hex_size, (u64)packet->zones[zones_iter].hex_size, (f64)packet->zones[zones_iter].hex_size);
+
+// u8 is_production_zone
+endian_write_u8_little(buffer + offset, packet->zones[zones_iter].is_production_zone);
+offset += sizeof(u8);
+printf("-- is_production_zone      \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].is_production_zone, (u64)packet->zones[zones_iter].is_production_zone, (f64)packet->zones[zones_iter].is_production_zone);
+
+} // zones
 
 } break;
 
@@ -8755,17 +8898,6 @@ case Zone_Packet_Kind_GetRespawnLocations:
 printf("[*] Packing GetRespawnLocations...\n");
 endian_write_u8_little(buffer + offset, 0x9a);
 offset += sizeof(u8);
-
-} break;
-
-case Zone_Packet_Kind_WallOfDataBase:
-{
-printf("[*] Packing WallOfDataBase...\n");
-endian_write_u8_little(buffer + offset, 0x9b);
-offset += sizeof(u8);
-
-endian_write_u16_little(buffer + offset, 0);
-offset += sizeof(u16);
 
 } break;
 
@@ -9096,8 +9228,70 @@ offset += sizeof(u8);
 case Zone_Packet_Kind_RewardBuffInfo:
 {
 printf("[*] Packing RewardBuffInfo...\n");
+Zone_Packet_RewardBuffInfo* packet = packet_ptr;
+
 endian_write_u8_little(buffer + offset, 0xb1);
 offset += sizeof(u8);
+
+// f32 unk_float_1
+endian_write_f32_little(buffer + offset, packet->unk_float_1);
+offset += sizeof(f32);
+printf("-- unk_float_1             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_1, (u64)packet->unk_float_1, (f64)packet->unk_float_1);
+
+// f32 unk_float_2
+endian_write_f32_little(buffer + offset, packet->unk_float_2);
+offset += sizeof(f32);
+printf("-- unk_float_2             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_2, (u64)packet->unk_float_2, (f64)packet->unk_float_2);
+
+// f32 unk_float_3
+endian_write_f32_little(buffer + offset, packet->unk_float_3);
+offset += sizeof(f32);
+printf("-- unk_float_3             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_3, (u64)packet->unk_float_3, (f64)packet->unk_float_3);
+
+// f32 unk_float_4
+endian_write_f32_little(buffer + offset, packet->unk_float_4);
+offset += sizeof(f32);
+printf("-- unk_float_4             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_4, (u64)packet->unk_float_4, (f64)packet->unk_float_4);
+
+// f32 unk_float_5
+endian_write_f32_little(buffer + offset, packet->unk_float_5);
+offset += sizeof(f32);
+printf("-- unk_float_5             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_5, (u64)packet->unk_float_5, (f64)packet->unk_float_5);
+
+// f32 unk_float_6
+endian_write_f32_little(buffer + offset, packet->unk_float_6);
+offset += sizeof(f32);
+printf("-- unk_float_6             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_6, (u64)packet->unk_float_6, (f64)packet->unk_float_6);
+
+// f32 unk_float_7
+endian_write_f32_little(buffer + offset, packet->unk_float_7);
+offset += sizeof(f32);
+printf("-- unk_float_7             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_7, (u64)packet->unk_float_7, (f64)packet->unk_float_7);
+
+// f32 unk_float_8
+endian_write_f32_little(buffer + offset, packet->unk_float_8);
+offset += sizeof(f32);
+printf("-- unk_float_8             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_8, (u64)packet->unk_float_8, (f64)packet->unk_float_8);
+
+// f32 unk_float_9
+endian_write_f32_little(buffer + offset, packet->unk_float_9);
+offset += sizeof(f32);
+printf("-- unk_float_9             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_9, (u64)packet->unk_float_9, (f64)packet->unk_float_9);
+
+// f32 unk_float_10
+endian_write_f32_little(buffer + offset, packet->unk_float_10);
+offset += sizeof(f32);
+printf("-- unk_float_10            \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_10, (u64)packet->unk_float_10, (f64)packet->unk_float_10);
+
+// f32 unk_float_11
+endian_write_f32_little(buffer + offset, packet->unk_float_11);
+offset += sizeof(f32);
+printf("-- unk_float_11            \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_11, (u64)packet->unk_float_11, (f64)packet->unk_float_11);
+
+// f32 unk_float_12
+endian_write_f32_little(buffer + offset, packet->unk_float_12);
+offset += sizeof(f32);
+printf("-- unk_float_12            \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_12, (u64)packet->unk_float_12, (f64)packet->unk_float_12);
 
 } break;
 
@@ -9489,8 +9683,185 @@ offset += sizeof(u8);
 case Zone_Packet_Kind_UpdateWeatherData:
 {
 printf("[*] Packing UpdateWeatherData...\n");
+Zone_Packet_UpdateWeatherData* packet = packet_ptr;
+
 endian_write_u8_little(buffer + offset, 0xcb);
 offset += sizeof(u8);
+
+// f32 unknownDword1
+endian_write_f32_little(buffer + offset, packet->unknownDword1);
+offset += sizeof(f32);
+printf("-- unknownDword1           \t%lld\t%llxh\t%f\n", (i64)packet->unknownDword1, (u64)packet->unknownDword1, (f64)packet->unknownDword1);
+
+// f32 fog_density
+endian_write_f32_little(buffer + offset, packet->fog_density);
+offset += sizeof(f32);
+printf("-- fog_density             \t%lld\t%llxh\t%f\n", (i64)packet->fog_density, (u64)packet->fog_density, (f64)packet->fog_density);
+
+// f32 fog_floor
+endian_write_f32_little(buffer + offset, packet->fog_floor);
+offset += sizeof(f32);
+printf("-- fog_floor               \t%lld\t%llxh\t%f\n", (i64)packet->fog_floor, (u64)packet->fog_floor, (f64)packet->fog_floor);
+
+// f32 fog_gradient
+endian_write_f32_little(buffer + offset, packet->fog_gradient);
+offset += sizeof(f32);
+printf("-- fog_gradient            \t%lld\t%llxh\t%f\n", (i64)packet->fog_gradient, (u64)packet->fog_gradient, (f64)packet->fog_gradient);
+
+// f32 rain
+endian_write_f32_little(buffer + offset, packet->rain);
+offset += sizeof(f32);
+printf("-- rain                    \t%lld\t%llxh\t%f\n", (i64)packet->rain, (u64)packet->rain, (f64)packet->rain);
+
+// f32 temp
+endian_write_f32_little(buffer + offset, packet->temp);
+offset += sizeof(f32);
+printf("-- temp                    \t%lld\t%llxh\t%f\n", (i64)packet->temp, (u64)packet->temp, (f64)packet->temp);
+
+// f32 color_gradient
+endian_write_f32_little(buffer + offset, packet->color_gradient);
+offset += sizeof(f32);
+printf("-- color_gradient          \t%lld\t%llxh\t%f\n", (i64)packet->color_gradient, (u64)packet->color_gradient, (f64)packet->color_gradient);
+
+// f32 unknown_dword8
+endian_write_f32_little(buffer + offset, packet->unknown_dword8);
+offset += sizeof(f32);
+printf("-- unknown_dword8          \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword8, (u64)packet->unknown_dword8, (f64)packet->unknown_dword8);
+
+// f32 unknown_dword9
+endian_write_f32_little(buffer + offset, packet->unknown_dword9);
+offset += sizeof(f32);
+printf("-- unknown_dword9          \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword9, (u64)packet->unknown_dword9, (f64)packet->unknown_dword9);
+
+// f32 unknown_dword10
+endian_write_f32_little(buffer + offset, packet->unknown_dword10);
+offset += sizeof(f32);
+printf("-- unknown_dword10         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword10, (u64)packet->unknown_dword10, (f64)packet->unknown_dword10);
+
+// f32 unknown_dword11
+endian_write_f32_little(buffer + offset, packet->unknown_dword11);
+offset += sizeof(f32);
+printf("-- unknown_dword11         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword11, (u64)packet->unknown_dword11, (f64)packet->unknown_dword11);
+
+// f32 unknown_dword12
+endian_write_f32_little(buffer + offset, packet->unknown_dword12);
+offset += sizeof(f32);
+printf("-- unknown_dword12         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword12, (u64)packet->unknown_dword12, (f64)packet->unknown_dword12);
+
+// f32 sun_axis_x
+endian_write_f32_little(buffer + offset, packet->sun_axis_x);
+offset += sizeof(f32);
+printf("-- sun_axis_x              \t%lld\t%llxh\t%f\n", (i64)packet->sun_axis_x, (u64)packet->sun_axis_x, (f64)packet->sun_axis_x);
+
+// f32 sun_axis_y
+endian_write_f32_little(buffer + offset, packet->sun_axis_y);
+offset += sizeof(f32);
+printf("-- sun_axis_y              \t%lld\t%llxh\t%f\n", (i64)packet->sun_axis_y, (u64)packet->sun_axis_y, (f64)packet->sun_axis_y);
+
+// f32 unknown_dword15
+endian_write_f32_little(buffer + offset, packet->unknown_dword15);
+offset += sizeof(f32);
+printf("-- unknown_dword15         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword15, (u64)packet->unknown_dword15, (f64)packet->unknown_dword15);
+
+// f32 disable_trees
+endian_write_f32_little(buffer + offset, packet->disable_trees);
+offset += sizeof(f32);
+printf("-- disable_trees           \t%lld\t%llxh\t%f\n", (i64)packet->disable_trees, (u64)packet->disable_trees, (f64)packet->disable_trees);
+
+// f32 disable_trees1
+endian_write_f32_little(buffer + offset, packet->disable_trees1);
+offset += sizeof(f32);
+printf("-- disable_trees1          \t%lld\t%llxh\t%f\n", (i64)packet->disable_trees1, (u64)packet->disable_trees1, (f64)packet->disable_trees1);
+
+// f32 disable_trees2
+endian_write_f32_little(buffer + offset, packet->disable_trees2);
+offset += sizeof(f32);
+printf("-- disable_trees2          \t%lld\t%llxh\t%f\n", (i64)packet->disable_trees2, (u64)packet->disable_trees2, (f64)packet->disable_trees2);
+
+// f32 wind
+endian_write_f32_little(buffer + offset, packet->wind);
+offset += sizeof(f32);
+printf("-- wind                    \t%lld\t%llxh\t%f\n", (i64)packet->wind, (u64)packet->wind, (f64)packet->wind);
+
+// f32 unknown_dword20
+endian_write_f32_little(buffer + offset, packet->unknown_dword20);
+offset += sizeof(f32);
+printf("-- unknown_dword20         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword20, (u64)packet->unknown_dword20, (f64)packet->unknown_dword20);
+
+// f32 unknown_dword21
+endian_write_f32_little(buffer + offset, packet->unknown_dword21);
+offset += sizeof(f32);
+printf("-- unknown_dword21         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword21, (u64)packet->unknown_dword21, (f64)packet->unknown_dword21);
+
+// string name
+endian_write_u32_little(buffer + offset, packet->name_length);
+offset += sizeof(u32);
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->name_length, (u64)packet->name_length, (f64)packet->name_length);
+for (u32 name_iter = 0; name_iter < packet->name_length; name_iter++)
+{
+endian_write_i8_little(buffer + offset, packet->name[name_iter]);
+offset++;
+}
+
+// f32 unknown_dword22
+endian_write_f32_little(buffer + offset, packet->unknown_dword22);
+offset += sizeof(f32);
+printf("-- unknown_dword22         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword22, (u64)packet->unknown_dword22, (f64)packet->unknown_dword22);
+
+// f32 unknown_dword23
+endian_write_f32_little(buffer + offset, packet->unknown_dword23);
+offset += sizeof(f32);
+printf("-- unknown_dword23         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword23, (u64)packet->unknown_dword23, (f64)packet->unknown_dword23);
+
+// f32 unknown_dword24
+endian_write_f32_little(buffer + offset, packet->unknown_dword24);
+offset += sizeof(f32);
+printf("-- unknown_dword24         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword24, (u64)packet->unknown_dword24, (f64)packet->unknown_dword24);
+
+// f32 unknown_dword25
+endian_write_f32_little(buffer + offset, packet->unknown_dword25);
+offset += sizeof(f32);
+printf("-- unknown_dword25         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword25, (u64)packet->unknown_dword25, (f64)packet->unknown_dword25);
+
+// f32 unknown_dword26
+endian_write_f32_little(buffer + offset, packet->unknown_dword26);
+offset += sizeof(f32);
+printf("-- unknown_dword26         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword26, (u64)packet->unknown_dword26, (f64)packet->unknown_dword26);
+
+// f32 unknown_dword27
+endian_write_f32_little(buffer + offset, packet->unknown_dword27);
+offset += sizeof(f32);
+printf("-- unknown_dword27         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword27, (u64)packet->unknown_dword27, (f64)packet->unknown_dword27);
+
+// f32 unknown_dword28
+endian_write_f32_little(buffer + offset, packet->unknown_dword28);
+offset += sizeof(f32);
+printf("-- unknown_dword28         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword28, (u64)packet->unknown_dword28, (f64)packet->unknown_dword28);
+
+// f32 unknown_dword29
+endian_write_f32_little(buffer + offset, packet->unknown_dword29);
+offset += sizeof(f32);
+printf("-- unknown_dword29         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword29, (u64)packet->unknown_dword29, (f64)packet->unknown_dword29);
+
+// f32 ao_size
+endian_write_f32_little(buffer + offset, packet->ao_size);
+offset += sizeof(f32);
+printf("-- ao_size                 \t%lld\t%llxh\t%f\n", (i64)packet->ao_size, (u64)packet->ao_size, (f64)packet->ao_size);
+
+// f32 ao_gamma
+endian_write_f32_little(buffer + offset, packet->ao_gamma);
+offset += sizeof(f32);
+printf("-- ao_gamma                \t%lld\t%llxh\t%f\n", (i64)packet->ao_gamma, (u64)packet->ao_gamma, (f64)packet->ao_gamma);
+
+// f32 ao_blackpoint
+endian_write_f32_little(buffer + offset, packet->ao_blackpoint);
+offset += sizeof(f32);
+printf("-- ao_blackpoint           \t%lld\t%llxh\t%f\n", (i64)packet->ao_blackpoint, (u64)packet->ao_blackpoint, (f64)packet->ao_blackpoint);
+
+// f32 unknown_dword33
+endian_write_f32_little(buffer + offset, packet->unknown_dword33);
+offset += sizeof(f32);
+printf("-- unknown_dword33         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword33, (u64)packet->unknown_dword33, (f64)packet->unknown_dword33);
 
 } break;
 
@@ -13370,6 +13741,78 @@ printf("-- unk_bool_2              \t%lld\t%llxh\t%f\n", (i64)packet->unk_bool_2
 
 } break;
 
+case Zone_Packet_Kind_ContinentBattleInfo:
+{
+printf("[*] Unpacking ContinentBattleInfo...\n");
+Zone_Packet_ContinentBattleInfo* packet = packet_ptr;
+
+// list zones
+packet->zones_count = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->zones = memory_arena_push_length(arena, packet->zones_count * sizeof(packet->zones[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->zones_count);
+for (u32 zones_iter = 0; zones_iter < packet->zones_count; zones_iter++)
+{
+// u32 continent_id
+packet->zones[zones_iter].continent_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- continent_id            \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].continent_id, (u64)packet->zones[zones_iter].continent_id, (f64)packet->zones[zones_iter].continent_id);
+
+// u32 info_name_id
+packet->zones[zones_iter].info_name_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- info_name_id            \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].info_name_id, (u64)packet->zones[zones_iter].info_name_id, (f64)packet->zones[zones_iter].info_name_id);
+
+// u32 zone_description_id
+packet->zones[zones_iter].zone_description_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- zone_description_id     \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].zone_description_id, (u64)packet->zones[zones_iter].zone_description_id, (f64)packet->zones[zones_iter].zone_description_id);
+
+// u8 population
+packet->zones[zones_iter].population = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- population              \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].population, (u64)packet->zones[zones_iter].population, (f64)packet->zones[zones_iter].population);
+
+// u8 regionPercent
+packet->zones[zones_iter].regionPercent = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- regionPercent           \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].regionPercent, (u64)packet->zones[zones_iter].regionPercent, (f64)packet->zones[zones_iter].regionPercent);
+
+// u8 populationBuff
+packet->zones[zones_iter].populationBuff = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- populationBuff          \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].populationBuff, (u64)packet->zones[zones_iter].populationBuff, (f64)packet->zones[zones_iter].populationBuff);
+
+// u8 populationTargetPercent
+packet->zones[zones_iter].populationTargetPercent = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- populationTargetPercent \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].populationTargetPercent, (u64)packet->zones[zones_iter].populationTargetPercent, (f64)packet->zones[zones_iter].populationTargetPercent);
+
+// string zone_name
+packet->zones[zones_iter].zone_name_length = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->zones[zones_iter].zone_name = memory_arena_push_length(arena, packet->zones[zones_iter].zone_name_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->zones[zones_iter].zone_name_length);
+for (u32 zone_name_iter = 0; zone_name_iter < packet->zones[zones_iter].zone_name_length; zone_name_iter++)
+{
+packet->zones[zones_iter].zone_name[zone_name_iter] = *(i8*)((uptr)data + offset);
+offset++;
+}
+
+// f32 hex_size
+packet->zones[zones_iter].hex_size = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- hex_size                \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].hex_size, (u64)packet->zones[zones_iter].hex_size, (f64)packet->zones[zones_iter].hex_size);
+
+// u8 is_production_zone
+packet->zones[zones_iter].is_production_zone = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- is_production_zone      \t%lld\t%llxh\t%f\n", (i64)packet->zones[zones_iter].is_production_zone, (u64)packet->zones[zones_iter].is_production_zone, (f64)packet->zones[zones_iter].is_production_zone);
+
+} // zones
+
+} break;
+
 case Zone_Packet_Kind_WallOfData_UIEvent:
 {
 printf("[*] Unpacking WallOfData_UIEvent...\n");
@@ -13447,6 +13890,73 @@ printf("-- new_state               \t%lld\t%llxh\t%f\n", (i64)packet->new_state,
 packet->ms_elapsed = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
 printf("-- ms_elapsed              \t%lld\t%llxh\t%f\n", (i64)packet->ms_elapsed, (u64)packet->ms_elapsed, (f64)packet->ms_elapsed);
+
+} break;
+
+case Zone_Packet_Kind_RewardBuffInfo:
+{
+printf("[*] Unpacking RewardBuffInfo...\n");
+Zone_Packet_RewardBuffInfo* packet = packet_ptr;
+
+// f32 unk_float_1
+packet->unk_float_1 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unk_float_1             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_1, (u64)packet->unk_float_1, (f64)packet->unk_float_1);
+
+// f32 unk_float_2
+packet->unk_float_2 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unk_float_2             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_2, (u64)packet->unk_float_2, (f64)packet->unk_float_2);
+
+// f32 unk_float_3
+packet->unk_float_3 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unk_float_3             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_3, (u64)packet->unk_float_3, (f64)packet->unk_float_3);
+
+// f32 unk_float_4
+packet->unk_float_4 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unk_float_4             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_4, (u64)packet->unk_float_4, (f64)packet->unk_float_4);
+
+// f32 unk_float_5
+packet->unk_float_5 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unk_float_5             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_5, (u64)packet->unk_float_5, (f64)packet->unk_float_5);
+
+// f32 unk_float_6
+packet->unk_float_6 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unk_float_6             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_6, (u64)packet->unk_float_6, (f64)packet->unk_float_6);
+
+// f32 unk_float_7
+packet->unk_float_7 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unk_float_7             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_7, (u64)packet->unk_float_7, (f64)packet->unk_float_7);
+
+// f32 unk_float_8
+packet->unk_float_8 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unk_float_8             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_8, (u64)packet->unk_float_8, (f64)packet->unk_float_8);
+
+// f32 unk_float_9
+packet->unk_float_9 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unk_float_9             \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_9, (u64)packet->unk_float_9, (f64)packet->unk_float_9);
+
+// f32 unk_float_10
+packet->unk_float_10 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unk_float_10            \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_10, (u64)packet->unk_float_10, (f64)packet->unk_float_10);
+
+// f32 unk_float_11
+packet->unk_float_11 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unk_float_11            \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_11, (u64)packet->unk_float_11, (f64)packet->unk_float_11);
+
+// f32 unk_float_12
+packet->unk_float_12 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unk_float_12            \t%lld\t%llxh\t%f\n", (i64)packet->unk_float_12, (u64)packet->unk_float_12, (f64)packet->unk_float_12);
 
 } break;
 
@@ -13617,6 +14127,189 @@ offset += sizeof(b8);
 printf("-- has_bulk_limit          \t%lld\t%llxh\t%f\n", (i64)packet->container_list[container_list_iter].has_bulk_limit, (u64)packet->container_list[container_list_iter].has_bulk_limit, (f64)packet->container_list[container_list_iter].has_bulk_limit);
 
 } // container_list
+
+} break;
+
+case Zone_Packet_Kind_UpdateWeatherData:
+{
+printf("[*] Unpacking UpdateWeatherData...\n");
+Zone_Packet_UpdateWeatherData* packet = packet_ptr;
+
+// f32 unknownDword1
+packet->unknownDword1 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknownDword1           \t%lld\t%llxh\t%f\n", (i64)packet->unknownDword1, (u64)packet->unknownDword1, (f64)packet->unknownDword1);
+
+// f32 fog_density
+packet->fog_density = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- fog_density             \t%lld\t%llxh\t%f\n", (i64)packet->fog_density, (u64)packet->fog_density, (f64)packet->fog_density);
+
+// f32 fog_floor
+packet->fog_floor = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- fog_floor               \t%lld\t%llxh\t%f\n", (i64)packet->fog_floor, (u64)packet->fog_floor, (f64)packet->fog_floor);
+
+// f32 fog_gradient
+packet->fog_gradient = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- fog_gradient            \t%lld\t%llxh\t%f\n", (i64)packet->fog_gradient, (u64)packet->fog_gradient, (f64)packet->fog_gradient);
+
+// f32 rain
+packet->rain = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- rain                    \t%lld\t%llxh\t%f\n", (i64)packet->rain, (u64)packet->rain, (f64)packet->rain);
+
+// f32 temp
+packet->temp = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- temp                    \t%lld\t%llxh\t%f\n", (i64)packet->temp, (u64)packet->temp, (f64)packet->temp);
+
+// f32 color_gradient
+packet->color_gradient = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- color_gradient          \t%lld\t%llxh\t%f\n", (i64)packet->color_gradient, (u64)packet->color_gradient, (f64)packet->color_gradient);
+
+// f32 unknown_dword8
+packet->unknown_dword8 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword8          \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword8, (u64)packet->unknown_dword8, (f64)packet->unknown_dword8);
+
+// f32 unknown_dword9
+packet->unknown_dword9 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword9          \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword9, (u64)packet->unknown_dword9, (f64)packet->unknown_dword9);
+
+// f32 unknown_dword10
+packet->unknown_dword10 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword10         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword10, (u64)packet->unknown_dword10, (f64)packet->unknown_dword10);
+
+// f32 unknown_dword11
+packet->unknown_dword11 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword11         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword11, (u64)packet->unknown_dword11, (f64)packet->unknown_dword11);
+
+// f32 unknown_dword12
+packet->unknown_dword12 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword12         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword12, (u64)packet->unknown_dword12, (f64)packet->unknown_dword12);
+
+// f32 sun_axis_x
+packet->sun_axis_x = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- sun_axis_x              \t%lld\t%llxh\t%f\n", (i64)packet->sun_axis_x, (u64)packet->sun_axis_x, (f64)packet->sun_axis_x);
+
+// f32 sun_axis_y
+packet->sun_axis_y = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- sun_axis_y              \t%lld\t%llxh\t%f\n", (i64)packet->sun_axis_y, (u64)packet->sun_axis_y, (f64)packet->sun_axis_y);
+
+// f32 unknown_dword15
+packet->unknown_dword15 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword15         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword15, (u64)packet->unknown_dword15, (f64)packet->unknown_dword15);
+
+// f32 disable_trees
+packet->disable_trees = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- disable_trees           \t%lld\t%llxh\t%f\n", (i64)packet->disable_trees, (u64)packet->disable_trees, (f64)packet->disable_trees);
+
+// f32 disable_trees1
+packet->disable_trees1 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- disable_trees1          \t%lld\t%llxh\t%f\n", (i64)packet->disable_trees1, (u64)packet->disable_trees1, (f64)packet->disable_trees1);
+
+// f32 disable_trees2
+packet->disable_trees2 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- disable_trees2          \t%lld\t%llxh\t%f\n", (i64)packet->disable_trees2, (u64)packet->disable_trees2, (f64)packet->disable_trees2);
+
+// f32 wind
+packet->wind = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- wind                    \t%lld\t%llxh\t%f\n", (i64)packet->wind, (u64)packet->wind, (f64)packet->wind);
+
+// f32 unknown_dword20
+packet->unknown_dword20 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword20         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword20, (u64)packet->unknown_dword20, (f64)packet->unknown_dword20);
+
+// f32 unknown_dword21
+packet->unknown_dword21 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword21         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword21, (u64)packet->unknown_dword21, (f64)packet->unknown_dword21);
+
+// string name
+packet->name_length = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->name = memory_arena_push_length(arena, packet->name_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->name_length);
+for (u32 name_iter = 0; name_iter < packet->name_length; name_iter++)
+{
+packet->name[name_iter] = *(i8*)((uptr)data + offset);
+offset++;
+}
+
+// f32 unknown_dword22
+packet->unknown_dword22 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword22         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword22, (u64)packet->unknown_dword22, (f64)packet->unknown_dword22);
+
+// f32 unknown_dword23
+packet->unknown_dword23 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword23         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword23, (u64)packet->unknown_dword23, (f64)packet->unknown_dword23);
+
+// f32 unknown_dword24
+packet->unknown_dword24 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword24         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword24, (u64)packet->unknown_dword24, (f64)packet->unknown_dword24);
+
+// f32 unknown_dword25
+packet->unknown_dword25 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword25         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword25, (u64)packet->unknown_dword25, (f64)packet->unknown_dword25);
+
+// f32 unknown_dword26
+packet->unknown_dword26 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword26         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword26, (u64)packet->unknown_dword26, (f64)packet->unknown_dword26);
+
+// f32 unknown_dword27
+packet->unknown_dword27 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword27         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword27, (u64)packet->unknown_dword27, (f64)packet->unknown_dword27);
+
+// f32 unknown_dword28
+packet->unknown_dword28 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword28         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword28, (u64)packet->unknown_dword28, (f64)packet->unknown_dword28);
+
+// f32 unknown_dword29
+packet->unknown_dword29 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword29         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword29, (u64)packet->unknown_dword29, (f64)packet->unknown_dword29);
+
+// f32 ao_size
+packet->ao_size = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- ao_size                 \t%lld\t%llxh\t%f\n", (i64)packet->ao_size, (u64)packet->ao_size, (f64)packet->ao_size);
+
+// f32 ao_gamma
+packet->ao_gamma = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- ao_gamma                \t%lld\t%llxh\t%f\n", (i64)packet->ao_gamma, (u64)packet->ao_gamma, (f64)packet->ao_gamma);
+
+// f32 ao_blackpoint
+packet->ao_blackpoint = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- ao_blackpoint           \t%lld\t%llxh\t%f\n", (i64)packet->ao_blackpoint, (u64)packet->ao_blackpoint, (f64)packet->ao_blackpoint);
+
+// f32 unknown_dword33
+packet->unknown_dword33 = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- unknown_dword33         \t%lld\t%llxh\t%f\n", (i64)packet->unknown_dword33, (u64)packet->unknown_dword33, (f64)packet->unknown_dword33);
 
 } break;
 

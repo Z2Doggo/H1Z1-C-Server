@@ -308,12 +308,24 @@ internal void zone_packet_handle(
 
 			break;
 		}
+
+		case ZONE_WALLOFDATA_UIEVENT_ID:
+		{
+			packet_kind = Zone_Packet_Kind_WallOfData_UIEvent;
+			printf("[Zone] Handling WallOfData.UIEvent\n");
+
+			Zone_Packet_WallOfData_UIEvent result = { 0 };
+			zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
+			
+			break;
+		}
+
 		case ZONE_WALLOFDATA_CLIENTSYSTEMINFO_ID:
 		{
 			packet_kind = Zone_Packet_Kind_WallOfData_ClientSystemInfo;
 			printf("[Zone] Handling WallOfData.ClientSystemInfo\n");
 
-			Zone_Packet_WallOfData_UIEvent result = { 0 };
+			Zone_Packet_WallOfData_ClientSystemInfo result = { 0 };
 			zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
 			
 			break;
@@ -340,6 +352,39 @@ internal void zone_packet_handle(
 			
 			break;
 		}
+
+		case ZONE_GETCONTINENTBATTLEINFO_ID:
+		{
+			packet_kind = Zone_Packet_Kind_GetContinentBattleInfo;
+			printf("[Zone] Handling GetContinentBattleInfo\n");
+
+			//Zone_Packet_GetContinentBattleInfo result = { 0 };
+			//zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
+
+			Zone_Packet_ContinentBattleInfo battle_info =
+			{
+				.zones_count = 1,
+				.zones =
+					(struct zones_s[1]) {
+					[0] =
+					{
+						.continent_id = 1,
+						.info_name_id = 1,
+						.zone_description_id = 1,
+
+						.zone_name_length = 2,
+						.zone_name = "Z1",
+						.hex_size = 100,
+						.is_production_zone = 1,
+					}
+				}
+			};
+			
+			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, 10, Zone_Packet_Kind_ContinentBattleInfo, &battle_info);
+
+			break;
+		}
+
 		case ZONE_CLIENTUPDATE_UPDATEBATTLEYEREGISTRATION_ID:
 		{
 			packet_kind = Zone_Packet_Kind_ClientUpdate_UpdateBattlEyeRegistration;
@@ -347,6 +392,7 @@ internal void zone_packet_handle(
 			
 			break;
 		}
+
 		default:
 		{
 			packet_id_fail:
