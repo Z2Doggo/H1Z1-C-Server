@@ -37,8 +37,8 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 
 #include "shared/protocol/core_protocol.c"
 #include "game/external_gateway_api_3.c"
-#include "../schema/output/client_protocol_298.c"
-#include "game/client_protocol_298.c"
+#include "../schema/output/client_protocol_1080.c"
+#include "game/client_protocol_1080.c"
 
 // TODO(rhett): hardcoded in gateway protocol for now
 internal void gateway_on_login(Server_State* server_state, Session_State* session_state, u64 character_id)

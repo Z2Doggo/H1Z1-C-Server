@@ -39,8 +39,8 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 //#include "../schema/output/login_udp_9.c"
 //#include "login/login_udp_9.c"
 #include "shared/protocol/core_protocol.c"
-#include "../schema/output/login_udp_2_july.c"
-#include "login/login_udp_2_july.c"
+#include "../schema/output/login_udp_11.c"
+#include "login/login_udp_11.c"
 
 
 internal INPUT_STREAM_CALLBACK_ACK(on_input_stream_ack)

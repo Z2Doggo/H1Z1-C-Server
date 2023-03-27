@@ -10,6 +10,7 @@
 #include <stdarg.h>
 #include <limits.h>
 #include <assert.h>
+#include <string.h>
 
 
 static void platform_win_console_write(char* format, ...);

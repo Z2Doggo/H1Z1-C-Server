@@ -1,1 +1,1 @@
-schema_tool.exe client_protocol_298.schm output/client_protocol_298.c
+schema_tool.exe client_protocol_1080.schm output/client_protocol_1080.c

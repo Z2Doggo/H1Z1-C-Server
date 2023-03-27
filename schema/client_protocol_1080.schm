@@ -274,6 +274,20 @@ packet 0xf 0x7:u16 Character_RemoveTemporaryAppearance
 packet 0xf 0x8:u16 Character_SetLookAt
 packet 0xf 0x9:u16 Character_RenamePlayer
 
+packet 0xf 0xa:u16 Character_UpdateCharacterState
+u64 character_id
+
+u8 stateflags1
+u8 stateflags2
+u8 stateflags3
+u8 stateflags4
+u8 stateflags5
+u8 stateflags6
+u8 stateflags7
+
+u8 ignore_this_placeholder
+u32 game_time
+
 packet 0xf 0x20:u16 Character_WeaponStance
 u64 character_id
 u32 stance
@@ -1019,6 +1033,7 @@ packet 0x93 PlayerUpdateVehicleWeapon
 packet 0x94 ProfileStatsBase
 
 packet 0x95 0x01:u16 EquipmentSetCharacterEquipment
+
 u32 profile_id
 u64 character_id
 u32 unk_dword_1

@@ -29,7 +29,7 @@ pushd build_game_server_win_x64
 
 cl /nologo /Fe:schema_tool.exe /Od /Zi /FC "..\src\schema_tool.c" /link /debug:full
 rem schema_tool.exe ..\schema\client_protocol_823.schm ..\schema\output\client_protocol_823.c
-schema_tool.exe ..\schema\client_protocol_298.schm ..\schema\output\client_protocol_298.c
+schema_tool.exe ..\schema\client_protocol_1080.schm ..\schema\output\client_protocol_1080.c
 
 rem NOTE(rhett): For release mode, define NDEBUG and redefine abort() for now
 rem cl /Fe:!OUTPUT_NAME! !DEFINES_SHARED! !FLAGS_COMPILE! !SOURCES! !FLAGS_LINK! !LIBS_SHARED!

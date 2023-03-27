@@ -28,7 +28,7 @@ pushd build_login_server_win_x64
 
 
 cl /nologo /Fe:schema_tool.exe /Od /Zi /FC "..\src\schema_tool.c" /link /debug:full
-schema_tool.exe ..\schema\login_udp_2_july.schm ..\schema\output\login_udp_2_july.c
+schema_tool.exe ..\schema\login_udp_11.schm ..\schema\output\login_udp_11.c
 rem schema_tool.exe ..\schema\login_udp_9.schm ..\schema\output\login_udp_9.c
 
 rem cl /Fe:!OUTPUT_NAME! !DEFINES_SHARED! !FLAGS_COMPILE! !SOURCES! !FLAGS_LINK! !LIBS_SHARED!

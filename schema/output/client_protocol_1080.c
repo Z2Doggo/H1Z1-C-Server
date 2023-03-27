@@ -26,6 +26,7 @@
 #define ZONE_CHARACTER_REMOVETEMPORARYAPPEARANCE_ID 0xf0007
 #define ZONE_CHARACTER_SETLOOKAT_ID 0xf0008
 #define ZONE_CHARACTER_RENAMEPLAYER_ID 0xf0009
+#define ZONE_CHARACTER_UPDATECHARACTERSTATE_ID 0xf000a
 #define ZONE_CHARACTER_WEAPONSTANCE_ID 0xf0020
 #define ZONE_CHARACTER_CHARACTERSTATEDELTA_ID 0xf003f
 #define ZONE_ABILITYBASE_ID 0x100000
@@ -448,6 +449,7 @@ ZONE_PACKET_KIND(Zone_Packet_Kind_Character_UpdateTemporaryAppearance, "Characte
 ZONE_PACKET_KIND(Zone_Packet_Kind_Character_RemoveTemporaryAppearance, "Character_RemoveTemporaryAppearance"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_Character_SetLookAt, "Character_SetLookAt"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_Character_RenamePlayer, "Character_RenamePlayer"), \
+ZONE_PACKET_KIND(Zone_Packet_Kind_Character_UpdateCharacterState, "Character_UpdateCharacterState"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_Character_WeaponStance, "Character_WeaponStance"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_Character_CharacterStateDelta, "Character_CharacterStateDelta"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_AbilityBase, "AbilityBase"), \
@@ -886,6 +888,7 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_Character_RemoveTemporaryAppearance] = 0xf0007,
 [Zone_Packet_Kind_Character_SetLookAt] = 0xf0008,
 [Zone_Packet_Kind_Character_RenamePlayer] = 0xf0009,
+[Zone_Packet_Kind_Character_UpdateCharacterState] = 0xf000a,
 [Zone_Packet_Kind_Character_WeaponStance] = 0xf0020,
 [Zone_Packet_Kind_Character_CharacterStateDelta] = 0xf003f,
 [Zone_Packet_Kind_AbilityBase] = 0x100000,
@@ -1559,6 +1562,22 @@ struct Zone_Packet_Character_UpdateScale
 {
 u64 character_id;
 vec4 scale;
+};
+
+
+typedef struct Zone_Packet_Character_UpdateCharacterState Zone_Packet_Character_UpdateCharacterState;
+struct Zone_Packet_Character_UpdateCharacterState
+{
+u64 character_id;
+u8 stateflags1;
+u8 stateflags2;
+u8 stateflags3;
+u8 stateflags4;
+u8 stateflags5;
+u8 stateflags6;
+u8 stateflags7;
+u8 ignore_this_placeholder;
+u32 game_time;
 };
 
 
@@ -3731,6 +3750,69 @@ offset += sizeof(u8);
 
 endian_write_u16_little(buffer + offset, 0x9);
 offset += sizeof(u16);
+
+} break;
+
+case Zone_Packet_Kind_Character_UpdateCharacterState:
+{
+printf("[*] Packing Character_UpdateCharacterState...\n");
+Zone_Packet_Character_UpdateCharacterState* packet = packet_ptr;
+
+endian_write_u8_little(buffer + offset, 0xf);
+offset += sizeof(u8);
+
+endian_write_u16_little(buffer + offset, 0xa);
+offset += sizeof(u16);
+
+// u64 character_id
+endian_write_u64_little(buffer + offset, packet->character_id);
+offset += sizeof(u64);
+printf("-- character_id            \t%lld\t%llxh\t%f\n", (i64)packet->character_id, (u64)packet->character_id, (f64)packet->character_id);
+
+// u8 stateflags1
+endian_write_u8_little(buffer + offset, packet->stateflags1);
+offset += sizeof(u8);
+printf("-- stateflags1             \t%lld\t%llxh\t%f\n", (i64)packet->stateflags1, (u64)packet->stateflags1, (f64)packet->stateflags1);
+
+// u8 stateflags2
+endian_write_u8_little(buffer + offset, packet->stateflags2);
+offset += sizeof(u8);
+printf("-- stateflags2             \t%lld\t%llxh\t%f\n", (i64)packet->stateflags2, (u64)packet->stateflags2, (f64)packet->stateflags2);
+
+// u8 stateflags3
+endian_write_u8_little(buffer + offset, packet->stateflags3);
+offset += sizeof(u8);
+printf("-- stateflags3             \t%lld\t%llxh\t%f\n", (i64)packet->stateflags3, (u64)packet->stateflags3, (f64)packet->stateflags3);
+
+// u8 stateflags4
+endian_write_u8_little(buffer + offset, packet->stateflags4);
+offset += sizeof(u8);
+printf("-- stateflags4             \t%lld\t%llxh\t%f\n", (i64)packet->stateflags4, (u64)packet->stateflags4, (f64)packet->stateflags4);
+
+// u8 stateflags5
+endian_write_u8_little(buffer + offset, packet->stateflags5);
+offset += sizeof(u8);
+printf("-- stateflags5             \t%lld\t%llxh\t%f\n", (i64)packet->stateflags5, (u64)packet->stateflags5, (f64)packet->stateflags5);
+
+// u8 stateflags6
+endian_write_u8_little(buffer + offset, packet->stateflags6);
+offset += sizeof(u8);
+printf("-- stateflags6             \t%lld\t%llxh\t%f\n", (i64)packet->stateflags6, (u64)packet->stateflags6, (f64)packet->stateflags6);
+
+// u8 stateflags7
+endian_write_u8_little(buffer + offset, packet->stateflags7);
+offset += sizeof(u8);
+printf("-- stateflags7             \t%lld\t%llxh\t%f\n", (i64)packet->stateflags7, (u64)packet->stateflags7, (f64)packet->stateflags7);
+
+// u8 ignore_this_placeholder
+endian_write_u8_little(buffer + offset, packet->ignore_this_placeholder);
+offset += sizeof(u8);
+printf("-- ignore_this_placeholder \t%lld\t%llxh\t%f\n", (i64)packet->ignore_this_placeholder, (u64)packet->ignore_this_placeholder, (f64)packet->ignore_this_placeholder);
+
+// u32 game_time
+endian_write_u32_little(buffer + offset, packet->game_time);
+offset += sizeof(u32);
+printf("-- game_time               \t%lld\t%llxh\t%f\n", (i64)packet->game_time, (u64)packet->game_time, (f64)packet->game_time);
 
 } break;
 
@@ -11442,6 +11524,63 @@ printf("-- character_id            \t%lld\t%llxh\t%f\n", (i64)packet->character_
 packet->scale = endian_read_vec4_little(data + offset);
 offset += sizeof(f32) * 4;
 printf("-- scale                   \t%f\t%f\t%f\t%f\n", (f64)packet->scale.x, (f64)packet->scale.y, (f64)packet->scale.z, (f64)packet->scale.w);
+
+} break;
+
+case Zone_Packet_Kind_Character_UpdateCharacterState:
+{
+printf("[*] Unpacking Character_UpdateCharacterState...\n");
+Zone_Packet_Character_UpdateCharacterState* packet = packet_ptr;
+
+// u64 character_id
+packet->character_id = endian_read_u64_little(data + offset);
+offset += sizeof(u64);
+printf("-- character_id            \t%lld\t%llxh\t%f\n", (i64)packet->character_id, (u64)packet->character_id, (f64)packet->character_id);
+
+// u8 stateflags1
+packet->stateflags1 = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- stateflags1             \t%lld\t%llxh\t%f\n", (i64)packet->stateflags1, (u64)packet->stateflags1, (f64)packet->stateflags1);
+
+// u8 stateflags2
+packet->stateflags2 = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- stateflags2             \t%lld\t%llxh\t%f\n", (i64)packet->stateflags2, (u64)packet->stateflags2, (f64)packet->stateflags2);
+
+// u8 stateflags3
+packet->stateflags3 = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- stateflags3             \t%lld\t%llxh\t%f\n", (i64)packet->stateflags3, (u64)packet->stateflags3, (f64)packet->stateflags3);
+
+// u8 stateflags4
+packet->stateflags4 = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- stateflags4             \t%lld\t%llxh\t%f\n", (i64)packet->stateflags4, (u64)packet->stateflags4, (f64)packet->stateflags4);
+
+// u8 stateflags5
+packet->stateflags5 = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- stateflags5             \t%lld\t%llxh\t%f\n", (i64)packet->stateflags5, (u64)packet->stateflags5, (f64)packet->stateflags5);
+
+// u8 stateflags6
+packet->stateflags6 = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- stateflags6             \t%lld\t%llxh\t%f\n", (i64)packet->stateflags6, (u64)packet->stateflags6, (f64)packet->stateflags6);
+
+// u8 stateflags7
+packet->stateflags7 = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- stateflags7             \t%lld\t%llxh\t%f\n", (i64)packet->stateflags7, (u64)packet->stateflags7, (f64)packet->stateflags7);
+
+// u8 ignore_this_placeholder
+packet->ignore_this_placeholder = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- ignore_this_placeholder \t%lld\t%llxh\t%f\n", (i64)packet->ignore_this_placeholder, (u64)packet->ignore_this_placeholder, (f64)packet->ignore_this_placeholder);
+
+// u32 game_time
+packet->game_time = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- game_time               \t%lld\t%llxh\t%f\n", (i64)packet->game_time, (u64)packet->game_time, (f64)packet->game_time);
 
 } break;
 
