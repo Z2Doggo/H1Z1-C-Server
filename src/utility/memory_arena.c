@@ -3,8 +3,8 @@
 #define MEMORY_ARENA_ALIGN_DEFAULT (sizeof(void*)*2)
 
 
-typedef struct Memory_Arena Memory_Arena;
-struct Memory_Arena
+typedef struct Arena Arena;
+struct Arena
 {
 	void* buffer;
 	usize capacity;
@@ -22,14 +22,14 @@ struct Memory_Arena
 typedef struct Memory_Arena_Temp Memory_Arena_Temp;
 struct Memory_Arena_Temp
 {
-	Memory_Arena* arena;
+	Arena* arena;
 	usize tail_offset;
 };
 
 
-internal Memory_Arena memory_arena_init(void* buffer, usize length, char* name)
+internal Arena memory_arena_init(void* buffer, usize length, char* name)
 {
-	Memory_Arena result =
+	Arena result =
 	{
 		.capacity = length,
 		.buffer = buffer,
@@ -45,7 +45,7 @@ internal Memory_Arena memory_arena_init(void* buffer, usize length, char* name)
 #define memory_arena_push_array_align(arena, type, count, align) (type*)memory_arena_push_length_align(arena, sizeof(type) * count, align)
 #define memory_arena_push_array(arena, type, count) memory_arena_push_array_align(arena, type, count, MEMORY_ARENA_ALIGN_DEFAULT)
 
-internal void* memory_arena_push_length_align(Memory_Arena* arena, usize length, usize align)
+internal void* memory_arena_push_length_align(Arena* arena, usize length, usize align)
 {
 	uptr aligned_ptr = util_align_forward((uptr)arena->buffer + arena->tail_offset, align);
 	isize padding = 0;
@@ -68,12 +68,12 @@ internal void* memory_arena_push_length_align(Memory_Arena* arena, usize length,
 	return (void*)aligned_ptr;
 }
 
-internal void memory_arena_rewind(Memory_Arena* arena, u32 rewind_length)
+internal void memory_arena_rewind(Arena* arena, u32 rewind_length)
 {
 	arena->tail_offset -= rewind_length;
 }
 
-internal void memory_arena_reset(Memory_Arena* arena)
+internal void memory_arena_reset(Arena* arena)
 {
 	arena->peak_used = MAX(arena->tail_offset, arena->peak_used);
 	arena->peak_padding = MAX(arena->padding, arena->peak_padding);
@@ -82,7 +82,7 @@ internal void memory_arena_reset(Memory_Arena* arena)
 	arena->padding = 0;
 }
 
-internal Memory_Arena_Temp memory_arena_temp_begin(Memory_Arena* arena)
+internal Memory_Arena_Temp memory_arena_temp_begin(Arena* arena)
 {
 	return (Memory_Arena_Temp) { .arena = arena, .tail_offset = arena->tail_offset };
 }

@@ -1690,13 +1690,13 @@ emit_c_source(Parser_Object_Kind kind,
 
 			// TODO(rhett): specify opcode length
 			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-																											"\ninternal void\n%s_packet_unpack(u8* data, u32 data_length, %s_Packet_Kind packet_kind, void* packet_ptr, Memory_Arena* arena)\n{\n",
+																											"\ninternal void\n%s_packet_unpack(u8* data, u32 data_length, %s_Packet_Kind packet_kind, void* packet_ptr, Arena* arena)\n{\n",
 																											group_buffer_lower,
 																											group_buffer);
 
 			// TODO(rhett): change offset length based on opcode length
 			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-																											"u32 offset = 0;\n\nprintf(\"\\n\");\nswitch (packet_kind)\n{\n");
+																											"UNUSED(data_length);\nu32 offset = 0;\n\nprintf(\"\\n\");\nswitch (packet_kind)\n{\n");
 		} break;
 		case PO_Group_Exit:
 		{
@@ -1722,11 +1722,11 @@ emit_c_source(Parser_Object_Kind kind,
 			                                                      "};\n\n");
 
 			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
-																										"default:\n{\nprintf(\"[!] Packing %%s not implemented\\n\", %s_packet_names[packet_kind]);\n}\n}\nreturn offset;\n}\n",
+																										"default:\n{\nprintf(MESSAGE_CONCAT_WARN(\"Packing %%s not implemented\\n\"), %s_packet_names[packet_kind]);\n}\n}\nreturn offset;\n}\n",
 																										group_buffer_lower);
 
 			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-																											"default:\n{\nprintf(\"[!] Unpacking %%s not implemented\\n\", %s_packet_names[packet_kind]);\n}\n}\n}\n",
+																											"default:\n{\nprintf(MESSAGE_CONCAT_WARN(\"Unpacking %%s not implemented\\n\"), %s_packet_names[packet_kind]);\n}\n}\n}\n",
 																											group_buffer_lower);
 		} break;
 		case PO_Packet_Enter:
@@ -1791,7 +1791,7 @@ emit_c_source(Parser_Object_Kind kind,
 																										packet_buffer);
 	
 			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
-																										"printf(\"[*] Packing %s...\\n\");\n",
+																										"printf(MESSAGE_CONCAT_INFO(\"Packing %s...\\n\"));\n",
 																										packet_buffer);
 
 			if (will_generate_struct)
@@ -2117,7 +2117,7 @@ emit_c_source(Parser_Object_Kind kind,
 
 			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth);
 			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-																											"%s = memory_arena_push_length(arena, ",
+																											"%s = arena_push_size(arena, ",
 																											identifier_buffer);
 
 			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth);
@@ -2322,7 +2322,7 @@ emit_c_source(Parser_Object_Kind kind,
 
 			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth);
 			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-																											"%s = memory_arena_push_length(arena, ",
+																											"%s = arena_push_size(arena, ",
 																											identifier_buffer);
 
 			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth);
@@ -2463,7 +2463,7 @@ emit_c_source(Parser_Object_Kind kind,
 
 			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth - 1);
 			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-																											"%s = memory_arena_push_length(arena, ",
+																											"%s = arena_push_size(arena, ",
 																											identifier_buffer);
 
 			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth - 1);
@@ -2605,7 +2605,7 @@ emit_c_source(Parser_Object_Kind kind,
 
 			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth - 1);
 			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-																											"%s = memory_arena_push_length(arena, ",
+																											"%s = arena_push_size(arena, ",
 																											identifier_buffer);
 
 			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth - 1);

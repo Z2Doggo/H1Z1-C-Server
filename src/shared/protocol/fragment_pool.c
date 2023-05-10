@@ -1,13 +1,13 @@
-internal Fragment_Pool fragment_pool_create(u32 capacity, u32 packet_length, Memory_Arena* arena)
+internal Fragment_Pool fragment_pool_create(u32 capacity, u32 packet_length, Arena* arena)
 {
 	Fragment_Pool result =
 	{
 		.capacity = capacity,
 		.packet_length = packet_length,
-		//.fragments = memory_arena_allocate(arena, sizeof(*result.fragments) * capacity),
-		.fragments = memory_arena_push_array(arena, Fragment_Entry, capacity),
-		.buffer = memory_arena_push_length(arena, packet_length * capacity),
-		//.buffer = memory_arena_allocate(arena, packet_length * capacity),
+		//.fragments = arena_allocate(arena, sizeof(*result.fragments) * capacity),
+		.fragments = arena_push_array(arena, Fragment_Entry, capacity),
+		.buffer = arena_push_size(arena, packet_length * capacity),
+		//.buffer = arena_allocate(arena, packet_length * capacity),
 	};
 
 	return result;
@@ -18,36 +18,43 @@ internal void fragment_pool_insert(Fragment_Pool* pool, i32 sequence, u8* data, 
 {
 	if (sequence < pool->sequence_base)
 	{
-		// printf("[!!!] Attempting to insert older sequence (%d), rejecting\n", sequence);
+		printf("[!!!] Attempting to insert older sequence (%d), rejecting\n", sequence);
 		return;
 	}
         
 	i32 index = sequence - pool->sequence_base;
 
-	// printf("[***] fragment_pool_insert: sequence=%d,  data=%p, data_length=%d, is_fragment=%d, index=%d\n", sequence, data, data_length, is_fragment, index);
+	printf("[***] fragment_pool_insert: sequence=%d,  data=%p, data_length=%d, is_fragment=%d, index=%d\n",
+	       sequence, data, data_length, is_fragment, index);
 
-	if (index > pool->capacity)
-	{
-		// printf("[X] fragment_pool_insert; %d (sequence=%d - base=%d) exceeds pool capacity\n", index, sequence, pool->sequence_base);
-		abort();
-	}
+	//if (index > pool->capacity)
+	//{
+		ASSERT_MSG(index < pool->capacity, "exceeds pool capacity");
+		//printf("[X] fragment_pool_insert; %d (sequence=%d - base=%d) exceeds pool capacity\n",
+		       //index, sequence, pool->sequence_base);
+		//abort();
+	//}
 
-	if (data_length > pool->packet_length)
-	{
-		// printf("[X] fragment_pool_insert; Data length %d exceeds packet length (%d)\n", data_length, pool->packet_length);
-		abort();
-	}
+	//if (data_length > pool->packet_length)
+	//{
+		ASSERT_MSG(data_length < pool->packet_length, "exceeds packet length");
 
-	if (pool->fragments[index].data_length)
-	{
-		// printf("[X] fragment_pool_insert: Sequence %d already in use\n", index);
-		abort();
-	}
+		//printf("[X] fragment_pool_insert; Data length %d exceeds packet length (%d)\n",
+		       //data_length, pool->packet_length);
+		//abort();
+	//}
+
+	//if (pool->fragments[index].data_length)
+	//{
+		ASSERT_MSG(!pool->fragments[index].data_length, "already in use");
+		//printf("[X] fragment_pool_insert: Sequence %d already in use\n", index);
+		//abort();
+	//}
 
 	if (index == 0 && is_fragment)
 	{
 		pool->buffer_target_length = endian_read_u32_big(data);
-		// printf("[***] Fragment_Pool target length updated: %d\n", pool->buffer_target_length);
+		printf("[***] Fragment_Pool target length updated: %d\n", pool->buffer_target_length);
 		data_length -= 4;
 		data += 4;
 	}
@@ -67,16 +74,20 @@ internal void fragment_pool_insert(Fragment_Pool* pool, i32 sequence, u8* data, 
 		pool->buffer_tail += (index + 1) * pool->packet_length;
 	}
 
-	memcpy(pool->fragments[index].data, data, data_length);
+	base_memory_copy(pool->fragments[index].data, data, data_length);
 	pool->fragments_count++;
 }
 
 internal void fragment_pool_advance(Fragment_Pool* pool)
 {
 	pool->sequence_base += pool->fragments_count;
-	// printf("[***] Advancing Fragment_Pool; New base: %d\n", pool->sequence_base);
+	printf("[***] Advancing Fragment_Pool; New base: %d\n", pool->sequence_base);
 	pool->buffer_target_length = 0;
 
+	// for (u32 i = 0; i < pool->buffer_tail; i++)
+	//     {
+	//     pool->buffer[i] = 0;
+	//     }
 	pool->buffer_tail = 0;
 
 	for (u32 i = 0; i < pool->fragments_count; i++)

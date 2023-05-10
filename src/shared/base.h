@@ -67,9 +67,4 @@ typedef    u16  f16;
 typedef  float  f32;
 typedef double  f64;
 
-typedef struct String String;
-struct String
-{
-	u32 length;
-	char* content;
-};
+

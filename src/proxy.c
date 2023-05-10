@@ -19,14 +19,14 @@ struct Proxy_Memory
 {
 	Platform_State* platform_state;
 	Platform_Api* platform_api;
-	Memory_Arena arena_persist;
+	Arena arena_persist;
 	Proxy_State* proxy_state;
 };
 
 struct Proxy_State
 {
 	Platform_Api* platform_api;
-	Memory_Arena  arena_per_frame;
+	Arena  arena_per_frame;
 
 	Platform_Socket client_to_proxy_socket;
 	Session_State client_to_proxy_session;

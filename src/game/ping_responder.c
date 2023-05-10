@@ -1,4 +1,4 @@
-internal void ping_packet_handle(Server_State* server_state,
+internal void ping_packet_handle(App_State* server_state,
                                  Session_State* session_state,
                                  u8* data,
                                  u32 data_length)

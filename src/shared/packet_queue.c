@@ -1,16 +1,16 @@
-internal Packet_Queue packet_queue_create(Memory_Arena* arena,
+internal Packet_Queue packet_queue_create(Arena* arena,
                                           i32 entries_capacity,
                                           i32 buffer_capacity,
                                           packet_queue_send_t* packet_queue_send_func)
 {
 	Packet_Queue result = { 0 };
 
-	result.entries = memory_arena_push_array(arena, Packet_Queue_Entry, entries_capacity);
-	//result.entries = memory_arena_allocate(arena, sizeof(*result.entries) * entries_capacity);
+	result.entries = arena_push_array(arena, Packet_Queue_Entry, entries_capacity);
+	//result.entries = arena_allocate(arena, sizeof(*result.entries) * entries_capacity);
 	result.entries_capacity = entries_capacity;
 
-	result.buffer = memory_arena_push_length(arena, buffer_capacity);
-	//result.buffer = memory_arena_allocate(arena, buffer_capacity);
+	result.buffer = arena_push_size(arena, buffer_capacity);
+	//result.buffer = arena_allocate(arena, buffer_capacity);
 	result.buffer_capacity = buffer_capacity;
 
 	result.packet_queue_send = packet_queue_send_func;
@@ -25,17 +25,19 @@ internal void packet_queue_push(Packet_Queue* queue,
                                 u8* data,
                                 i32 data_length)
 {
-	if (queue->entries_tail == queue->entries_capacity)
-	{
-		printf("[X] Packet Queue entries capacity exceeded\n");
-		abort();
-	}
+	//if (queue->entries_tail == queue->entries_capacity)
+	//{
+		ASSERT_MSG(queue->entries_tail != queue->entries_capacity, "Packet Queue entries capacity exceeded");
+		//printf("[X] Packet Queue entries capacity exceeded\n");
+		//abort();
+	//}
 
-	if (queue->buffer_tail + data_length > queue->buffer_capacity)
-	{
-		printf("[X] Packet Queue buffer capacity exceeded\n");
-		abort();
-	}
+	//if (queue->buffer_tail + data_length > queue->buffer_capacity)
+	//{
+		ASSERT_MSG(!(queue->buffer_tail + data_length > queue->buffer_capacity), "Packet Queue buffer capacity exceeded");
+		//printf("[X] Packet Queue buffer capacity exceeded\n");
+		//abort();
+	//}
 
 	Packet_Queue_Entry* entry = &queue->entries[queue->entries_tail];
 	//entry->packet_kind = packet_kind;
@@ -45,7 +47,7 @@ internal void packet_queue_push(Packet_Queue* queue,
 	entry->session_state = session_state;
 	queue->entries_tail += 1;
 
-	util_memory_copy(queue->buffer + queue->buffer_tail,
+	base_memory_copy(queue->buffer + queue->buffer_tail,
 	                 data,
 	                 data_length);
 	queue->buffer_tail += data_length;
@@ -55,18 +57,20 @@ internal void packet_queue_push(Packet_Queue* queue,
 internal void packet_queue_pop_and_send(Packet_Queue* queue,
                                         void* server_state)
 {
-	if (!queue->entries_tail)
-	{
+	//if (!queue->entries_tail)
+	//{
 		// TODO(rhett): maybe we won't crash here later on
-		printf("[X] Nothing to pop from Packet Queue\n");
-		abort();
-	}
+		ASSERT_MSG(queue->entries_tail, "Nothing to pop from Packet Queue");
+		//printf("[X] Nothing to pop from Packet Queue\n");
+		//abort();
+	//}
 
-	if (!queue->buffer_tail)
-	{
-		printf("[X] No data in Packet Queue buffer\n");
-		abort();
-	}
+	//if (!queue->buffer_tail)
+	//{
+		ASSERT_MSG(queue->buffer_tail, "No data in Packet Queue buffer");
+		//printf("[X] No data in Packet Queue buffer\n");
+		//abort();
+	//}
 
 	Packet_Queue_Entry* entry = &queue->entries[queue->entries_tail - 1];
 
@@ -76,7 +80,7 @@ internal void packet_queue_pop_and_send(Packet_Queue* queue,
 	                         entry->length);
 
 	// TODO(rhett): do we need to zero the buffer?
-	util_memory_set(queue->buffer + entry->buffer_offset,
+	base_memory_fill(queue->buffer + entry->buffer_offset,
 	                0,
 	                entry->length);
 	

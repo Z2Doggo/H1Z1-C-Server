@@ -15,6 +15,7 @@
 		<BuildWorkingDirectory></BuildWorkingDirectory>
 		<CancelBuild></CancelBuild>
 		<RunCommand>build_$(Configuration)_$(Platform)\$(Configuration)_$(Platform).exe</RunCommand>
+		<RunCommandWorkingDirectory></RunCommandWorkingDirectory>
 		<DebugCommand>misc\$(Configuration)_$(Platform).rdbg</DebugCommand>
 		<ExePathCommand>build_$(Configuration)_$(Platform)\$(Configuration)_$(Platform).exe</ExePathCommand>
 		<DebugSln></DebugSln>
@@ -38,8 +39,13 @@
 			<AdditionalIncludePath>C:/Program Files (x86)/Windows Kits/10//include/10.0.19041.0//cppwinrt</AdditionalIncludePath>
 		</AdditionalIncludePaths>
 		<Defines>
-			<Define>WIN32_LEAN_AND_MEAN</Define>
-			<Define>INTERNAL</Define>
+			<Define>YOTE_INTERNAL</Define>
+			<Define>YOTE_PLATFORM_WINDOWS</Define>
+			<Define>YOTE_USE_SOCKET</Define>
+			<Define>YOTE_USE_ARENA</Define>
+			<Define>YOTE_USE_STRING</Define>
+			<Define>YOTE_SLOW</Define>
+			<Define>YOTE_PLATFORM_USE_SOCKETS</Define>
 		</Defines>
 		<ConfigProperties>
 			<ConfigAndPlatform>
@@ -51,13 +57,15 @@
 				<Name>game_server:win_x64</Name>
 				<Defines></Defines>
 				<ForceIncludes>
-					<ForceInclude></ForceInclude>
+					<ForceInclude>src\yote.h</ForceInclude>
 				</ForceIncludes>
 			</ConfigAndPlatform>
 			<ConfigAndPlatform>
 				<Name>login_server:win_x64</Name>
 				<Defines></Defines>
-				<ForceIncludes></ForceIncludes>
+				<ForceIncludes>
+					<ForceInclude>src\yote.h</ForceInclude>
+				</ForceIncludes>
 			</ConfigAndPlatform>
 			<ConfigAndPlatform>
 				<Name>proxy:win_x64</Name>
@@ -89,6 +97,81 @@
 				<Defines></Defines>
 			</Platform>
 		</ConfigProperties>
-		<Children></Children>
+		<Children>
+			<Folder>
+				<Path>misc</Path>
+				<IncludeFilter>*.*,</IncludeFilter>
+				<ExcludeFilter>*.obj,*.lib,*.pch,*.dll,*.pdb,.vs,Debug,Release,x64,Win32,obj,*.user,Intermediate,,build_game_server_win_x64,build_login_server_win_x64,build_proxy_win_x64,.git,build_scratch_win_x64,</ExcludeFilter>
+				<SyncFiles>true</SyncFiles>
+				<Recursive>true</Recursive>
+				<ShowEmptyFolders>true</ShowEmptyFolders>
+				<IsVirtual>false</IsVirtual>
+				<Children></Children>
+			</Folder>
+			<Folder>
+				<Path>resources</Path>
+				<IncludeFilter>*.*,</IncludeFilter>
+				<ExcludeFilter>*.obj,*.lib,*.pch,*.dll,*.pdb,.vs,Debug,Release,x64,Win32,obj,*.user,Intermediate,,build_game_server_win_x64,build_login_server_win_x64,build_proxy_win_x64,.git,build_scratch_win_x64,</ExcludeFilter>
+				<SyncFiles>true</SyncFiles>
+				<Recursive>true</Recursive>
+				<ShowEmptyFolders>true</ShowEmptyFolders>
+				<IsVirtual>false</IsVirtual>
+				<Children></Children>
+			</Folder>
+			<Folder>
+				<Path>schema</Path>
+				<IncludeFilter>*.*,</IncludeFilter>
+				<ExcludeFilter>*.obj,*.lib,*.pch,*.dll,*.pdb,.vs,Debug,Release,x64,Win32,obj,*.user,Intermediate,,build_game_server_win_x64,build_login_server_win_x64,build_proxy_win_x64,.git,build_scratch_win_x64,</ExcludeFilter>
+				<SyncFiles>true</SyncFiles>
+				<Recursive>true</Recursive>
+				<ShowEmptyFolders>true</ShowEmptyFolders>
+				<IsVirtual>false</IsVirtual>
+				<Children></Children>
+			</Folder>
+			<Folder>
+				<Path>src</Path>
+				<IncludeFilter>*.*,</IncludeFilter>
+				<ExcludeFilter>*.obj,*.lib,*.pch,*.dll,*.pdb,.vs,Debug,Release,x64,Win32,obj,*.user,Intermediate,,build_game_server_win_x64,build_login_server_win_x64,build_proxy_win_x64,.git,build_scratch_win_x64,</ExcludeFilter>
+				<SyncFiles>true</SyncFiles>
+				<Recursive>true</Recursive>
+				<ShowEmptyFolders>true</ShowEmptyFolders>
+				<IsVirtual>false</IsVirtual>
+				<Children></Children>
+			</Folder>
+			<File>
+				<Path>.gitignore</Path>
+			</File>
+			<File>
+				<Path>build_login_server_win_x64.bat</Path>
+			</File>
+			<File>
+				<Path>build_game_server_win_x64.bat</Path>
+			</File>
+			<File>
+				<Path>build_proxy_win_x64.bat</Path>
+			</File>
+			<File>
+				<Path>build_scratch_win_x64.bat</Path>
+			</File>
+			<File>
+				<Path>run_all.bat</Path>
+			</File>
+			<File>
+				<Path>build_login_server_win_x64_OLD.bat</Path>
+			</File>
+			<Folder>
+				<Path>.vscode</Path>
+				<IncludeFilter>*.*,</IncludeFilter>
+				<ExcludeFilter>*.obj,*.lib,*.pch,*.dll,*.pdb,.vs,Debug,Release,x64,Win32,obj,*.user,Intermediate,,build_game_server_win_x64,build_login_server_win_x64,build_proxy_win_x64,.git,build_scratch_win_x64,</ExcludeFilter>
+				<SyncFiles>true</SyncFiles>
+				<Recursive>true</Recursive>
+				<ShowEmptyFolders>true</ShowEmptyFolders>
+				<IsVirtual>false</IsVirtual>
+				<Children></Children>
+			</Folder>
+			<File>
+				<Path>H1Z1-C-Server.10x</Path>
+			</File>
+		</Children>
 	</Workspace>
 </N10X>

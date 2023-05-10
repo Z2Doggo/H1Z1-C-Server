@@ -48,9 +48,10 @@ internal void input_stream_channel_packet_data_parse(Input_Stream* stream, u8* d
 				crypt_rc4_transform(&stream->rc4_state, data + offset, chunk_length);
 			}
 
-			if (stream->data_callback)
+			// TODO(rhett): 
+			if (*stream->data_callback_ptr)
 			{
-				stream->data_callback(server, session, data + offset, chunk_length);
+				(*stream->data_callback_ptr)(server, session, data + offset, chunk_length);
 			}
 
 			offset += chunk_length;
@@ -68,9 +69,10 @@ internal void input_stream_channel_packet_data_parse(Input_Stream* stream, u8* d
 			crypt_rc4_transform(&stream->rc4_state, data + offset, data_length);
 		}
 
-		if (stream->data_callback)
+		// TODO(rhett): 
+		if (*stream->data_callback_ptr)
 		{
-			stream->data_callback(server, session, data + offset, data_length);
+		(*stream->data_callback_ptr)(server, session, data + offset, data_length);
 		}
 	}
 }
@@ -138,9 +140,10 @@ internal void input_stream_write(Input_Stream* stream, u8* data, u32 data_length
 	{
 		stream->ack_previous = ack;
 		// TODO(rhett): Using pointer for session, maybe move to an index
-		if (stream->ack_callback && session)
+		if (*stream->ack_callback_ptr && session)
 		{
-			stream->ack_callback(ack, session);
+			(*stream->ack_callback_ptr)(ack, session);
+		//on_input_stream_ack(ack, session);
 		}
 	}
 

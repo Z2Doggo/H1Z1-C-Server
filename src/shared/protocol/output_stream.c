@@ -23,16 +23,18 @@ void output_stream_write(Output_Stream* stream,
 	if (data_length <= stream->fragment_pool->packet_length)
 	{
 		stream->sequence++;
-		if (stream->data_callback)
+
+		// TODO(rhett): 
+		if (*stream->data_callback_ptr)
 		{
-			stream->data_callback(server, session, data, data_length, stream->sequence, FALSE);
+			(*stream->data_callback_ptr)(server, session, data, data_length, stream->sequence, FALSE);
 		}
 	}
 	else
 	{
 		// TODO(rhett): still some cleanup to do
 		// TODO(rhett): this will need to match output stream fragment length. switch to an arena
-		assert((MAX_PACKET_LENGTH - DATA_HEADER_LENGTH) == (512 - 4)
+		ASSERT((MAX_PACKET_LENGTH - DATA_HEADER_LENGTH) == (512 - 4)
 		       && (MAX_PACKET_LENGTH - DATA_HEADER_LENGTH) == stream->fragment_pool->packet_length);
 		u8 temp_buffer[MAX_PACKET_LENGTH - DATA_HEADER_LENGTH] = { 0 };
 		// TODO(rhett): maybe endian_write should return bytes written incase we swap it out?
@@ -44,13 +46,14 @@ void output_stream_write(Output_Stream* stream,
 			u32 partial_data_length = MIN(data_length - i, stream->fragment_pool->packet_length);
 			partial_data_length -= initial_offset;
 			stream->sequence++;
-			util_memory_copy(&temp_buffer[initial_offset],
+			base_memory_copy(&temp_buffer[initial_offset],
 			                 (void*)((uptr)data + i),
 			                 partial_data_length);
 
-			if (stream->data_callback)
+			// TODO(rhett): 
+			if (*stream->data_callback_ptr)
 			{
-				stream->data_callback(server,
+				(*stream->data_callback_ptr)(server,
 				                      session,
 				                      temp_buffer,
 				                      partial_data_length + initial_offset,
@@ -66,7 +69,7 @@ void output_stream_write(Output_Stream* stream,
 
 internal void output_stream_ack_update(Output_Stream* stream, i32 sequence)
 {
-	// printf("[*] output_stream_ack_update; ack_previous=%d, sequence=%d\n", stream->ack_previous, sequence);
+	printf("[*] output_stream_ack_update; ack_previous=%d, sequence=%d\n", stream->ack_previous, sequence);
 	stream->ack_previous = sequence;
 }
 

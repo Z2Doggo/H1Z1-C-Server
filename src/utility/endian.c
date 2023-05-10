@@ -656,6 +656,41 @@ struct vec4
 	f32 w;
 };
 
+typedef struct vec4_i32 vec4_i32;
+struct vec4_i32
+{
+	i32 x;
+	i32 y;
+	i32 z;
+	i32 w;
+};
+
+typedef struct euler_angle euler_angle;
+struct euler_angle
+{
+	i32 pitch;
+	i32 yaw;
+	i32 roll;
+};
+
+internal vec4_i32
+	euler_to_quaternion(euler_angle euler) {
+	i32 cos_pitch = cos(euler.pitch / 2);
+	i32 sin_pitch = sin(euler.pitch / 2);
+	i32 cos_yaw = cos(euler.yaw / 2);
+	i32 sin_yaw = sin(euler.yaw / 2);
+	i32 cos_roll = cos(euler.roll / 2);
+	i32 sin_roll = sin(euler.roll / 2);
+
+	vec4_i32 q;
+	q.x = cos_pitch * cos_yaw * cos_roll + sin_pitch * sin_yaw * sin_roll;
+	q.y = sin_pitch * cos_yaw * cos_roll - cos_pitch * sin_yaw * sin_roll;
+	q.z = cos_pitch * sin_yaw * cos_roll + sin_pitch * cos_yaw * sin_roll;
+	q.w = cos_pitch * cos_yaw * sin_roll - sin_pitch * sin_yaw * cos_roll;
+
+	return q;
+}
+
 internal vec4
 endian_read_vec4_little(u8* data)
 {
@@ -734,4 +769,53 @@ endian_write_uint2b_little(u8* buffer, u32 value)
 	endian_write_u32_little(buffer, value);
 
 	return length + 1;
+}
+
+typedef struct int2b int2b;
+struct int2b
+{
+	i32 value;
+	i32 length;
+};
+
+internal int2b
+endian_read_int2b_little(u8* data, i32 offset)
+{
+	i32 value = data[offset];
+	const i32 sign = value & 1;
+	const i32 n = (value >> 1) & 3;
+	for (i32 i = 0; i < n; i++) {
+		value += data[offset + i + 1] << ((i + 1) * 8);
+	}
+	value = value >> 3;
+	if (sign) {
+		value = -value;
+	}
+	int2b result = {
+		.value = value,
+		.length = n + 1,
+	};
+	
+	return result;
+}
+
+internal i32
+endian_write_int2b_little(u8* buffer, i32 value) {
+    i32 sign = value < 0 ? 1 : 0;
+    value = sign ? -value : value;
+    value = value << 3;
+    i32 length = 0;
+    if (value > 0xffffff) {
+        length = 3;
+    } else if (value > 0xffff) {
+        length = 2;
+    } else if (value > 0xff) {
+        length = 1;
+    }
+    value |= length << 1;
+    value |= sign;
+
+	endian_write_i32_little(buffer, value);
+
+    return length + 1;
 }

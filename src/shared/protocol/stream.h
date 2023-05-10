@@ -34,8 +34,8 @@ struct Input_Stream
 {
 	Rc4_State rc4_state;
 
-	input_stream_callback_ack*  ack_callback;
-	input_stream_callback_data* data_callback;
+	input_stream_callback_ack**  ack_callback_ptr;
+	input_stream_callback_data** data_callback_ptr;
 
 	i32 sequence_next;
 	i32 ack_previous;
@@ -53,7 +53,7 @@ struct Output_Stream
 {
 	Rc4_State rc4_state;
 
-	output_stream_callback_data* data_callback;
+	output_stream_callback_data** data_callback_ptr;
 
 	i32 sequence;
 	i32 ack_previous;

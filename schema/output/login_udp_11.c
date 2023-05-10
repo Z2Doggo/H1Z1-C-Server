@@ -135,8 +135,8 @@ struct Login_Packet_CharacterCreateRequest
 {
 u32 server_id;
 u32 unk_u32;
-u32 payload_length;
-struct payload_s
+u32 char_payload_length;
+struct char_payload_s
 {
 b8 empire_id;
 u32 head_type;
@@ -144,7 +144,7 @@ u32 profile_type;
 u32 gender;
 u32 character_name_length;
 char* character_name;
-}* payload;
+}* char_payload;
 };
 
 
@@ -432,7 +432,7 @@ switch(packet_kind)
 {
 case Login_Packet_Kind_LoginRequest:
 {
-printf("[*] Packing LoginRequest...\n");
+printf(MESSAGE_CONCAT_INFO("Packing LoginRequest...\n"));
 Login_Packet_LoginRequest* packet = packet_ptr;
 
 endian_write_u8_little(buffer + offset, 0x1);
@@ -482,7 +482,7 @@ printf("-- third_party_id          \t%lld\t%llxh\t%f\n", (i64)packet->third_part
 
 case Login_Packet_Kind_LoginReply:
 {
-printf("[*] Packing LoginReply...\n");
+printf(MESSAGE_CONCAT_INFO("Packing LoginReply...\n"));
 Login_Packet_LoginReply* packet = packet_ptr;
 
 endian_write_u8_little(buffer + offset, 0x2);
@@ -620,7 +620,7 @@ offset++;
 
 case Login_Packet_Kind_Logout:
 {
-printf("[*] Packing Logout...\n");
+printf(MESSAGE_CONCAT_INFO("Packing Logout...\n"));
 endian_write_u8_little(buffer + offset, 0x3);
 offset += sizeof(u8);
 
@@ -628,7 +628,7 @@ offset += sizeof(u8);
 
 case Login_Packet_Kind_ForceDisconnect:
 {
-printf("[*] Packing ForceDisconnect...\n");
+printf(MESSAGE_CONCAT_INFO("Packing ForceDisconnect...\n"));
 endian_write_u8_little(buffer + offset, 0x4);
 offset += sizeof(u8);
 
@@ -636,7 +636,7 @@ offset += sizeof(u8);
 
 case Login_Packet_Kind_CharacterCreateRequest:
 {
-printf("[*] Packing CharacterCreateRequest...\n");
+printf(MESSAGE_CONCAT_INFO("Packing CharacterCreateRequest...\n"));
 Login_Packet_CharacterCreateRequest* packet = packet_ptr;
 
 endian_write_u8_little(buffer + offset, 0x5);
@@ -652,52 +652,52 @@ endian_write_u32_little(buffer + offset, packet->unk_u32);
 offset += sizeof(u32);
 printf("-- unk_u32                 \t%lld\t%llxh\t%f\n", (i64)packet->unk_u32, (u64)packet->unk_u32, (f64)packet->unk_u32);
 
-// stream payload
-void* payload_length_ptr = buffer + offset;
+// stream char_payload
+void* char_payload_length_ptr = buffer + offset;
 offset += sizeof(u32);
-printf("-- STREAM_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->payload_length, (u64)packet->payload_length, (f64)packet->payload_length);
+printf("-- STREAM_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->char_payload_length, (u64)packet->char_payload_length, (f64)packet->char_payload_length);
 
-u32 will_pack_payload = packet->payload_length == ~(u32)0 ? 0 : 1;
-for (u32 payload_iter = 0; payload_iter < will_pack_payload; payload_iter++)
+u32 will_pack_char_payload = packet->char_payload_length == ~(u32)0 ? 0 : 1;
+for (u32 char_payload_iter = 0; char_payload_iter < will_pack_char_payload; char_payload_iter++)
 {
 // b8 empire_id
-endian_write_b8_little(buffer + offset, packet->payload[payload_iter].empire_id);
+endian_write_b8_little(buffer + offset, packet->char_payload[char_payload_iter].empire_id);
 offset += sizeof(b8);
-printf("-- empire_id               \t%lld\t%llxh\t%f\n", (i64)packet->payload[payload_iter].empire_id, (u64)packet->payload[payload_iter].empire_id, (f64)packet->payload[payload_iter].empire_id);
+printf("-- empire_id               \t%lld\t%llxh\t%f\n", (i64)packet->char_payload[char_payload_iter].empire_id, (u64)packet->char_payload[char_payload_iter].empire_id, (f64)packet->char_payload[char_payload_iter].empire_id);
 
 // u32 head_type
-endian_write_u32_little(buffer + offset, packet->payload[payload_iter].head_type);
+endian_write_u32_little(buffer + offset, packet->char_payload[char_payload_iter].head_type);
 offset += sizeof(u32);
-printf("-- head_type               \t%lld\t%llxh\t%f\n", (i64)packet->payload[payload_iter].head_type, (u64)packet->payload[payload_iter].head_type, (f64)packet->payload[payload_iter].head_type);
+printf("-- head_type               \t%lld\t%llxh\t%f\n", (i64)packet->char_payload[char_payload_iter].head_type, (u64)packet->char_payload[char_payload_iter].head_type, (f64)packet->char_payload[char_payload_iter].head_type);
 
 // u32 profile_type
-endian_write_u32_little(buffer + offset, packet->payload[payload_iter].profile_type);
+endian_write_u32_little(buffer + offset, packet->char_payload[char_payload_iter].profile_type);
 offset += sizeof(u32);
-printf("-- profile_type            \t%lld\t%llxh\t%f\n", (i64)packet->payload[payload_iter].profile_type, (u64)packet->payload[payload_iter].profile_type, (f64)packet->payload[payload_iter].profile_type);
+printf("-- profile_type            \t%lld\t%llxh\t%f\n", (i64)packet->char_payload[char_payload_iter].profile_type, (u64)packet->char_payload[char_payload_iter].profile_type, (f64)packet->char_payload[char_payload_iter].profile_type);
 
 // u32 gender
-endian_write_u32_little(buffer + offset, packet->payload[payload_iter].gender);
+endian_write_u32_little(buffer + offset, packet->char_payload[char_payload_iter].gender);
 offset += sizeof(u32);
-printf("-- gender                  \t%lld\t%llxh\t%f\n", (i64)packet->payload[payload_iter].gender, (u64)packet->payload[payload_iter].gender, (f64)packet->payload[payload_iter].gender);
+printf("-- gender                  \t%lld\t%llxh\t%f\n", (i64)packet->char_payload[char_payload_iter].gender, (u64)packet->char_payload[char_payload_iter].gender, (f64)packet->char_payload[char_payload_iter].gender);
 
 // string character_name
-endian_write_u32_little(buffer + offset, packet->payload[payload_iter].character_name_length);
+endian_write_u32_little(buffer + offset, packet->char_payload[char_payload_iter].character_name_length);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->payload[payload_iter].character_name_length, (u64)packet->payload[payload_iter].character_name_length, (f64)packet->payload[payload_iter].character_name_length);
-for (u32 character_name_iter = 0; character_name_iter < packet->payload[payload_iter].character_name_length; character_name_iter++)
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->char_payload[char_payload_iter].character_name_length, (u64)packet->char_payload[char_payload_iter].character_name_length, (f64)packet->char_payload[char_payload_iter].character_name_length);
+for (u32 character_name_iter = 0; character_name_iter < packet->char_payload[char_payload_iter].character_name_length; character_name_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->payload[payload_iter].character_name[character_name_iter]);
+endian_write_i8_little(buffer + offset, packet->char_payload[char_payload_iter].character_name[character_name_iter]);
 offset++;
 }
 
-} // payload
-endian_write_u32_little((u8*)payload_length_ptr, (u32)((uptr)buffer + (uptr)offset - (uptr)payload_length_ptr - sizeof(u32)));
+} // char_payload
+endian_write_u32_little((u8*)char_payload_length_ptr, (u32)((uptr)buffer + (uptr)offset - (uptr)char_payload_length_ptr - sizeof(u32)));
 
 } break;
 
 case Login_Packet_Kind_CharacterCreateReply:
 {
-printf("[*] Packing CharacterCreateReply...\n");
+printf(MESSAGE_CONCAT_INFO("Packing CharacterCreateReply...\n"));
 Login_Packet_CharacterCreateReply* packet = packet_ptr;
 
 endian_write_u8_little(buffer + offset, 0x6);
@@ -717,7 +717,7 @@ printf("-- character_id            \t%lld\t%llxh\t%f\n", (i64)packet->character_
 
 case Login_Packet_Kind_CharacterLoginRequest:
 {
-printf("[*] Packing CharacterLoginRequest...\n");
+printf(MESSAGE_CONCAT_INFO("Packing CharacterLoginRequest...\n"));
 Login_Packet_CharacterLoginRequest* packet = packet_ptr;
 
 endian_write_u8_little(buffer + offset, 0x7);
@@ -773,7 +773,7 @@ endian_write_u32_little((u8*)payload2_length_ptr, (u32)((uptr)buffer + (uptr)off
 
 case Login_Packet_Kind_CharacterLoginReply:
 {
-printf("[*] Packing CharacterLoginReply...\n");
+printf(MESSAGE_CONCAT_INFO("Packing CharacterLoginReply...\n"));
 Login_Packet_CharacterLoginReply* packet = packet_ptr;
 
 endian_write_u8_little(buffer + offset, 0x8);
@@ -894,7 +894,7 @@ endian_write_u32_little((u8*)login_payload_length_ptr, (u32)((uptr)buffer + (upt
 
 case Login_Packet_Kind_CharacterDeleteRequest:
 {
-printf("[*] Packing CharacterDeleteRequest...\n");
+printf(MESSAGE_CONCAT_INFO("Packing CharacterDeleteRequest...\n"));
 Login_Packet_CharacterDeleteRequest* packet = packet_ptr;
 
 endian_write_u8_little(buffer + offset, 0x9);
@@ -909,7 +909,7 @@ printf("-- character_id            \t%lld\t%llxh\t%f\n", (i64)packet->character_
 
 case Login_Packet_Kind_TunnelAppPacketClientToServer:
 {
-printf("[*] Packing TunnelAppPacketClientToServer...\n");
+printf(MESSAGE_CONCAT_INFO("Packing TunnelAppPacketClientToServer...\n"));
 Login_Packet_TunnelAppPacketClientToServer* packet = packet_ptr;
 
 endian_write_u8_little(buffer + offset, 0x10);
@@ -960,7 +960,7 @@ endian_write_u32_little((u8*)data_client_length_ptr, (u32)((uptr)buffer + (uptr)
 
 case Login_Packet_Kind_TunnelAppPacketServerToClient:
 {
-printf("[*] Packing TunnelAppPacketServerToClient...\n");
+printf(MESSAGE_CONCAT_INFO("Packing TunnelAppPacketServerToClient...\n"));
 Login_Packet_TunnelAppPacketServerToClient* packet = packet_ptr;
 
 endian_write_u8_little(buffer + offset, 0x11);
@@ -1026,7 +1026,7 @@ endian_write_u32_little((u8*)data_server_length_ptr, (u32)((uptr)buffer + (uptr)
 
 case Login_Packet_Kind_CharacterTransferRequest:
 {
-printf("[*] Packing CharacterTransferRequest...\n");
+printf(MESSAGE_CONCAT_INFO("Packing CharacterTransferRequest...\n"));
 endian_write_u8_little(buffer + offset, 0x12);
 offset += sizeof(u8);
 
@@ -1034,7 +1034,7 @@ offset += sizeof(u8);
 
 case Login_Packet_Kind_CharacterTransferReply:
 {
-printf("[*] Packing CharacterTransferReply...\n");
+printf(MESSAGE_CONCAT_INFO("Packing CharacterTransferReply...\n"));
 endian_write_u8_little(buffer + offset, 0x13);
 offset += sizeof(u8);
 
@@ -1042,7 +1042,7 @@ offset += sizeof(u8);
 
 case Login_Packet_Kind_CharacterDeleteReply:
 {
-printf("[*] Packing CharacterDeleteReply...\n");
+printf(MESSAGE_CONCAT_INFO("Packing CharacterDeleteReply...\n"));
 Login_Packet_CharacterDeleteReply* packet = packet_ptr;
 
 endian_write_u8_little(buffer + offset, 0xa);
@@ -1072,7 +1072,7 @@ offset++;
 
 case Login_Packet_Kind_CharacterSelectInfoRequest:
 {
-printf("[*] Packing CharacterSelectInfoRequest...\n");
+printf(MESSAGE_CONCAT_INFO("Packing CharacterSelectInfoRequest...\n"));
 endian_write_u8_little(buffer + offset, 0xb);
 offset += sizeof(u8);
 
@@ -1080,7 +1080,7 @@ offset += sizeof(u8);
 
 case Login_Packet_Kind_CharacterSelectInfoReply:
 {
-printf("[*] Packing CharacterSelectInfoReply...\n");
+printf(MESSAGE_CONCAT_INFO("Packing CharacterSelectInfoReply...\n"));
 Login_Packet_CharacterSelectInfoReply* packet = packet_ptr;
 
 endian_write_u8_little(buffer + offset, 0xc);
@@ -1669,7 +1669,7 @@ endian_write_u32_little((u8*)payload4_length_ptr, (u32)((uptr)buffer + (uptr)off
 
 case Login_Packet_Kind_ServerListRequest:
 {
-printf("[*] Packing ServerListRequest...\n");
+printf(MESSAGE_CONCAT_INFO("Packing ServerListRequest...\n"));
 endian_write_u8_little(buffer + offset, 0xd);
 offset += sizeof(u8);
 
@@ -1677,7 +1677,7 @@ offset += sizeof(u8);
 
 case Login_Packet_Kind_ServerListReply:
 {
-printf("[*] Packing ServerListReply...\n");
+printf(MESSAGE_CONCAT_INFO("Packing ServerListReply...\n"));
 Login_Packet_ServerListReply* packet = packet_ptr;
 
 endian_write_u8_little(buffer + offset, 0xe);
@@ -1786,7 +1786,7 @@ printf("-- is_access_allowed       \t%lld\t%llxh\t%f\n", (i64)packet->servers[se
 
 case Login_Packet_Kind_ServerUpdate:
 {
-printf("[*] Packing ServerUpdate...\n");
+printf(MESSAGE_CONCAT_INFO("Packing ServerUpdate...\n"));
 endian_write_u8_little(buffer + offset, 0xf);
 offset += sizeof(u8);
 
@@ -1794,15 +1794,16 @@ offset += sizeof(u8);
 
 default:
 {
-printf("[!] Packing %s not implemented\n", login_packet_names[packet_kind]);
+printf(MESSAGE_CONCAT_WARN("Packing %s not implemented\n"), login_packet_names[packet_kind]);
 }
 }
 return offset;
 }
 
 internal void
-login_packet_unpack(u8* data, u32 data_length, Login_Packet_Kind packet_kind, void* packet_ptr, Memory_Arena* arena)
+login_packet_unpack(u8* data, u32 data_length, Login_Packet_Kind packet_kind, void* packet_ptr, Arena* arena)
 {
+UNUSED(data_length);
 u32 offset = 0;
 
 printf("\n");
@@ -1816,7 +1817,7 @@ Login_Packet_LoginRequest* packet = packet_ptr;
 // string session_id
 packet->session_id_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->session_id = memory_arena_push_length(arena, packet->session_id_length);
+packet->session_id = arena_push_size(arena, packet->session_id_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->session_id_length);
 for (u32 session_id_iter = 0; session_id_iter < packet->session_id_length; session_id_iter++)
 {
@@ -1827,7 +1828,7 @@ offset++;
 // string system_fingerprint
 packet->system_fingerprint_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->system_fingerprint = memory_arena_push_length(arena, packet->system_fingerprint_length);
+packet->system_fingerprint = arena_push_size(arena, packet->system_fingerprint_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->system_fingerprint_length);
 for (u32 system_fingerprint_iter = 0; system_fingerprint_iter < packet->system_fingerprint_length; system_fingerprint_iter++)
 {
@@ -1890,7 +1891,7 @@ printf("-- is_internal             \t%lld\t%llxh\t%f\n", (i64)packet->is_interna
 // string namespace_name
 packet->namespace_name_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->namespace_name = memory_arena_push_length(arena, packet->namespace_name_length);
+packet->namespace_name = arena_push_size(arena, packet->namespace_name_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->namespace_name_length);
 for (u32 namespace_name_iter = 0; namespace_name_iter < packet->namespace_name_length; namespace_name_iter++)
 {
@@ -1901,7 +1902,7 @@ offset++;
 // list account_features
 packet->account_features_count = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->account_features = memory_arena_push_length(arena, packet->account_features_count * sizeof(packet->account_features[0]));
+packet->account_features = arena_push_size(arena, packet->account_features_count * sizeof(packet->account_features[0]));
 printf("-- LIST_COUNT              \t%d\n", packet->account_features_count);
 for (u32 account_features_iter = 0; account_features_iter < packet->account_features_count; account_features_iter++)
 {
@@ -1928,7 +1929,7 @@ printf("-- remaining_count         \t%lld\t%llxh\t%f\n", (i64)packet->account_fe
 // bytes raw_data
 packet->account_features[account_features_iter].raw_data_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->account_features[account_features_iter].raw_data = memory_arena_push_length(arena, packet->account_features[account_features_iter].raw_data_length);
+packet->account_features[account_features_iter].raw_data = arena_push_size(arena, packet->account_features[account_features_iter].raw_data_length);
 printf("-- BYTES_LENGTH            \t%d\n", packet->account_features[account_features_iter].raw_data_length);
 for (u32 raw_data_iter = 0; raw_data_iter < packet->account_features[account_features_iter].raw_data_length; raw_data_iter++)
 {
@@ -1941,7 +1942,7 @@ offset++;
 // bytes application_payload
 packet->application_payload_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->application_payload = memory_arena_push_length(arena, packet->application_payload_length);
+packet->application_payload = arena_push_size(arena, packet->application_payload_length);
 printf("-- BYTES_LENGTH            \t%d\n", packet->application_payload_length);
 for (u32 application_payload_iter = 0; application_payload_iter < packet->application_payload_length; application_payload_iter++)
 {
@@ -1952,7 +1953,7 @@ offset++;
 // list error_details
 packet->error_details_count = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->error_details = memory_arena_push_length(arena, packet->error_details_count * sizeof(packet->error_details[0]));
+packet->error_details = arena_push_size(arena, packet->error_details_count * sizeof(packet->error_details[0]));
 printf("-- LIST_COUNT              \t%d\n", packet->error_details_count);
 for (u32 error_details_iter = 0; error_details_iter < packet->error_details_count; error_details_iter++)
 {
@@ -1964,7 +1965,7 @@ printf("-- unknown_dword1          \t%lld\t%llxh\t%f\n", (i64)packet->error_deta
 // string name
 packet->error_details[error_details_iter].name_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->error_details[error_details_iter].name = memory_arena_push_length(arena, packet->error_details[error_details_iter].name_length);
+packet->error_details[error_details_iter].name = arena_push_size(arena, packet->error_details[error_details_iter].name_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->error_details[error_details_iter].name_length);
 for (u32 name_iter = 0; name_iter < packet->error_details[error_details_iter].name_length; name_iter++)
 {
@@ -1975,7 +1976,7 @@ offset++;
 // string value
 packet->error_details[error_details_iter].value_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->error_details[error_details_iter].value = memory_arena_push_length(arena, packet->error_details[error_details_iter].value_length);
+packet->error_details[error_details_iter].value = arena_push_size(arena, packet->error_details[error_details_iter].value_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->error_details[error_details_iter].value_length);
 for (u32 value_iter = 0; value_iter < packet->error_details[error_details_iter].value_length; value_iter++)
 {
@@ -1988,7 +1989,7 @@ offset++;
 // string ip_country_code
 packet->ip_country_code_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->ip_country_code = memory_arena_push_length(arena, packet->ip_country_code_length);
+packet->ip_country_code = arena_push_size(arena, packet->ip_country_code_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->ip_country_code_length);
 for (u32 ip_country_code_iter = 0; ip_country_code_iter < packet->ip_country_code_length; ip_country_code_iter++)
 {
@@ -2013,45 +2014,45 @@ packet->unk_u32 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
 printf("-- unk_u32                 \t%lld\t%llxh\t%f\n", (i64)packet->unk_u32, (u64)packet->unk_u32, (f64)packet->unk_u32);
 
-// stream payload
-packet->payload_length = endian_read_u32_little(data + offset);
+// stream char_payload
+packet->char_payload_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->payload = memory_arena_push_length(arena, packet->payload_length * sizeof(packet->payload[0]));
-printf("-- STREAM_LENGTH           \t%d\n", packet->payload_length);
-for (u32 payload_iter = 0; payload_iter < (packet->payload_length > (u32)0 ? (u32)1 : (u32)0); payload_iter++)
+packet->char_payload = arena_push_size(arena, packet->char_payload_length * sizeof(packet->char_payload[0]));
+printf("-- STREAM_LENGTH           \t%d\n", packet->char_payload_length);
+for (u32 char_payload_iter = 0; char_payload_iter < (packet->char_payload_length > (u32)0 ? (u32)1 : (u32)0); char_payload_iter++)
 {
 // b8 empire_id
-packet->payload[payload_iter].empire_id = endian_read_b8_little(data + offset);
+packet->char_payload[char_payload_iter].empire_id = endian_read_b8_little(data + offset);
 offset += sizeof(b8);
-printf("-- empire_id               \t%lld\t%llxh\t%f\n", (i64)packet->payload[payload_iter].empire_id, (u64)packet->payload[payload_iter].empire_id, (f64)packet->payload[payload_iter].empire_id);
+printf("-- empire_id               \t%lld\t%llxh\t%f\n", (i64)packet->char_payload[char_payload_iter].empire_id, (u64)packet->char_payload[char_payload_iter].empire_id, (f64)packet->char_payload[char_payload_iter].empire_id);
 
 // u32 head_type
-packet->payload[payload_iter].head_type = endian_read_u32_little(data + offset);
+packet->char_payload[char_payload_iter].head_type = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- head_type               \t%lld\t%llxh\t%f\n", (i64)packet->payload[payload_iter].head_type, (u64)packet->payload[payload_iter].head_type, (f64)packet->payload[payload_iter].head_type);
+printf("-- head_type               \t%lld\t%llxh\t%f\n", (i64)packet->char_payload[char_payload_iter].head_type, (u64)packet->char_payload[char_payload_iter].head_type, (f64)packet->char_payload[char_payload_iter].head_type);
 
 // u32 profile_type
-packet->payload[payload_iter].profile_type = endian_read_u32_little(data + offset);
+packet->char_payload[char_payload_iter].profile_type = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- profile_type            \t%lld\t%llxh\t%f\n", (i64)packet->payload[payload_iter].profile_type, (u64)packet->payload[payload_iter].profile_type, (f64)packet->payload[payload_iter].profile_type);
+printf("-- profile_type            \t%lld\t%llxh\t%f\n", (i64)packet->char_payload[char_payload_iter].profile_type, (u64)packet->char_payload[char_payload_iter].profile_type, (f64)packet->char_payload[char_payload_iter].profile_type);
 
 // u32 gender
-packet->payload[payload_iter].gender = endian_read_u32_little(data + offset);
+packet->char_payload[char_payload_iter].gender = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- gender                  \t%lld\t%llxh\t%f\n", (i64)packet->payload[payload_iter].gender, (u64)packet->payload[payload_iter].gender, (f64)packet->payload[payload_iter].gender);
+printf("-- gender                  \t%lld\t%llxh\t%f\n", (i64)packet->char_payload[char_payload_iter].gender, (u64)packet->char_payload[char_payload_iter].gender, (f64)packet->char_payload[char_payload_iter].gender);
 
 // string character_name
-packet->payload[payload_iter].character_name_length = endian_read_u32_little(data + offset);
+packet->char_payload[char_payload_iter].character_name_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->payload[payload_iter].character_name = memory_arena_push_length(arena, packet->payload[payload_iter].character_name_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->payload[payload_iter].character_name_length);
-for (u32 character_name_iter = 0; character_name_iter < packet->payload[payload_iter].character_name_length; character_name_iter++)
+packet->char_payload[char_payload_iter].character_name = arena_push_size(arena, packet->char_payload[char_payload_iter].character_name_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->char_payload[char_payload_iter].character_name_length);
+for (u32 character_name_iter = 0; character_name_iter < packet->char_payload[char_payload_iter].character_name_length; character_name_iter++)
 {
-packet->payload[payload_iter].character_name[character_name_iter] = *(i8*)((uptr)data + offset);
+packet->char_payload[char_payload_iter].character_name[character_name_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
-} // payload
+} // char_payload
 
 } break;
 
@@ -2095,14 +2096,14 @@ printf("-- status                  \t%lld\t%llxh\t%f\n", (i64)packet->status, (u
 // stream payload2
 packet->payload2_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->payload2 = memory_arena_push_length(arena, packet->payload2_length * sizeof(packet->payload2[0]));
+packet->payload2 = arena_push_size(arena, packet->payload2_length * sizeof(packet->payload2[0]));
 printf("-- STREAM_LENGTH           \t%d\n", packet->payload2_length);
 for (u32 payload2_iter = 0; payload2_iter < (packet->payload2_length > (u32)0 ? (u32)1 : (u32)0); payload2_iter++)
 {
 // string locale
 packet->payload2[payload2_iter].locale_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->payload2[payload2_iter].locale = memory_arena_push_length(arena, packet->payload2[payload2_iter].locale_length);
+packet->payload2[payload2_iter].locale = arena_push_size(arena, packet->payload2[payload2_iter].locale_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->payload2[payload2_iter].locale_length);
 for (u32 locale_iter = 0; locale_iter < packet->payload2[payload2_iter].locale_length; locale_iter++)
 {
@@ -2152,14 +2153,14 @@ printf("-- status                  \t%lld\t%llxh\t%f\n", (i64)packet->status, (u
 // stream login_payload
 packet->login_payload_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->login_payload = memory_arena_push_length(arena, packet->login_payload_length * sizeof(packet->login_payload[0]));
+packet->login_payload = arena_push_size(arena, packet->login_payload_length * sizeof(packet->login_payload[0]));
 printf("-- STREAM_LENGTH           \t%d\n", packet->login_payload_length);
 for (u32 login_payload_iter = 0; login_payload_iter < (packet->login_payload_length > (u32)0 ? (u32)1 : (u32)0); login_payload_iter++)
 {
 // string server_address
 packet->login_payload[login_payload_iter].server_address_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->login_payload[login_payload_iter].server_address = memory_arena_push_length(arena, packet->login_payload[login_payload_iter].server_address_length);
+packet->login_payload[login_payload_iter].server_address = arena_push_size(arena, packet->login_payload[login_payload_iter].server_address_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->login_payload[login_payload_iter].server_address_length);
 for (u32 server_address_iter = 0; server_address_iter < packet->login_payload[login_payload_iter].server_address_length; server_address_iter++)
 {
@@ -2170,7 +2171,7 @@ offset++;
 // string server_ticket
 packet->login_payload[login_payload_iter].server_ticket_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->login_payload[login_payload_iter].server_ticket = memory_arena_push_length(arena, packet->login_payload[login_payload_iter].server_ticket_length);
+packet->login_payload[login_payload_iter].server_ticket = arena_push_size(arena, packet->login_payload[login_payload_iter].server_ticket_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->login_payload[login_payload_iter].server_ticket_length);
 for (u32 server_ticket_iter = 0; server_ticket_iter < packet->login_payload[login_payload_iter].server_ticket_length; server_ticket_iter++)
 {
@@ -2181,7 +2182,7 @@ offset++;
 // bytes encryption_key
 packet->login_payload[login_payload_iter].encryption_key_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->login_payload[login_payload_iter].encryption_key = memory_arena_push_length(arena, packet->login_payload[login_payload_iter].encryption_key_length);
+packet->login_payload[login_payload_iter].encryption_key = arena_push_size(arena, packet->login_payload[login_payload_iter].encryption_key_length);
 printf("-- BYTES_LENGTH            \t%d\n", packet->login_payload[login_payload_iter].encryption_key_length);
 for (u32 encryption_key_iter = 0; encryption_key_iter < packet->login_payload[login_payload_iter].encryption_key_length; encryption_key_iter++)
 {
@@ -2207,7 +2208,7 @@ printf("-- unk_u64                 \t%lld\t%llxh\t%f\n", (i64)packet->login_payl
 // string station_name
 packet->login_payload[login_payload_iter].station_name_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->login_payload[login_payload_iter].station_name = memory_arena_push_length(arena, packet->login_payload[login_payload_iter].station_name_length);
+packet->login_payload[login_payload_iter].station_name = arena_push_size(arena, packet->login_payload[login_payload_iter].station_name_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->login_payload[login_payload_iter].station_name_length);
 for (u32 station_name_iter = 0; station_name_iter < packet->login_payload[login_payload_iter].station_name_length; station_name_iter++)
 {
@@ -2218,7 +2219,7 @@ offset++;
 // string character_name
 packet->login_payload[login_payload_iter].character_name_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->login_payload[login_payload_iter].character_name = memory_arena_push_length(arena, packet->login_payload[login_payload_iter].character_name_length);
+packet->login_payload[login_payload_iter].character_name = arena_push_size(arena, packet->login_payload[login_payload_iter].character_name_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->login_payload[login_payload_iter].character_name_length);
 for (u32 character_name_iter = 0; character_name_iter < packet->login_payload[login_payload_iter].character_name_length; character_name_iter++)
 {
@@ -2229,7 +2230,7 @@ offset++;
 // string unk_str
 packet->login_payload[login_payload_iter].unk_str_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->login_payload[login_payload_iter].unk_str = memory_arena_push_length(arena, packet->login_payload[login_payload_iter].unk_str_length);
+packet->login_payload[login_payload_iter].unk_str = arena_push_size(arena, packet->login_payload[login_payload_iter].unk_str_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->login_payload[login_payload_iter].unk_str_length);
 for (u32 unk_str_iter = 0; unk_str_iter < packet->login_payload[login_payload_iter].unk_str_length; unk_str_iter++)
 {
@@ -2276,7 +2277,7 @@ printf("-- unk1                    \t%lld\t%llxh\t%f\n", (i64)packet->unk1, (u64
 // stream data_client
 packet->data_client_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->data_client = memory_arena_push_length(arena, packet->data_client_length * sizeof(packet->data_client[0]));
+packet->data_client = arena_push_size(arena, packet->data_client_length * sizeof(packet->data_client[0]));
 printf("-- STREAM_LENGTH           \t%d\n", packet->data_client_length);
 for (u32 data_client_iter = 0; data_client_iter < (packet->data_client_length > (u32)0 ? (u32)1 : (u32)0); data_client_iter++)
 {
@@ -2293,7 +2294,7 @@ printf("-- sub_op_code             \t%lld\t%llxh\t%f\n", (i64)packet->data_clien
 // string character_name
 packet->data_client[data_client_iter].character_name_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->data_client[data_client_iter].character_name = memory_arena_push_length(arena, packet->data_client[data_client_iter].character_name_length);
+packet->data_client[data_client_iter].character_name = arena_push_size(arena, packet->data_client[data_client_iter].character_name_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->data_client[data_client_iter].character_name_length);
 for (u32 character_name_iter = 0; character_name_iter < packet->data_client[data_client_iter].character_name_length; character_name_iter++)
 {
@@ -2323,7 +2324,7 @@ printf("-- unk1                    \t%lld\t%llxh\t%f\n", (i64)packet->unk1, (u64
 // stream data_server
 packet->data_server_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->data_server = memory_arena_push_length(arena, packet->data_server_length * sizeof(packet->data_server[0]));
+packet->data_server = arena_push_size(arena, packet->data_server_length * sizeof(packet->data_server[0]));
 printf("-- STREAM_LENGTH           \t%d\n", packet->data_server_length);
 for (u32 data_server_iter = 0; data_server_iter < (packet->data_server_length > (u32)0 ? (u32)1 : (u32)0); data_server_iter++)
 {
@@ -2340,7 +2341,7 @@ printf("-- sub_op_code             \t%lld\t%llxh\t%f\n", (i64)packet->data_serve
 // string character_name
 packet->data_server[data_server_iter].character_name_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->data_server[data_server_iter].character_name = memory_arena_push_length(arena, packet->data_server[data_server_iter].character_name_length);
+packet->data_server[data_server_iter].character_name = arena_push_size(arena, packet->data_server[data_server_iter].character_name_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->data_server[data_server_iter].character_name_length);
 for (u32 character_name_iter = 0; character_name_iter < packet->data_server[data_server_iter].character_name_length; character_name_iter++)
 {
@@ -2351,7 +2352,7 @@ offset++;
 // string character_name2
 packet->data_server[data_server_iter].character_name2_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->data_server[data_server_iter].character_name2 = memory_arena_push_length(arena, packet->data_server[data_server_iter].character_name2_length);
+packet->data_server[data_server_iter].character_name2 = arena_push_size(arena, packet->data_server[data_server_iter].character_name2_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->data_server[data_server_iter].character_name2_length);
 for (u32 character_name2_iter = 0; character_name2_iter < packet->data_server[data_server_iter].character_name2_length; character_name2_iter++)
 {
@@ -2386,7 +2387,7 @@ printf("-- status                  \t%lld\t%llxh\t%f\n", (i64)packet->status, (u
 // bytes payload3
 packet->payload3_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->payload3 = memory_arena_push_length(arena, packet->payload3_length);
+packet->payload3 = arena_push_size(arena, packet->payload3_length);
 printf("-- BYTES_LENGTH            \t%d\n", packet->payload3_length);
 for (u32 payload3_iter = 0; payload3_iter < packet->payload3_length; payload3_iter++)
 {
@@ -2414,7 +2415,7 @@ printf("-- can_bypass_server_lock  \t%lld\t%llxh\t%f\n", (i64)packet->can_bypass
 // list characters
 packet->characters_count = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters = memory_arena_push_length(arena, packet->characters_count * sizeof(packet->characters[0]));
+packet->characters = arena_push_size(arena, packet->characters_count * sizeof(packet->characters[0]));
 printf("-- LIST_COUNT              \t%d\n", packet->characters_count);
 for (u32 characters_iter = 0; characters_iter < packet->characters_count; characters_iter++)
 {
@@ -2446,14 +2447,14 @@ printf("-- status                  \t%lld\t%llxh\t%f\n", (i64)packet->characters
 // stream payload4
 packet->characters[characters_iter].payload4_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4 = memory_arena_push_length(arena, packet->characters[characters_iter].payload4_length * sizeof(packet->characters[characters_iter].payload4[0]));
+packet->characters[characters_iter].payload4 = arena_push_size(arena, packet->characters[characters_iter].payload4_length * sizeof(packet->characters[characters_iter].payload4[0]));
 printf("-- STREAM_LENGTH           \t%d\n", packet->characters[characters_iter].payload4_length);
 for (u32 payload4_iter = 0; payload4_iter < (packet->characters[characters_iter].payload4_length > (u32)0 ? (u32)1 : (u32)0); payload4_iter++)
 {
 // string name
 packet->characters[characters_iter].payload4[payload4_iter].name_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].name = memory_arena_push_length(arena, packet->characters[characters_iter].payload4[payload4_iter].name_length);
+packet->characters[characters_iter].payload4[payload4_iter].name = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].name_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].name_length);
 for (u32 name_iter = 0; name_iter < packet->characters[characters_iter].payload4[payload4_iter].name_length; name_iter++)
 {
@@ -2529,7 +2530,7 @@ printf("-- unknown_dword_3         \t%lld\t%llxh\t%f\n", (i64)packet->characters
 // string loadout_name
 packet->characters[characters_iter].payload4[payload4_iter].loadout_name_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].loadout_name = memory_arena_push_length(arena, packet->characters[characters_iter].payload4[payload4_iter].loadout_name_length);
+packet->characters[characters_iter].payload4[payload4_iter].loadout_name = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].loadout_name_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].loadout_name_length);
 for (u32 loadout_name_iter = 0; loadout_name_iter < packet->characters[characters_iter].payload4[payload4_iter].loadout_name_length; loadout_name_iter++)
 {
@@ -2555,7 +2556,7 @@ printf("-- decal_item_id           \t%lld\t%llxh\t%f\n", (i64)packet->characters
 // list loadout_slots
 packet->characters[characters_iter].payload4[payload4_iter].loadout_slots_count = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots = memory_arena_push_length(arena, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[0]));
+packet->characters[characters_iter].payload4[payload4_iter].loadout_slots = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[0]));
 printf("-- LIST_COUNT              \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].loadout_slots_count);
 for (u32 loadout_slots_iter = 0; loadout_slots_iter < packet->characters[characters_iter].payload4[payload4_iter].loadout_slots_count; loadout_slots_iter++)
 {
@@ -2582,7 +2583,7 @@ printf("-- flags                   \t%lld\t%llxh\t%f\n", (i64)packet->characters
 // list attachments
 packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments_count = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments = memory_arena_push_length(arena, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments[0]));
+packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments[0]));
 printf("-- LIST_COUNT              \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments_count);
 for (u32 attachments_iter = 0; attachments_iter < packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments_count; attachments_iter++)
 {
@@ -2596,7 +2597,7 @@ printf("-- attachment_id           \t%lld\t%llxh\t%f\n", (i64)packet->characters
 // list attachment_classes
 packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes_count = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes = memory_arena_push_length(arena, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[0]));
+packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[0]));
 printf("-- LIST_COUNT              \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes_count);
 for (u32 attachment_classes_iter = 0; attachment_classes_iter < packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes_count; attachment_classes_iter++)
 {
@@ -2627,7 +2628,7 @@ printf("-- item_slot               \t%lld\t%llxh\t%f\n", (i64)packet->characters
 // list item_definitions
 packet->characters[characters_iter].payload4[payload4_iter].item_definitions_count = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions = memory_arena_push_length(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].item_definitions[0]));
+packet->characters[characters_iter].payload4[payload4_iter].item_definitions = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].item_definitions[0]));
 printf("-- LIST_COUNT              \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions_count);
 for (u32 item_definitions_iter = 0; item_definitions_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions_count; item_definitions_iter++)
 {
@@ -2724,7 +2725,7 @@ printf("-- unknown_dword6          \t%lld\t%llxh\t%f\n", (i64)packet->characters
 // string model_name
 packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name = memory_arena_push_length(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name_length);
+packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name_length);
 for (u32 model_name_iter = 0; model_name_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name_length; model_name_iter++)
 {
@@ -2735,7 +2736,7 @@ offset++;
 // string unknown_string
 packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string = memory_arena_push_length(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string_length);
+packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string_length);
 for (u32 unknown_string_iter = 0; unknown_string_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string_length; unknown_string_iter++)
 {
@@ -2806,7 +2807,7 @@ printf("-- max_stack_size          \t%lld\t%llxh\t%f\n", (i64)packet->characters
 // string tint_name
 packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name = memory_arena_push_length(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name_length);
+packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name_length);
 for (u32 tint_name_iter = 0; tint_name_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name_length; tint_name_iter++)
 {
@@ -2867,7 +2868,7 @@ printf("-- skill_set_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters
 // string overlay_texture
 packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture = memory_arena_push_length(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture_length);
+packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture_length);
 for (u32 overlay_texture_iter = 0; overlay_texture_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture_length; overlay_texture_iter++)
 {
@@ -2878,7 +2879,7 @@ offset++;
 // string decal_slot
 packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot = memory_arena_push_length(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot_length);
+packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot_length);
 for (u32 decal_slot_iter = 0; decal_slot_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot_length; decal_slot_iter++)
 {
@@ -2909,7 +2910,7 @@ printf("-- client_use_requirement_id\t%lld\t%llxh\t%f\n", (i64)packet->character
 // string override_appearance
 packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance = memory_arena_push_length(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance_length);
+packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance_length);
 for (u32 override_appearance_iter = 0; override_appearance_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance_length; override_appearance_iter++)
 {
@@ -2932,7 +2933,7 @@ printf("-- client_use_requirement_id_2\t%lld\t%llxh\t%f\n", (i64)packet->charact
 // list attachment_definitions
 packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions_count = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions = memory_arena_push_length(arena, packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[0]));
+packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[0]));
 printf("-- LIST_COUNT              \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions_count);
 for (u32 attachment_definitions_iter = 0; attachment_definitions_iter < packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions_count; attachment_definitions_iter++)
 {
@@ -2964,7 +2965,7 @@ printf("-- flags                   \t%lld\t%llxh\t%f\n", (i64)packet->characters
 // list classes
 packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes_count = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes = memory_arena_push_length(arena, packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes[0]));
+packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes[0]));
 printf("-- LIST_COUNT              \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes_count);
 for (u32 classes_iter = 0; classes_iter < packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes_count; classes_iter++)
 {
@@ -2996,7 +2997,7 @@ Login_Packet_ServerListReply* packet = packet_ptr;
 // list servers
 packet->servers_count = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->servers = memory_arena_push_length(arena, packet->servers_count * sizeof(packet->servers[0]));
+packet->servers = arena_push_size(arena, packet->servers_count * sizeof(packet->servers[0]));
 printf("-- LIST_COUNT              \t%d\n", packet->servers_count);
 for (u32 servers_iter = 0; servers_iter < packet->servers_count; servers_iter++)
 {
@@ -3018,7 +3019,7 @@ printf("-- is_locked               \t%lld\t%llxh\t%f\n", (i64)packet->servers[se
 // string name
 packet->servers[servers_iter].name_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->servers[servers_iter].name = memory_arena_push_length(arena, packet->servers[servers_iter].name_length);
+packet->servers[servers_iter].name = arena_push_size(arena, packet->servers[servers_iter].name_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->servers[servers_iter].name_length);
 for (u32 name_iter = 0; name_iter < packet->servers[servers_iter].name_length; name_iter++)
 {
@@ -3034,7 +3035,7 @@ printf("-- name_id                 \t%lld\t%llxh\t%f\n", (i64)packet->servers[se
 // string description
 packet->servers[servers_iter].description_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->servers[servers_iter].description = memory_arena_push_length(arena, packet->servers[servers_iter].description_length);
+packet->servers[servers_iter].description = arena_push_size(arena, packet->servers[servers_iter].description_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->servers[servers_iter].description_length);
 for (u32 description_iter = 0; description_iter < packet->servers[servers_iter].description_length; description_iter++)
 {
@@ -3055,7 +3056,7 @@ printf("-- req_feature_id          \t%lld\t%llxh\t%f\n", (i64)packet->servers[se
 // string server_info
 packet->servers[servers_iter].server_info_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->servers[servers_iter].server_info = memory_arena_push_length(arena, packet->servers[servers_iter].server_info_length);
+packet->servers[servers_iter].server_info = arena_push_size(arena, packet->servers[servers_iter].server_info_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->servers[servers_iter].server_info_length);
 for (u32 server_info_iter = 0; server_info_iter < packet->servers[servers_iter].server_info_length; server_info_iter++)
 {
@@ -3071,7 +3072,7 @@ printf("-- population_level        \t%lld\t%llxh\t%f\n", (i64)packet->servers[se
 // string population_data
 packet->servers[servers_iter].population_data_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->servers[servers_iter].population_data = memory_arena_push_length(arena, packet->servers[servers_iter].population_data_length);
+packet->servers[servers_iter].population_data = arena_push_size(arena, packet->servers[servers_iter].population_data_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->servers[servers_iter].population_data_length);
 for (u32 population_data_iter = 0; population_data_iter < packet->servers[servers_iter].population_data_length; population_data_iter++)
 {
@@ -3082,7 +3083,7 @@ offset++;
 // string access_expression
 packet->servers[servers_iter].access_expression_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->servers[servers_iter].access_expression = memory_arena_push_length(arena, packet->servers[servers_iter].access_expression_length);
+packet->servers[servers_iter].access_expression = arena_push_size(arena, packet->servers[servers_iter].access_expression_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->servers[servers_iter].access_expression_length);
 for (u32 access_expression_iter = 0; access_expression_iter < packet->servers[servers_iter].access_expression_length; access_expression_iter++)
 {
@@ -3101,7 +3102,7 @@ printf("-- is_access_allowed       \t%lld\t%llxh\t%f\n", (i64)packet->servers[se
 
 default:
 {
-printf("[!] Unpacking %s not implemented\n", login_packet_names[packet_kind]);
+printf(MESSAGE_CONCAT_WARN("Unpacking %s not implemented\n"), login_packet_names[packet_kind]);
 }
 }
 }

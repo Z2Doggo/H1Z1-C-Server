@@ -1,9 +1,27 @@
-#define LOCAL_PORT         1117
-#define MAX_FRAGMENTS      12000
-#define MAX_PACKET_LENGTH  512
-#define DATA_HEADER_LENGTH 4
-#define MAX_SESSIONS_COUNT 2
+#if defined(YOTE_INTERNAL)
+#include <stdio.h>
+#include <math.h>
+#else
+static void platform_win_console_write(char* format, ...);
+#define printf(s, ...) platform_win_console_write(s, __VA_ARGS__)
+#endif // YOTE_INTERNAL
 
+#define YOTE_USE_ARENA   1
+#define YOTE_USE_STRING  1
+#include "yote.h"
+#define YOTE_PLATFORM_USE_SOCKETS  1
+#include "yote_platform.h"
+#include "game_server.h"
+
+#define LOCAL_PORT          60000
+#define MAX_FRAGMENTS       12000
+#define MAX_PACKET_LENGTH   512
+#define DATA_HEADER_LENGTH  4
+#define MAX_SESSIONS_COUNT  4
+
+#include "utility/endian.c"
+#include "utility/util.c"
+#include "utility/crypt_rc4.c"
 #include "shared/protocol/stream.h"
 #include "shared/protocol/fragment_pool.c"
 #include "shared/protocol/input_stream.c"
@@ -13,13 +31,37 @@
 #include "shared/session.h"
 #include "shared/packet_queue.h"
 #include "shared/packet_queue.c"
+#include "utility/character_id_gen.c"
+#include "function/server.c"
 
 global u64 global_packet_dump_count;
+// HACK(rhett):
+global u64 global_tick_count;
 
-struct Server_State
+typedef struct Stream_Function_Table Stream_Function_Table;
+struct Stream_Function_Table
 {
+	input_stream_callback_ack*    game_input_ack;
+	input_stream_callback_data*   game_input_data;
+	output_stream_callback_data*   game_output_data;
+	input_stream_callback_data*  ping_input_data;
+};
+
+struct App_State
+{
+	Stream_Function_Table* stream_function_table;
+	f32* tick_ms;
+	f32* work_ms;
+	u64* tick_count;
+	Key_States* key_states;
+
+#if defined(TERMINAL_UI)
+	Buffer screen;
+#endif // TERMINAL_UI
+
+	Arena arena_total;
 	Platform_Api* platform_api;
-	Memory_Arena arena_per_tick;
+	Arena arena_per_tick;
 
 	Platform_Socket socket;
 
@@ -31,26 +73,38 @@ struct Server_State
 	Session_State sessions[MAX_SESSIONS_COUNT];
 };
 
-internal void gateway_on_login(Server_State* server_state, Session_State* session_state, u64 character_id);
-internal void gateway_on_tunnel_data_from_client(Server_State* server_state, Session_State* session_state, u8* data, u32 data_length);
+internal void gateway_on_login(App_State* app_state, Session_State* session_state, u64 character_id);
+internal void gateway_on_tunnel_data_from_client(App_State* app_state, Session_State* session_state, u8* data, u32 data_length);
 internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 
+#undef MESSAGE_NAMESPACE
+#define MESSAGE_NAMESPACE  "Core"
 #include "shared/protocol/core_protocol.c"
+#undef MESSAGE_NAMESPACE
+#define MESSAGE_NAMESPACE  "Gateway"
 #include "game/external_gateway_api_3.c"
+#undef MESSAGE_NAMESPACE
+// TODO(rhett): Client or Zone? Client is the word used by the game, but zone is more clear?
+#define MESSAGE_NAMESPACE  "Zone"
 #include "../schema/output/client_protocol_1080.c"
 #include "game/client_protocol_1080.c"
+#undef MESSAGE_NAMESPACE
+#define MESSAGE_NAMESPACE  MESSAGE_NAMESPACE_DEFAULT
 
 // TODO(rhett): hardcoded in gateway protocol for now
-internal void gateway_on_login(Server_State* server_state, Session_State* session_state, u64 character_id)
+internal void gateway_on_login(App_State* app_state, Session_State* session_state, u64 character_id)
 {
 	printf("[!] Character %llxh trying to login to zone server\n", character_id);
+
+	//session_state->character_id = character_id;
+
+	__time64_t timer;
+	_time64(&timer);
 
 	Zone_Packet_InitializationParameters init_params =
 	{
 		.environment_length = 4,
 		.environment = "LIVE",
-		.unk_string_1_length = 0,
-		.unk_string_1 = "",
 	};
 
 	Zone_Packet_SendZoneDetails send_zone_details =
@@ -212,12 +266,12 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 	Zone_Packet_ReferenceDataWeaponDefinitions weapon_defs =
 	{
 		.weapon_byteswithlength =
-		(struct weapon_byteswithlength_s[1]) {
+			(struct weapon_byteswithlength_s[1]) {
 			[0] = 
 			{
 				.weapon_defs_count = 1,
 				.weapon_defs = 
-				(struct weapon_defs_s[1]) {
+					(struct weapon_defs_s[1]) {
 					[0] = 
 					{
 						.id1 = 0,
@@ -256,7 +310,7 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 
 						.ammo_slots_count = 1,
 						.ammo_slots = 
-						(struct ammo_slots_s[1]) {
+							(struct ammo_slots_s[1]) {
 							[0] = 
 							{
 								.ammo_id = 0,
@@ -274,7 +328,7 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 
 						.fire_groups_count = 1,
 						.fire_groups = 
-						(struct fire_groups_s[1]) {
+							(struct fire_groups_s[1]) {
 							[0] = 
 							{
 								.fire_group_id = 0,
@@ -285,7 +339,7 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 
 				.fire_group_defs_count = 1,
 				.fire_group_defs = 
-				(struct fire_group_defs_s[1]) {
+					(struct fire_group_defs_s[1]) {
 					[0] =
 					{
 						.id3 = 0,
@@ -293,7 +347,7 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 
 						.fire_mode_list_count = 1,
 						.fire_mode_list = 
-						(struct fire_mode_list_s[1]) {
+							(struct fire_mode_list_s[1]) {
 							[0] = 
 							{
 								.fire_mode_1 = 0,
@@ -316,7 +370,7 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 
 				.fire_mode_defs_count = 1,
 				.fire_mode_defs =
-				(struct fire_mode_defs_s[1]) {
+					(struct fire_mode_defs_s[1]) {
 					[0] = 
 					{
 						.id5 = 0,
@@ -489,7 +543,7 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 
 				.player_state_group_defs_count = 1,
 				.player_state_group_defs =
-				(struct player_state_group_defs_s[1]) {
+					(struct player_state_group_defs_s[1]) {
 					[0] =
 					{
 						.id7 = 0,
@@ -497,7 +551,7 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 
 						.player_state_properties_count = 1,
 						.player_state_properties =
-						(struct player_state_properties_s[1]) {
+							(struct player_state_properties_s[1]) {
 							[0] = 
 							{
 								.group_id = 0,
@@ -526,7 +580,7 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 
 				.fire_mode_projectile_mapping_data_count = 1,
 				.fire_mode_projectile_mapping_data =
-				(struct fire_mode_projectile_mapping_data_s[1]) {
+					(struct fire_mode_projectile_mapping_data_s[1]) {
 					[0] = 
 					{
 						.id10 = 0,
@@ -538,7 +592,7 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 
 				.aim_assist_defs_count = 1,
 				.aim_assist_defs = 
-				(struct aim_assist_defs_s[1]) {
+					(struct aim_assist_defs_s[1]) {
 					[0] = 
 					{
 						.id12 = 0,
@@ -582,26 +636,148 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 		.damage_multiplier 			= 11.,
 	};
 
-	/*
-	(doggo)todo: unfinished.. going to redo sendself
-
-	Zone_Packet_SendSelfToClient send_self = 
+	Zone_Packet_SendSelfToClient send_self =
 	{
 		.payload_self =
-			(struct payload_self_s[1]) {
-			[0] =
-			{
-				.guid_1 = 0x66778899,
-				.character_id_1 = 0xaabbccdd11223344,
-				.unk_uint2b.value = 52,
-				.actor_model_id = 176,
-				.head_actor_length = 25,
-				.head_actor = "Head_Female_Caucasian.adr",
-				.head_id = 5,
+			(struct payload_self_s [1]) {
+			[0] = {
+				.guid = 0x1337, // temp l33t solution for now(doggo)
+				.character_id = session_state->character_id,
+				.transient_id = 0x42069,
+				.actor_model_id = 9474,
+				.head_actor_length = 26,
+				.head_actor = "SurvivorFemale_Head_02.adr",
+				.hair_model_length = 32,
+				.hair_model = "SurvivorFemale_Hair_ShortBun.adr",
+				.position = 602.91, 71.62, -1301.5, 1,
+				.rotation = 0, -0.9944087862968445, 0,  0.105599045753479,
+				.character_name_length = 5,
+				.character_name = "doggo",
+				//.is_respawning = TRUE,
+				//.gender1 = 1,
+				.creation_date = timer,
+				.last_login_date = timer,
+				
+				.loadout_id = 3,
+				.loadout_slots_array_count = 1,
+				.loadout_slots_array =
+					(struct loadout_slots_array_s[1]) {
+					[0] =
+					{
+						.hotbar_slot_id = 0,
+						.loadout_id = 3,
+						.slot_id = 0,
+						.item_def_id4 = 1 || 0,
+						.loadout_item_guid = 0x01 || 0,
+						.unk_byte_17 = 255,
+						.unk_dword_111 = 0,
+					},
+				},
+				.current_slot_id = 7,
+
+				.character_resources_count = 1,
+				.character_resources =
+					(struct character_resources_s[1]) {
+					[0] =
+					{
+						.resource_type1 = 0 | session_state->resource_type,
+
+						.resource_id = session_state->resource_id,
+						.resource_type2 = 0 | session_state->resource_type,
+
+						.value = session_state->resource_id > 0 ? session_state->resource_id : 0,
+					},
+				},
+				
+				.stats3_count = 1,
+				.stats3 =
+					(struct stats3_s[1]) {
+					[0] =
+					{
+						.stat_id55 = 1,
+						.stat_id66 = 2,
+						
+						.variable_u8_3_case = 1,
+						.variable_u8_3 =
+							(struct vartype_5_s[1]) {
+							[0] =
+							{
+								.base_1 = 0,
+								.modifier_1 = 0,
+							},
+						},
+
+						(struct vartype_6_s[1]) {
+							[0] =
+							{
+								.base_2 = 0,
+								.modifier_2 = 0,
+							},
+						},
+					},
+				},
+
+				.is_admin = TRUE,
 			},
 		},
 	};
-	*/
+
+	Zone_Packet_Equipment_SetCharacterEquipment set_character_equipment =
+	{	
+		.length_1_length = 1,
+		.length_1 =
+			(struct length_1_s[1]) {
+			[0] = {
+				.profile_id = 5,
+				.character_id = session_state->character_id,
+			},
+		},
+		.unk_dword_1 = 0,
+		.unk_string_1_length = 7,
+		.unk_string_1 = "Default",
+		.unk_string_2_length = 1,
+		.unk_string_2 = "#",
+
+		.equipment_slot_array_count = 1,
+		.equipment_slot_array =
+			(struct equipment_slot_array_s[1]) {
+			[0] =
+			{
+				.equipment_slot_id_1 = 0,
+				.length_2_length = 1,
+				.length_2 =
+					(struct length_2_s[1]) {
+					[0] = {
+						.equipment_slot_id_2 = 0,
+						.guid = 0,
+						.tint_alias_length = 7,
+						.tint_alias = "Default",
+						.decal_alias_length = 1,
+						.decal_alias = "#",
+					},
+				},
+			},
+		},
+
+		.attachments_data_1_count = 1,
+		.attachments_data_1 =
+			(struct attachments_data_1_s[1]) {
+			[0] =
+			{
+				.model_name_length = 0,
+				.model_name = "",
+				.texture_alias_length = 0,
+				.texture_alias = "",
+				.tint_alias_length = 7,
+				.tint_alias = "Default",
+				.decal_alias_length = 1,
+				.decal_alias = "#",
+				.slot_id = 0,
+			},
+		},
+
+		.unk_bool_2 = TRUE,
+	};
 
 	Zone_Packet_ContainerInitEquippedContainers init_equipped_containers = 
 	{
@@ -610,7 +786,7 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 
 		.container_list_count = 1,
 		.container_list = 
-		(struct container_list_s[1]) {
+			(struct container_list_s[1]) {
 			[0] =
 			{
 				.loadout_slot_id = 0,
@@ -622,7 +798,7 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 
 				.items_list_count = 1,
 				.items_list = 
-				(struct items_list_s[1]) {
+					(struct items_list_s[1]) {
 					[0] = 
 					{
 						.item_defs_id_1 = 0,
@@ -657,14 +833,13 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 		},
 	};
 
-	
 	Zone_Packet_UpdateWeatherData updt_weather_data =
 	{
 		.unknownDword1 = 1,
 		.fog_density = 0.0001733333,
 		.fog_floor = 10,
 		.fog_gradient = 0.0144,
-		.rain = 0,
+		.rain = 1,
 		.temp = 75,
 		.color_gradient = 0,
 		.unknown_dword8 = 0.05,
@@ -672,8 +847,8 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 		.unknown_dword10 = 0.05,
 		.unknown_dword11 = 0.15,
 		.unknown_dword12 = 0,
-		.sun_axis_x = 0,
-		.sun_axis_y = 0,
+		.sun_axis_x = 38,
+		.sun_axis_y = -15,
 		.unknown_dword15 = 0,
 		.disable_trees = -1,
 		.disable_trees1 = -0.05,
@@ -699,34 +874,95 @@ internal void gateway_on_login(Server_State* server_state, Session_State* sessio
 		.unknown_dword33 = 0.5,
 	};
 
-	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
-	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
-	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_CommandItemDefinitions, &item_defs);
-	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(40), Zone_Packet_Kind_ReferenceDataWeaponDefinitions, &weapon_defs);
-	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientGameSettings, &game_settings);
-	//zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(40), Zone_Packet_Kind_SendSelfToClient, &send_self);
-	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ContainerInitEquippedContainers, &init_equipped_containers);
-	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_UpdateWeatherData, &updt_weather_data);
+	Zone_Packet_AddLightweightPc lightweightpc =
+	{
+		.character_id 			= 0x1337,
+		.transient_id.value		= 0x133742069,
+		.unknownByte1 			= 2,
+		.actorModelId 			= 9474,
+		.unknownDword1			= 270,
+		.unknownFloat1			= 4.7,
+		.mountSeatId			= 0xffffffff,
+		.mountRelatedDword1		= 0xffffffff,
+		.unknownQword1			= 0x0100000000100000,
+		.unknownDword5			= 665,
 
-	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "1.bin");
-	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "2.bin");
-	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(40), "C:\\Users\\Lane\\Desktop\\send_self\\" "3.bin");
-	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "4.bin");
-	zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(40), "C:\\Users\\Lane\\Desktop\\send_self\\" "5.bin");
-	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "6.bin");
-	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "7.bin");
-	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "8.bin");
-	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "9.bin");
-	//zone_packet_raw_file_send(server_state, session_state, &server_state->arena_per_tick, KB(10), "C:\\Users\\Lane\\Desktop\\send_self\\" "10.bin");
+		.id_characterName_length	= 0,
+		.id_characterName			= "",
+
+		.position_x 			= 1024,
+		.position_y 			= 79,
+		.position_z 			= 3295,
+	};
+
+	Zone_Packet_AddLightweightNpc lightweightnpc =
+	{
+		.characterId 			= 0x1337,
+		.transientId.value		= 0x133742069,
+		.nameId = 0,
+		.unknownByte1 			= 2,
+		.actorModelId 			= 9240,
+	};
+
+	Zone_Packet_RewardBuffInfo buff_info =
+	{
+		.unk_float_1 = 1,
+		.unk_float_2 = 2,
+		.unk_float_3 = 3,
+		.unk_float_4 = 4,
+		.unk_float_5 = 5,
+		.unk_float_6 = 6,
+		.unk_float_7 = 7,
+		.unk_float_8 = 8,
+		.unk_float_9 = 9,
+		.unk_float_10 = 10,
+		.unk_float_11 = 11,
+		.unk_float_12 = 12,
+	};
+
+	Zone_Packet_ClientUpdate_DoneSendingPreloadCharacters preload_done =
+	{
+		.is_done = TRUE,
+	};
+
+	Zone_Packet_Character_CharacterStateDelta character_state_delta =
+	{
+		.guid_1 	= session_state->character_id,
+		.guid_3 	= 0x0000000040000000,
+		.game_time 	= (u32)timer,
+	};
+
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_CommandItemDefinitions, &item_defs);
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(40), Zone_Packet_Kind_ReferenceDataWeaponDefinitions, &weapon_defs);
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientGameSettings, &game_settings);
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(40), Zone_Packet_Kind_Equipment_SetCharacterEquipment, &set_character_equipment);
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ContainerInitEquippedContainers, &init_equipped_containers);
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_RewardBuffInfo, &buff_info);
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_UpdateWeatherData, &updt_weather_data);
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightPc, &lightweightpc);
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightNpc, &lightweightnpc);
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(500), Zone_Packet_Kind_SendSelfToClient, &send_self);	
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(30), Zone_Packet_Kind_ClientUpdate_DoneSendingPreloadCharacters, &preload_done);
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_NetworkProximityUpdatesComplete, 	0);
+	// todo: send DtoObjectInitialData for trees
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, sizeof(character_state_delta), Zone_Packet_Kind_Character_CharacterStateDelta, &character_state_delta);
+	zone_packet_send(0, app_state,session_state,&app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ZoneDoneSendingInitialData, 0);
+	//zone_packet_raw_file_send(0, app_state, session_state, &app_state->arena_per_tick, KB(40), "C:\\Users\\epicg\\OneDrive\\\Desktop\\send_self\\" "5.bin");
 }
 
-internal void gateway_on_tunnel_data_from_client(Server_State* server_state, Session_State* session_state, u8* data, u32 data_length)
+internal void gateway_on_tunnel_data_from_client(App_State* app_state, Session_State* session_state, u8* data, u32 data_length)
 {
-	zone_packet_handle(server_state, session_state, data, data_length);
+	zone_packet_handle(app_state, session_state, data, data_length);
 }
 
 internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data)
 {
+	UNUSED(server);
+	UNUSED(session);
+	UNUSED(data);
+	UNUSED(data_length);
 	//ping_packet_handle(server, session, data, data_length);
 }
 
@@ -743,7 +979,7 @@ internal INPUT_STREAM_CALLBACK_DATA(on_input_stream_data)
 
 internal OUTPUT_STREAM_CALLBACK_DATA(on_output_stream_data)
 {
-	Server_State* server_state = server;
+	App_State* app_state = server;
 	Session_State* session_state = session;
 
 	Data packet =
@@ -755,57 +991,134 @@ internal OUTPUT_STREAM_CALLBACK_DATA(on_output_stream_data)
 
 	if (!is_fragment)
 	{
-		core_packet_send(server_state->socket, server_state->platform_api, session_state->address.ip, session_state->address.port, &session_state->connection_args, Core_Packet_Kind_Data, &packet);
+		core_packet_send(app_state->socket, app_state->platform_api, session_state->address.ip, session_state->address.port, &session_state->connection_args, Core_Packet_Kind_Data, &packet);
 	}
 	else
 	{
-		core_packet_send(server_state->socket, server_state->platform_api, session_state->address.ip, session_state->address.port, &session_state->connection_args, Core_Packet_Kind_Data_Fragment, &packet);
+		core_packet_send(app_state->socket, app_state->platform_api, session_state->address.ip, session_state->address.port, &session_state->connection_args, Core_Packet_Kind_Data_Fragment, &packet);
 	}
 }
 
-internal void game_tick_run(Program_State* program_state)
+// TODO(rhett): STBSP_SPRINTF breaks if this is less than 4 bytes each? or sanitizer issue
+char toggle_state_text[2][4] =
 {
-	Server_State* server_state = program_state->server_state;
-	if (!server_state)
+	[FALSE] = "--",
+	[TRUE]  = "ON",
+};
+
+__declspec(dllexport) APP_TICK(server_tick)
+{
+	App_State* app_state = app_memory->app_state;
+	if (!app_state)
 	{
-		//server_state = program_state->server_state = server_state_create(&program_state->persist_arena,
-		                                                                 //&program_state->platform_api);
-		server_state = program_state->server_state = memory_arena_push_struct(&program_state->arena_persist,
-		                                                                      Server_State);
-		server_state->platform_api = program_state->platform_api;
-		
-		usize backing_memory_length = MB(10);
-		void* backing_memory = memory_arena_push_length(&program_state->arena_persist, backing_memory_length);
-		server_state->arena_per_tick = memory_arena_init(backing_memory, backing_memory_length, "Tick");
+		app_state = app_memory->app_state = arena_bootstrap_push_struct(app_memory->backing_memory.data,
+		                                                                app_memory->backing_memory.size,
+		                                                                "Total",
+		                                                                App_State,
+		                                                                arena_total);
+		app_state->platform_api = &app_memory->platform_api;
+		app_state->tick_ms = &app_memory->tick_ms;
+		app_state->work_ms = &app_memory->work_ms;
+		app_state->tick_count = &app_memory->tick_count;
+		app_state->key_states = &app_memory->key_states;
+
+#if defined(TERMINAL_UI)
+		Buffer screen =
+		{
+			.size = sizeof(char) * SCREEN_RESOLUTION,
+			.data = arena_push_size(&app_state->arena_total,
+			                        screen.size),
+		};
+		app_state->screen = app_memory->screen = screen;
+		//core_memory_fill(app_state->screen.data, ' ', app_state->screen.size);
+#endif // TERMINAL_UI
+
+		Buffer per_tick_backing_memory =
+		{
+			.size = MB(10),
+			.data = arena_push_size(&app_state->arena_total,
+			                        per_tick_backing_memory.size),
+		};
+
+		app_state->stream_function_table = arena_push_struct(&app_state->arena_total, Stream_Function_Table);
+		app_state->stream_function_table->game_input_ack = on_input_stream_ack;
+		app_state->stream_function_table->game_input_data = on_input_stream_data;
+		app_state->stream_function_table->game_output_data = on_output_stream_data;
+		app_state->stream_function_table->ping_input_data = on_ping_input_stream_data;
+
+		app_state->arena_per_tick =
+			(Arena) {
+			.buffer = per_tick_backing_memory.data,
+			.capacity = per_tick_backing_memory.size,
+			.name = "Tick",
+		};
 
 		u8 rc4_key_encoded[] = "F70IaxuU8C/w7FPXY1ibXw==";
-		server_state->rc4_key_decoded_length = util_base64_decode((u8*)rc4_key_encoded, sizeof(rc4_key_encoded) - 1, server_state->rc4_key_decoded);
+		app_state->rc4_key_decoded_length = util_base64_decode((u8*)rc4_key_encoded,
+		                                                       sizeof(rc4_key_encoded) - 1,
+		                                                       app_state->rc4_key_decoded);
 
-		server_state->connection_args.crc_seed 		= 0;
-		server_state->connection_args.crc_length 	= 0;
-		server_state->connection_args.udp_length 	= MAX_PACKET_LENGTH;
-		server_state->connection_args.encryption	= FALSE;
+		app_state->connection_args.udp_length = MAX_PACKET_LENGTH;
+		// TODO(rhett): encryption should probably be kept disabled initially and toggled on in higher layers
+		//app_state->connection_args.use_encryption = FALSE;
+		app_state->connection_args.should_dump_core = TRUE;
+		app_state->connection_args.should_dump_login = TRUE;
+		app_state->connection_args.should_dump_tunnel = TRUE;
+		app_state->connection_args.should_dump_gateway = TRUE;
+		app_state->connection_args.should_dump_zone = TRUE;
 		
-		server_state->sessions_capacity = MAX_SESSIONS_COUNT;
-		server_state->socket = server_state->platform_api->socket_udp_create_and_bind(program_state->platform_state, LOCAL_PORT);
-		printf("[*] Game server socket bound to port " STRINGIFY(LOCAL_PORT) "\n\n");
-		server_state->platform_api->folder_create("packets");
+		app_state->sessions_capacity = MAX_SESSIONS_COUNT;
+		app_state->socket = app_state->platform_api->socket_udp_create_and_bind(LOCAL_PORT);
+		printf(MESSAGE_CONCAT_INFO("Game server socket bound to port " STRINGIFY(LOCAL_PORT) "\n\n"));
+		app_state->platform_api->folder_create("packets");
 	}
 
+	if (should_reload)
+	{
+		printf(MESSAGE_CONCAT_INFO("Reloading function table...\n"));
+		app_state->stream_function_table->game_input_ack = on_input_stream_ack;
+		app_state->stream_function_table->game_input_data = on_input_stream_data;
+		app_state->stream_function_table->game_output_data = on_output_stream_data;
+		app_state->stream_function_table->ping_input_data = on_ping_input_stream_data;
+	}
+
+	//app_state->platform_api->buffer_write_to_file("STATE.dump",
+	                                  //(u8*)app_state,
+	                                  //sizeof(App_State));
+
+	global_tick_count = *app_state->tick_count;
+
+#if defined(TERMINAL_UI)
+	core_memory_fill(app_state->screen.data, ' ', app_state->screen.size);
+	stbsp_sprintf((char*)app_state->screen.data,
+	              "Tick: %llu    %fms/w | %fms/f", *app_state->tick_count, *app_state->work_ms, *app_state->tick_ms);
+
+	i32 pos = 0;
+	for (i32 key = 0; key < 0xff; key++)
+	{
+		pos += stbsp_sprintf((char*)(app_state->screen.data + (SCREEN_WIDTH * 2) + pos),
+		                     "K%02x %s  ",
+		                     key,
+		                     toggle_state_text[(*app_state->key_states)[key]]);
+	}
+
+	//pos = SCREEN_WIDTH * 29;
+	//pos += stbsp_sprintf((char*)(app_state->screen.data + pos),
+	                     //"cool :)");
+#endif // TERMINAL_UI
 
 	u8 incoming_buffer[MAX_PACKET_LENGTH] = { 0 };
 	u32 from_ip;
 	u16 from_port;
-	i32 receive_result = server_state->platform_api->receive_from(
-		server_state->socket,
-		incoming_buffer,
-		MAX_PACKET_LENGTH,
-		&from_ip,
-		&from_port
-	);
+	i32 receive_result = app_state->platform_api->receive_from(app_state->socket,
+	                                                           incoming_buffer,
+	                                                           MAX_PACKET_LENGTH,
+	                                                           &from_ip,
+	                                                           &from_port);
 
 	if (receive_result)
 	{
+		printf("\n\nPacket Tick Begin ============================================================\\\\\n");
 
 		Session_Address incoming_session_address =
 		{
@@ -813,17 +1126,18 @@ internal void game_tick_run(Program_State* program_state)
 			.port = from_port,
 		};
 
+		// TODO(rhett): Before we tackle the problem of multiple clients, let's reliably handle one first
 		// TODO(rhett): will need cleaned up
 		i32 first_free_session = -1;
 		i32 known_session = -1;
-		for (i32 i = 0; i < server_state->sessions_capacity; i++)
+		for (i32 i = 0; i < app_state->sessions_capacity; i++)
 		{
-			if (first_free_session == -1 && !server_state->sessions[i].address.full)
+			if (first_free_session == -1 && !app_state->sessions[i].address.full)
 			{
 				first_free_session = i;
 			}
 
-			if (known_session == -1 && incoming_session_address.full == server_state->sessions[i].address.full)
+			if (known_session == -1 && incoming_session_address.full == app_state->sessions[i].address.full)
 			{
 				known_session = i;
 			}
@@ -838,92 +1152,97 @@ internal void game_tick_run(Program_State* program_state)
 		{
 			if (known_session != -1)
 			{
-				printf("[*] Known client %u.%u.%u.%u:%u re-sent SessionRequest\n",
-					(from_ip & 0xff000000) >> 24,
-					(from_ip & 0x00ff0000) >> 16,
-					(from_ip & 0x0000ff00) >> 8,
-					(from_ip & 0x000000ff),
-					from_port
-				);
+				printf(MESSAGE_CONCAT_INFO("Known client %u.%u.%u.%u:%u re-sent SessionRequest\n"),
+				       (from_ip & 0xff000000) >> 24,
+				       (from_ip & 0x00ff0000) >> 16,
+				       (from_ip & 0x0000ff00) >> 8,
+				       (from_ip & 0x000000ff),
+				       from_port);
 			}
 			else
 			{
-				printf("[*] Unknown client %u.%u.%u.%u:%u sent SessionRequest. Beginning session\n",
-					(from_ip & 0xff000000) >> 24,
-					(from_ip & 0x00ff0000) >> 16,
-					(from_ip & 0x0000ff00) >> 8,
-					(from_ip & 0x000000ff),
-					from_port
-				);
+				printf(MESSAGE_CONCAT_INFO("Unknown client %u.%u.%u.%u:%u sent SessionRequest. Beginning session\n"),
+				       (from_ip & 0xff000000) >> 24,
+				       (from_ip & 0x00ff0000) >> 16,
+				       (from_ip & 0x0000ff00) >> 8,
+				       (from_ip & 0x000000ff),
+				       from_port);
 
 				if (first_free_session == -1)
 				{
-					printf("[!] No free sessions avaliable\n");
+					printf(MESSAGE_CONCAT_WARN("No free sessions avaliable\n"));
 				}
 				else
 				{
 					known_session = first_free_session;
-					server_state->sessions[first_free_session].address.full = incoming_session_address.full;
-					server_state->sessions[first_free_session].ack_next = -1;
-					server_state->sessions[first_free_session].ack_previous = -1;
+					app_state->sessions[first_free_session].address.full = incoming_session_address.full;
+					app_state->sessions[first_free_session].ack_next = -1;
+					app_state->sessions[first_free_session].ack_previous = -1;
 
-					util_memory_copy(
-						(void*)&server_state->sessions[first_free_session].connection_args,
-						(void*)&server_state->connection_args,
-						sizeof(server_state->connection_args)
-						);
+					base_memory_copy((void*)&app_state->sessions[first_free_session].connection_args,
+					                 (void*)&app_state->connection_args,
+					                 sizeof(app_state->connection_args));
 
 					// TODO(rhett): These fragment pools will leak memory. this whole system needs refactored
-					server_state->sessions[first_free_session].input_fragment_pool = fragment_pool_create(MAX_FRAGMENTS,
+					app_state->sessions[first_free_session].input_fragment_pool = fragment_pool_create(MAX_FRAGMENTS,
 					                                                                                      MAX_PACKET_LENGTH,
-					                                                                                      &program_state->arena_persist);
-					server_state->sessions[first_free_session].output_fragment_pool = fragment_pool_create(MAX_FRAGMENTS,
+					                                                                                      &app_state->arena_total);
+					app_state->sessions[first_free_session].output_fragment_pool = fragment_pool_create(MAX_FRAGMENTS,
 					                                                                                       MAX_PACKET_LENGTH - DATA_HEADER_LENGTH,
-					                                                                                       &program_state->arena_persist);
-					server_state->sessions[first_free_session].input_stream = input_stream_init(&server_state->sessions[first_free_session].input_fragment_pool,
-					                                                                            server_state->rc4_key_decoded,
-					                                                                            server_state->rc4_key_decoded_length,
+					                                                                                       &app_state->arena_total);
+					app_state->sessions[first_free_session].input_stream = input_stream_init(&app_state->sessions[first_free_session].input_fragment_pool,
+					                                                                            app_state->rc4_key_decoded,
+					                                                                            app_state->rc4_key_decoded_length,
 					                                                                            FALSE);
-					server_state->sessions[first_free_session].output_stream = output_stream_init(&server_state->sessions[first_free_session].output_fragment_pool,
-					                                                                              server_state->rc4_key_decoded,
-					                                                                              server_state->rc4_key_decoded_length,
+					app_state->sessions[first_free_session].output_stream = output_stream_init(&app_state->sessions[first_free_session].output_fragment_pool,
+					                                                                              app_state->rc4_key_decoded,
+					                                                                              app_state->rc4_key_decoded_length,
 					                                                                              FALSE);
 
-					server_state->sessions[first_free_session].input_stream.ack_callback = on_input_stream_ack;
-					server_state->sessions[first_free_session].input_stream.data_callback = on_input_stream_data;
-					server_state->sessions[first_free_session].output_stream.data_callback = on_output_stream_data;
+					app_state->sessions[first_free_session].input_stream.ack_callback_ptr = &app_state->stream_function_table->game_input_ack;
+					app_state->sessions[first_free_session].input_stream.data_callback_ptr = &app_state->stream_function_table->game_input_data;
+					app_state->sessions[first_free_session].output_stream.data_callback_ptr = &app_state->stream_function_table->game_output_data;
 				}
 			}
 		}
 
 		if (known_session != -1)
 		{
-			if (server_state->sessions[known_session].kind == Session_Kind_Ping_Responder)
+			if (app_state->sessions[known_session].kind == Session_Kind_Ping_Responder)
 			{
-				//ping_packet_handle(server_state,
-				                   //&server_state->sessions[known_session],
+				//ping_packet_handle(app_state,
+				                   //&app_state->sessions[known_session],
 				                   //incoming_buffer,
 				                   //receive_result);
 			}
 			else
 			{
-				core_packet_handle(server_state, server_state->platform_api, &server_state->sessions[known_session], incoming_buffer, receive_result, FALSE);
+				core_packet_handle(app_state, app_state->platform_api, &app_state->sessions[known_session], incoming_buffer, receive_result, FALSE);
 			}
 
-			if (server_state->sessions[known_session].ack_previous != server_state->sessions[known_session].ack_next)
+			//Zone_Packet_ClientUpdatePacketModifyMovementSpeed speed = { .speed = 4.0f, .unk_bool = 1};
+
+			//local_persist b32 do_once_7 = 0;
+			//if (!do_once_7++)
+			//{
+			//DO_ONCE(printf("AAAAAAAAAAAAAAAAA\n\n"); zone_packet_send(app_state, &app_state->sessions[known_session], &app_state->arena_per_tick, KB(1), Zone_Packet_Kind_ClientUpdatePacketModifyMovementSpeed, &speed););
+			//}
+
+			if (app_state->sessions[known_session].ack_previous != app_state->sessions[known_session].ack_next)
 			{
-				server_state->sessions[known_session].ack_previous = server_state->sessions[known_session].ack_next;
+				printf(MESSAGE_CONCAT_INFO("Syncing ack...\n"));
+				app_state->sessions[known_session].ack_previous = app_state->sessions[known_session].ack_next;
 
 				Ack ack =
 				{
-					.sequence = (u16)server_state->sessions[known_session].ack_next
+					.sequence = (u16)app_state->sessions[known_session].ack_next
 				};
 
-				core_packet_send(server_state->socket,
-				                 server_state->platform_api,
-				                 server_state->sessions[known_session].address.ip,
-				                 server_state->sessions[known_session].address.port,
-				                 &server_state->sessions[known_session].connection_args,
+				core_packet_send(app_state->socket,
+				                 app_state->platform_api,
+				                 app_state->sessions[known_session].address.ip,
+				                 app_state->sessions[known_session].address.port,
+				                 &app_state->sessions[known_session].connection_args,
 				                 Core_Packet_Kind_Ack,
 				                 &ack);
 			}
@@ -934,22 +1253,24 @@ internal void game_tick_run(Program_State* program_state)
 		// TODO(rhett): we also should have a way to time this,
 		//              probably through the platform api
 		// TODO(rhett): processing one normal packet per tick for now
-		//if (server_state->packet_queue.entries_tail > 0)
+		//if (app_state->packet_queue.entries_tail > 0)
 		//{
-			//packet_queue_pop_and_send(&server_state->packet_queue,
-			     //                     server_state);
-			     //                     //&server_state->arena_per_frame,
-			     //                     //server_state->server_packet_send);
+			//packet_queue_pop_and_send(&app_state->packet_queue,
+			     //                     app_state);
+			     //                     //&app_state->arena_per_frame,
+			     //                     //app_state->server_packet_send);
 //
-			////Packet_Queue_Entry normal_packet_entry = packet_queue_pop(&server_state->packet_queue);
-			////zone_packet_send(server_state,
+			////Packet_Queue_Entry normal_packet_entry = packet_queue_pop(&app_state->packet_queue);
+			////zone_packet_send(app_state,
 								//			//normal_packet_entry.session_state,
-								//			//&server_state->arena_per_frame,
+								//			//&app_state->arena_per_frame,
 								//			//normal_packet_entry.max_packed_length,
 								//			//normal_packet_entry.packet_kind,
-								//			//server_state->packet_queue.buffer + normal_packet_entry.buffer_offset);
+								//			//app_state->packet_queue.buffer + normal_packet_entry.buffer_offset);
 		//}
+
+		printf("Packet Tick End ==============================================================//\n");
 	}
 
-	memory_arena_reset(&server_state->arena_per_tick);
+	arena_reset(&app_state->arena_per_tick);
 }

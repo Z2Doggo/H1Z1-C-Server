@@ -1,31 +1,31 @@
-internal uptr util_align_forward(uptr ptr, usize align)
-{
-	assert(IS_POWER_OF_TWO(align));
-
-	uptr remainder = ptr & (align - 1);
-	if (remainder)
-	{
-		ptr += align - remainder;
-	}
-	return ptr;
-}
-
-internal void util_memory_set(void* destination, u8 value, usize length)
-{
-	for (usize i = 0; i < length; i++)
-	{
-		*(u8*)((uptr)destination + i) = value;
-	}
-}
-
-internal void util_memory_copy(void* destination, void* source, usize length)
-{
-	for (usize i = 0; i < length; i++)
-	{
-		*(u8*)((uptr)destination + i) = *(u8*)((uptr)source + i);
-	}
-}
-
+//internal uptr util_align_forward(uptr ptr, usize align)
+//{
+//	assert(IS_POWER_OF_TWO(align));
+//
+//	uptr remainder = ptr & (align - 1);
+//	if (remainder)
+//	{
+//		ptr += align - remainder;
+//	}
+//	return ptr;
+//}
+//
+//internal void util_memory_set(void* destination, u8 value, usize length)
+//{
+//	for (usize i = 0; i < length; i++)
+//	{
+//		*(u8*)((uptr)destination + i) = value;
+//	}
+//}
+//
+//internal void util_memory_copy(void* destination, void* source, usize length)
+//{
+//	for (usize i = 0; i < length; i++)
+//	{
+//		*(u8*)((uptr)destination + i) = *(u8*)((uptr)source + i);
+//	}
+//}
+//
 internal u32 util_string_length(i8* data)
 {
 	u32 tail = 0;
@@ -38,48 +38,109 @@ internal u32 util_string_length(i8* data)
 
 	return tail;
 }
+//
+//internal void util_string_concat(i8* destination, u32 length, i8* source)
+//{
+//	u32 destination_tail;
+//	for (destination_tail = 0; destination_tail < length; )
+//	{
+//		if (!destination[destination_tail])
+//		{
+//			break;
+//		}
+//		destination_tail++;
+//	}
+//
+//	i8 c;
+//	do
+//	{
+//		c = source[destination_tail];
+//		destination[destination_tail++] = c;
+//	}
+//	while (c != 0);
+//}
+//
+//internal b32 util_string_compare(i8* string_1, i8* string_2)
+//{
+//	u32 length_1 = util_string_length(string_1);
+//	u32 length_2 = util_string_length(string_2);
+//
+//	if (length_1 != length_2)
+//	{
+//		return FALSE;
+//	}
+//
+//	for (u32 i = 0; i < length_1; i++)
+//	{
+//		if (string_1[i] != string_2[i])
+//		{
+//			return FALSE;
+//		}
+//	}
+//
+//	return TRUE;
+//}
 
-internal void util_string_concat(i8* destination, u32 length, i8* source)
-{
-	u32 destination_tail;
-	for (destination_tail = 0; destination_tail < length; )
-	{
-		if (!destination[destination_tail])
-		{
-			break;
-		}
-		destination_tail++;
-	}
+// NOTE(rhett): Sloppy but does what I want
+// internal void
+// util_byte_dump(void* data, u32 data_length)
+//     {
+//     u32 bytes_per_line = 8;
+//     u32 line_count = data_length / bytes_per_line;
+//     if (data_length % bytes_per_line)
+//         {
+//         ++line_count;
+//         }
 
-	i8 c;
-	do
-	{
-		c = source[destination_tail];
-		destination[destination_tail++] = c;
-	}
-	while (c != 0);
-}
+//     printf("\n==== Base: %p\n", data);
+//     for (u32 i = 0; i < line_count; ++i)
+//         {
+//         printf("%08X: ", i*bytes_per_line);
+//         for (u32 j = 0; j < bytes_per_line; ++j)
+//             {
+//             if (!(bytes_per_line % 2) && j == bytes_per_line / 2)
+//                 {
+//                 putchar(' ');
+//                 }
+//             if (j < data_length - (i*bytes_per_line))
+//                 {
+//                 printf("%02x ", *(u8*)((uptr)data + (i*bytes_per_line+j)));
+//                 }
+//             else
+//                 {
+//                 printf("   ");
+//                 }
+//             }
 
-internal b32 util_string_compare(i8* string_1, i8* string_2)
-{
-	u32 length_1 = util_string_length(string_1);
-	u32 length_2 = util_string_length(string_2);
+//         printf("| ");
+//         for (u32 j = 0; j < bytes_per_line; ++j)
+//             {
+//             char byte = *(char*)((uptr)data + (i*bytes_per_line+j));
+//             if (!(bytes_per_line % 2) && j == bytes_per_line / 2)
+//                 {
+//                 putchar(' ');
+//                 }
+            
+//             if (byte < '!' || byte > '~')
+//                 {
+//                 byte = '.';
+//                 }
 
-	if (length_1 != length_2)
-	{
-		return FALSE;
-	}
+//             if (j < data_length - (i*bytes_per_line))
+//                 {
+//                 printf("%c", byte);
+//                 }
+//             else
+//                 {
+//                 putchar(' ');
+//                 }
+//             }
+//         printf(" |\n");
+//         }
+//     putchar('\n');
 
-	for (u32 i = 0; i < length_1; i++)
-	{
-		if (string_1[i] != string_2[i])
-		{
-			return FALSE;
-		}
-	}
-
-	return TRUE;
-}
+//     return;
+//     }
 
 #if 0
 internal void
@@ -174,11 +235,12 @@ internal u32
 util_base64_calculate_decoded_length(u8* data, u32 data_length)
     {
     // TODO(rhett): correct this automatically 
-    if (data_length % 4)
-        {
-        printf("[X] data_length is not divisible by 4.\n");
-        abort();
-        }
+			ASSERT_MSG(!(data_length % 4), "data_length is not divisible by 4");
+    //if (data_length % 4)
+        //{
+        //printf("[X] data_length is not divisible by 4.\n");
+        //abort();
+        //}
 
     u32 result = (data_length / 4) * 3;
     if (data[data_length - 1] == '=')
@@ -193,23 +255,16 @@ util_base64_calculate_decoded_length(u8* data, u32 data_length)
     return result;
     }
 
-internal u64
-util_generate_id() {
-    u64 id;
-    srand(time(NULL)); // initialisation de la graine avec le temps actuel
-    id = ((u64)rand() << 32) | rand(); // génération de deux nombres aléatoires de 32 bits et leur concaténation en un nombre de 64 bits
-    return id;
-}
-
 internal u32
 util_base64_decode(u8* data, u32 data_length, u8* buffer)
     {
     // TODO(rhett): correct this automatically 
-    if (data_length % 4)
-        {
-        printf("[X] data_length is not divisible by 4.\n");
-        abort();
-        }
+			ASSERT_MSG(!(data_length % 4), "data_length is not divisible by 4");
+    //if (data_length % 4)
+        //{
+        //printf("[X] data_length is not divisible by 4.\n");
+        //abort();
+        //}
 
     // u8 encoding_table[64] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 
     //                          'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 
@@ -246,5 +301,5 @@ util_base64_decode(u8* data, u32 data_length, u8* buffer)
         }
 
     return util_base64_calculate_decoded_length(data, data_length);
-}
+    }
 

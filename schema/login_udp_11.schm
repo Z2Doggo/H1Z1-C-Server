@@ -2,8 +2,7 @@ group Login
 // TODO(rhett): maybe we'll specify stuff like opcode type like this for the whole group?
 //endian little
 // TODO(rhett): opcode can be variable length. think about this
-//opcode u8$
-
+//opcode u8
 packet 0x1 LoginRequest
 string:u32		session_id
 string:u32		system_fingerprint
@@ -12,7 +11,6 @@ u32 			third_party_auth_ticket
 u32 			third_party_user_id
 u32 			third_party_id
 
-
 packet 0x2 LoginReply
 b8           	is_logged_in
 u32          	status
@@ -20,7 +18,6 @@ u32          	result_code
 b8           	is_member
 b8			 	is_internal
 string:u32 	 	namespace_name
-
 list:u32 account_features
 {
     u32 	   	key
@@ -29,16 +26,13 @@ list:u32 account_features
     u32        	remaining_count
     bytes:u32  	raw_data
 }
-
 bytes:u32 application_payload
-
 list:u32 error_details
 {
     u32 		unknown_dword1
     string:u32 	name
     string:u32 	value
 }
-
 string:u32 		ip_country_code
 
 packet 0x3 Logout
@@ -49,7 +43,7 @@ packet 0x5 CharacterCreateRequest
 u32 			server_id
 u32 			unk_u32
 
-stream:u32 		payload
+stream:u32 		char_payload
 {
 
 	b8 			empire_id
@@ -97,7 +91,7 @@ stream:u32 login_payload
 }
 
 packet 0x9 CharacterDeleteRequest
-u64 			character_id
+u64 character_id
 
 packet 0x10 TunnelAppPacketClientToServer
 u32 			server_id
@@ -122,7 +116,6 @@ stream:u32 		data_server
 	string:u32 		character_name2
 	u32 			status
 }
-
 
 packet 0x12 CharacterTransferRequest
 
@@ -275,10 +268,9 @@ list:u32 characters
 	}
 }
 
+packet 0xd ServerListRequest
 
-packet 0x0d ServerListRequest
-
-packet 0x0e ServerListReply
+packet 0xe ServerListReply
 list:u32 servers
 {
 	u32 			id
@@ -296,5 +288,6 @@ list:u32 servers
 	b8 				is_access_allowed
 }
 
-packet 0x0f ServerUpdate
+packet 0xf ServerUpdate
+
 
