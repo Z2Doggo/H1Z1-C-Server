@@ -32,7 +32,6 @@ static void platform_win_console_write(char* format, ...);
 #include "shared/packet_queue.h"
 #include "shared/packet_queue.c"
 #include "utility/character_id_gen.c"
-#include "function/server.c"
 
 global u64 global_packet_dump_count;
 // HACK(rhett):
