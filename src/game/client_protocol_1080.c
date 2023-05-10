@@ -66,10 +66,6 @@ internal void zone_packet_handle(App_State* server_state,
 		return;
 	}
 
-	__time64_t timer;
-	_time64(&timer);
-
-	// (doggo) specify packet channels, makes it easier to send packets to specific gateway channels
 	typedef enum packet_channel 
 	{
 		packet_channel_0 = 0,
@@ -77,7 +73,13 @@ internal void zone_packet_handle(App_State* server_state,
 		packet_channel_2 = 2,
 		packet_channel_3 = 3,
 		packet_channel_4 = 4,
+		packet_channel_5 = 5,
+		packet_channel_6 = 6,
+		packet_channel_7 = 7,
 	} packet_channel;
+
+	__time64_t timer;
+	_time64(&timer);
 
 	// TODO(rhett): once we start receiving packets, we'll need to handle subcodes
 	// (doggo) ^ done!
@@ -132,6 +134,7 @@ internal void zone_packet_handle(App_State* server_state,
 	
 	local_persist u8 test = FALSE;
 	
+	// (doggo)makes it easier to send packets that need to be sent on the proper gateway channel, 
 	switch_gateway_channel:
 	switch (channel)
 	{
@@ -164,13 +167,17 @@ internal void zone_packet_handle(App_State* server_state,
 
 					break;
 				}
+				// (doggo) need to figure out a way to confirm the ClientFinishedLoading packet, because, right now this packet is not working and is being spammed and called an unhandled packet, baffles me
 				case ZONE_CLIENTFINISHEDLOADING_ID:
 				{
-					packet_kind = Zone_Packet_Kind_ClientFinishedLoading;
-					printf("[Zone] Handling ZONE_CLIENTFINISHEDLOADING_ID\n");
+					//packet_kind = Zone_Packet_Kind_ClientFinishedLoading;
+					//printf("[Zone] Handling ZONE_CLIENTFINISHEDLOADING_ID\n");
 
 					if (session_state->finished_loading == FALSE)
 					{
+						packet_kind = Zone_Packet_Kind_ClientFinishedLoading;
+						printf("[Zone] Handling ZONE_CLIENTFINISHEDLOADING_ID\n");
+
 						session_state->finished_loading = TRUE;
 
 						Zone_Packet_Character_WeaponStance weapon_stance =
@@ -247,9 +254,9 @@ internal void zone_packet_handle(App_State* server_state,
 						};
 
 						zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Command_AddWorldCommand, &command_help);
-						
-						break;
 					}
+
+					return;
 				}
 				case ZONE_CLIENTLOGOUT_ID:
 				{
@@ -257,7 +264,11 @@ internal void zone_packet_handle(App_State* server_state,
 					printf("[Zone] Handling ClientLogout\n");
 
 					char local_message[36] = { 0 };
-					//stbsp_snprintf(local_message, sizeof(local_message), "%s left the server", character_name);
+
+					/*
+					(doggo) not sure how to include the character's name, for this, will comment out for now
+					stbsp_snprintf(local_message, sizeof(local_message), "%s left the server", character_name);
+					*/
 
 					Zone_Packet_ClientUpdate_TextAlert text_alert =
 					{
@@ -315,8 +326,12 @@ internal void zone_packet_handle(App_State* server_state,
 
 					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(time_sync), Zone_Packet_Kind_GameTimeSync, &time_sync);
 
-					char local_message[36] = { 0 };
+					char local_message[36] = { 0 };					
+					
+					/*
+					(doggo) not sure how to include the character's name, for this, will comment out for now
 					//stbsp_snprintf(local_message, sizeof(local_message), "%s joined the server", character_name);
+					*/
 
 					if (!session_state->first_login)
 					{
@@ -417,7 +432,7 @@ internal void zone_packet_handle(App_State* server_state,
 						},
 					};
 
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(100), Zone_Packet_Kind_ClientUpdate_RespawnLocations, &respawn_locations);
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(respawn_locations), Zone_Packet_Kind_ClientUpdate_RespawnLocations, &respawn_locations);
 
 					break;
 				}
@@ -498,9 +513,6 @@ internal void zone_packet_handle(App_State* server_state,
 					packet_kind = Zone_Packet_Kind_GetContinentBattleInfo;
 					printf("[Zone] Handling GetContinentBattleInfo\n");
 
-					//Zone_Packet_GetContinentBattleInfo result = { 0 };
-					//zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
-
 					Zone_Packet_ContinentBattleInfo battle_info =
 					{
 						.zones_count = 1,
@@ -549,7 +561,7 @@ internal void zone_packet_handle(App_State* server_state,
 						},
 					};
 
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(150), Zone_Packet_Kind_ResourceEventBase, &rsrc_event_base);
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(rsrc_event_base), Zone_Packet_Kind_ResourceEventBase, &rsrc_event_base);
 
 					break;
 				}
@@ -557,7 +569,9 @@ internal void zone_packet_handle(App_State* server_state,
 				{
 					packet_kind = Zone_Packet_Kind_ClientUpdate_UpdateBattlEyeRegistration;
 					printf("[Zone] Handling ClientUpdate.UpdateBattlEyeRegistration\n");
-			
+
+					// (doggo)keep empty, don't need this
+
 					break;
 				}
 
@@ -573,10 +587,6 @@ internal void zone_packet_handle(App_State* server_state,
 		}
 		case packet_channel_2:
 		{
-			switch (packet_id)
-			{
-				case ZONE_PLAYERUPDATEPOSITION_ID:
-				{
 					u32 offset = 0;
 
 					u16 flags = endian_read_u16_little(data + offset);
@@ -741,9 +751,7 @@ internal void zone_packet_handle(App_State* server_state,
 					zone_packet_send(2, server_state, session_state, &server_state->arena_per_tick, KB(50), Zone_Packet_Kind_PlayerUpdatePosition, &updt_pos);
 
 					return;
-				}
-			}
-		}
+		}	
 		case packet_channel_3:
 		{
 			switch (packet_id)
@@ -752,6 +760,63 @@ internal void zone_packet_handle(App_State* server_state,
 			}
 		}
 		case packet_channel_4:
+		{
+			if (session_state->is_synced == FALSE)
+			{
+				session_state->is_synced = TRUE;
+
+				packet_kind = Zone_Packet_Kind_Synchronization;
+				printf("[Zone] Handling Synchronization\n");
+
+				Zone_Packet_Synchronization sync_packet =
+				{
+					.server_time = timer,
+					.server_time_2 = timer,
+					.unk_time = timer + 2,
+				};
+			
+			zone_packet_send(4, server_state, session_state, &server_state->arena_per_tick, sizeof(sync_packet), Zone_Packet_Kind_Synchronization, &sync_packet);
+			}
+
+			return;
+		}
+		case packet_channel_5:
+		{
+			switch (packet_id)
+			{
+				case ZONE_GETREWARDBUFFINFO_ID:
+				{
+					Zone_Packet_RewardBuffInfo buff_info =
+					{
+						.unk_float_1 = 1,
+						.unk_float_2 = 2,
+						.unk_float_3 = 3,
+						.unk_float_4 = 4,
+						.unk_float_5 = 5,
+						.unk_float_6 = 6,
+						.unk_float_7 = 7,
+						.unk_float_8 = 8,
+						.unk_float_9 = 9,
+						.unk_float_10 = 10,
+						.unk_float_11 = 11,
+						.unk_float_12 = 12,
+					};
+
+					zone_packet_send(5, server_state, session_state, &server_state->arena_per_tick, sizeof(buff_info), Zone_Packet_Kind_RewardBuffInfo, &buff_info);
+				}
+
+				return;
+			}
+		}	
+		case packet_channel_6:
+		{
+			switch (packet_id)
+			{
+				break;
+			}
+		}
+		// (doggo) haven't seen packets on anything above gateway_channel_7, keep like this for now		
+		case packet_channel_7:
 		{
 			switch (packet_id)
 			{
@@ -763,7 +828,7 @@ internal void zone_packet_handle(App_State* server_state,
 			packet_id_fail:
 				packet_kind = Zone_Packet_Kind_Unhandled;
 				
-			printf("[!] Unhandled zone packet from:\n gateway channel: [%x],\n packet opcode: [0x%x],\n sub packet opcode: [0x%x],\n", channel, packet_id, sub_packet_id);
+			printf("[!] Unhandled zone packet from:\n gateway channel: [%x],\n packet opcode: [0x%x],\n sub packet opcode: [0x%x],\n\n", channel, packet_id, sub_packet_id);
 		}
 	}
 }

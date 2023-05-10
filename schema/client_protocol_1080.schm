@@ -2481,6 +2481,7 @@ u64 client_hours_ms
 u64 client_hours_ms2
 u64 client_time
 u64 server_time
+u64 server_time_2
 u64 unk_time
 
 packet 0x8e ResourceEventBase

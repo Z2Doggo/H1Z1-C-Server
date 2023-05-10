@@ -920,18 +920,6 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 		.unk_float_12 = 12,
 	};
 
-	Zone_Packet_ClientUpdate_DoneSendingPreloadCharacters preload_done =
-	{
-		.is_done = TRUE,
-	};
-
-	Zone_Packet_Character_CharacterStateDelta character_state_delta =
-	{
-		.guid_1 	= session_state->character_id,
-		.guid_3 	= 0x0000000040000000,
-		.game_time 	= (u32)timer,
-	};
-
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_CommandItemDefinitions, &item_defs);
@@ -944,12 +932,8 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightPc, &lightweightpc);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightNpc, &lightweightnpc);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(500), Zone_Packet_Kind_SendSelfToClient, &send_self);	
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(30), Zone_Packet_Kind_ClientUpdate_DoneSendingPreloadCharacters, &preload_done);
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_NetworkProximityUpdatesComplete, 	0);
-	// todo: send DtoObjectInitialData for trees
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, sizeof(character_state_delta), Zone_Packet_Kind_Character_CharacterStateDelta, &character_state_delta);
-	zone_packet_send(0, app_state,session_state,&app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ZoneDoneSendingInitialData, 0);
-	//zone_packet_raw_file_send(0, app_state, session_state, &app_state->arena_per_tick, KB(40), "C:\\Users\\epicg\\OneDrive\\\Desktop\\send_self\\" "5.bin");
+
+	//zone_packet_raw_file_send(0, app_state, session_state, &app_state->arena_per_tick, KB(40), "C:\\Users\\epicg\\OneDrive\\Desktop\\send_self\\" "5.bin");
 }
 
 internal void gateway_on_tunnel_data_from_client(App_State* app_state, Session_State* session_state, u8* data, u32 data_length)

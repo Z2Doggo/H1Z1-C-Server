@@ -3515,6 +3515,7 @@ u64 client_hours_ms;
 u64 client_hours_ms2;
 u64 client_time;
 u64 server_time;
+u64 server_time_2;
 u64 unk_time;
 };
 
@@ -15767,6 +15768,11 @@ endian_write_u64_little(buffer + offset, packet->server_time);
 offset += sizeof(u64);
 printf("-- server_time             \t%lld\t%llxh\t%f\n", (i64)packet->server_time, (u64)packet->server_time, (f64)packet->server_time);
 
+// u64 server_time_2
+endian_write_u64_little(buffer + offset, packet->server_time_2);
+offset += sizeof(u64);
+printf("-- server_time_2           \t%lld\t%llxh\t%f\n", (i64)packet->server_time_2, (u64)packet->server_time_2, (f64)packet->server_time_2);
+
 // u64 unk_time
 endian_write_u64_little(buffer + offset, packet->unk_time);
 offset += sizeof(u64);
@@ -27250,6 +27256,11 @@ printf("-- client_time             \t%lld\t%llxh\t%f\n", (i64)packet->client_tim
 packet->server_time = endian_read_u64_little(data + offset);
 offset += sizeof(u64);
 printf("-- server_time             \t%lld\t%llxh\t%f\n", (i64)packet->server_time, (u64)packet->server_time, (f64)packet->server_time);
+
+// u64 server_time_2
+packet->server_time_2 = endian_read_u64_little(data + offset);
+offset += sizeof(u64);
+printf("-- server_time_2           \t%lld\t%llxh\t%f\n", (i64)packet->server_time_2, (u64)packet->server_time_2, (f64)packet->server_time_2);
 
 // u64 unk_time
 packet->unk_time = endian_read_u64_little(data + offset);

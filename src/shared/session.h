@@ -104,6 +104,7 @@ struct Session_State
 	u8 				finished_loading;
 	u8 				first_login;
 	u8 				gateway_channel;
+	u8 				is_synced;
 
 	Session_Kind kind;
 	Connection_Args connection_args;
