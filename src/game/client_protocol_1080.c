@@ -717,7 +717,7 @@ internal void zone_packet_handle(App_State* server_state,
 						offset += v.length;
 
 						v = endian_read_int2b_little(data, offset);
-						// rotation_euler.w = v.value / 100;
+						//rotation_euler.w = v.value / 100;
 						offset += v.length;
 
 						//vec4_i32 rotation = euler_to_quaternion(rotation_euler);
@@ -746,7 +746,7 @@ internal void zone_packet_handle(App_State* server_state,
 					memcpy(updt_pos.test, data + 7, data_length - 7);
 					updt_pos.test_length = 0;
 
-					zone_packet_send(2, server_state, session_state, &server_state->arena_per_tick, KB(50), Zone_Packet_Kind_PlayerUpdatePosition, &updt_pos);
+					zone_packet_send(2, server_state, session_state, &server_state->arena_per_tick, sizeof(updt_pos), Zone_Packet_Kind_PlayerUpdatePosition, &updt_pos);
 
 					break;
 				}
@@ -785,9 +785,9 @@ internal void zone_packet_handle(App_State* server_state,
 
 						break;
 					}
-				
-					return;
 				}
+				
+				return;
 			}
 		}
 		case packet_channel_5:
