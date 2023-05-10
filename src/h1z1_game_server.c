@@ -95,7 +95,7 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 {
 	printf("[!] Character %llxh trying to login to zone server\n", character_id);
 
-	//session_state->character_id = character_id;
+	character_id = generate_guid();
 
 	__time64_t timer;
 	_time64(&timer);
@@ -640,8 +640,8 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 		.payload_self =
 			(struct payload_self_s [1]) {
 			[0] = {
-				.guid = 0x1337, // temp l33t solution for now(doggo)
-				.character_id = session_state->character_id,
+				.guid = generate_guid(), // temp l33t solution for now(doggo)
+				.character_id = character_id,
 				.transient_id = 0x42069,
 				.actor_model_id = 9474,
 				.head_actor_length = 26,
@@ -652,8 +652,8 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 				.rotation = 0, -0.9944087862968445, 0,  0.105599045753479,
 				.character_name_length = 5,
 				.character_name = "doggo",
-				//.is_respawning = TRUE,
-				//.gender1 = 1,
+				//.is_respawning = FALSE || TRUE,
+				.gender1 = 1 || 2,
 				.creation_date = timer,
 				.last_login_date = timer,
 				
@@ -724,7 +724,7 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 	Zone_Packet_ContainerInitEquippedContainers init_equipped_containers = 
 	{
 		.ignore_this = 0,
-		.character_id = session_state->character_id,
+		.character_id = character_id,
 
 		.container_list_count = 1,
 		.container_list = 
@@ -733,9 +733,9 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 			{
 				.loadout_slot_id = 0,
 
-				.guid_1 = session_state->character_id,
+				.guid_1 = character_id,
 				.defs_id = 0,
-				.associated_character_id = session_state->character_id,
+				.associated_character_id = character_id,
 				.slots = 0,
 
 				.items_list_count = 1,
@@ -747,7 +747,7 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 
 						.item_defs_id_2 = 0,
 						.tint_id = 0,
-						.guid_2 = session_state->character_id,
+						.guid_2 = character_id,
 						.count = 1,
 
 						.unk_qword_1 = 0,
@@ -761,7 +761,7 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 						.current_durability = 0,
 						.max_durability_from_defs = 0,
 						.unk_bool_1 = FALSE,
-						.owner_character_id = session_state->character_id,
+						.owner_character_id = character_id,
 						.unk_dword_3 = 0,
 					},
 				},
@@ -818,7 +818,7 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 
 	Zone_Packet_AddLightweightPc lightweightpc =
 	{
-		.character_id 			= 0x1337,
+		.character_id 			= character_id,
 		.transient_id.value		= 0x133742069,
 		.unknownByte1 			= 2,
 		.actorModelId 			= 9474,

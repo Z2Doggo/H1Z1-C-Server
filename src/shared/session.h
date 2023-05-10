@@ -99,7 +99,9 @@ struct Session_State
 	
 	resource_ids resource_id;
 	resource_types resource_type;
+	
 	u64 			character_id;
+
 	u32 			selected_server_id;
 	u8 				finished_loading;
 	u8 				first_login;

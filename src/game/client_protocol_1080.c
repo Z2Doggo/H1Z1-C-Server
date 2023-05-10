@@ -520,19 +520,52 @@ internal void zone_packet_handle(App_State* server_state,
 					Zone_Packet_ResourceEventBase rsrc_event_base =
 					{
 						.gametime = timer32,
-						.variabletype8_case =
-							(struct set_character_resources_1_s[1]) {
-							[0] =
+						.variabletype8 =
+						(struct set_character_resources_1_s[1]) {
+							[0] = 
 							{
 								.character_id_1 = session_state->character_id,
+
 								.character_resources_1_count = 1,
-								.character_resources_1 =
+								.character_resources_1 = 
 									(struct character_resources_1_s[1]) {
-									[0] =
+									[0] = 
 									{
 										.resource_type_1 = 3,
+
+										.resource_id_1 = session_state->resource_id,
+										.resource_type_2 = session_state->resource_type ? session_state->resource_type : session_state->resource_id,
+										.value = 1000,
 									},
 								},
+							},
+						},
+						(struct set_character_resources_2_s[1]) {
+							[0] = 
+							{
+								.character_id_2 = session_state->character_id,
+
+								.character_resources_2_count = 1,
+								.character_resources_2 = 
+									(struct character_resources_2_s[1]) {
+									[0] = 
+									{
+										.resource_type_1 = 3,
+
+										.resource_id = session_state->resource_id,
+										.resource_type_2 = session_state->resource_type ? session_state->resource_type : session_state->resource_id,
+										.value = 1000,
+									},
+								},
+							},
+						},
+						(struct updt_character_resources_s[1]) {
+							[0] = 
+							{
+								.character_id_3 = session_state->character_id,
+								.resource_id_2 = session_state->resource_id,
+								.resource_type_3 = session_state->resource_type ? session_state->resource_type : session_state->resource_id,
+								.initial_value = 1000 >= 0 ? 1000 : 0,
 							},
 						},
 					};
