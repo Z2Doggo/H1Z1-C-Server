@@ -264,14 +264,13 @@ internal void zone_packet_handle(App_State* server_state,
 				{
 					packet_kind = Zone_Packet_Kind_ClientLogout;
 					printf("[Zone] Handling ClientLogout\n");
-
-					char local_message[36] = { 0 };
-
+					
 					/*
+					char local_message[36] = { 0 };
+					
 					(doggo) not sure how to include the character's name, for this, will comment out for now
 					stbsp_snprintf(local_message, sizeof(local_message), "%s left the server", character_name);
-					*/
-
+					
 					Zone_Packet_ClientUpdate_TextAlert text_alert =
 					{
 						.message_length = util_string_length(local_message),
@@ -279,7 +278,8 @@ internal void zone_packet_handle(App_State* server_state,
 					};
 
 					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_TextAlert, &text_alert);
-			
+					*/
+				
 					break;
 				}
 				case ZONE_INGAMEPURCHASEBASE_ID:
@@ -298,8 +298,8 @@ internal void zone_packet_handle(App_State* server_state,
 				{
 					packet_kind = Zone_Packet_Kind_Chat_Chat;
 
-					Zone_Packet_Chat_Chat result = { 0 };
-					zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
+					//Zone_Packet_Chat_Chat result = { 0 };
+					//zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
 
 					// Zone_Packet_Chat_ChatText packet =
 					// {
@@ -316,8 +316,8 @@ internal void zone_packet_handle(App_State* server_state,
 					packet_kind = Zone_Packet_Kind_GameTimeSync;
 					printf("[Zone] Handling GameTimeSync\n");
 
-					Zone_Packet_GameTimeSync result = { 0 };
-					zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
+					//Zone_Packet_GameTimeSync result = { 0 };
+					//zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
 
 					Zone_Packet_GameTimeSync time_sync =
 					{
@@ -327,14 +327,13 @@ internal void zone_packet_handle(App_State* server_state,
 					};
 
 					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(time_sync), Zone_Packet_Kind_GameTimeSync, &time_sync);
-
-					char local_message[36] = { 0 };					
 					
 					/*
+					char local_message[36] = { 0 };					
+					
 					(doggo) not sure how to include the character's name, for this, will comment out for now
 					//stbsp_snprintf(local_message, sizeof(local_message), "%s joined the server", character_name);
-					*/
-
+					
 					if (!session_state->first_login)
 					{
 						session_state->first_login = TRUE;
@@ -347,21 +346,8 @@ internal void zone_packet_handle(App_State* server_state,
 				
 						zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_TextAlert, &text_alert);
 					}
+					*/
 
-					break;
-				}
-				case ZONE_KEEPALIVE_ID:
-				{
-					packet_kind = Zone_Packet_Kind_KeepAlive;
-					printf("[Zone] Handling KeepAlive\n");
-
-					Zone_Packet_KeepAlive keep_alive =
-					{
-						.game_time = timer32,
-					};
-
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(keep_alive), Zone_Packet_Kind_KeepAlive, &keep_alive);
-					
 					break;
 				}
 				case ZONE_GETRESPAWNLOCATIONS_ID:
@@ -445,13 +431,6 @@ internal void zone_packet_handle(App_State* server_state,
 
 					break;
 				}
-				case ZONE_SYNCHRONIZATION_ID:
-				{
-					packet_kind = Zone_Packet_Kind_Synchronization;
-					printf("[Zone] Handling Synchronization\n");
-
-					break;
-				}
 				case ZONE_CLIENTINITIALIZATIONDETAILS_ID:
 				{
 					packet_kind = Zone_Packet_Kind_ClientInitializationDetails;
@@ -496,15 +475,12 @@ internal void zone_packet_handle(App_State* server_state,
 					packet_kind = Zone_Packet_Kind_ClientUpdate_MonitorTimeDrift;
 					printf("[Zone] Handling ClientUpdate.MonitorTimeDrift\n");
 
-					Zone_Packet_ClientUpdate_MonitorTimeDrift result = { 0 };
-					zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
-
 					Zone_Packet_ClientUpdate_MonitorTimeDrift time_drift =
 					{
 						.time_drift = timer32,
 					};
 			
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_MonitorTimeDrift, &time_drift);
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(time_drift), Zone_Packet_Kind_ClientUpdate_MonitorTimeDrift, &time_drift);
 
 					break;
 				}
@@ -532,7 +508,7 @@ internal void zone_packet_handle(App_State* server_state,
 						}
 					};
 			
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ContinentBattleInfo, &battle_info);
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(battle_info), Zone_Packet_Kind_ContinentBattleInfo, &battle_info);
 
 					break;
 				}
@@ -582,7 +558,24 @@ internal void zone_packet_handle(App_State* server_state,
 		{	
 			switch (packet_id)
 			{
-				break;
+				/*
+				case ZONE_KEEPALIVE_ID:
+				{
+					packet_kind = Zone_Packet_Kind_KeepAlive;
+					printf("[Zone] Handling KeepAlive\n");
+
+					Zone_Packet_KeepAlive keep_alive =
+					{
+						.game_time = timer32,
+					};
+
+					zone_packet_send(1, server_state, session_state, &server_state->arena_per_tick, sizeof(keep_alive), Zone_Packet_Kind_KeepAlive, &keep_alive);
+					
+					break;
+				}
+				*/
+
+				return;
 			}
 		}
 		case packet_channel_2:
@@ -765,7 +758,7 @@ internal void zone_packet_handle(App_State* server_state,
 		{
 			switch (packet_id)
 			{
-				break;
+				return;
 			}
 		}
 		case packet_channel_4:
@@ -792,11 +785,10 @@ internal void zone_packet_handle(App_State* server_state,
 
 						break;
 					}
+				
+					return;
 				}
-
-				return;
 			}
-
 		}
 		case packet_channel_5:
 		{
@@ -830,7 +822,7 @@ internal void zone_packet_handle(App_State* server_state,
 		{
 			switch (packet_id)
 			{
-				break;
+				return;
 			}
 		}
 		// (doggo) haven't seen packets on anything above gateway_channel_7, keep like this for now		
@@ -838,7 +830,7 @@ internal void zone_packet_handle(App_State* server_state,
 		{
 			switch (packet_id)
 			{
-				break;
+				return;
 			}
 		}
 		default:

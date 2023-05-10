@@ -904,22 +904,6 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 		.actorModelId 			= 9240,
 	};
 
-	Zone_Packet_RewardBuffInfo buff_info =
-	{
-		.unk_float_1 = 1,
-		.unk_float_2 = 2,
-		.unk_float_3 = 3,
-		.unk_float_4 = 4,
-		.unk_float_5 = 5,
-		.unk_float_6 = 6,
-		.unk_float_7 = 7,
-		.unk_float_8 = 8,
-		.unk_float_9 = 9,
-		.unk_float_10 = 10,
-		.unk_float_11 = 11,
-		.unk_float_12 = 12,
-	};
-
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_CommandItemDefinitions, &item_defs);
@@ -927,7 +911,6 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientGameSettings, &game_settings);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(40), Zone_Packet_Kind_Equipment_SetCharacterEquipment, &set_character_equipment);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ContainerInitEquippedContainers, &init_equipped_containers);
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_RewardBuffInfo, &buff_info);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_UpdateWeatherData, &updt_weather_data);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightPc, &lightweightpc);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightNpc, &lightweightnpc);
