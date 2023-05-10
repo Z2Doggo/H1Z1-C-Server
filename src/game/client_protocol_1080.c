@@ -78,8 +78,11 @@ internal void zone_packet_handle(App_State* server_state,
 		packet_channel_7 = 7,
 	} packet_channel;
 
-	__time64_t timer;
-	_time64(&timer);
+	__time64_t timer64;
+	_time64(&timer64);
+
+	__time32_t timer32;
+	_time32(&timer32);
 
 	// TODO(rhett): once we start receiving packets, we'll need to handle subcodes
 	// (doggo) ^ done!
@@ -160,7 +163,7 @@ internal void zone_packet_handle(App_State* server_state,
 					{
 						.guid_1 	= session_state->character_id,
 						.guid_3 	= 0x0000000040000000,
-						.game_time 	= (u32)timer,
+						.game_time 	= timer32,
 					};
 
 					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(character_state_delta), Zone_Packet_Kind_Character_CharacterStateDelta, &character_state_delta);
@@ -170,9 +173,6 @@ internal void zone_packet_handle(App_State* server_state,
 				// (doggo) need to figure out a way to confirm the ClientFinishedLoading packet, because, right now this packet is not working and is being spammed and called an unhandled packet, baffles me
 				case ZONE_CLIENTFINISHEDLOADING_ID:
 				{
-					//packet_kind = Zone_Packet_Kind_ClientFinishedLoading;
-					//printf("[Zone] Handling ZONE_CLIENTFINISHEDLOADING_ID\n");
-
 					if (session_state->finished_loading == FALSE)
 					{
 						packet_kind = Zone_Packet_Kind_ClientFinishedLoading;
@@ -254,6 +254,8 @@ internal void zone_packet_handle(App_State* server_state,
 						};
 
 						zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Command_AddWorldCommand, &command_help);
+
+						break;
 					}
 
 					return;
@@ -319,7 +321,7 @@ internal void zone_packet_handle(App_State* server_state,
 
 					Zone_Packet_GameTimeSync time_sync =
 					{
-						.time = timer,
+						.time = timer64,
 						.cycle_speed = 12.0f,
 						.unk_bool = FALSE,
 					};
@@ -355,10 +357,10 @@ internal void zone_packet_handle(App_State* server_state,
 
 					Zone_Packet_KeepAlive keep_alive =
 					{
-						.game_time = (u32)timer,
+						.game_time = timer32,
 					};
 
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_KeepAlive, &keep_alive);
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(keep_alive), Zone_Packet_Kind_KeepAlive, &keep_alive);
 					
 					break;
 				}
@@ -496,18 +498,16 @@ internal void zone_packet_handle(App_State* server_state,
 
 					Zone_Packet_ClientUpdate_MonitorTimeDrift result = { 0 };
 					zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
-			
 
 					Zone_Packet_ClientUpdate_MonitorTimeDrift time_drift =
 					{
-						.time_drift = (u32)timer,
+						.time_drift = timer32,
 					};
 			
 					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_MonitorTimeDrift, &time_drift);
 
 					break;
 				}
-
 				case ZONE_GETCONTINENTBATTLEINFO_ID:
 				{
 					packet_kind = Zone_Packet_Kind_GetContinentBattleInfo;
@@ -543,7 +543,7 @@ internal void zone_packet_handle(App_State* server_state,
 
 					Zone_Packet_ResourceEventBase rsrc_event_base =
 					{
-						.gametime = (u32)timer,
+						.gametime = timer32,
 						.variabletype8_case =
 							(struct set_character_resources_1_s[1]) {
 							[0] =
@@ -575,7 +575,7 @@ internal void zone_packet_handle(App_State* server_state,
 					break;
 				}
 
-				break;
+				return;
 			}
 		}
 		case packet_channel_1:
@@ -587,6 +587,11 @@ internal void zone_packet_handle(App_State* server_state,
 		}
 		case packet_channel_2:
 		{
+			switch (packet_id)
+			{
+				case ZONE_PLAYERUPDATEPOSITION_ID:
+				{
+			
 					u32 offset = 0;
 
 					u16 flags = endian_read_u16_little(data + offset);
@@ -750,7 +755,11 @@ internal void zone_packet_handle(App_State* server_state,
 
 					zone_packet_send(2, server_state, session_state, &server_state->arena_per_tick, KB(50), Zone_Packet_Kind_PlayerUpdatePosition, &updt_pos);
 
-					return;
+					break;
+				}
+				
+				return;
+			}
 		}	
 		case packet_channel_3:
 		{
@@ -761,24 +770,33 @@ internal void zone_packet_handle(App_State* server_state,
 		}
 		case packet_channel_4:
 		{
-			if (session_state->is_synced == FALSE)
+			switch (packet_id)
 			{
-				session_state->is_synced = TRUE;
-
-				packet_kind = Zone_Packet_Kind_Synchronization;
-				printf("[Zone] Handling Synchronization\n");
-
-				Zone_Packet_Synchronization sync_packet =
+				case ZONE_SYNCHRONIZATION_ID:
 				{
-					.server_time = timer,
-					.server_time_2 = timer,
-					.unk_time = timer + 2,
-				};
+					if (session_state->is_synced == FALSE)
+					{
+						packet_kind = Zone_Packet_Kind_Synchronization;
+						printf("[Zone] Handling Synchronization\n");
+
+						session_state->is_synced = TRUE;
+
+						Zone_Packet_Synchronization sync_packet =
+						{
+							.server_time = timer64,
+							.server_time_2 = timer64,
+							.unk_time = timer64 + 2,
+						};
 			
-			zone_packet_send(4, server_state, session_state, &server_state->arena_per_tick, sizeof(sync_packet), Zone_Packet_Kind_Synchronization, &sync_packet);
+						zone_packet_send(4, server_state, session_state, &server_state->arena_per_tick, sizeof(sync_packet), Zone_Packet_Kind_Synchronization, &sync_packet);
+
+						break;
+					}
+				}
+
+				return;
 			}
 
-			return;
 		}
 		case packet_channel_5:
 		{
