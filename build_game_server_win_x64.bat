@@ -38,7 +38,7 @@ pushd build_game_server_win_x64
 
 
 cl /nologo /Fe:schema_tool.exe /Od /Zi /FC "..\src\schema_tool.c" /link /debug:full
-schema_tool.exe ..\schema\client_protocol_1080.schm ..\schema\output\client_protocol_1080.c
+schema_tool.exe ..\schema\client_protocol_1087.schm ..\schema\output\client_protocol_1087.c
 
 echo LOCKED > .reload-lock
 cl /Fe:game_server_module.dll "..\src\h1z1_game_server.c"   !FLAGS_COMPILE_D! !DEFINES_D! /LD  /link !FLAGS_LINK_D!                    !LIBS_D!

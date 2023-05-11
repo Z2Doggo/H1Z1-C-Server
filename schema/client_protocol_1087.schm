@@ -1,0 +1,2985 @@
+group Zone
+
+packet 0x1 BaseServerPacket
+
+packet 0x2 ClientFinishedLoading
+
+packet 0x3 SendSelfToClient
+stream:u32 payload_self
+{
+	u64        guid
+	u64        character_id
+	uint2b     transient_id
+	u64 	   last_login_date
+	u32        actor_model_id
+	string:u32 head_actor
+	string:u32 hair_model
+	u32        hair_tint
+	u32        eye_tint
+	string:u32 unk_string_2
+	string:u32 unk_string_31
+	string:u32 unk_string_4
+	u32 			 head_id
+	u32				 unk_u32_3
+	u32				 faction_id
+	u32				 unk_u32_4
+	u32				 unk_u32_5
+	vec4       position
+	vec4       rotation
+
+	// NOTE(rhett): identity
+	u32        unk_u32_iden
+	u32        unk_u32_iden_2
+	u32        unk_u32_iden_3
+	string:u32 character_first_name
+	string:u32 character_last_name
+	string:u32 unk_string_iden
+	string:u32 character_name
+	u64 unk_qword_1
+	// NOTE(rhett): end identity
+
+	u32 unk_u32_6
+
+	list:u32 currencies
+	{
+		u32 currency_id
+		u32 quantity
+	}
+
+	u64 creation_date
+	u32 unk_u32_7
+	u32 unk_u32_8
+	u8  unk_bool
+	u8  is_respawning
+	u32 unk_u32_9
+	u32 unk_u32_10
+	u8  unk_bool_3
+	u32 unk_u32_11
+	u32 gender1
+	u32 unk_u32_12
+	u32 unk_u32_13
+	u32 unk_u32_14
+	u64 unk_time1
+	u64 unk_time2_2
+	u32 unk_u32_15
+	u8 unk_bool_5
+	u32 unk_u32_16
+
+	// NOTE(rhett): profiles
+	list:u32 profiles
+	{
+		u32 profile_id
+		u32 name_id1
+		u32 description_id
+		u8 type
+		u32 unk_dword_1
+		u32 icon_id
+		u32 unk_u32
+		u32 unk_u32_2
+		u8  unk_byte_1
+		u8  unk_byte_2
+		u32 unk_u32_4
+
+		list:u32 profile_item_class_data
+		{
+			// TODO(rhett): some kind of id?
+			u32 unk_u32
+
+			// TODO(rhett): maybe a pair of u32s
+			u32 unk_u32_2
+			u32 unk_u32_3
+		}
+
+		u32 unk_u32_5
+		u32 unk_u32_6
+		u8  unk_u8
+		f32 unk_f32
+		f32 unk_f32_2
+		f32 unk_f32_3
+		u32 unk_u32_7
+		f32 unk_f32_4
+		u32 unk_u32_8
+		u32 unk_u32_9
+		u32 unk_u32_10
+		u32 unk_u32_11
+		u32 unk_u32_12
+	}
+
+	u32 current_profile
+
+	list:u32 unk_list
+	{
+		i32 unk_list_unk_u32
+		i32 unk_list_unk_u32_2
+	}
+
+	list:u32 collections
+	{
+		u32 unk_u32_1
+		u32 unk_u32_2
+		u32 unk_u32_3
+		u32 unk_u32_4
+		u32 unk_u32_5
+		u32 unk_u32_6
+		u32 unk_u32_7
+
+			u8 unk_bool_11	
+			
+			list:u32 currencies_21
+			{
+				u32 currency_id
+				u32 quantity
+			}
+
+			u32 unk_dword_21
+			u32 unk_dword_22
+			u32 unk_dword_31
+			u32 unk_dword_41
+			u32 unk_dword_51
+			u32 unk_dword_61
+			u64 time3
+			u64 character_id
+			u32 name_id2
+			u32 unk_dword_71
+			u32 image_set_id
+			u32 entries_array_length
+
+			// doggo's comment: on the h1emu server, the array for entries is commented out and not used but still works fine zoning into just survive
+			u32 unk_dword_81	
+
+		list:u32 unk_array_21
+		{
+			u32 unk_dword_32
+
+			u32 unk_dword_42
+			u32 unk_dword_23
+			u32 unk_dword_33
+			u32 unk_dword_43
+			u32 unk_dword_52
+			u32 unk_dword_62
+			u32 unk_dword_72
+			u8 unk_bool_12
+			
+		}
+	}
+
+	// NOTE(rhett): Inventory
+		list:u32 items1
+		{
+			u32 item_def_id1
+			u32 tint_id
+			u64 guid
+			u32 count
+
+				u64 unk_qword_21
+				u32 unk_dword_53
+				u32 unk_dword_24
+			
+
+			u64 container_guid
+			u32 container_def_id
+			u32 container_slot_id
+			u32 base_durability
+			u32 current_durability
+			u32 max_durability_from_def
+			u8 unk_bool_13
+			u64 owner_character_id
+			u32 unk_dword_9
+		}
+				u8 unk_bool_14
+			
+				list:u32 ammo_slots1
+				{
+					u32 ammo_slot
+				}
+
+				list:u32 fire_groups1
+				{
+					u32 fire_group_id
+
+					list:u32 unk_array_1
+					{
+						u8 unk_byte_2
+						u32 unk_dword_63
+						u32 unk_dword_25
+						u32 unk_dword_34
+					}
+				}
+				u8 equipment_slot_id1
+				u8 unk_byte_2
+				u32 unk_dword_73
+				u8 unk_byte_31
+				i8 unk_byte_4
+				i8 unk_byte_5
+				f32 unk_float_1
+				u8 unk_byte_6
+				u32 unk_dword_26
+				u8 unk_byte_7
+				i32 unk_dword_35
+			
+			list:u32 character_stats1
+			{
+				u32 stat_id11
+
+				
+					u32 stat_id22
+
+					// NOTE(doggo): either 2 floats in stat_value or 2 u32's
+					switch:u8 variable_u8_1
+					{
+						case 0 vartype_1
+						u32 base
+						u32 modifier
+
+						case 1 vartype_2
+						f32 base
+						f32 modifier
+					}
+				
+			}
+			list:u32 unk_array_221
+			{
+				i32 unk_dword_82
+
+					list:u32 unk_array_23
+					{
+						i32 unk_dword_9
+
+						list:u32 stats2
+						{
+							u32 stat_id33
+
+								u32 stat_id44
+
+								// NOTE(doggo): either 2 floats in stat_value or 2 u32's
+								switch:u8 variable_u8_2
+								{
+									case 0 vartype_3
+									u32 base
+									u32 modifier
+
+									case 1 vartype_4
+									f32 base
+									f32 modifier
+								}
+							
+						}
+					}
+				
+			}
+		
+
+		u32 unk_dword_10
+	
+	u32 gender2
+
+	// NOTE(rhett): character quests block
+		list:u32 quests
+		{
+			u32 unk_dword_11
+			u32 unk_dword_27
+			u32 unk_dword_36
+			u32 unk_dword_44
+			u8 unk_bool_15
+			u64 unk_guid_1
+			u32 unk_dword_54
+			u8 unk_bool_2
+			u32 unk_dword_64
+
+				u8 unk_bool_16	
+			
+				list:u32 currencies_22
+				{
+					u32 currency_id
+					u32 quantity
+				}
+
+				u32 unk_dword_12
+				u32 unk_dword_28
+				u32 unk_dword_37
+				u32 unk_dword_45
+				u32 unk_dword_55
+				u32 unk_dword_65
+				u64 time4
+				u64 character_id
+				u32 name_id3
+				u32 unk_dword_74
+				u32 image_set_id
+				u32 entries_array_length
+
+				// doggo's comment: on the h1emu server, the array for entries is commented out and not used but still works fine zoning into just survive
+				u32 unk_dword_83
+			
+			list:u32 unk_array_31
+			{
+				u32 unk_dword_13
+					u32 unk_dword_14
+					u32 unk_dword_29
+					u32 unk_dword_38
+					u8 unk_bool_17
+
+						u8 unk_bool_18	
+			
+						list:u32 currencies_23
+						{
+							u32 currency_id
+							u32 quantity
+						}
+
+						u32 unk_dword_15
+						u32 unk_dword_210
+						u32 unk_dword_39
+						u32 unk_dword_46
+						u32 unk_dword_56
+						u32 unk_dword_66
+						u64 time5
+						u64 character_id
+						u32 name_id4
+						u32 unk_dword_75
+						u32 image_set_id
+						u32 entries_array_length
+
+						// doggo's comment: on the h1emu server, the array for entries is commented out and not used but still works fine zoning into just survive
+						u32 unk_dword_84
+					
+					u32 unk_dword_47
+					u32 unk_dword_57
+					u32 unk_dword_67
+					u32 unk_dword_76
+					u8 unk_bool_2
+					u32 unk_dword_85
+					u32 unk_dword_9
+						u32 unk_dword_16
+						u32 unk_dword_211
+						u32 unk_dword_310
+						u32 unk_dword_48
+					
+				
+			}
+			u32 unk_dword_77
+			u8 unk_bool_3
+			u8 unk_bool_4
+		}
+		u32 unk_dword_17
+		u32 unk_dword_212
+		u8 unk_bool_19
+		u32 unk_dword_311
+		u32 unk_dword_49
+	
+
+	// NOTE(rhett): achievements block
+	list:u32 achievements
+	{
+		u32 achievement_id
+		u32 unk_bool_110
+		u32 name_id5
+		u32 description_id
+		u64 time6_started
+		u64 time7_finished
+		f32 progress
+		list:u32 objectives
+		{
+			u32 index
+				u32 objective_id
+				u32 name_id6
+				u32 description_id
+
+					u8 unk_bool_111	
+			
+					list:u32 currencies_24
+					{
+						u32 currency_id
+						u32 quantity
+					}
+
+					u32 unk_dword_18
+					u32 unk_dword_213
+					u32 unk_dword_312
+					u32 unk_dword_410
+					u32 unk_dword_58
+					u32 unk_dword_68
+					u64 time8
+					u64 character_id
+					u32 name_id7
+					u32 unk_dword_78
+					u32 image_set_id
+					u32 entries_array_length
+
+					// doggo's comment: on the h1emu server, the array for entries is commented out and not used but still works fine zoning into just survive
+					u32 unk_dword_86
+				
+				u8 unk_byte_32
+				u32 unk_dword_313
+				u32 unk_dword_411
+				u8 unk_byte_2
+				u8 unk_byte_33
+
+					u32 unk_dword_19
+					u32 unk_dword_214
+					u32 unk_dword_314
+					u32 unk_dword_412
+				
+				u8 unk_byte_4
+			
+			u32 icon_id
+			u32 unk_dword_59
+			u32 unk_dword_69
+			u32 points
+			u32 unk_dword_87
+			u8 unk_bool_2
+			u32 unk_dword_9
+		}
+	}
+	// NOTE(rhett): end achievements block
+
+	list:u32 acquaintances
+	{
+		u64 unk_guid_1
+		string:u32 unk_string_1
+		u32 unk_dword_2150
+		u64 unk_guid_2
+		u8 unk_bool_112
+	}
+
+	list:u32 recipes
+	{
+		u32 recipe_id
+		u32 name_id8
+		u32 icon_id
+		u32 unk_dword_2161
+		u32 description_id
+		u32 unk_dword_217
+		u32 bundle_count
+		u8 member_only
+		u32 filter_id
+		list:u32 components
+		{
+			u32 unk_dword_2182
+			u32 name_id9
+			u32 icon_id
+			u32 unk_dword_219
+			u32 description_id
+			u32 req_amount
+			u64 unk_qword_3
+			u32 unk_dword_315
+			u32 item_def_id2_1
+		}
+		u32 item_def_id3_2
+	}
+
+	list:u32 mounts
+	{
+		u32 unk_dword_2203
+		u32 unk_dword_221
+		u32 unk_dword_316
+		u64 unk_qword_4
+		u8 unk_bool_113
+		u32 unk_dword_413
+		string:u32 unk_string_2
+	}
+
+	// NOTE(rhett): coin store data block
+	u8 send_first_time9_events
+
+	// NOTE(rhett): CoinStoreData block 1
+		list:u32 unk_array_41
+		{
+			u32 unk_dword_2224
+		}
+	
+	// NOTE(rhett): end CoinStoreData block 1
+
+	// NOTE(rhett): end coin store data block
+
+	list:u32 unk_array_24
+	{
+		u32 unk_dword_2235
+	}
+
+	list:u32 unk_effect_array
+	{
+			u32 unk_dword_2246
+			u32 unk_dword_225
+			u32 unk_dword_317
+			u32 unk_dword_414
+			u32 unk_dword_510
+			u32 unk_dword_610
+			u32 unk_dword_79
+			u32 unk_dword_88
+			u32 unk_dword_9
+			u32 unk_dword_22670
+			u32 unk_dword_22781
+			u64 unk_qword_51
+			u64 unk_qword_22
+			u64 unk_qword_3
+			u64 unk_qword_4
+			u32 unk_dword_22892
+			u32 unk_dword_31803
+			u32 unk_dword_31914
+			u32 unk_dword_32025
+			u32 unk_dword_32136
+			u32 unk_dword_32247
+			u32 unk_dword_32358
+			u64 unk_qword_52
+			u32 unk_dword_32469
+			u32 unk_dword_2290
+			u8 unk_byte_4
+			u32 unk_dword_2301
+			u64 unk_qword_6
+			u64 unk_qword_7
+			u32 unk_dword_2312
+			u64 unk_qword_8
+			u32 unk_dword_2323
+		
+		u32 unk_dword_3257
+		u8 unk_bool_114
+		u32 unk_dword_233
+		u32 unk_dword_326
+
+		list:u32 unk_array_51
+		{
+			u32 unk_dword_3278
+		}
+	}
+
+	list:u32 stats3
+	{
+		u32 stat_id55
+
+			u32 stat_id66
+
+			// NOTE(doggo): either 2 floats in stat_value or 2 u32's
+			switch:u8 variable_u8_3
+			{
+				case 0 vartype_5
+				u32 base_1
+				u32 modifier_1
+
+				case 1 vartype_6
+				f32 base_2
+				f32 modifier_2
+			}
+		
+	}
+
+	// NOTE(rhett): player titles block
+	list:u32 player_titles
+	{
+		u32 title_id
+		u32 title_type
+		u32 string_id
+	}
+
+	u32 current_player_title
+	// NOTE(rhett): end player titles block
+
+	// NOTE(rhett): unk_array_63 block
+	list:u32 unk_array_73
+	{
+		u32 unk_dword_3289
+		u32 unk_dword_234
+	}
+	// NOTE(rhett): end unk_array_83 block
+
+	list:u32 unk_array_94
+	{
+		u32 unk_dword_4150
+	}
+
+	u32 unk_u32_18
+
+	// NOTE(rhett): fire_modes_1 block
+	list:u32 fire_modes_1
+	{
+		u32 fire_mode_id
+	}
+	// NOTE(rhett): end fire_modes_1 block
+
+	// NOTE(rhett): fire_modes_2 block
+	list:u32 fire_modes_2
+	{
+		u32 fire_mode_id
+	}
+	// NOTE(rhett): end fire_modes_2 block
+
+	// NOTE(rhett): unk_array_107 block
+	list:u32 unk_array_117
+	{
+		u8 unk_bool_115
+	}
+	// NOTE(rhett): end unk_array_127 block
+
+	u32 unk_u32_19
+	u32 unk_u32_20
+
+	// NOTE(rhett): unk block 2
+
+
+		list:u32 unk_array_13
+		{
+			u32 unk_dword_4161
+
+			
+				u32 unk_dword_4172
+
+				list:u32 unk_array_14
+				{
+					u32 unk_dword_4183
+					u32 unk_dword_235
+					u32 unk_dword_329
+				}
+			u32 unk_dword_236
+			u32 unk_dword_330
+			u8 unk_byte_5
+			
+		}
+		list:u32 unk_array_25
+		{
+			u32 unk_dword_4194
+			
+				u32 unk_dword_4205
+				list:u32 unk_array_15
+				{
+					u32 unk_dword_4216
+					u32 unk_dword_237
+					u32 unk_dword_331
+				}
+				u32 unk_dword_238
+				u32 unk_dword_332
+				u8 unk_byte_6
+			
+		}
+		list:u32 unk_array_32
+		{
+			u32 unk_dword_4227
+			u32 unk_dword_239
+		}
+	
+		list:u32 ability_lines_1
+		{
+			u32 ability_line_id1
+				u32 ability_line_id2
+				u32 ability_id
+				u32 ability_line_index
+			
+		}
+		list:u32 ability_lines_2
+		{
+			u32 ability_line_id3
+				u32 ability_line_id4
+				u32 ability_id
+				u32 ability_line_index
+			
+		}		
+		list:u32 ability_lines_3
+		{
+			u32 ability_line_id5
+				u32 ability_line_id6
+				u32 ability_id
+				u32 ability_line_index
+		}
+		list:u32 ability_lines_4
+		{
+			u32 ability_line_id7
+				u32 ability_line_id8
+				u32 ability_id
+				u32 ability_line_index
+		}
+		u32 unk_dword_4238
+		u32 unk_dword_240
+		list:u32 unk_array_16
+		{
+			u32 unk_dword_4249
+				u32 unk_dword_5110
+				u32 unk_dword_241
+				u32 unk_dword_333
+				u64 unk_guid_1
+				u64 unk_guid_2
+			
+		}
+		list:u32 unk_array_261
+		{
+			u32 unk_dword_5121
+				u32 unk_dword_5132
+				u32 unk_dword_242
+				u32 unk_dword_334
+				u64 unk_guid_1
+			
+		}
+		list:u32 unk_array_33
+		{
+			u32 unk_dword_5143
+			u32 unk_dword_243
+		}
+		list:u32 unk_array_42		
+		{
+			u32 unk_dword_5154
+			u32 unk_dword_244
+		}
+	
+
+		list:u32 unk_array_17
+		{
+			u32 unk_dword_5165
+				u32 unk_dword_5176
+				u32 unk_dword_245
+				u64 unk_qword_6
+			
+			u32 unk_dword_246
+		}
+		list:u32 unk_array_271
+		{
+			u32 unk_dword_5187
+			u8 unk_byte_7
+					u32 unk_dword_5198
+					u32 unk_dword_247
+					u64 unk_qword_7
+				
+				u32 unk_dword_5209
+				u8 unk_byte_8
+			
+		}
+		u8 unk_byte_9
+	
+
+	// NOTE(rhett): unk block 3
+		u32 unk_dword_6110
+			u32 unk_dword_6121
+			u32 unk_dword_248
+			u32 unk_dword_335
+		
+			u32 unk_dword_6132
+			u32 unk_dword_249
+			u32 unk_dword_336
+		
+		u32 unk_dword_6143
+	
+
+	u32 unk_dword_3377
+
+		u64 unk_qword_8
+				u32 unk_dword_6154
+				u32 unk_dword_250
+				u64 unk_qword_9
+			
+			u64 unk_qword_10
+			u32 unk_dword_6165
+			u32 unk_dword_251
+			u32 unk_dword_338
+
+			
+				u32 unk_dword_6176
+				u32 unk_dword_252
+				u32 unk_dword_339
+				u32 unk_dword_425
+			
+			string:u32 unk_string_32
+		
+		u8 unk_byte_10
+	
+
+	list:u32 unk_array_188
+	{
+		u32 unk_dword_6187
+		u32 unk_dword_253
+	}
+
+
+		u32 unk_dword_6198
+		u32 unk_dword_254
+		u32 unk_dword_340
+		u32 unk_dword_426
+		u32 unk_dword_521
+	
+
+	list:u32 unk_array_199
+	{
+		u32 unk_dword_6209
+		u32 unk_dword_255
+		u32 unk_dword_341
+	}
+
+	list:u32 unk_array_280
+	{
+		u32 unk_dword_7100
+		u64 unk_qword_11
+		u32 unk_dword_256
+		u32 unk_dword_342
+	}
+
+	list:u32 unk_array_291
+	{
+		u32 unk_dword_7111
+		u64 unk_guid_1
+
+		list:u32 unk_array_2100
+		{
+			u32 unk_dword_7122
+			u32 unk_dword_257
+		}
+	}
+
+	list:u32 unk_array_2112
+	{
+		u64 unk_qword_12
+			u64 unk_qword_13
+			u32 unk_dword_7133
+
+				u32 unk_dword_7144
+				u32 unk_dword_258
+				u32 unk_dword_343
+			
+
+				u32 unk_dword_7155
+				u32 unk_dword_259
+				u32 unk_dword_344
+
+				u64 unk_qword_14
+				u32 unk_dword_7166
+				u64 unk_qword_23
+			
+
+				u64 unk_qword_15
+				u64 unk_qword_24
+				vec4 unk_vec4_1
+			
+
+				u32 unk_dword_7177
+				u32 unk_dword_260
+				u32 unk_dword_345
+			
+			u32 unk_dword_261
+			u8 unk_byte_11
+		}
+	
+
+	// NOTE(rhett): unk block_5
+	list:u32 unk_array_2122
+	{
+		u64 unk_qword_16
+
+			u64 unk_qword_17
+			u32 unk_dword_7188
+			u32 unk_dword_262
+			u32 unk_dword_346
+			u64 unk_qword_25
+			u32 unk_dword_427
+		
+	}
+
+	list:u32 equipment_slots
+	{
+		u32 unk_dword_7199
+		
+			u32 unk_dword_890
+			string:u32 unk_string_4
+			string:u32 unk_string_2
+
+
+				u32 equipment_slot_id2
+
+
+					u32 equipment_slot_id3
+					u64 guid
+					string:u32 tint_alias
+					string:u32 decal_alias
+				
+			
+		
+	}
+
+	list:u32 unk_array_2135
+	{
+		u32 unk_dword_8101
+
+
+			u32 unk_dword_8112
+			u32 unk_dword_263
+			u32 unk_dword_347
+			u32 unk_dword_428
+			u32 unk_dword_522
+			u32 unk_dword_621
+			u32 unk_dword_720
+		
+	}
+
+
+		u32 unk_dword_8123
+		u32 unk_dword_264
+		u32 unk_dword_348
+		u32 unk_dword_429
+		u32 unk_dword_523
+	
+
+
+		u32 unk_dword_8134
+		u32 unk_dword_265
+		u32 unk_dword_349
+	
+
+	list:u32 implant_slots
+	{
+		u32 unk_dword_8145
+		u32 unk_dword_266
+
+				u32 unk_dword_8156
+				u32 unk_dword_267
+				u64 unk_qword_18
+			
+			u32 unk_dword_8167
+			u32 unk_dword_268
+			u32 unk_dword_350
+		
+	}
+
+		list:u32 unk_array_2141
+		{
+			u64 unk_qword_19
+
+				u64 unk_qword_260
+				u32 unk_dword_8178
+				u32 unk_dword_269
+				u32 unk_dword_351
+			
+		}
+		list:u32 unk_array_215
+		{
+			u64 unk_qword_271
+			u32 unk_dword_8189
+			u32 unk_dword_270
+		}
+		list:u32 unk_array_34
+		{
+			u64 unk_qword_282
+			u64 unk_qword_29
+			u32 unk_dword_90
+		}
+	
+
+	list:u32 unk_array_2166
+	{
+		u64 unk_qword_2103
+
+				u64 unk_qword_2114
+				u32 unk_dword_91
+				u32 unk_dword_271
+				u32 unk_dword_352
+			
+			u64 unk_qword_2125
+			u32 unk_dword_92
+		
+	}
+
+			u32 unk_dword_93
+			u32 unk_dword_272
+			u64 unk_qword_2136
+			u64 unk_qword_214
+		
+		list:u32 unk_array_2172
+		{
+			u32 unk_dword_94
+
+				u32 unk_dword_95
+				u32 unk_dword_273
+				u64 unk_qword_2157
+				u64 unk_qword_216
+			
+			u32 unk_dword_274
+		}
+
+			u32 unk_dword_96
+			u32 unk_dword_275
+			u64 unk_qword_2178
+		
+		list:u32 unk_array_218
+		{
+			u32 unk_dword_97
+			
+				
+					u32 unk_dword_98
+					u32 unk_dword_276
+					u64 unk_qword_2189
+				
+				u32 unk_dword_99
+				u32 unk_dword_277
+				u8 unk_byte_12
+			
+		}
+		list:u32 unk_array_35
+		{
+			u32 unk_dword_100
+
+					u32 unk_dword_101
+					u32 unk_dword_278
+					u64 unk_qword_30
+				
+				u32 unk_dword_102
+				u32 unk_dword_279
+				u8 unk_byte_13
+			
+		}
+		u8 unk_byte_14
+	
+		u32 unk_dword_103
+		u32 unk_dword_280
+		string:u32 unk_string_5
+
+		list:u32 unk_array_2193
+		{
+			u32 unk_dword_104
+
+				u32 unk_dword_105
+				u64 unk_qword_31
+				u32 unk_dword_281
+				u8 unk_byte_15
+			
+		}
+		list:u32 unk_array_2220
+		{
+			u32 unk_dword_106
+			u32 unk_dword_282
+			u32 unk_dword_353
+		}
+		list:u32 unk_array_36
+		{
+			u32 unk_dword_107
+			u32 unk_dword_283
+			string:u32 unk_string_6
+			list:u32 unk_array_22314
+			{
+				u32 unk_dword_108
+
+					u32 unk_dword_109
+					u64 unk_qword_32
+					u32 unk_dword_284
+					u8 unk_byte_16
+				
+			}
+			list:u32 unk_array_2242
+			{
+				u32 unk_dword_110
+				u32 unk_dword_285
+				u32 unk_dword_354
+			}
+		}
+	
+
+
+		u32 loadout_id
+
+			list:u32 loadout_slots_array
+			{
+				u32 hotbar_slot_id
+					u32 loadout_id
+					u32 slot_id
+					
+						u32 item_def_id4
+						u64 loadout_item_guid
+						u8 unk_byte_17
+					
+					u32 unk_dword_111
+				
+			}
+
+			u32 current_slot_id
+		
+	
+
+	list:u32 unk_array_22537
+	{
+		u32 unk_dword_112
+		u32 unk_dword_286
+	}
+
+
+		list:u32 unk_array_22645
+		{
+
+				u32 unk_dword_113
+				u64 unk_qword_33
+				u8 unk_byte_18
+			
+			u32 unk_dword_114
+			u32 unk_dword_287
+			u32 unk_dword_355
+		}
+		list:u32 unk_array_2275
+		{
+				u32 unk_dword_115
+				u64 unk_qword_34
+				u8 unk_byte_19
+			
+			u32 unk_dword_116
+			u32 unk_dword_288
+			u32 unk_dword_356
+		}
+		list:u32 unk_array_37
+		{
+				u32 unk_dword_117
+				u64 unk_qword_35
+				u8 unk_byte_20
+			
+			u32 unk_dword_118
+			u32 unk_dword_289
+			u64 unk_qword_36
+		}
+		list:u32 unk_array_43
+		{
+
+				u32 unk_dword_119
+				u64 unk_qword_37
+				u8 unk_byte_21
+			
+					u32 unk_dword_120
+					u64 unk_qword_38
+					u8 unk_byte_22
+				
+					u32 unk_dword_121
+					u32 unk_dword_290
+					u32 unk_dword_357
+				
+				u32 unk_dword_122
+					u32 unk_dword_123
+					u32 unk_dword_291
+					vec4 unk_vec4_1
+				
+			
+		}
+		list:u32 unk_array_52
+		{
+
+				u32 unk_dword_124
+				u64 unk_qword_39
+				u8 unk_byte_23
+			
+
+
+					u32 unk_dword_125
+					u64 unk_qword_40
+					u8 unk_byte_24
+				
+				
+					u32 unk_dword_126
+					u32 unk_dword_292
+					u32 unk_dword_358
+				
+				u32 unk_dword_127
+				
+					u32 unk_dword_128
+					u32 unk_dword_293
+					vec4 unk_vec4_1
+				
+			
+		}
+	
+
+	list:u32 character_resources
+	{
+		u32 resource_type1
+			u32 resource_id
+			u32 resource_type2
+			list:u32 unk_array_22866
+			{
+				u32 unk_dword_129
+				u32 unk_dword_294
+				u32 unk_dword_359
+				u32 unk_dword_430
+			}
+			u32 value
+			u32 unk_dword_130
+			u32 unk_dword_295
+			u32 unk_dword_360
+			u32 unk_dword_431
+			u32 unk_dword_524
+			u32 unk_dword_622
+			u32 unk_dword_721
+			u32 unk_dword_819
+			u64 unk_qword_41
+			u64 unk_qword_219
+			u64 unk_qword_3
+			u64 unk_qword_4
+			u64 unk_qword_53
+			u8 unk_byte_25
+			u8 unk_byte_2
+		
+	}
+
+		u64 skill_points_granted
+		u64 skill_points_total
+		u64 skill_points_spent
+		u64 unk_qword_42
+		u64 unk_qword_220
+		u32 unk_dword_131
+	
+
+	list:u32 skills
+	{
+		u32 skill_line_id
+		u32 skill_id
+	}
+
+	list:u32 containers
+	{
+		u32 loadout_slot_id
+
+			u64 guid
+			u32 def_id
+			u64 associated_character_id
+			u32 slots
+			list:u32 items2
+			{
+				u32 item_def_id5
+				
+					u32 item_def_id6
+					u32 tint_id
+					u64 guid
+					u32 count
+
+						u64 unk_qword_43
+						u32 unk_dword_132
+						u32 unk_dword_296
+					
+
+					u64 container_guid
+					u32 container_def_id
+					u32 container_slot_id
+					u32 base_durability
+					u32 current_durability
+					u32 max_durability_from_def
+					u8 unk_bool_116
+					u64 owner_character_id
+					u32 unk_dword_9
+				
+				u8 show_bulk
+				u32 max_bulk
+				u32 unk_dword_133
+				u32 bulk_used
+				u8 has_bulk_limit
+			}
+		
+	}
+
+	list:u32 unk_array_22978
+	{
+		u32 unk_dword_134
+		u32 unk_dword_297
+		u32 unk_dword_361
+
+		list:u32 currency
+		{
+			u32 currency_id
+			u32 quantity
+		}
+	}
+
+	list:u32 unk_array_221089
+	{
+		u32 unk_dword_135
+
+		list:u32 unk_array_221197
+		{
+			u32 unk_dword_136
+			u32 unk_dword_298
+		}
+	}
+
+	u8 quiz_complete
+	u64 unk_qword_44
+	u32 unk_dword_3628
+	u64 vehicle_loadout_related_qword
+	u64 unk_qword_3
+	u32 vehicle_loadout_related_dword
+	u32 unk_dword_4320
+	u8 is_admin
+	u8 first_person_only
+	u8 spectator_flags
+}
+
+packet 0x4 ClientIsReady
+
+packet 0x5 ZoneDoneSendingInitialData
+
+packet 0x6 ChatBase
+packet 0x6 0x1:u8 Chat_Chat
+u16 unk_u16
+u16 channel
+u64 character_id
+u64 character_id2
+
+u32 unk_u32
+u32 unk_u32_2
+u32 unk_u32_3
+string:u32 character_first_name
+string:u32 character_last_name
+string:u32 unk_string
+string:u32 character_name
+u64 unk_u64
+
+u32 unk_u32_4
+u32 unk_u32_5
+u32 unk_u32_6
+string:u32 character_first_name_2
+string:u32 character_last_name_2
+string:u32 unk_string_2
+string:u32 character_name_2
+u64 unk_u64_2
+ 
+string:u32 message
+vec4 position
+u64 unk_guid
+u32 unk_u32_7
+u32 color_1
+u32 color_2
+u8 unk_u8
+u8 unk_u8_2
+
+packet 0x6 0x5:u16 Chat_ChatText
+string:u32 message
+u32 unk_u32
+u32 color
+u32 unk_u32_2
+u8 unk_u8
+u8 unk_u8_2
+
+packet 0x7 ClientLogout
+packet 0x8 TargetClientNotOnline
+
+packet 0x9 CommandBase
+packet 0x9 0x1:u16 Command_ShowDialog
+packet 0x9 0x2:u16 Command_EndDialog
+packet 0x9 0x3:u16 Command_StartDialog
+packet 0x9 0x4:u16 Command_PlayerPlaySpeech
+packet 0x9 0x5:u16 Command_DialogResponse
+packet 0x9 0x6:u16 Command_PlaySoundAtLocation
+string:u32 unk_string
+u32 unk_u32
+u32 unk_u32_2
+u32 unk_u32_3
+
+packet 0x9 0x7:u16 Command_InteractRequest
+u64 character_id
+vec4 entity_position
+u8 is_instant
+
+packet 0x9 0x8:u16 Command_InteractCancel
+packet 0x9 0x9:u16 Command_InteractDebug
+packet 0x9 0xa:u16 Command_InteractionList
+packet 0x9 0xb:u16 Command_InteractionSelect
+u64 guid
+u32 interaction_id
+packet 0x9 0xc:u16 Command_InteractionStartWheel
+packet 0x9 0xd:u16 Command_InteractionComplete
+packet 0x9 0xe:u16 Command_StartFlashGame
+packet 0x9 0xf:u16 Command_SetProfile
+u32 profile_id
+u32 interaction_id
+packet 0x9 0x3f:u32 Command_AddWorldCommand
+string:u32 command
+packet 0x9 0x45:u32 Command_ItemDefinitionRequest
+u32 id
+packet 0x9 0x46:u32 Command_ItemDefinitionReply
+stream:u32 item_def_reply_1
+{
+	u8 bitflags1
+	u8 bitflags2
+	u32 name_id
+	u32 description_id
+	u32 content_id
+	u32 image_set_id
+	u32 tint_id
+	u32 hud_image_set_id
+	u32 unk_dword_1
+	u32 unk_dword_2
+	u32 cost
+	u32 item_class
+	u32 profile_override
+	string:u32 model_name
+	string:u32 texture_alias
+	u32 gender_usage
+	u32 item_type
+	u32 category_id
+	u32 weapon_trail_effect_id
+	u32 composite_effect_id
+	u32 power_rating
+	u32 min_profile_rank
+	u32 rarity
+	u32 activatable_ability_id
+	u32 activatable_ability_set_id
+	u32 passive_ability_id
+	u32 passive_ability_set_id
+	u32 max_stack_size
+	u32 min_stack_size
+	string:u32 tint_alias
+	u32 tint_group_id
+	u32 member_discount
+	u32 vip_rank_required
+	u32 race_set_id
+	u32 ui_model_camera_id_1
+	u32 equip_count_max
+	i32 curreny_type
+	u32 datasheet_id
+	u32 item_type_1
+	u32 skill_set_id
+	string:u32 overlay_texture
+	string:u32 decal_slot
+	u32 overlay_adjustment
+	u32 trial_duration_sec
+	u32 next_trial_delay_sec
+	u32 client_use_requirement
+	string:u32 override_appearance
+	u32 override_camera_id
+	u32 unk_dword_3
+	u32 unk_dword_4
+	u32 unk_dword_5
+	u32 bulk
+	u32 active_equip_slot_id
+	u32 passive_equip_slot_id
+	u32 passive_equip_slot_group_id
+	u32 unk_dword_6
+	u32 grinder_reward_set_id
+	u32 build_bar_group_id
+	string:u32 unk_string_1
+	b8 unk_bool_1
+	b8 is_armor
+	u32 unk_dword_7
+	u32 param1
+	u32 param2
+	u32 param3
+	string:u32 string_param1
+	u32 ui_model_camera_id_2
+	u32 unk_dword_8
+	i32 scrap_value_override
+
+	list:u32 stats_item_def_1
+	{
+		u32 unk_dword_9
+		u32 stat_id
+		f32 base
+		f32 modifier
+		u32 unk_dword_10
+	}
+}
+
+packet 0x9 0x47:u32 CommandItemDefinitions
+stream:u32 item_def_reply_2
+{
+	list:u32 item_defs
+	{
+	u32 defs_id
+
+	u8 bitflags1
+	////  X------- NO_TRADE
+	////  -X------ COMBAT_ONLY
+	////  --X----- NO_LIVE_GAMER
+	////  ---X---- SINGLE_USE
+	////  ----X--- NON_MINI_GAME
+	////  -----X-- MEMBERS_ONLY
+	////  ------X- NO_SALE
+	////  -------X FORCE_DISABLE_PREVIEW
+	
+	u8 bitflags2
+	////  X------- PERSIST_PROFILE_SWITCH
+	////  -X------ FLAG_QUICK_USE
+	////  --X----- FLAG_NO_DRAG_DROP
+	////  ---X---- FLAG_ACCOUNT_SCOPE
+	////  ----X--- FLAG_CAN_EQUIP
+	////  -----X-- bit5
+	////  ------X- bit6
+	////  -------X bit7
+	
+	u32 name_id
+	u32 description_id
+	u32 content_id
+	u32 image_set_id
+	u32 tint_id
+	u32 hud_image_set_id
+	u32 unk_dword_1
+	u32 unk_dword_2
+	u32 cost
+	u32 item_class
+	u32 profile_override
+	string:u32 model_name
+	string:u32 texture_alias
+	u32 gender_usage
+	u32 item_type
+	u32 category_id
+	u32 weapon_trail_effect_id
+	u32 composite_effect_id
+	u32 power_rating
+	u32 min_profile_rank
+	u32 rarity
+	u32 activatable_ability_id
+	u32 activatable_ability_set_id
+	u32 passive_ability_id
+	u32 passive_ability_set_id
+	u32 max_stack_size
+	u32 min_stack_size
+	string:u32 tint_alias
+	u32 tint_group_id
+	u32 member_discount
+	u32 vip_rank_required
+	u32 race_set_id
+	u32 ui_model_camera_id_1
+	u32 equip_count_max
+	i32 curreny_type
+	u32 datasheet_id
+	u32 item_type_1
+	u32 skill_set_id
+	string:u32 overlay_texture
+	string:u32 decal_slot
+	u32 overlay_adjustment
+	u32 trial_duration_sec
+	u32 next_trial_delay_sec
+	u32 client_use_requirement
+	string:u32 override_appearance
+	u32 override_camera_id
+	u32 unk_dword_3
+	u32 unk_dword_4
+	u32 unk_dword_5
+	u32 bulk
+	u32 active_equip_slot_id
+	u32 passive_equip_slot_id
+	u32 passive_equip_slot_group_id
+	u32 unk_dword_6
+	u32 grinder_reward_set_id
+	u32 build_bar_group_id
+	string:u32 unk_string_1
+	b8 unk_bool_1
+	b8 is_armor
+	u32 unk_dword_7
+	u32 param1
+	u32 param2
+	u32 param3
+	string:u32 string_param1
+	u32 ui_model_camera_id_2
+	u32 unk_dword_8
+	i32 scrap_value_override
+
+	list:u32 stats_item_def_2
+	{
+		u32 unk_dword_9
+		u32 stat_id
+		u32 base
+		u32 modifier
+		u32 unk_dword_10
+	}	
+	}
+}
+
+packet 0xa AdminBase
+packet 0xb ClientBeginZoning
+packet 0xc CombatBase
+packet 0xd ProjectileDebug
+packet 0xe MailBase
+
+packet 0xf CharacterBase
+packet 0xf 0x1:u16 Character_RemovePlayer
+u64 character_id
+u16 unk_u16
+u8 unk_u8
+u32 unk_u32
+u32 effect_delay
+u32 effect_id
+u32 sticky_effect_id
+u32 time_to_disappear
+
+packet 0xf 0x2:u16 Character_Knockback
+packet 0xf 0x3:u16 Character_UpdateHitpoints
+packet 0xf 0x4:u16 Character_PlayAnimation
+packet 0xf 0x5:u16 Character_UpdateScale
+u64 character_id
+vec4 scale
+packet 0xf 0x6:u16 Character_UpdateTemporaryAppearance
+packet 0xf 0x7:u16 Character_RemoveTemporaryAppearance
+packet 0xf 0x8:u16 Character_SetLookAt
+packet 0xf 0x9:u16 Character_RenamePlayer
+packet 0xf 0xA:u16 Character_UpdateCharacterState
+u64 character_id
+u8 state1
+u8 state2
+u8 state3
+u8 state4
+u8 state5
+u8 state6
+u8 state7
+u8 placeholder
+u32 game_time
+
+packet 0xf 0x20:u16 Character_WeaponStance
+u64 character_id
+u32 stance
+packet 0xf 0x3f:u16 Character_CharacterStateDelta
+u64 guid_1
+u64 guid_2
+u64 guid_3
+u64 guid_4
+u32 game_time
+packet 0xf 0x48:u16 Character_KilledBy
+string:u32 killer
+string:u32 killed
+u8 is_cheater
+
+packet 0x10 AbilityBase
+packet 0x11 ClientUpdateBase
+packet 0x11 0x1:u16 ClientUpdate_Hitpoints
+packet 0x11 0x2:u16 ClientUpdate_ItemAdd
+packet 0x11 0x3:u16 ClientUpdate_ItemUpdate
+packet 0x11 0x4:u16 ClientUpdate_ItemDelete
+packet 0x11 0x5:u16 ClientUpdate_UpdateStat
+packet 0x11 0x6:u16 ClientUpdate_CollectionStart
+packet 0x11 0x7:u16 ClientUpdate_CollectionRemove
+packet 0x11 0x8:u16 ClientUpdate_CollectionAddEntry
+packet 0x11 0x9:u16 ClientUpdate_CollectionRemoveEntry
+
+packet 0x11 0xa:u16 ClientUpdate_UpdateLocation
+vec4 position
+vec4 rotation
+u8 unk_bool
+u8 unk_u8_1
+u8 trigger_loading_screen
+		
+packet 0x11 0xb:u16 ClientUpdate_Mana
+packet 0x11 0xc:u16 ClientUpdate_UpdateProfileExperience
+packet 0x11 0xd:u16 ClientUpdate_AddProfileAbilitySetApl
+packet 0x11 0xe:u16 ClientUpdate_AddEffectTag
+packet 0x11 0xf:u16 ClientUpdate_RemoveEffectTag
+packet 0x11 0x10:u16 ClientUpdate_UpdateProfileRank
+packet 0x11 0x11:u16 ClientUpdate_CoinCount
+packet 0x11 0x12:u16 ClientUpdate_DeleteProfile
+packet 0x11 0x13:u16 ClientUpdate_ActivateProfile
+stream:u32 profile_payload
+{
+	u32 profile_id
+	u32 name_id
+	u32 desc_id
+	u8 type
+	u32 unk_dword_1
+	u32 ability_bg_image_set
+	u32 badge_image_set
+	u32 button_image_set
+	u8 unk_byte_1
+	u8 unk_byte_2
+	u32 unk_dword_2
+	
+	list:u32 unk_list_1
+	{
+		u32 unk_dword_3
+		u32 unk_dword_4
+		u32 unk_dword_5
+	}
+
+	u32 unk_dword_6
+	u32 unk_dword_7
+	u8 unk_byte_3
+	f32 unk_float_1
+	f32 unk_float_2
+	f32 unk_float_3
+	u32 unk_dword_8
+	f32 unk_float_4
+	u32 unk_dword_9
+	u32 unk_dword_10
+	u32 unk_dword_11
+	u32 unk_dword_12
+	u32 unk_dword_13
+}
+
+list:u32 attachment_list
+{
+	string:u32 model_name
+	string:u32 texture_alias
+	string:u32 tint_alias
+	string:u32 decal_alias
+	u32 unk_dword_1
+	u32 unk_dword_2
+	u32 effect_id
+	u32 slot_id
+	u32 unk_dword_3
+
+	list:u32 unk_list_1337
+	{
+		u32 unk_dword_4
+	}
+
+	u8 unk_bool_1
+}
+
+u32 unk_dword_1
+u32 unk_dword_2
+u32 actor_model_id
+string:u32 tint_alias
+string:u32 decal_alias
+
+packet 0x11 0x14:u16 ClientUpdate_AddAbility
+packet 0x11 0x15:u16 ClientUpdate_NotifyPlayer
+packet 0x11 0x16:u16 ClientUpdate_UpdateProfileAbilitySetApl
+packet 0x11 0x17:u16 ClientUpdate_RemoveActionBars
+packet 0x11 0x18:u16 ClientUpdate_UpdateActionBarSlot
+
+packet 0x11 0x19:u16 ClientUpdate_DoneSendingPreloadCharacters
+b8 is_done
+
+packet 0x11 0x1a:u16 ClientUpdate_SetGrandfatheredStatus
+packet 0x11 0x1b:u16 ClientUpdate_UpdateActionBarSlotUsed
+packet 0x11 0x1c:u16 ClientUpdate_PhaseChange
+packet 0x11 0x1d:u16 ClientUpdate_UpdateKingdomExperience
+packet 0x11 0x1e:u16 ClientUpdate_UpdatePacketDamageInfo
+packet 0x11 0x1f:u16 ClientUpdate_RespawnLocations
+u8 unk_flags
+list:u32 locations1
+{
+	u64 guid
+	u8 respawn_type
+	vec4 position
+	u32 unk_dword_1
+	u32 unk_dword_2
+	u32 icon_id_1
+	u32 icon_id_2
+	u32 respawn_total_time
+	u32 respawn_time_ms
+	u32 name_id
+	f32 distance
+	u8 unk_byte_1
+	u8 unk_byte_2
+
+	// begin unk_schema_1
+	u8 unk_byte_3
+	u8 unk_byte_4
+	u8 unk_byte_5
+	u8 unk_byte_6
+	u8 unk_byte_7
+	// end unk_schema_1
+
+	u32 unk_dword_3
+	u8 unk_byte_8
+	u8 unk_byte_9
+}
+
+u32 unk_dword_1
+u32 unk_dword_2
+
+list:u32 locations2
+{
+	u64 guid
+	u8 respawn_type
+	vec4 position
+	u32 unk_dword_1
+	u32 unk_dword_2
+	u32 icon_id_1
+	u32 icon_id_2
+	u32 respawn_total_time
+	u32 respawn_time_ms
+	u32 name_id
+	f32 distance
+	u8 unk_byte_1
+	u8 unk_byte_2
+
+	// begin unk_schema_2
+	u8 unk_byte_3
+	u8 unk_byte_4
+	u8 unk_byte_5
+	u8 unk_byte_6
+	u8 unk_byte_7
+	// end unk_schema_2
+
+	u32 unk_dword_3
+	u8 unk_byte_8
+	u8 unk_byte_9
+}
+
+packet 0x11 0x20:u16 ClientUpdate_ModifyMovementSpeed
+packet 0x11 0x21:u16 ClientUpdate_ModifyTurnRate
+packet 0x11 0x22:u16 ClientUpdate_ModifyStrafeSpeed
+packet 0x11 0x23:u16 ClientUpdate_UpdateManagedLocation
+packet 0x11 0x24:u16 ClientUpdate_ManagedMovementVersion
+packet 0x11 0x25:u16 ClientUpdate_UpdateWeaponAddClips
+packet 0x11 0x26:u16 ClientUpdate_SpotProbation
+packet 0x11 0x27:u16 ClientUpdate_DailyRibbonCount
+packet 0x11 0x29:u16 ClientUpdate_DespawnNpcUpdate
+packet 0x11 0x2a:u16 ClientUpdate_LoyaltyPoints
+packet 0x11 0x2b:u16 ClientUpdate_ResetMissionRespawnTimer
+packet 0x11 0x2c:u16 ClientUpdate_Freeze
+packet 0x11 0x2d:u16 ClientUpdate_InGamePurchaseResult
+packet 0x11 0x2e:u16 ClientUpdate_QuizComplete
+packet 0x11 0x2f:u16 ClientUpdate_StartTimer
+packet 0x11 0x30:u16 ClientUpdate_CompleteLogoutProcess
+packet 0x11 0x31:u16 ClientUpdate_ProximateItems
+
+packet 0x11 0x32:u16 ClientUpdate_TextAlert
+string message
+
+packet 0x11 0x33:u16 ClientUpdate_ClearEntitlementValues
+packet 0x11 0x34:u16 ClientUpdate_AddEntitlementValue
+
+packet 0x11 0x35:u16 ClientUpdate_NetworkProximityUpdatesComplete
+
+packet 0x11 0x36:u16 ClientUpdate_FileValidationRequest
+packet 0x11 0x37:u16 ClientUpdate_FileValidationResponse
+packet 0x11 0x38:u16 ClientUpdate_DeathMetrics
+packet 0x11 0x3c:u16 ClientUpdate_SetCurrentAdventure
+packet 0x11 0x3d:u16 ClientUpdate_CharacterSlot
+packet 0x11 0x39:u16 ClientUpdate_ManagedObjectRequestControl
+packet 0x11 0x3a:u16 ClientUpdate_ManagedObjectResponseControl
+packet 0x11 0x3b:u16 ClientUpdate_ManagedObjectReleaseControl
+packet 0x11 0x3e:u16 ClientUpdate_CustomizationData
+packet 0x11 0x3f:u16 ClientUpdate_UpdateCurrency
+packet 0x11 0x40:u16 ClientUpdate_AddNotifications
+packet 0x11 0x41:u16 ClientUpdate_RemoveNotifications
+packet 0x11 0x42:u16 ClientUpdate_NpcRelevance
+packet 0x11 0x43:u16 ClientUpdate_InitiateNameChange
+packet 0x11 0x44:u16 ClientUpdate_NameChangeResult
+packet 0x11 0x45:u16 ClientUpdate_MonitorTimeDrift
+u32 time_drift
+
+packet 0x11 0x46:u16 ClientUpdate_NotifyServerOfStalledEvent
+packet 0x11 0x47:u16 ClientUpdate_UpdateSights
+packet 0x11 0x49:u16 ClientUpdate_UpdateRewardAndGrinderState
+packet 0x11 0x4b:u16 ClientUpdate_UpdateActivityMetrics
+packet 0x11 0x4c:u16 ClientUpdate_StopWithError
+packet 0x11 0x4d:u16 ClientUpdate_SetWorldWipeTimer
+packet 0x11 0x4e:u16 ClientUpdate_UpdateLockoutTimes
+packet 0x11 0x4f:u16 ClientUpdate_ZoneStatus
+packet 0x11 0x50:u16 ClientUpdate_SetDataCenter
+packet 0x11 0x51:u16 ClientUpdate_UpdateBattlEyeRegistration
+
+packet 0x13 GroupsBase
+packet 0x14 EncounterBase
+packet 0x15 InventoryBase
+
+
+packet 0x16 SendZoneDetails
+string:u32	zone_name
+u32        	zone_type
+u8         	unk_bool
+f32 		unknownDword1
+f32 		fog_density
+f32 		fog_floor
+f32 		fog_gradient
+f32 		rain
+f32 		temp
+f32 		color_gradient
+f32 		unknown_dword8
+f32 		unknown_dword9
+f32 		unknown_dword10
+f32 		unknown_dword11
+f32 		unknown_dword12
+f32 		sun_axis_x
+f32 		sun_axis_y
+f32 		unknown_dword15
+f32 		disable_trees
+f32 		disable_trees1
+f32 		disable_trees2
+f32 		wind
+f32 		unknown_dword20
+f32 		unknown_dword21
+string:u32 	name
+f32 		unknown_dword22
+f32 		unknown_dword23
+f32 		unknown_dword24
+f32 		unknown_dword25
+f32 		unknown_dword26
+f32 		unknown_dword27
+f32 		unknown_dword28
+f32 		unknown_dword29
+f32 		ao_size
+f32 		ao_gamma
+f32 		ao_blackpoint
+f32 		unknown_dword33
+
+u32        	zone_id
+u32        	zone_id_2?
+u32        	name_id
+u8         	unk_bool2
+string:u32 	lighting
+u8         	unk_bool3
+u8         	unk_bool4
+
+packet 0x17 ReferenceDataBase
+
+packet 0x17 0x04:u16 ReferenceDataWeaponDefinitions
+stream:u32 weapon_byteswithlength
+{
+	list:u32 weapon_defs
+	{
+	u32 id1
+	u32 id2
+	u32 weapon_group_id
+	u8 flags1
+	u32 equip_ms
+	u32 unequip_ms
+	u32 from_passive_ms
+	u32 to_passive_ms
+	u32 xp_category
+	u32 to_iron_sights_ms
+	u32 from_iron_sights_ms
+	u32 to_iron_sights_anim_ms
+	u32 from_iron_sights_anim_ms
+	u32 sprint_recovery_ms
+	u32 next_use_delay_msec
+	f32 turn_rate_modifier
+	f32 movement_speed_modifier
+	u32 propulsion_type
+	u32 heat_bleed_off_rate
+	u32 heat_capacity
+	u32 overheat_penalty_ms
+	u32 range_string_id
+	
+	u32 melee_detect_width
+	u32 melee_detect_height
+
+	string:u32 anim_set_name
+	u32 vehicle_fp_camera_id
+	u32 vehicle_tp_camera_id
+	u32 overheat_effect_id
+	f32 min_pitch
+	f32 max_pitch
+	u32 audio_game_object
+
+	list:u32 ammo_slots
+	{
+	u32 ammo_id
+	u32 clip_size
+	u32 capacity
+	b8 start_empty
+	u32 refill_ammo_per_tick
+	u32 refill_ammo_delay_ms
+	u32 clip_attachment_slot
+	string:u32 clip_model_name
+	string:u32 reload_weapon_bone
+	string:u32 reload_character_bone
+	}
+
+	list:u32 fire_groups
+	{
+	u32 fire_group_id
+	}
+	}
+
+	list:u32 fire_group_defs
+	{
+	u32 id3
+	u32 id4
+
+	list:u32 fire_mode_list
+	{
+	u32 fire_mode_1
+	}
+
+	u8 flags2
+	u32 chamber_duration_ms
+	u32 image_set_override
+	u32 transition_duration_ms
+	u32 anim_actor_slot_override
+	u32 deployable_id
+	u32 spin_up_time_ms
+	u32 spin_up_movement_modifier
+	u32 spin_up_turn_rate_modifier
+	u32 spool_up_time_ms
+	u32 spool_up_initial_refire_ms
+	}
+
+	list:u32 fire_mode_defs
+	{
+	u32 id5
+	u32 id6
+
+	u8 flag1
+	u8 flag2
+	u8 flag3
+
+	u8 type
+	u32 ammo_item_id
+	u8 ammo_slot
+	u8 burst_count
+	u16 fire_duration_ms
+	u16 fire_cooldown_duration_ms
+	u16 refire_time_ms
+	u16 auto_fire_time_ms
+	u16 cook_time_ms
+	f32 range
+	u8 ammo_per_shot
+	u16 reload_time_ms
+	u16 reload_chamber_time_ms
+	u16 reload_ammo_fill_time_ms
+	u16 reload_loop_start_time_ms
+	u16 reload_loop_end_time_ms
+	u8 pellets_per_shot
+	f32 pellet_spread
+	f32 cof_recoil
+	f32 cof_scalar
+	f32 cof_scalar_moving
+	f32 cof_override
+	f32 recoil_angle_min
+	f32 recoil_angle_max
+	f32 recoil_horizontal_tolerance
+	f32 recoil_horizontal_min
+	f32 recoil_horizontal_max
+	f32 recoil_magnitude_min
+	f32 recoil_magnitude_max
+	u16 recoil_recovery_delay_ms
+	f32 recoil_recovery_rate
+	f32 recoil_recovery_acceleration
+	u8 recoil_shots_at_min_magnitude
+	f32 recoil_max_total_magnitude
+	f32 recoil_increase
+	f32 recoil_increase_crouched
+	f32 recoil_first_shot_modifier
+	f32 recoil_horizontal_min_increase
+  	f32 recoil_horizontal_max_increase
+	u16 fire_detect_range
+	f32 effect_group
+	f32 player_state_group_id
+	f32 movement_modifier
+	f32 turn_modifier
+	f32 lock_on_icon_id
+	f32 lock_on_angle
+	f32 lock_on_radius
+	f32 lock_on_range
+	f32 lock_on_range_close
+	f32 lock_on_range_far
+	u16 lock_on_acquire_time_ms
+	u16 lock_on_acquire_time_close_ms
+	u16 lock_on_acquire_time_far_ms
+	u16 lock_on_lose_time_ms
+	f32 default_zoom
+
+	f32 fp_offset_x
+	f32 fp_offset_y
+	f32 fp_offset_z
+
+	u8 reticle_id
+	u8 full_screen_effect
+	u32 heat_per_shot
+	u32 heat_threshold
+	u16 heat_recovery_delay_ms
+
+	f32 sway_amplitude_x
+	f32 sway_amplitude_y
+
+	f32 sway_period_x
+	f32 sway_period_y
+
+	f32 sway_initial_y_offset
+	f32 arms_fov_scalar
+	f32 anim_kick_magnitude
+	f32 anim_recoil_magnitude
+	u32 description_id
+	u32 indirect_effect
+	f32 bullet_arc_kick_angle
+	f32 projectile_speed_override
+	u32 inherit_from_id
+	f32 inherit_from_charge_power
+	u32 hud_image_id
+	u32 target_requirement
+	u32 fire_anim_duration_ms
+	u8 sequential_fire_anim_start
+	u8 sequential_fire_anim_count
+	f32 cylof_recoil
+	f32 cylof_scalar
+	f32 cylof_scalar_moving
+	f32 cylof_override
+	u32 melee_composite_effect_id
+	u32 melee_ability_id
+	f32 sway_crouch_scalar
+	f32 sway_prone_scalar
+	f32 launch_pitch_additive_degrees
+	b8 tp_force_camera_overrides
+	f32 tp_camera_look_offset_x
+	f32 tp_camera_look_offset_y
+	f32 tp_camera_look_offset_z
+	f32 tp_camera_position_offset_x
+	f32 tp_camera_position_offset_y
+	f32 tp_camera_position_offset_z
+	f32 tp_camera_fov
+	b8 fp_force_camera_overrides
+	f32 tp_extra_lead_from_pitch_a
+	f32 tp_extra_lead_from_pitch_b
+	f32 tp_extra_lead_pitch_a
+	f32 tp_extra_lead_pitch_b
+	f32 tp_extra_height_from_pitch_a
+	f32 tp_extra_height_from_pitch_b
+	f32 tp_extra_height_pitch_a
+	f32 tp_extra_height_pitch_b
+	f32 fp_camera_fov
+	f32 tp_cr_camera_look_offset_x
+	f32 tp_cr_camera_look_offset_y
+	f32 tp_cr_camera_look_offset_z
+	f32 tp_cr_camera_position_offset_x
+	f32 tp_cr_camera_position_offset_y
+	f32 tp_cr_camera_position_offset_z
+	f32 tp_pr_camera_look_offset_x
+	f32 tp_pr_camera_look_offset_y
+	f32 tp_pr_camera_look_offset_z
+	f32 tp_pr_camera_position_offset_x
+	f32 tp_pr_camera_position_offset_y
+	f32 tp_pr_camera_position_offset_z
+	f32 tp_cr_extra_lead_from_pitch_a
+	f32 tp_cr_extra_lead_from_pitch_b
+	f32 tp_cr_extra_lead_pitch_a
+	f32 tp_cr_extra_lead_pitch_b
+	f32 tp_cr_extra_height_from_pitch_a
+	f32 tp_cr_extra_height_from_pitch_b
+	f32 tp_cr_extra_height_pitch_a
+	f32 tp_cr_extra_height_pitch_b
+	f32 tp_pr_extra_lead_from_pitch_a
+	f32 tp_pr_extra_lead_from_pitch_b
+	f32 tp_pr_extra_lead_pitch_a
+	f32 tp_pr_extra_lead_pitch_b
+	f32 tp_pr_extra_height_from_pitch_a
+	f32 tp_pr_extra_height_from_pitch_b
+	f32 tp_pr_extra_height_pitch_a
+	f32 tp_pr_extra_height_pitch_b
+	f32 tp_camera_distance
+	f32 tp_cr_camera_distance
+	f32 tp_pr_camera_distance
+	f32 tp_cr_camera_fov
+	f32 tp_pr_camera_fov
+	f32 fp_cr_camera_fov
+	f32 fp_pr_camera_fov
+	b8 force_fp_scope
+	u32 aim_assist_config
+	b8 allow_depth_adjustment
+	f32 tp_extra_draw_from_pitch_a
+	f32 tp_extra_draw_from_pitch_b
+	f32 tp_extra_draw_pitch_a
+	f32 tp_extra_draw_pitch_b
+	f32 tp_cr_extra_draw_from_pitch_a
+	f32 tp_cr_extra_draw_from_pitch_b
+	f32 tp_cr_extra_draw_pitch_a
+	f32 tp_cr_extra_draw_pitch_b
+	f32 tp_camera_pos_offset_y_mov
+	f32 tp_camera_look_offset_y_mov
+	f32 tp_cr_camera_pos_offset_y_mov
+	f32 tp_cr_camera_look_offset_y_mov
+	b8 tp_allow_move_heights
+	}
+
+	list:u32 player_state_group_defs
+	{
+	u32 id7
+	u32 _id8
+
+	list:u32 player_state_properties
+	{
+	u32 group_id
+	
+	u32 id9
+	u8 flags3
+	f32 min_cof
+	f32 max_cof
+	f32 cof_recovery_rate
+	f32 cof_turn_penalty
+	u32 shots_before_cof_penalty
+	f32 cof_recovery_delay_threshold
+	u32 cof_recovery_delay_ms
+	f32 cof_grow_rate
+	f32 min_cyl_of_fire
+	f32 max_cyl_of_fire
+	f32 cylof_recovery_rate
+	f32 cylof_turn_penalty
+	u32 shots_before_cylof_penalty
+	f32 cylof_recovery_delay_threshold
+	u32 cylof_recovery_delay_ms
+	f32 cylof_grow_rate
+	}
+	}
+
+	list:u32 fire_mode_projectile_mapping_data
+	{
+	u32 id10
+	u32 id11
+	u32 index
+	u32 projectile_definition_id
+	}
+
+	list:u32 aim_assist_defs
+	{
+	u32 id12
+	f32 cone_angle
+	f32 cone_range
+	f32 fall_off_cone_range
+	f32 magnet_cone_angle
+	f32 magnet_cone_range
+	f32 target_override_delay
+	f32 target_oos_delay
+	f32 arrive_time
+	f32 target_motion_update_time
+	f32 weight
+	f32 min_input_weight_delay_in
+	f32 max_input_weight_delay_in
+	f32 min_input_weight_delay_out
+	f32 max_input_weight_delay_out
+	f32 min_input_actor
+	f32 max_input_actor
+	u32 requirement_id
+	f32 magnet_min_angle
+	f32 magnet_dist_for_min_angle
+	f32 magnet_max_angle
+	f32 magnet_dist_for_max_angle
+	f32 min_input_strafe_arrive_time
+	f32 max_input_strafe_arrive_time
+	}
+}
+
+packet 0x18 ObjectiveBase
+packet 0x19 DebugBase
+packet 0x1a UiBase
+packet 0x1b QuestBase
+packet 0x1c RewardBase
+
+packet 0x1d GameTimeSync
+u64 time
+f32 cycle_speed
+b8 unk_bool
+
+packet 0x1e PetBase
+packet 0x1f PointOfInterestDefinitionRequest
+packet 0x20 PointOfInterestDefinitionReply
+packet 0x21 WorldTeleportRequest
+packet 0x22 TradeBase
+packet 0x23 EscrowGivePackage
+packet 0x24 EscrowGotPackage
+packet 0x25 UpdateEncounterDataCommon
+packet 0x26 RecipeBase
+packet 0x27 InGamePurchaseBase
+packet 0x28 QuickChatBase
+packet 0x29 ReportBase
+packet 0x2a LiveGamerBase
+packet 0x2b AcquaintanceBase
+packet 0x2c ClientServerShuttingDown
+packet 0x2d FriendBase
+packet 0x2e BroadcastBase
+packet 0x2f ClientKickedFromServer
+packet 0x30 UpdateClientSessionData
+packet 0x31 BugSubmissionBase
+packet 0x32 WorldDisplayInfo
+packet 0x33 MOTD
+
+packet 0x34 SetLocale
+string:u32  locale
+
+packet 0x35 SetClientArea
+packet 0x36 ZoneTeleportRequest
+packet 0x37 TradingCardBase
+packet 0x38 WorldShutdownNotice
+packet 0x39 LoadWelcomeScreen
+packet 0x3a ShipCombatBase
+packet 0x3c KeepAlive
+u32 game_time
+
+packet 0x3d ClientExitLaunchUri
+packet 0x3e ClientPath
+packet 0x3f ClientPendingKickFromServer
+packet 0x40 ClientMembershipActivation
+packet 0x41 LobbyBase
+packet 0x42 LobbyGameDefinitionBase
+packet 0x42 0x1:u16 LobbyGameDefinition_DefinitionsRequest
+packet 0x42 0x2:u16 LobbyGameDefinition_DefinitionsResponse
+bytes:u32 definitions_data
+
+packet 0x43 ShowSystemMessage
+packet 0x44 POIChangeMessage
+packet 0x45 ClientMetrics
+packet 0x46 FirstTimeEventBase
+packet 0x47 ClaimBase
+
+packet 0x48 ClientLog
+string:u32 file
+string:u32 message
+
+packet 0x49 IgnoreBase
+packet 0x4a SnoopedPlayerBase
+packet 0x4b PromotionalBase
+packet 0x4c AddClientPortraitCrc
+packet 0x4d ObjectiveTargetBase
+packet 0x4e CommerceSessionRequest
+packet 0x4f CommerceSessionResponse
+packet 0x50 TrackedEvent
+packet 0x51 ClientLoginFailed
+packet 0x52 LoginToUChat
+packet 0x53 ZoneSafeTeleportRequest
+packet 0x54 RemoteInteractionRequest
+packet 0x57 UpdateCamera
+packet 0x59 GuildBase
+packet 0x5a AdminGuildBase
+packet 0x5b BattleMagesBase
+packet 0x5c WorldToWorldBase
+packet 0x5d PerformAction
+packet 0x5e EncounterMatchmakingBase
+packet 0x5f ClientLuaMetrics
+packet 0x60 RepeatingActivityBase
+
+packet 0x61 ClientGameSettings
+u32			unk_u32
+u32			interact_glow_and_dist
+u8			unk_bool
+f32			timescale
+u32			enable_weapons
+u32			unk_u32_2
+f32			unk_float1
+f32			unk_float2
+f32			damage_multiplier
+
+packet 0x62 ClientTrialProfileUpsell
+packet 0x63 ActivityManagerBase
+packet 0x64 RequestSendItemDefinitionsToClient
+packet 0x65 0:u16 InspectBase
+packet 0x66 0:u16 AchievementBase
+packet 0x67 0:u16 PlayerTitleBase
+packet 0x68 0:u16 MatchHistoryBase
+packet 0x69 UpdateUserAge
+packet 0x6a 0:u16 LootBase
+packet 0x6b 0:u16 ActionBarManagerBase
+packet 0x6c ClientTrialProfileUpsellRequest
+packet 0x6d PlayerUpdateJump
+packet 0x6e 0:u16 CoinStoreBase
+
+packet 0x6f InitializationParameters
+string:u32 environment
+string:u32 unk_string_1
+list:u32 ruleset_definitions
+{
+    u32 unk_u32_1
+    u32 unk_u32_2
+    string:u32 ruleset
+    string:u32 unk_string_2
+	
+	list:u32 rulesets
+    {
+        u32 ID
+		//data
+        u32 data_id
+        u32 ruleset_id
+        u32 content_pack_id
+        u32 content_pack_action_id
+    }
+}
+
+
+packet 0x70 0:u16 ActivityBase
+
+
+packet 0x71 MountBase
+packet 0x71 0x1:u16 Mount_MountRequest
+packet 0x71 0x2:u16 Mount_MountResponse
+packet 0x71 0x3:u16 Mount_DismountRequest
+packet 0x71 0x4:u16 Mount_DismountResponse
+packet 0x71 0x5:u16 Mount_MountList
+packet 0x71 0x6:u16 Mount_MountSpawn
+packet 0x71 0x7:u16 Mount_MountDespawn
+packet 0x71 0x8:u16 Mount_MountSpawnByItemDefinitionId
+packet 0x71 0x9:u16 Mount_MountOfferUpsell
+packet 0x71 0xa:u16 Mount_SeatChangeRequest
+packet 0x71 0xb:u16 Mount_SeatChangeResponse
+packet 0x71 0xc:u16 Mount_SeatSwapRequest
+packet 0x71 0xd:u16 Mount_SeatSwapResponse
+packet 0x71 0xf:u16 Mount_MountPacketTypeCount
+packet 0x71 0xe:u16 Mount_FlipMount
+
+packet 0x72 ClientInitializationDetails
+u32 unk_u32_1
+
+packet 0x73 ClientAreaTimer
+packet 0x74 0:u16 LoyaltyRewardBase
+packet 0x75 0:u16 RatingBase
+packet 0x76 0:u16 ClientActivityLaunchBase
+packet 0x77 0:u16 ServerActivityLaunchBase
+packet 0x78 ClientFlashTimer
+packet 0x79 PlayerUpdatePosition
+uint2b transient_id
+u16 flag
+u32 sequence
+bytes:u8 test
+
+packet 0x7a InviteAndStartMiniGame
+packet 0x7b QuizBase
+packet 0x7c PlayerUpdatePositionOnPlatform
+packet 0x7d ClientMembershipVipInfo
+packet 0x7e 0:u16 TargetBase
+packet 0x80 GuideStoneBase
+packet 0x81 0:u16 RaidsBase
+packet 0x82 0:u16 VoiceBase
+packet 0x83 0:u16 WeaponBase
+packet 0x84 MatchScheduleBase
+
+packet 0x85 0:u16 FacilityBase
+packet 0x85 0x1:u16 Facility_ReferenceData
+packet 0x85 0x2:u16 Facility_FacilityData
+packet 0x85 0x3:u16 Facility_CurrentFacilityUpdate
+packet 0x85 0x4:u16 Facility_SpawnDataRequest
+packet 0x85 0x5:u16 Facility_FacilitySpawnData
+packet 0x85 0x6:u16 Facility_FacilityUpdate
+packet 0x85 0x7:u16 Facility_FacilitySpawnStatus
+packet 0x85 0x8:u16 Facility_FacilitySpawnStatusTracked
+packet 0x85 0x9:u16 Facility_NotificationFacilityCaptured
+packet 0x85 0xa:u16 Facility_NotificationFacilitySignificantCaptureProgress
+packet 0x85 0xb:u16 Facility_NotificationFacilityCloseToCapture
+packet 0x85 0xc:u16 Facility_NotificationFacilitySpawnBeginCapture
+packet 0x85 0xd:u16 Facility_NotificationFacilitySpawnFinishCapture
+packet 0x85 0xe:u16 Facility_NotificationLeavingFacilityDuringContention
+packet 0x85 0xf:u16 Facility_ProximitySpawnCaptureUpdate
+packet 0x85 0x10:u16 Facility_ClearProximitySpawn
+packet 0x85 0x11:u16 Facility_GridStabilizeTimerUpdated
+packet 0x85 0x12:u16 Facility_SpawnCollisionChanged
+packet 0x85 0x13:u16 Facility_NotificationFacilitySecondaryObjectiveEventPacket
+packet 0x85 0x14:u16 Facility_PenetrateShieldEffect
+packet 0x85 0x15:u16 Facility_SpawnUpdateGuid
+packet 0x85 0x16:u16 Facility_FacilityUpdateRequest
+packet 0x85 0x17:u16 Facility_EmpireScoreValueUpdate
+
+packet 0x86 0:u16 SkillsBase
+packet 0x87 0:u16 LoadoutsBase
+packet 0x88 0:u16 ExperienceBase
+
+packet 0x89 0:u16 VehicleBase
+packet 0x89 0x1:u16 Vehicle_Owner
+packet 0x89 0x2:u16 Vehicle_Occupy
+packet 0x89 0x3:u16 Vehicle_StateData
+packet 0x89 0x4:u16 Vehicle_StateDamage
+packet 0x89 0x5:u16 Vehicle_PlayerManager
+packet 0x89 0x6:u16 Vehicle_Spawn
+packet 0x89 0x7:u16 Vehicle_Tint
+packet 0x89 0x8:u16 Vehicle_LoadVehicleTerminalDefinitionManager
+packet 0x89 0x9:u16 Vehicle_ActiveWeapon
+packet 0x89 0xa:u16 Vehicle_Stats
+packet 0x89 0xb:u16 Vehicle_DamageInfo
+packet 0x89 0xc:u16 Vehicle_StatUpdate
+packet 0x89 0xd:u16 Vehicle_UpdateWeapon
+packet 0x89 0xe:u16 Vehicle_RemovedFromQueue
+packet 0x89 0xf:u16 Vehicle_UpdateQueuePosition
+packet 0x89 0x10:u16 Vehicle_PadDestroyNotify
+packet 0x89 0x11:u16 Vehicle_SetAutoDrive
+packet 0x89 0x12:u16 Vehicle_LockOnInfo
+packet 0x89 0x13:u16 Vehicle_LockOnState
+packet 0x89 0x14:u16 Vehicle_TrackingState
+packet 0x89 0x15:u16 Vehicle_CounterMeasureState
+packet 0x89 0x16:u16 Vehicle_LoadVehicleDefinitionManager
+packet 0x89 0x17:u16 Vehicle_AcquireState
+packet 0x89 0x18:u16 Vehicle_Dismiss
+packet 0x89 0x19:u16 Vehicle_AutoMount
+packet 0x89 0x1a:u16 Vehicle_Deploy
+packet 0x89 0x1b:u16 Vehicle_Engine
+packet 0x89 0x1c:u16 Vehicle_AccessType
+packet 0x89 0x1d:u16 Vehicle_KickPlayer
+packet 0x89 0x1e:u16 Vehicle_HealthUpdateOwner
+packet 0x89 0x1f:u16 Vehicle_OwnerPassengerList
+packet 0x89 0x20:u16 Vehicle_KickPacket
+packet 0x89 0x21:u16 Vehicle_NoAccessPacket
+packet 0x89 0x22:u16 Vehicle_ExpirationPacket
+packet 0x89 0x23:u16 Vehicle_GroupPacket
+packet 0x89 0x24:u16 Vehicle_DeployResponsePacket
+packet 0x89 0x25:u16 Vehicle_ExitPoints
+packet 0x89 0x26:u16 Vehicle_ControllerLogOut
+packet 0x89 0x27:u16 Vehicle_CurrentMoveMode
+packet 0x89 0x28:u16 Vehicle_ItemDefinitionRequest
+packet 0x89 0x29:u16 Vehicle_ItemDefinitionReply
+packet 0x89 0x2a:u16 Vehicle_InventoryItems
+
+packet 0x8a GriefBase
+packet 0x8b SpotPlayer
+packet 0x8c FactionsBase
+packet 0x8d Synchronization
+u64 client_hours_ms
+u64 client_hours_ms2
+u64 client_time
+u64 server_time
+u64 server_time_2
+u64 unk_time
+
+packet 0x8e ResourceEventBase
+u32 gametime
+switch:u8 variabletype8
+{
+	case 0 set_character_resources_1
+	u64 character_id_1
+	list:u32 character_resources_1
+	{
+		u32 resource_type_1
+
+		// begin schema
+		u32 resource_id_1
+		u32 resource_type_2
+		list:u32 unk_list_11
+		{
+			u32 unk_dword_1
+			u32 unk_dword_2
+			u32 unk_dword_3
+			u32 unk_dword_4
+		}
+
+		u32 value
+		u32 unk_dword_1
+		u32 unk_dword_2
+		u32 unk_dword_3
+		u32 unk_dword_4
+		u32 unk_dword_5
+		u32 unk_dword_6
+		u32 unk_dword_7
+		u32 unk_dword_8
+		u64 unk_qword_1
+		u64 unk_qword_2
+		u64 unk_qword_3
+		u64 unk_qword_4
+		u64 unk_qword_5
+		u8 unk_byte_1
+		u8 unk_byte_2
+		// end schema
+	}
+
+	case 1 set_character_resources_2
+	u64 character_id_2
+	list:u32 character_resources_2
+	{
+		u32 resource_type_1
+
+		// begin schema
+		u32 resource_id
+		u32 resource_type_2
+		list:u32 unk_list_22
+		{
+			u32 unk_dword_1
+			u32 unk_dword_2
+			u32 unk_dword_3
+			u32 unk_dword_4
+		}
+
+		u32 value
+		u32 unk_dword_1
+		u32 unk_dword_2
+		u32 unk_dword_3
+		u32 unk_dword_4
+		u32 unk_dword_5
+		u32 unk_dword_6
+		u32 unk_dword_7
+		u32 unk_dword_8
+		u64 unk_qword_1
+		u64 unk_qword_2
+		u64 unk_qword_3
+		u64 unk_qword_4
+		u64 unk_qword_5
+		u8 unk_byte_1
+		u8 unk_byte_2
+		// end schema
+	}
+
+	case 2 updt_character_resources
+	u64 character_id_3
+	u32 resource_id_2
+	u32 resource_type_3
+	u32 initial_value
+	u32 unk_dword_1
+	f32 unk_float_1
+	f32 unk_float_2
+	f32 unk_float_3
+	u32 unk_dword_2
+	u32 unk_dword_3
+	u32 unk_dword_4
+	u8 unk_byte_1
+	u8 unk_byte_2
+	u64 unk_guid_1
+	u64 unk_guid_2
+	u64 unk_guid_3
+	u8 unk_bool_1
+}
+
+packet 0x8f CollisionBase
+packet 0x8f 0x1:u16 Collision_Damage
+u8 unknownByte
+u64 characterId
+u64 objectCharacterId
+u32 unknownDword1
+u32 damage
+u32 unknownDword2
+f32 positionx
+f32 positiony
+f32 positionz
+u32 unknownByte2
+
+packet 0x90 LeaderboardBase
+packet 0x91 PlayerUpdateManagedPosition
+uint2b transient_id
+
+packet 0x93 PlayerUpdateVehicleWeapon
+packet 0x94 ProfileStatsBase
+
+packet 0x95 0x1:u16 Equipment_SetCharacterEquipment
+stream:u32 length_1
+{
+u32 profile_id
+u64 character_id
+}
+u32 unk_dword_1
+string:u32 unk_string_1
+string:u32 unk_string_2
+
+list:u32 equipment_slot_array
+{
+u32 equipment_slot_id_1
+stream:u32 length_2
+{
+u32 equipment_slot_id_2
+u64 guid
+string:u32 tint_alias
+string:u32 decal_alias
+}
+}
+
+list:u32 attachments_data_1
+{
+string:u32 model_name
+string:u32 texture_alias
+string:u32 tint_alias
+string:u32 decal_alias
+u32 unk_dword_1
+u32 unk_dword_2
+u32 effect_id
+u32 slot_id
+u32 unk_dword_3
+
+list:u32 unk_array_1337
+{
+u32 unk_dword_4
+}
+b8 unk_bool_1
+}
+
+b8 unk_bool_2
+
+packet 0x96 DefinitionFiltersBase
+packet 0x97 ContinentBattleInfo
+list:u32 zones
+{
+	u32 continent_id
+	u32 info_name_id
+	u32 zone_description_id
+
+	u8 population
+	u8 regionPercent
+	u8 populationBuff
+	u8 populationTargetPercent
+
+	string:u32 zone_name
+	f32 hex_size
+	u8 is_production_zone
+}
+packet 0x99 SendSecurityPacketAndSelfDestruct
+packet 0x98 GetContinentBattleInfo
+packet 0x9a GetRespawnLocations
+
+packet 0x9b WallOfDataBase
+packet 0x9b 0x5:u16 WallOfData_UIEvent
+string:u32 object
+string:u32 function
+string:u32 argument
+packet 0x9b 0x6:u16 WallOfData_ClientSystemInfo
+string:u32 info
+packet 0x9b 0x7:u16 WallOfData_VoiceChatEvent
+packet 0x9b 0x9:u16 WallOfData_NudgeEvent
+packet 0x9b 0xa:u16 WallOfData_LaunchPadFingerprint
+packet 0x9b 0xb:u16 WallOfData_VideoCapture
+
+packet 0x9b 0xc:u16 WallOfData_ClientTransition
+u32 old_state
+u32 new_state
+u32 ms_elapsed
+
+packet 0x9c 0:u16 ImplantsBase
+packet 0x9d InGamePurchase
+packet 0x9e 0:u16 MissionsBase
+packet 0x9f 0:u16 EffectsBase
+packet 0xa0 0:u16 RewardBuffsBase
+packet 0xa1 0:u16 AbilitiesBase
+packet 0xa2 0:u16 DeployableBase
+packet 0xa3 Security
+packet 0xa4 MapRegionBase
+packet 0xa5 HudManagerBase
+packet 0xa6 AcquireTimersBase
+packet 0xa7 LoginBase
+packet 0xa8 ServerPopulationInfo
+packet 0xa9 GetServerPopulationInfo
+packet 0xaa PlayerUpdateVehicleCollision
+packet 0xab PlayerStop
+packet 0xac CurrencyBase
+packet 0xad ItemsBase
+packet 0xae PlayerUpdateAttachObject
+packet 0xaf PlayerUpdateDetachObject
+packet 0xb0 ClientSettings
+packet 0xb1 RewardBuffInfo
+f32 unk_float_1
+f32 unk_float_2
+f32 unk_float_3
+f32 unk_float_4
+f32 unk_float_5
+f32 unk_float_6
+f32 unk_float_7
+f32 unk_float_8
+f32 unk_float_9
+f32 unk_float_10
+f32 unk_float_11
+f32 unk_float_12
+
+packet 0xb2 GetRewardBuffInfo
+packet 0xb3 CaisBase
+packet 0xb4 ZoneSettingBase
+packet 0xb5 RequestPromoEligibilityUpdate
+packet 0xb6 PromoEligibilityReply
+packet 0xb7 MetaGameEventBase
+packet 0xb8 RequestWalletTopupUpdate
+packet 0xb9 StationCashActivePromoRequestUpdate
+packet 0xbc OperationBase
+packet 0xbd WordFilterBase
+
+packet 0xbe StaticFacilityInfoBase
+packet 0xbe 0x1:u16 FacilityInfo_Request
+packet 0xbe 0x2:u16 FacilityInfo_Reply
+packet 0xbe 0x3:u16 FacilityInfo_AllZones
+
+packet 0xbf ProxiedPlayerBase
+packet 0xc0 ResistsBase
+packet 0xc1 InGamePurchasingBase
+packet 0xc2 BusinessEnvironments
+packet 0xc3 EmpireScorePacketBase
+packet 0xc4 CharacterSelectSessionRequest
+packet 0xc5 CharacterSelectSessionResponse
+packet 0xc6 StatsBase
+packet 0xc7 ScoreBase
+packet 0xc8 ResourcesBase
+
+packet 0xc9 0x02:u32 ContainerInitEquippedContainers
+u64 ignore_this
+u64 character_id
+
+list:u32 container_list
+{
+	u32 loadout_slot_id
+
+	u64 guid_1
+	u32 defs_id
+	u64 associated_character_id
+	u32 slots
+
+	list:u32 items_list
+	{
+		u32 item_defs_id_1
+
+		u32 item_defs_id_2
+		u32 tint_id 
+		u64 guid_2
+		u32 count 
+
+		u64 unk_qword_1
+		u32 unk_dword_1
+		u32 unk_dword_2
+
+		u64 container_guid
+		u32 contain_def_id
+		u32 container_slot_id
+		u32 base_durability
+		u32 current_durability
+		u32 max_durability_from_defs
+		u8 unk_bool_1
+		u64 owner_character_id
+		u32 unk_dword_3
+	}
+
+	u8 show_bulk
+	u32 max_bulk
+	u32 unk_dword_4
+	u32 bulk_used
+	u8 has_bulk_limit
+}
+
+packet 0xca ConstructionBase
+
+packet 0xcb UpdateWeatherData
+f32 		unknownDword1
+f32 		fog_density
+f32 		fog_floor
+f32 		fog_gradient
+f32 		rain
+f32 		temp
+f32 		color_gradient
+f32 		unknown_dword8
+f32 		unknown_dword9
+f32 		unknown_dword10
+f32 		unknown_dword11
+f32 		unknown_dword12
+f32 		sun_axis_x
+f32 		sun_axis_y
+f32 		unknown_dword15
+f32 		disable_trees
+f32 		disable_trees1
+f32 		disable_trees2
+f32 		wind
+f32 		unknown_dword20
+f32 		unknown_dword21
+string:u32 	name
+f32 		unknown_dword22
+f32 		unknown_dword23
+f32 		unknown_dword24
+f32 		unknown_dword25
+f32 		unknown_dword26
+f32 		unknown_dword27
+f32 		unknown_dword28
+f32 		unknown_dword29
+f32 		ao_size
+f32 		ao_gamma
+f32 		ao_blackpoint
+f32 		unknown_dword33
+
+packet 0xcc NavGenBase
+packet 0xcd LocksBase
+packet 0xce RagdollBase
+packet 0xd0 CharacterStateBase
+packet 0xd1 TimedGrantBase
+packet 0xd2 WeatherBase
+packet 0xd3 GameEscrowBase
+packet 0xd4 PlayCompositeEffect
+packet 0xd5 SetSpotted
+packet 0xd6 AddLightweightPc
+u64 character_id
+uint2b transient_id
+
+u32 id_unknownDword1
+u32 id_unknownDword2
+u32 id_unknownDword3
+string:u32 id_characterFirstName
+string:u32 id_characterLastName
+string:u32 id_unknownString1
+string:u32 id_characterName
+u64 id_unknownQword1
+  
+u8 unknownByte1
+u32 actorModelId
+u32 unknownDword1
+f32 position_x
+f32 position_y
+f32 position_z
+vec4 rotation
+f32 unknownFloat1
+u64 mountGuid
+u32 mountSeatId
+u32 mountRelatedDword1
+u8 movementVersion
+u32 effectId
+u32 unknownDword4
+u64 unknownQword1
+u32 unknownDword5
+u8 flags1
+packet 0xd7 AddLightweightNpc
+u64 characterId
+uint2b transientId
+string:u32 petName
+u32 nameId
+u8 unknownByte1
+u32 actorModelId
+vec4 scale
+string:u32 texture
+string:u32 unknownString2
+u32 unknownDword1
+f32 position_x
+f32 position_y
+f32 position_z
+vec4 rotation
+vec4 unknownFloatVector4
+
+u32 unknownDword2
+u32 unknownDword3
+string:u32 headActor
+string:u32 unknownString3
+string:u32 unknownString4
+u32 vehicleId
+u32 unknownDword5
+u32 npcDefinitionId
+u8 positionUpdateType
+u32 profileId
+u8 isLightweight
+u8 flags1
+u8 flags2
+u8 flags3
+
+u8 unknownByte3
+u32 unknownDword8
+u64 unknownQword1
+
+u64 targetObjectId
+
+u32 unknownDword9
+u32 unknownDword10
+u64 unknownQword2
+u32 unknownDword11
+u32 useCollision
+u32 unknownDword13
+u32 unknownDword14
+u32 unknownDword15
+  
+packet 0xd8 AddLightweightVehicle
+u64 characterId
+uint2b transientId
+string:u32 petName
+u32 nameId
+u8 unknownByte1
+u32 actorModelId
+vec4 scale
+string:u32 texture
+string:u32 test
+u32 unknownDword1
+f32 position_x
+f32 position_y
+f32 position_z
+vec4 rotation
+vec4 unknownFloatVec4
+u32 unknownDword2
+u32 unknownDword3
+string:u32 headActor
+string:u32 unknownString3
+string:u32 unknownString4
+u32 vehicleId
+u32 unknownDword5
+u32 npcDefinitionId
+u8 positionUpdateType
+u32 profileId
+u8 isLightweight
+u8 flags1
+u8 flags2
+u8 flags3
+u8 unknownByte3
+u32 unknownDword8
+u64 unknownQword1
+u64 targetObjectId
+u64 guid
+u32 unknownDword11
+u32 unknownDword22
+//missing position special pack
+string:u32 unknownString1
+
+packet 0xd9 AddProxiedObject
+packet 0x92 AddSimpleNpc
+packet 0xda LightweightToFullPc
+packet 0xdb LightweightToFullNpc
+packet 0xdc LightweightToFullVehicle
+packet 0xde CheckLocalValues
+packet 0xdf ChronicleBase
+packet 0xe0 GrinderBase
+packet 0xe1 RequestObject
+packet 0xe2 ScreenEffectBase
+packet 0xe3 SpectatorBase
+packet 0xe4 WhitelistBase
+packet 0xe5 NpcFoundationPermissionsManagerBase
+packet 0xe6 BattlEyeData
+packet 0xe7 OnlineIdBase
+packet 0xe8 Ps4PlayGoBase
+packet 0xe9 SynchronizedTeleportBase
+packet 0xea StaticViewBase
+packet 0xeb ReplicationBase
+packet 0xec DatasheetsBase
+packet 0xed PlayerWorldTransferRequest
+packet 0xee PlayerWorldTransferReply
+packet 0xef CancelQueueOnWorld
+packet 0xf0 DeclineEnterGameOnWorld
+packet 0xf1 AccessedCharacterBase
+packet 0xf2 ShaderParameterOverrideBase
+packet 0xf3 VehicleSkinBase
+packet 0xf5 WeaponLagLockParameters
+packet 0xf6 CrateOpeningBase
+packet 0xf7 PlayerHeatWarning
+packet 0xf8 AnimationBase

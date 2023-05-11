@@ -36,6 +36,7 @@ static void platform_win_console_write(char* format, ...);
 #include "shared/packet_queue.c"
 #include "utility/character_id_gen.c"
 #include "utility/transient_id_gen.c"
+#include "utility/read_json.c"
 
 global u64 global_packet_dump_count;
 // HACK(rhett):
@@ -89,8 +90,8 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #undef MESSAGE_NAMESPACE
 // TODO(rhett): Client or Zone? Client is the word used by the game, but zone is more clear?
 #define MESSAGE_NAMESPACE  "Zone"
-#include "../schema/output/client_protocol_1080.c"
-#include "game/client_protocol_1080.c"
+#include "../schema/output/client_protocol_1087.c"
+#include "game/client_protocol_1087.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE  MESSAGE_NAMESPACE_DEFAULT
 
@@ -99,6 +100,7 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 {
 	printf("[!] Character %llxh trying to login to zone server\n", character_id);
 
+	generate_guid(session_state->character_id);
 	generate_transient_id(session_state->transient_id);
 
 	__time64_t timer;
@@ -112,8 +114,8 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 
 	Zone_Packet_SendZoneDetails send_zone_details =
 	{
-		.zone_name_length 	= 2,
-		.zone_name 			= "Z1",
+		.zone_name_length 	= 9,
+		.zone_name 			= "LoginZone",
 		.zone_type 			= 4,
 		.unk_bool 			= FALSE,
 
@@ -143,8 +145,10 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 		.zone_id_2			= 5,
 		.name_id			= 7699,
 		.unk_bool2			= TRUE,
-		.lighting			= "Lighting.txt",
+		.lighting_length 	= 15,
+		.lighting			= "Lighting_Z2.txt",
 		.unk_bool3			= FALSE,
+		.unk_bool4			= FALSE,
 	};
 
 	Zone_Packet_CommandItemDefinitions item_defs = 
@@ -644,8 +648,8 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 		.payload_self =
 			(struct payload_self_s [1]) {
 			[0] = {
-				.guid = generate_guid(),
-				.character_id = 0x1337, // (doggo)temp l33t solution for now
+				.guid = get_guid(session_state->character_id),
+				.character_id = 0x1337, // (doggo)hacky work-around l33t solution for now...
 				.transient_id = get_transient_id(session_state->transient_id),
 				.actor_model_id = 9474,
 				.head_actor_length = 26,
@@ -851,7 +855,7 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_CommandItemDefinitions, &item_defs);
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(40), Zone_Packet_Kind_CommandItemDefinitions, &item_defs);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(40), Zone_Packet_Kind_ReferenceDataWeaponDefinitions, &weapon_defs);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientGameSettings, &game_settings);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ContainerInitEquippedContainers, &init_equipped_containers);

@@ -193,11 +193,11 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 						.description_length 		= 10,
 						.description 				= "yeah",
 						.description_id 			= 1362,
-						.server_info_length 		= 165,
-						.server_info 				= "<ServerInfo Region=\"CharacterCreate.RegionEu\" Subregion=\"UI.SubregionEU\" IsRecommended=\"1\" IsRecommendedVS=\"0\" IsRecommendedNC=\"0\" IsRecommendedTR=\"0\" />",
+						.server_info_length 		= 168,
+						.server_info 				= "<ServerInfo Region=\"CharacterCreate.RegionEu\" Subregion=\"UI.SubregionEu\" IsRecommended=\"1\" IsRecommendedVS=\"0\" IsRecommendedNC=\"0\" IsRecommendedTR=\"0\" />",
 						.population_level			= 0,
-						.population_data_length 	= 436,
-						.population_data 			= "<Population ServerCapacity=\"0\" PingAdr=\"127.0.0.1:1117\" Rulesets=\"Permadeath\"><factionlist IsList=\"1\"><faction Id=\"1\" Percent=\"0\" TargetPopPct=\"0\" RewardBuff=\"52\" XPBuff=\"52\" PercentAvg=\"0\"/><faction Id=\"2\" Percent=\"0\" TargetPopPct=\"1\" RewardBuff=\"0\" XPBuff=\"0\" PercentAvg=\"0\"/><faction Id=\"3\" Percent=\"0\" TargetPopPct=\"1\" RewardBuff=\"0\" XPBuff=\"0\" PercentAvg=\"1\"/></factionlist></Population>",
+						.population_data_length 	= 238,
+						.population_data 			= "<Population PctCap=\"0\" PingAdr=\"127.0.0.1:1117\" Rulesets=\"\" Mode=\"0\" IsLogin=\"1\" IsWL=\"0\" IsEvt=\"0\" PL=\"0\" DC=\"LVS\" PopLock=\"0\" GP=\"100\" BP=\"175\" MaxPop=\"4000\" Subregion=\"US\"><Fac IsList=\"1\"/></Population>",
 						.is_access_allowed 			= TRUE,
 					},
 				},
@@ -236,7 +236,9 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 				.login_payload =
 					(struct login_payload_s[1]) {
 					[0] =
-					{
+					{	
+						.unk_byte_1 = 0,
+						.unk_byte_2 = 0,
 						.server_address_length = 15,
 						.server_address = "127.0.0.1:60000",
 						.server_ticket_length = 15,
@@ -274,13 +276,10 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 			Login_Packet_CharacterDeleteRequest character_delete_request = { 0 };
 			login_packet_unpack(data + offset, data_length - offset, packet_kind, &character_delete_request, &server->arena_per_tick);
 
-			u32 delete_status;
-			delete_status = delete_guid(1);
-
 			Login_Packet_CharacterDeleteReply character_delete_reply =
 			{
 				.character_id = session->character_id,
-				.status = delete_status,
+				.status = 1,
 			};
 
 			login_packet_send(server, session, &server->arena_per_tick, KB(10), FALSE, Login_Packet_Kind_CharacterDeleteReply, &character_delete_reply);
