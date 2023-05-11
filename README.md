@@ -1,6 +1,6 @@
-![alt text](https://cdn.akamai.steamstatic.com/steam/apps/295110/header.jpg?t=1540317442)
+![alt text](https://cutewallpaper.org/21/h1z1-king-of-the-kill-twitter/H1z1-King-Of-The-Kill-Wallpaper-Z1-Battle-Royale-Hd-.jpg)
 
-# An 'H1Z1: Just Survive' server made in the C programming language (PRIVATE)
+# An 'H1Z1: King of the Kill' server made in the C programming language (PRIVATE)
 
 ## Current Status
 
@@ -34,14 +34,14 @@ DirectX June 2010 Redist [Download from Guru3D](https://www.guru3d.com/files-get
 
 
 ## How to Download
-WARNING: This will only work if you have bought the H1Z1: Just Survive from steam before the game was shutdown!
+WARNING: This will only work if you have 'Z1: Battle Royale' formerly known as 'H1Z1: King of the Kill' from steam!
 
 Use [DepotDownloader](https://github.com/SteamRE/DepotDownloader)
 
-Example (Downloading H1Z1: Just Survive)
-AppID : 295110  DepotID : 295111   ManifestID : 8395659676467739522
+Example (Downloading H1Z1: King of the Kill)
+AppID : 433850  DepotID : 433851   ManifestID : 6098349229565958949
 
-cmd : `dotnet .\DepotDownloader.dll -app 295110 -depot 295111 -manifest 8395659676467739522 -username YOURUSERNAME -password YOURPASSWORD`
+cmd : `dotnet .\DepotDownloader.dll -app 433850 -depot 433851 -manifest 6098349229565958949 -username YOURUSERNAME -password YOURPASSWORD`
 
 ## Setup ClientConfig.ini
 In the H1Z1 Folder you will have a file called "ClientConfig.ini".
@@ -52,7 +52,8 @@ Add the following:
 
 - World=None
 - Server=127.0.0.1:20042
-- sessionId=0
+- usenewui=1
+- SessionId=0
 
 At the beginning of this file.
 
