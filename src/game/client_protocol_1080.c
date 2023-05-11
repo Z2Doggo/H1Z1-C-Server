@@ -161,7 +161,7 @@ internal void zone_packet_handle(App_State* server_state,
 
 					Zone_Packet_Character_CharacterStateDelta character_state_delta =
 					{
-						.guid_1 	= session_state->character_id,
+						.guid_1 	= get_guid(session_state->character_id),
 						.guid_3 	= 0x0000000040000000,
 						.game_time 	= timer32,
 					};
@@ -182,7 +182,7 @@ internal void zone_packet_handle(App_State* server_state,
 
 						Zone_Packet_Character_WeaponStance weapon_stance =
 						{
-							.character_id = session_state->character_id,
+							.character_id = get_guid(session_state->character_id),
 							.stance = 1,
 						};
 
@@ -195,7 +195,7 @@ internal void zone_packet_handle(App_State* server_state,
 								(struct length_1_s[1]) {
 								[0] = {
 									.profile_id = 5,
-									.character_id = session_state->character_id,
+									.character_id = get_guid(session_state->character_id),
 								},
 							},
 							.unk_dword_1 = 0,
@@ -524,7 +524,7 @@ internal void zone_packet_handle(App_State* server_state,
 						(struct set_character_resources_1_s[1]) {
 							[0] = 
 							{
-								.character_id_1 = session_state->character_id,
+								.character_id_1 = get_guid(session_state->character_id),
 
 								.character_resources_1_count = 1,
 								.character_resources_1 = 
@@ -543,7 +543,7 @@ internal void zone_packet_handle(App_State* server_state,
 						(struct set_character_resources_2_s[1]) {
 							[0] = 
 							{
-								.character_id_2 = session_state->character_id,
+								.character_id_2 = get_guid(session_state->character_id),
 
 								.character_resources_2_count = 1,
 								.character_resources_2 = 
@@ -562,7 +562,7 @@ internal void zone_packet_handle(App_State* server_state,
 						(struct updt_character_resources_s[1]) {
 							[0] = 
 							{
-								.character_id_3 = session_state->character_id,
+								.character_id_3 = get_guid(session_state->character_id),
 								.resource_id_2 = session_state->resource_id,
 								.resource_type_3 = session_state->resource_type ? session_state->resource_type : session_state->resource_id,
 								.initial_value = 1000 >= 0 ? 1000 : 0,
@@ -635,7 +635,7 @@ internal void zone_packet_handle(App_State* server_state,
 
 					Zone_Packet_PlayerUpdatePosition updt_pos =
 					{
-						.transient_id.value = 0x1337,
+						.transient_id = get_transient_id(session_state->transient_id),
 						.flag = flags,
 						.sequence = sequence
 					};

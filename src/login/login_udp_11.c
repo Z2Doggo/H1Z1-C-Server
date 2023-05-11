@@ -28,8 +28,7 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 {
 	Login_Packet_Kind packet_kind;
 
-	u64 character_id_gen;
-	character_id_gen = generate_guid;
+	generate_guid(session->character_id);
 
 	printf("\n");
 	u8 packet_id = *data;
@@ -132,7 +131,7 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 			Login_Packet_CharacterCreateReply character_create_reply =
 			{
 				.status = 1,
-				.character_id = character_id_gen,
+				.character_id = session->character_id,
 			};
 
 			login_packet_send(server, session, &server->arena_per_tick, KB(1), FALSE, Login_Packet_Kind_CharacterCreateReply, &character_create_reply);
@@ -231,7 +230,7 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 
 			Login_Packet_CharacterLoginReply character_login_reply =
 			{
-				.character_id = character_id_gen,
+				.character_id = session->character_id,
 				.server_id = session->selected_server_id,
 				.status = 1,
 				.login_payload =
@@ -245,7 +244,7 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 						.encryption_key_length = 16,
 						.encryption_key = (u8*)"\x17\xbd\x08\x6b\x1b\x94\xf0\x2f\xf0\xec\x53\xd7\x63\x58\x9b\x5f",
 						.soe_protocol_version	= 3,
-						.character_id = character_id_gen,
+						.character_id = session->character_id,
 					},
 				},
 			};
@@ -280,7 +279,7 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 
 			Login_Packet_CharacterDeleteReply character_delete_reply =
 			{
-				.character_id = character_id_gen,
+				.character_id = session->character_id,
 				.status = delete_status,
 			};
 

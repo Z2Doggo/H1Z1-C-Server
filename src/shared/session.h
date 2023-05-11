@@ -101,13 +101,14 @@ struct Session_State
 	resource_types resource_type;
 	
 	u64 			character_id;
+	uint2b 			transient_id;
 
 	u32 			selected_server_id;
 	u8 				finished_loading;
 	u8 				first_login;
 	u8 				gateway_channel;
 	u8 				is_synced;
-
+	
 	Session_Kind kind;
 	Connection_Args connection_args;
 
@@ -124,8 +125,6 @@ struct Session_State
 	Output_Stream output_stream;
 
 	// begin world_character struct
-	i32 			transient_id;
-
 	u8              is_moving;
 	u8              is_running;
 	u8              is_jumping;

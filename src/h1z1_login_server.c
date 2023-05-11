@@ -1,6 +1,9 @@
 #if defined(YOTE_INTERNAL)
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <stdint.h>
 #else
 static void platform_win_console_write(char* format, ...);
 #define printf(s, ...) platform_win_console_write(s, __VA_ARGS__)
