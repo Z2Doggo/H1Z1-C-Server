@@ -100,11 +100,28 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 {
 	printf("[!] Character %llxh trying to login to zone server\n", character_id);
 
+	generate_guid(session_state->guid);
 	generate_guid(session_state->character_id);
-	generate_transient_id(session_state->transient_id);
+	generate_transient_id(session_state->transient_id.value);
 
-	__time64_t timer;
-	_time64(&timer);
+	u64 guid_get = 0;
+	u64 character_id_get = 0;
+	u32 transient_id_get = 0;
+
+	character_id = character_id_get;
+	session_state->guid = guid_get;
+	session_state->character_id = character_id_get;
+	session_state->transient_id.value = transient_id_get;
+
+	guid_get = get_guid(session_state->guid);
+	character_id_get = get_guid(session_state->character_id);
+	transient_id_get = get_transient_id(session_state->transient_id.value);
+
+	__time64_t timer64;
+	_time64(&timer64);
+
+	__time32_t timer32;
+	_time32(&timer32);
 
 	Zone_Packet_InitializationParameters init_params =
 	{
@@ -114,8 +131,8 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 
 	Zone_Packet_SendZoneDetails send_zone_details =
 	{
-		.zone_name_length 	= 9,
-		.zone_name 			= "LoginZone",
+		.zone_name_length 	= 2,
+		.zone_name 			= "Z1",
 		.zone_type 			= 4,
 		.unk_bool 			= FALSE,
 
@@ -146,9 +163,8 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 		.name_id			= 7699,
 		.unk_bool2			= TRUE,
 		.lighting_length 	= 15,
-		.lighting			= "Lighting_Z2.txt",
+		.lighting			= "Lighting.txt",
 		.unk_bool3			= FALSE,
-		.unk_bool4			= FALSE,
 	};
 
 	Zone_Packet_CommandItemDefinitions item_defs = 
@@ -648,9 +664,9 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 		.payload_self =
 			(struct payload_self_s [1]) {
 			[0] = {
-				.guid = get_guid(session_state->character_id),
+				.guid = guid_get,
 				.character_id = 0x1337, // (doggo)hacky work-around l33t solution for now...
-				.transient_id = get_transient_id(session_state->transient_id),
+				.transient_id = transient_id_get,
 				.actor_model_id = 9474,
 				.head_actor_length = 26,
 				.head_actor = "SurvivorFemale_Head_02.adr",
@@ -661,8 +677,8 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 				.character_name_length = 5,
 				.character_name = "doggo",
 				.gender1 = 1 || 2,
-				.creation_date = timer,
-				.last_login_date = timer,
+				.creation_date = timer64,
+				.last_login_date = timer64,
 				
 				.loadout_id = 3,
 				.loadout_slots_array_count = 1,
@@ -731,7 +747,7 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 	Zone_Packet_ContainerInitEquippedContainers init_equipped_containers = 
 	{
 		.ignore_this = 0,
-		.character_id = get_guid(session_state->character_id),
+		.character_id = character_id_get,
 
 		.container_list_count = 1,
 		.container_list = 
@@ -740,9 +756,9 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 			{
 				.loadout_slot_id = 0,
 
-				.guid_1 = get_guid(session_state->character_id),
+				.guid_1 = guid_get,
 				.defs_id = 0,
-				.associated_character_id = get_guid(session_state->character_id),
+				.associated_character_id = character_id_get,
 				.slots = 0,
 
 				.items_list_count = 1,
@@ -754,7 +770,7 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 
 						.item_defs_id_2 = 0,
 						.tint_id = 0,
-						.guid_2 = get_guid(session_state->character_id),
+						.guid_2 = guid_get,
 						.count = 1,
 
 						.unk_qword_1 = 0,
@@ -768,7 +784,7 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 						.current_durability = 0,
 						.max_durability_from_defs = 0,
 						.unk_bool_1 = FALSE,
-						.owner_character_id = get_guid(session_state->character_id),
+						.owner_character_id = character_id_get,
 						.unk_dword_3 = 0,
 					},
 				},
@@ -825,8 +841,8 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 
 	Zone_Packet_AddLightweightPc lightweightpc =
 	{
-		.character_id 			= get_guid(session_state->character_id),
-		.transient_id			= get_transient_id(session_state->transient_id),
+		.character_id 			= character_id_get,
+		.transient_id			= transient_id_get,
 		.unknownByte1 			= 2,
 		.actorModelId 			= 9474,
 		.unknownDword1			= 270,
@@ -846,8 +862,8 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 
 	Zone_Packet_AddLightweightNpc lightweightnpc =
 	{
-		.characterId 			= get_guid(session_state->character_id),
-		.transientId			= get_transient_id(session_state->transient_id),
+		.characterId 			= character_id_get,
+		.transientId			= transient_id_get,
 		.nameId = 0,
 		.unknownByte1 			= 2,
 		.actorModelId 			= 9240,

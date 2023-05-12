@@ -161,7 +161,7 @@ internal void zone_packet_handle(App_State* server_state,
 
 					Zone_Packet_Character_CharacterStateDelta character_state_delta =
 					{
-						.guid_1 	= session_state->character_id,
+						.guid_1 	= get_guid(session_state->character_id),
 						.guid_3 	= 0x0000000040000000,
 						.game_time 	= timer32,
 					};
@@ -182,7 +182,7 @@ internal void zone_packet_handle(App_State* server_state,
 
 						Zone_Packet_Character_WeaponStance weapon_stance =
 						{
-							.character_id = session_state->character_id,
+							.character_id = get_guid(session_state->character_id),
 							.stance = 1,
 						};
 
@@ -195,7 +195,7 @@ internal void zone_packet_handle(App_State* server_state,
 								(struct length_1_s[1]) {
 								[0] = {
 									.profile_id = 5,
-									.character_id = session_state->character_id,
+									.character_id = get_guid(session_state->character_id),
 								},
 							},
 							.unk_dword_1 = 0,
@@ -215,7 +215,7 @@ internal void zone_packet_handle(App_State* server_state,
 										(struct length_2_s[1]) {
 										[0] = {
 											.equipment_slot_id_2 = 0,
-											.guid = 0,
+											.guid = 0, // keep guid as a 0
 											.tint_alias_length = 7,
 											.tint_alias = "Default",
 											.decal_alias_length = 1,
@@ -254,11 +254,9 @@ internal void zone_packet_handle(App_State* server_state,
 						};
 
 						zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Command_AddWorldCommand, &command_help);
-
-						break;
 					}
 
-					return;
+					break;
 				}
 				case ZONE_CLIENTLOGOUT_ID:
 				{
@@ -362,7 +360,7 @@ internal void zone_packet_handle(App_State* server_state,
 							(struct locations1_s[1]) {
 							[0] =
 							{
-								.guid = generate_guid(),
+								.guid = get_guid(session_state->character_id),
 								.respawn_type = 4,
 								.position = 602.91, 71.62, -1301.5, 1,
 								.unk_dword_1 = 1,
@@ -393,7 +391,7 @@ internal void zone_packet_handle(App_State* server_state,
 							(struct locations2_s[1]) {
 							[0] =
 							{
-								.guid = generate_guid(),
+								.guid = get_guid(session_state->character_id),
 								.respawn_type = 4,
 								.position = 602.91, 71.62, -1301.5, 1,
 								.unk_dword_1 = 1,
@@ -501,7 +499,7 @@ internal void zone_packet_handle(App_State* server_state,
 								.zone_description_id = 1,
 
 								.zone_name_length = 2,
-								.zone_name = "Z2",
+								.zone_name = "Z1",
 								.hex_size = 100,
 								.is_production_zone = 1,
 							}
@@ -517,6 +515,7 @@ internal void zone_packet_handle(App_State* server_state,
 					packet_kind = Zone_Packet_Kind_ResourceEventBase;
 					printf("[Zone] Handling ResourceEventBase\n");
 
+					/*
 					Zone_Packet_ResourceEventBase rsrc_event_base =
 					{
 						.gametime = timer32,
@@ -524,7 +523,7 @@ internal void zone_packet_handle(App_State* server_state,
 						(struct set_character_resources_1_s[1]) {
 							[0] = 
 							{
-								.character_id_1 = session_state->character_id,
+								.character_id_1 = get_guid(session_state->character_id),
 
 								.character_resources_1_count = 1,
 								.character_resources_1 = 
@@ -543,7 +542,7 @@ internal void zone_packet_handle(App_State* server_state,
 						(struct set_character_resources_2_s[1]) {
 							[0] = 
 							{
-								.character_id_2 = session_state->character_id,
+								.character_id_2 = get_guid(session_state->character_id),
 
 								.character_resources_2_count = 1,
 								.character_resources_2 = 
@@ -562,7 +561,7 @@ internal void zone_packet_handle(App_State* server_state,
 						(struct updt_character_resources_s[1]) {
 							[0] = 
 							{
-								.character_id_3 = session_state->character_id,
+								.character_id_3 = get_guid(session_state->character_id),
 								.resource_id_2 = session_state->resource_id,
 								.resource_type_3 = session_state->resource_type ? session_state->resource_type : session_state->resource_id,
 								.initial_value = 1000 >= 0 ? 1000 : 0,
@@ -571,6 +570,7 @@ internal void zone_packet_handle(App_State* server_state,
 					};
 
 					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(rsrc_event_base), Zone_Packet_Kind_ResourceEventBase, &rsrc_event_base);
+					*/
 
 					break;
 				}
@@ -581,6 +581,20 @@ internal void zone_packet_handle(App_State* server_state,
 
 					// (doggo)keep empty, don't need this
 
+					break;
+				}
+				case ZONE_KEEPALIVE_ID:
+				{
+					packet_kind = Zone_Packet_Kind_KeepAlive;
+					printf("[Zone] Handling KeepAlive\n");
+
+					Zone_Packet_KeepAlive keep_alive =
+					{
+						.game_time = timer32,
+					};
+
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(keep_alive), Zone_Packet_Kind_KeepAlive, &keep_alive);
+					
 					break;
 				}
 

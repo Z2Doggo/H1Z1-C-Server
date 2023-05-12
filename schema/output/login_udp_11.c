@@ -183,8 +183,6 @@ u32 status;
 u32 login_payload_length;
 struct login_payload_s
 {
-u8 unk_byte_1;
-u8 unk_byte_2;
 u32 server_address_length;
 char* server_address;
 u32 server_ticket_length;
@@ -809,16 +807,6 @@ printf("-- STREAM_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->login_payl
 u32 will_pack_login_payload = packet->login_payload_length == ~(u32)0 ? 0 : 1;
 for (u32 login_payload_iter = 0; login_payload_iter < will_pack_login_payload; login_payload_iter++)
 {
-// u8 unk_byte_1
-endian_write_u8_little(buffer + offset, packet->login_payload[login_payload_iter].unk_byte_1);
-offset += sizeof(u8);
-printf("-- unk_byte_1              \t%lld\t%llxh\t%f\n", (i64)packet->login_payload[login_payload_iter].unk_byte_1, (u64)packet->login_payload[login_payload_iter].unk_byte_1, (f64)packet->login_payload[login_payload_iter].unk_byte_1);
-
-// u8 unk_byte_2
-endian_write_u8_little(buffer + offset, packet->login_payload[login_payload_iter].unk_byte_2);
-offset += sizeof(u8);
-printf("-- unk_byte_2              \t%lld\t%llxh\t%f\n", (i64)packet->login_payload[login_payload_iter].unk_byte_2, (u64)packet->login_payload[login_payload_iter].unk_byte_2, (f64)packet->login_payload[login_payload_iter].unk_byte_2);
-
 // string server_address
 endian_write_u32_little(buffer + offset, packet->login_payload[login_payload_iter].server_address_length);
 offset += sizeof(u32);
@@ -2169,16 +2157,6 @@ packet->login_payload = arena_push_size(arena, packet->login_payload_length * si
 printf("-- STREAM_LENGTH           \t%d\n", packet->login_payload_length);
 for (u32 login_payload_iter = 0; login_payload_iter < (packet->login_payload_length > (u32)0 ? (u32)1 : (u32)0); login_payload_iter++)
 {
-// u8 unk_byte_1
-packet->login_payload[login_payload_iter].unk_byte_1 = endian_read_u8_little(data + offset);
-offset += sizeof(u8);
-printf("-- unk_byte_1              \t%lld\t%llxh\t%f\n", (i64)packet->login_payload[login_payload_iter].unk_byte_1, (u64)packet->login_payload[login_payload_iter].unk_byte_1, (f64)packet->login_payload[login_payload_iter].unk_byte_1);
-
-// u8 unk_byte_2
-packet->login_payload[login_payload_iter].unk_byte_2 = endian_read_u8_little(data + offset);
-offset += sizeof(u8);
-printf("-- unk_byte_2              \t%lld\t%llxh\t%f\n", (i64)packet->login_payload[login_payload_iter].unk_byte_2, (u64)packet->login_payload[login_payload_iter].unk_byte_2, (f64)packet->login_payload[login_payload_iter].unk_byte_2);
-
 // string server_address
 packet->login_payload[login_payload_iter].server_address_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
