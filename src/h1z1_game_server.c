@@ -108,11 +108,6 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 	u64 character_id_get = 0;
 	u32 transient_id_get = 0;
 
-	character_id = character_id_get;
-	session_state->guid = guid_get;
-	session_state->character_id = character_id_get;
-	session_state->transient_id.value = transient_id_get;
-
 	guid_get = get_guid(session_state->guid);
 	character_id_get = get_guid(session_state->character_id);
 	transient_id_get = get_transient_id(session_state->transient_id.value);
