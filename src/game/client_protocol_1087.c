@@ -649,7 +649,7 @@ internal void zone_packet_handle(App_State* server_state,
 
 					Zone_Packet_PlayerUpdatePosition updt_pos =
 					{
-						.transient_id = get_transient_id(session_state->transient_id),
+						.transient_id = get_transient_id(session_state->transient_id.value),
 						.flag = flags,
 						.sequence = sequence
 					};
