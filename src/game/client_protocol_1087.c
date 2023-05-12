@@ -161,9 +161,9 @@ internal void zone_packet_handle(App_State* server_state,
 
 					Zone_Packet_Character_CharacterStateDelta character_state_delta =
 					{
-						.guid_1 	= get_guid(session_state->character_id),
+						.guid_1 	= get_guid(session_state->guid),
 						.guid_3 	= 0x0000000040000000,
-						.game_time 	= timer32,
+						.game_time 	= (timer32 & 0xffffffff) >> 0,
 					};
 
 					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(character_state_delta), Zone_Packet_Kind_Character_CharacterStateDelta, &character_state_delta);
