@@ -2387,7 +2387,7 @@ packet 0x79 PlayerUpdatePosition
 uint2b transient_id
 u16 flag
 u32 sequence
-u8 unk_u8_data
+bytes:u8 unk_u8_data
 
 packet 0x7a InviteAndStartMiniGame
 packet 0x7b QuizBase

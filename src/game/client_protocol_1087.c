@@ -422,6 +422,80 @@ internal void zone_packet_handle(App_State* server_state,
 
 					break;
 				}
+				case ZONE_CLIENTUPDATE_RESPAWNLOCATIONS_ID:
+				{
+					packet_kind = Zone_Packet_Kind_ClientUpdate_RespawnLocations;
+					printf("[Zone] Handling ClientUpdate.RespawnLocations\n");
+
+					Zone_Packet_ClientUpdate_RespawnLocations respawn_locations =
+					{
+						.locations1_count = 1,
+						.locations1 =
+							(struct locations1_s[1]) {
+							[0] =
+							{
+								.guid = get_guid(session_state->character_id),
+								.respawn_type = 4,
+								.position = 602.91, 71.62, -1301.5, 1,
+								.unk_dword_1 = 1,
+								.unk_dword_2 = 1,
+								.icon_id_1 = 1,
+								.icon_id_2 = 1,
+								.respawn_total_time = 10,
+								.respawn_time_ms = 10000,
+								.name_id = 1,
+								.distance = 1000,
+								.unk_byte_1 = 1,
+								.unk_byte_2 = 1,
+
+								.unk_byte_3 = 1,
+								.unk_byte_4 = 1,
+								.unk_byte_5 = 1,
+								.unk_byte_6 = 1,
+								.unk_byte_7 = 1,
+
+								.unk_dword_3 = 1,
+								.unk_byte_8 = 1,
+								.unk_byte_9 = 1,
+							},
+						},
+
+						.locations2_count = 1,
+						.locations2 =
+							(struct locations2_s[1]) {
+							[0] =
+							{
+								.guid = get_guid(session_state->character_id),
+								.respawn_type = 4,
+								.position = 602.91, 71.62, -1301.5, 1,
+								.unk_dword_1 = 1,
+								.unk_dword_2 = 1,
+								.icon_id_1 = 1,
+								.icon_id_2 = 1,
+								.respawn_total_time = 10,
+								.respawn_time_ms = 10000,
+								.name_id = 1,
+								.distance = 1000,
+								.unk_byte_1 = 1,
+								.unk_byte_2 = 1,
+
+								.unk_byte_3 = 1,
+								.unk_byte_4 = 1,
+								.unk_byte_5 = 1,
+								.unk_byte_6 = 1,
+								.unk_byte_7 = 1,
+
+								.unk_dword_3 = 1,
+								.unk_byte_8 = 1,
+								.unk_byte_9 = 1,
+							},
+						},
+					};
+
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(respawn_locations), Zone_Packet_Kind_ClientUpdate_RespawnLocations, &respawn_locations);
+
+					break;
+				}
 				case ZONE_SETLOCALE_ID:
 				{
 					packet_kind = Zone_Packet_Kind_SetLocale;

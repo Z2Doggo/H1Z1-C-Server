@@ -104,14 +104,17 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 	printf("[!] Character %llxh trying to login to zone server\n", character_id);
 
 	generate_guid(session_state->guid);
+	generate_guid(session_state->item_guid);
 	generate_guid(session_state->character_id);
 	generate_transient_id(session_state->transient_id.value);
 
 	u64 guid_get = 0;
+	u64 item_guid_get = 0;
 	u64 character_id_get = 0;
 	u32 transient_id_get = 0;
 
 	guid_get = get_guid(session_state->guid);
+	item_guid_get = get_guid(session_state->item_guid);
 	character_id_get = get_guid(session_state->character_id);
 	transient_id_get = get_transient_id(session_state->transient_id.value);
 
@@ -727,11 +730,45 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 						.resource_type1 = pGetResources(character_resources.resource_type1),
 						.resource_id = pGetResources(character_resources.resource_id),
 						.resource_type2 = pGetResources(character_resources.resource_type2),
-
-						.value = pGetResources(character_resources.value) > 0 ? pGetResources(character_resources.value) : 0,
+						.value = pGetResources(character_resources.value),
 					},
 				},
 				
+				.containers_count = 1,
+				.containers =
+				(struct containers_s[1]) {
+					[0] = {
+						.loadout_slot_id = 0,
+						.guid = item_guid_get,
+						.def_id = 0,
+						.associated_character_id = character_id_get,
+						.slots = 14,
+						.items2_count = 1,
+						.items2 = 
+						(struct items2_s[1]) {
+							[0] =
+							{
+								.item_def_id5 = 0,
+								.item_def_id6 = 0,
+								.tint_id = 0,
+								.guid = item_guid_get,
+								.count = 14,
+								.container_guid = item_guid_get,
+								.container_def_id = 14,
+								.container_slot_id = 0,
+								.base_durability = 10,
+								.current_durability = 10 ? 15 : 0,
+								.max_durability_from_def = 10,
+								.unk_bool_116 = TRUE,
+								.owner_character_id = 0x0000000000000001,
+								.unk_dword_9 = 1,
+								// (doggo)put weapon data here from sendself later...
+								.show_bulk = TRUE,
+								.unk_dword_133 = 28,
+							},
+						},
+					},
+				},
 
 				.is_admin = TRUE,
 			},

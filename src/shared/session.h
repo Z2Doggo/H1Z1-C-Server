@@ -72,6 +72,7 @@ struct Session_State
 
 	u64 			character_id;
 	u64 			guid;
+	u64				item_guid;
 	uint2b 			transient_id;
 
 	u32 			selected_server_id;
