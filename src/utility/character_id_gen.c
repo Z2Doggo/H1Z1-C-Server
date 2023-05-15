@@ -4,7 +4,7 @@
 #include <time.h>
 #include <stdint.h>
 
-#define GUID_LENGTH 16
+#define GUID_LENGTH 6
 #define MAX_GUIDS 2048
 
 u64 generate_guid() {
@@ -15,7 +15,7 @@ u64 generate_guid() {
         random_num = (u64)rand() % 16;
         guid |= (random_num << (4 * (GUID_LENGTH - i - 1)));
     }
-    return guid & 0x7FFFFFFFFFFFFFFF; // ensure the guid is non-negative and within u64 range
+    return 0x0fuLL << 56 | guid & 0x7FFFFFFFFFFFFFFF; // add 0x0f to the most significant byte and "0x" to the return value
 }
 
 u64 get_guid() {
@@ -34,7 +34,7 @@ u64 get_guid() {
     if (guids[i] == 0) {
         guids[i] = generate_guid();
     }
-    return guids[i];
+    return 0x0fuLL << 56 | guids[i] & 0x7FFFFFFFFFFFFFFF; // add 0x0f to the most significant byte and "0x" to the returned value
 }
 
 void delete_guid(int delete_status) {

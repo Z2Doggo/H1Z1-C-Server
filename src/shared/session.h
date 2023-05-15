@@ -55,40 +55,11 @@ union Session_Address
 	};
 };
 
-typedef struct char_name_string char_name_string;
-struct char_name_string 
+typedef struct character_name_string character_name_string;
+struct character_name_string 
 {
-	usize length;
+	u32 length;
 	char* content;
-};
-
-typedef enum resource_types resource_types;
-enum resource_types
-{
-	CONDITION = 1,
-	HEALTH = 1,
-	HUNGER = 4,
-	HYDRATION = 5,
-	STAMINA = 6,
-	VIRUS = 12,
-	BLEEDING = 21,
-	FUEL = 50,
-	COMFORT = 68,
-};
-
-typedef enum resource_ids resource_ids;
-enum resource_ids
-{
-	HEALTH_ID = 1,
-	HUNGER_ID = 4,
-	HYDRATION_ID = 5,
-	STAMINA_ID = 6,
-	VIRUS_ID = 12,
-	BLEEDING_ID = 21,
-	COMFORT_ID = 68,
-	FUEL_ID = 396,
-	CONDITION_ID = 561,
-	CONSTRUCTION_CONDITION_ID = 567,
 };
 
 typedef struct Session_State Session_State;
@@ -97,12 +68,10 @@ struct Session_State
 	Session_Address address;
 	u32 id;
 	
-	resource_ids resource_id;
-	resource_types resource_type;
-	
+	character_name_string name_self;
+
 	u64 			character_id;
 	u64 			guid;
-
 	uint2b 			transient_id;
 
 	u32 			selected_server_id;
@@ -125,7 +94,7 @@ struct Session_State
 
 	Input_Stream input_stream;
 	Output_Stream output_stream;
-
+	
 	// begin world_character struct
 	u8              is_moving;
 	u8              is_running;

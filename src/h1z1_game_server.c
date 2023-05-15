@@ -25,6 +25,10 @@ static void platform_win_console_write(char* format, ...);
 #include "utility/endian.c"
 #include "utility/util.c"
 #include "utility/crypt_rc4.c"
+#include "utility/character_id_gen.c"
+#include "utility/transient_id_gen.c"
+#include "utility/read_json.c"
+#include "utility/shared.c"
 #include "shared/protocol/stream.h"
 #include "shared/protocol/fragment_pool.c"
 #include "shared/protocol/input_stream.c"
@@ -34,9 +38,7 @@ static void platform_win_console_write(char* format, ...);
 #include "shared/session.h"
 #include "shared/packet_queue.h"
 #include "shared/packet_queue.c"
-#include "utility/character_id_gen.c"
-#include "utility/transient_id_gen.c"
-#include "utility/read_json.c"
+#include "thirdparty/cJSON.h"
 
 global u64 global_packet_dump_count;
 // HACK(rhett):
@@ -91,6 +93,7 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 // TODO(rhett): Client or Zone? Client is the word used by the game, but zone is more clear?
 #define MESSAGE_NAMESPACE  "Zone"
 #include "../schema/output/client_protocol_1087.c"
+#include "../schema/output/login_udp_11.c"
 #include "game/client_protocol_1087.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE  MESSAGE_NAMESPACE_DEFAULT
@@ -117,6 +120,14 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 
 	__time32_t timer32;
 	_time32(&timer32);
+
+	resource_data character_resources = 
+	{
+		.resource_type1 = 0,
+		.resource_id = 0,
+		.resource_type2 = 0,
+		.value = 10000,
+	};
 
 	Zone_Packet_InitializationParameters init_params =
 	{
@@ -661,7 +672,7 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 			[0] = {
 				.guid = guid_get,
 				.character_id = 0x1337, // (doggo)hacky work-around l33t solution for now...
-				.transient_id = transient_id_get,
+				.transient_id.value = transient_id_get,
 				.actor_model_id = 9474,
 				.head_actor_length = 26,
 				.head_actor = "SurvivorFemale_Head_02.adr",
@@ -674,7 +685,7 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 				.gender1 = 1 || 2,
 				.creation_date = timer64,
 				.last_login_date = timer64,
-				
+
 				.loadout_id = 3,
 				.loadout_slots_array_count = 1,
 				.loadout_slots_array =
@@ -692,47 +703,35 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 				},
 				.current_slot_id = 7,
 
+				.equipment_slots_count = 1,
+				.equipment_slots = 
+				(struct equipment_slots_s[1]) {
+					[0] = 
+					{
+						.unk_dword_7199 = 0,
+						.unk_dword_890 = 0,
+						.equipment_slot_id2 = 0,
+						.equipment_slot_id3 = 0,
+						.guid = 0x0,
+						.decal_alias_length = 1,
+						.decal_alias = "#"
+					},
+				},
+
+				
 				.character_resources_count = 1,
 				.character_resources =
 					(struct character_resources_s[1]) {
 					[0] =
 					{
-						.resource_type1 = 0 | session_state->resource_type,
+						.resource_type1 = pGetResources(character_resources.resource_type1),
+						.resource_id = pGetResources(character_resources.resource_id),
+						.resource_type2 = pGetResources(character_resources.resource_type2),
 
-						.resource_id = session_state->resource_id,
-						.resource_type2 = 0 | session_state->resource_type,
-
-						.value = session_state->resource_id > 0 ? session_state->resource_id : 0,
+						.value = pGetResources(character_resources.value) > 0 ? pGetResources(character_resources.value) : 0,
 					},
 				},
 				
-				.stats3_count = 1,
-				.stats3 =
-					(struct stats3_s[1]) {
-					[0] =
-					{
-						.stat_id55 = 1,
-						.stat_id66 = 2,
-						
-						.variable_u8_3_case = 1,
-						.variable_u8_3 =
-							(struct vartype_5_s[1]) {
-							[0] =
-							{
-								.base_1 = 0,
-								.modifier_1 = 0,
-							},
-						},
-
-						(struct vartype_6_s[1]) {
-							[0] =
-							{
-								.base_2 = 0,
-								.modifier_2 = 0,
-							},
-						},
-					},
-				},
 
 				.is_admin = TRUE,
 			},
@@ -837,7 +836,7 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 	Zone_Packet_AddLightweightPc lightweightpc =
 	{
 		.character_id 			= character_id_get,
-		.transient_id			= transient_id_get,
+		.transient_id.value		= transient_id_get,
 		.unknownByte1 			= 2,
 		.actorModelId 			= 9474,
 		.unknownDword1			= 270,
@@ -858,7 +857,7 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 	Zone_Packet_AddLightweightNpc lightweightnpc =
 	{
 		.characterId 			= character_id_get,
-		.transientId			= transient_id_get,
+		.transientId.value		= transient_id_get,
 		.nameId = 0,
 		.unknownByte1 			= 2,
 		.actorModelId 			= 9240,

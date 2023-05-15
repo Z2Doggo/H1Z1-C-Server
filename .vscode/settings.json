@@ -4,6 +4,16 @@
         "string.h": "c",
         "time.h": "c",
         "stdint.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "core_protocol.h": "c",
+        "base.h": "c",
+        "session.h": "c",
+        "algorithm": "c",
+        "chrono": "c",
+        "optional": "c",
+        "system_error": "c",
+        "type_traits": "c",
+        "xtr1common": "c",
+        "xutility": "c"
     }
 }

@@ -629,6 +629,7 @@ internal void zone_packet_handle(App_State* server_state,
 		{
 			switch (packet_id)
 			{
+				/*
 				case ZONE_PLAYERUPDATEPOSITION_ID:
 				{
 			
@@ -640,18 +641,15 @@ internal void zone_packet_handle(App_State* server_state,
 					u32 sequence = endian_read_u32_little(data + offset);
 					offset += sizeof(u32);
 
-					/*
-					(doggo) not sure if used but commented it out for now...
-
-					u8 unk_u8		= endian_read_u8_little(data + offset);
+					u8 unk_u8_data		= endian_read_u8_little(data + offset);
 					offset += sizeof(u8);
-					*/
 
 					Zone_Packet_PlayerUpdatePosition updt_pos =
 					{
-						.transient_id = get_transient_id(session_state->transient_id.value),
+						.transient_id.value = get_transient_id(session_state->transient_id.value),
 						.flag = flags,
 						.sequence = sequence
+						.unk_u8_data = unk_u8_data,
 					};
 
 					if (flags & 1)
@@ -789,15 +787,15 @@ internal void zone_packet_handle(App_State* server_state,
 					if (test == FALSE)
 						return;
 
-					updt_pos.test = malloc(data_length);
-					memcpy(updt_pos.test, data + 7, data_length - 7);
-					updt_pos.test_length = 0;
+					updt_pos.unk_u8_data = malloc(data_length);
+					memcpy(updt_pos.unk_u8_data, data + 7, data_length - 7);
 
 					zone_packet_send(2, server_state, session_state, &server_state->arena_per_tick, sizeof(updt_pos), Zone_Packet_Kind_PlayerUpdatePosition, &updt_pos);
 
 					break;
 				}
-				
+				*/
+			
 				return;
 			}
 		}	
