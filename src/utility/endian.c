@@ -647,6 +647,14 @@ endian_write_f64_big(u8* buffer, f64 value)
 	*(f64*)buffer = *(f64*)&result;
 }
 
+typedef struct vec3 vec3;
+struct vec3
+{
+	f32 x;
+	f32 y;
+	f32 z;
+};
+
 typedef struct vec4 vec4;
 struct vec4
 {
@@ -691,6 +699,21 @@ internal vec4_i32
 	return q;
 }
 
+internal vec3
+endian_read_vec3_little(u8* data)
+{
+	vec3 result = { 0 };
+
+	result.x = endian_read_f32_little(data);
+	data += sizeof(f32);
+	result.y = endian_read_f32_little(data);
+	data += sizeof(f32);
+	result.z = endian_read_f32_little(data);
+	data += sizeof(f32);
+
+	return result;
+}
+
 internal vec4
 endian_read_vec4_little(u8* data)
 {
@@ -706,6 +729,17 @@ endian_read_vec4_little(u8* data)
 	data += sizeof(f32);
 
 	return result;
+}
+
+internal void
+endian_write_vec3_little(u8* buffer, vec3 value)
+{
+	endian_write_f32_little(buffer, value.x);
+	buffer += sizeof(f32);
+	endian_write_f32_little(buffer, value.y);
+	buffer += sizeof(f32);
+	endian_write_f32_little(buffer, value.z);
+	buffer += sizeof(f32);
 }
 
 internal void

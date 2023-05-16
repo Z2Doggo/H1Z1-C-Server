@@ -1345,6 +1345,9 @@ packet 0x7 ClientLogout
 packet 0x8 TargetClientNotOnline
 
 packet 0x9 CommandBase
+packet 0x9 0xc604:u32 Command_RunSpeed
+f32 run_speed
+
 packet 0x9 0x1:u16 Command_ShowDialog
 packet 0x9 0x2:u16 Command_EndDialog
 packet 0x9 0x3:u16 Command_StartDialog
@@ -1608,6 +1611,19 @@ u32 game_time
 packet 0xf 0x20:u16 Character_WeaponStance
 u64 character_id
 u32 stance
+
+packet 0xf 0x2e:u16 Character_Respawn
+u8 respawn_type_1
+u64 respawn_guid
+u32 profile_id_1
+u32 profile_id_2
+u32 unk_dword_1_1
+vec4 grid_pos
+
+packet 0xf 0x2f:u16 Character_RespawnReply
+u64 character_id_1_1
+u8 status
+
 packet 0xf 0x3f:u16 Character_CharacterStateDelta
 u64 guid_1
 u64 guid_2
@@ -2953,6 +2969,19 @@ string:u32 unknownString1
 
 packet 0xd9 AddProxiedObject
 packet 0x92 AddSimpleNpc
+u64 character_id
+uint2b transient_id
+u8 unk_byte_1
+vec3 position
+vec3 rotation
+u32 unk_dword_1
+u32 unk_dword_2
+u32 model_id
+vec4 scale
+u32 unk_unk_dword_3
+b8 show_health
+f32 health
+
 packet 0xda LightweightToFullPc
 packet 0xdb LightweightToFullNpc
 packet 0xdc LightweightToFullVehicle

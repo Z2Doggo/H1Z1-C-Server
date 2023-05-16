@@ -147,18 +147,46 @@ internal void zone_packet_handle(App_State* server_state,
 			{
 				case ZONE_CLIENTISREADY_ID:
 				{
+					packet_kind = Zone_Packet_Kind_ClientIsReady;
 					printf("[Zone] Handling ZONE_CLIENTISREADY_ID\n");
+
+					Zone_Packet_AddSimpleNpc simple_npc =
+					{
+						.character_id = get_guid(session_state->character_id),
+						.transient_id = get_guid(session_state->transient_id.value),
+						.unk_byte_1 = 50,
+						.position = 602.91, 71.62, -1301.5,
+						.rotation = 0, -0.9944087862968445, 0,
+						.unk_dword_1 = 23,
+						.unk_dword_2 = 23,
+						.model_id = 0,
+						.scale = 1,1,1,1,
+						.unk_unk_dword_3 = 23,
+						.show_health = TRUE,
+						.health = 100,
+					};
+					
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(25), Zone_Packet_Kind_AddSimpleNpc, &simple_npc);
+					
+					Zone_Packet_Character_UpdateCharacterState updt_char_state = 
+					{
+						.character_id = get_guid(session_state->character_id),
+						.state1 = FALSE,
+						.state2 = FALSE,
+						.state3 = FALSE,
+						.state4 = FALSE,
+						.state5 = FALSE,
+						.state6 = FALSE,
+						.state7 = FALSE,
+					};
+
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_UpdateCharacterState, &updt_char_state);
 
 					Zone_Packet_ClientUpdate_DoneSendingPreloadCharacters preload_done =
 					{
 						.is_done = TRUE,
-					};
-
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(30), Zone_Packet_Kind_ClientUpdate_DoneSendingPreloadCharacters, &preload_done);
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_NetworkProximityUpdatesComplete, 	0);
-					// todo: send DtoObjectInitialData for trees
-					zone_packet_send(0, server_state,session_state,&server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ZoneDoneSendingInitialData, 0);
-
+					};					
+					
 					Zone_Packet_Character_CharacterStateDelta character_state_delta =
 					{
 						.guid_1 	= get_guid(session_state->guid),
@@ -166,19 +194,44 @@ internal void zone_packet_handle(App_State* server_state,
 						.game_time 	= (timer32 & 0xffffffff) >> 0,
 					};
 
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(30), Zone_Packet_Kind_ClientUpdate_DoneSendingPreloadCharacters, &preload_done);
 					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(character_state_delta), Zone_Packet_Kind_Character_CharacterStateDelta, &character_state_delta);
+					zone_packet_send(0, server_state,session_state,&server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ZoneDoneSendingInitialData, 0);
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_NetworkProximityUpdatesComplete, 	0);
+					// todo: send DtoObjectInitialData for trees
 
-					break;
+					Zone_Packet_Character_RespawnReply respawn_reply = 
+					{
+						.character_id_1_1 = get_guid(session_state->character_id),
+						.status = TRUE,
+					};
+
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
+					
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(character_state_delta), Zone_Packet_Kind_Character_CharacterStateDelta, &character_state_delta);
 				}
 				// (doggo) need to figure out a way to confirm the ClientFinishedLoading packet, because, right now this packet is not working and is being spammed and called an unhandled packet, baffles me
 				case ZONE_CLIENTFINISHEDLOADING_ID:
 				{
+					packet_kind = Zone_Packet_Kind_ClientFinishedLoading;
+
 					if (session_state->finished_loading == FALSE)
 					{
-						packet_kind = Zone_Packet_Kind_ClientFinishedLoading;
 						printf("[Zone] Handling ZONE_CLIENTFINISHEDLOADING_ID\n");
 
-						session_state->finished_loading = TRUE;
+						Zone_Packet_Character_UpdateCharacterState updt_char_state = 
+						{
+							.character_id = get_guid(session_state->character_id),
+							.state1 = FALSE,
+							.state2 = FALSE,
+							.state3 = FALSE,
+							.state4 = FALSE,
+							.state5 = FALSE,
+							.state6 = FALSE,
+							.state7 = FALSE,
+						};
+
+						zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_UpdateCharacterState, &updt_char_state);
 
 						Zone_Packet_Character_WeaponStance weapon_stance =
 						{
@@ -254,8 +307,52 @@ internal void zone_packet_handle(App_State* server_state,
 						};
 
 						zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Command_AddWorldCommand, &command_help);
+					
+						Zone_Packet_Command_RunSpeed run_speed =
+						{
+							.run_speed = 10.0f,
+						};
+						
+						zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Command_RunSpeed, &run_speed);
+					
 					}
+					session_state->finished_loading == TRUE;
 
+					break;
+				}
+				case ZONE_CHARACTER_RESPAWN_ID:
+				{
+					packet_kind = Zone_Packet_Kind_Character_Respawn;
+					printf("[Zone] Handling Character.Respawn\n");
+
+					Zone_Packet_Character_Respawn result = { 0 };
+					zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
+
+					session_state->is_loading = TRUE;
+					session_state->character_released = FALSE;
+					// (doggo)input last login date here
+					session_state->is_alive = TRUE;
+					session_state->is_running = FALSE;
+					session_state->is_respawning = FALSE;
+					session_state->is_in_air = FALSE;
+
+					resource_ids resource_id = {
+						.HEALTH_ID = 10000,
+						.HUNGER_ID = 10000,
+						.HYDRATION_ID = 10000,
+						.STAMINA_ID = 600,
+						.VIRUS_ID = 0,
+						.BLEEDING_ID = -40,
+					};
+
+					Zone_Packet_Character_RespawnReply respawn_reply = 
+					{
+						.character_id_1_1 = get_guid(session_state->character_id),
+						.status = TRUE,
+					};
+					
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
+					
 					break;
 				}
 				case ZONE_CLIENTLOGOUT_ID:
@@ -418,6 +515,17 @@ internal void zone_packet_handle(App_State* server_state,
 						},
 					};
 
+					Zone_Packet_Character_Respawn result = { 0 };
+					zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
+
+					Zone_Packet_Character_RespawnReply respawn_reply = 
+					{
+						.character_id_1_1 = get_guid(session_state->character_id),
+						.status = TRUE,
+					};
+					
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
+					
 					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(respawn_locations), Zone_Packet_Kind_ClientUpdate_RespawnLocations, &respawn_locations);
 
 					break;
@@ -490,8 +598,19 @@ internal void zone_packet_handle(App_State* server_state,
 								.unk_byte_9 = 1,
 							},
 						},
-					};
+					};					
 
+					Zone_Packet_Character_Respawn result = { 0 };
+					zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
+
+					Zone_Packet_Character_RespawnReply respawn_reply = 
+					{
+						.character_id_1_1 = get_guid(session_state->character_id),
+						.status = TRUE,
+					};
+					
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
+					
 					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(respawn_locations), Zone_Packet_Kind_ClientUpdate_RespawnLocations, &respawn_locations);
 
 					break;

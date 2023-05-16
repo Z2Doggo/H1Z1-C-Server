@@ -62,6 +62,32 @@ struct character_name_string
 	char* content;
 };
 
+typedef struct resource_ids resource_ids;
+struct resource_ids {
+    int HEALTH_ID;
+    int HUNGER_ID;
+    int HYDRATION_ID;
+    int STAMINA_ID;
+    int VIRUS_ID;
+    int BLEEDING_ID;
+    int COMFORT_ID;
+    int FUEL_ID;
+    int CONDITION_ID;
+};
+
+typedef struct resource_types resource_types;
+struct resource_types {
+    u32 CONDITION;
+    u32 HEALTH;
+    u32 HUNGER;
+    u32 HYDRATION;
+    u32 STAMINA;
+    u32 VIRUS;
+    u32 BLEEDING;
+    u32 COMFORT;
+    u32 FUEL;
+};
+
 typedef struct Session_State Session_State;
 struct Session_State
 {
@@ -80,7 +106,7 @@ struct Session_State
 	u8 				first_login;
 	u8 				gateway_channel;
 	u8 				is_synced;
-	
+
 	Session_Kind kind;
 	Connection_Args connection_args;
 
@@ -97,6 +123,8 @@ struct Session_State
 	Output_Stream output_stream;
 	
 	// begin world_character struct
+	u8 				character_released;
+	u8				is_loading;
 	u8              is_moving;
 	u8              is_running;
 	u8              is_jumping;
