@@ -2289,7 +2289,10 @@ packet 0x41 LobbyBase
 packet 0x42 LobbyGameDefinitionBase
 packet 0x42 0x1:u16 LobbyGameDefinition_DefinitionsRequest
 packet 0x42 0x2:u16 LobbyGameDefinition_DefinitionsResponse
-bytes:u32 definitions_data
+stream:u32 definitions_data
+{
+	string:u32 data
+}
 
 packet 0x43 ShowSystemMessage
 packet 0x44 POIChangeMessage

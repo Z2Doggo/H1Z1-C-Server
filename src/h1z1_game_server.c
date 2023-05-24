@@ -888,16 +888,10 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 	{
 		.characterId 			= character_id_get,
 		.transientId.value		= transient_id_get,
-		.nameId = 0,
+		.nameId 				= 0,
 		.unknownByte1 			= 2,
 		.actorModelId 			= 9240,
 	};			
-
-	Zone_Packet_Character_RespawnReply respawn_reply = 
-	{
-		.character_id_1_1 = get_guid(session_state->character_id),
-		.status = TRUE,
-	};
 
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
@@ -909,8 +903,7 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightPc, &lightweightpc);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightNpc, &lightweightnpc);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(500), Zone_Packet_Kind_SendSelfToClient, &send_self);	// (doggo)if this packet was a person, I would beat the ever-living shit out of it!
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
-	
+
 	//zone_packet_raw_file_send(0, app_state, session_state, &app_state->arena_per_tick, KB(40), "C:\\Users\\epicg\\OneDrive\\Desktop\\send_self\\" "5.bin");
 }
 

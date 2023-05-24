@@ -139,6 +139,7 @@ struct Session_State
 	u8              is_spectator;
 	u8              is_muted;
 	u8              is_admin;
+	u8				is_ready;
 	u8              has_god_mode;
 	u8              has_conveys;
 

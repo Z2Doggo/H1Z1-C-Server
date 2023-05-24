@@ -251,7 +251,7 @@ internal PLATFORM_SOCKET_UDP_CREATE_AND_BIND(platform_win_socket_udp_create_and_
 		return result;
 	}
 
-	// NOTE(rhett): Use non-blocking socket
+	// NOTE: Use non-blocking socket
 	u_long cmd_arg = TRUE;
 	if (ioctlsocket(result.socket, FIONBIO, &cmd_arg) == SOCKET_ERROR)
 	{
@@ -259,7 +259,7 @@ internal PLATFORM_SOCKET_UDP_CREATE_AND_BIND(platform_win_socket_udp_create_and_
 		goto socket_close;
 	}
 
-	// NOTE(rhett): Bind
+	// NOTE: Bind
 	SOCKADDR_IN addr =
 	{
 		.sin_family = AF_INET,
@@ -277,13 +277,13 @@ internal PLATFORM_SOCKET_UDP_CREATE_AND_BIND(platform_win_socket_udp_create_and_
 	result.is_valid = TRUE;
 	return result;
 
-	socket_close:
-		if (closesocket(result.socket) == SOCKET_ERROR)
-		{
-			// TODO(rhett): What do we even do at this point?
-			printf("[!] closesocket() failed: %d\n", WSAGetLastError());
-		}
-		return result;
+socket_close:
+	if (closesocket(result.socket) == SOCKET_ERROR)
+	{
+		// TODO: What do we even do at this point?
+		printf("[!] closesocket() failed: %d\n", WSAGetLastError());
+	}
+	return result;
 }
 
 internal PLATFORM_RECEIVE_FROM(platform_win_receive_from)
@@ -347,4 +347,489 @@ internal PLATFORM_SEND_TO(platform_win_send_to)
 
 #endif // YOTE_PLATFORM_WINDOWS
 
-//#endif // YOTE_PLATFORM
+#if defined(YOTE_PLATFORM_LINUX)
+
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <errno.h>
+// HACK(rhett): 
+global u64 global_performance_frequency;
+
+#if defined(YOTE_PLATFORM_USE_SOCKETS)
+#include <netdb.h>
+STATIC_ASSERT(SIZE_OF(int) == SIZE_OF(uptr));
+#endif // YOTE_PLATFORM_USE_SOCKETS
+
+internal PLATFORM_FOLDER_CREATE(platform_linux_folder_create)
+{
+	if (mkdir(folder_path, 0777) == -1)
+	{
+		if (errno != EEXIST)
+		{
+			printf("[!] mkdir error on \"%s\" - Error: %d\n",
+			       folder_path,
+			       errno);
+			return FALSE;
+		}
+	}
+
+	return TRUE;
+}
+
+internal PLATFORM_BUFFER_WRITE_TO_FILE(platform_linux_buffer_write_to_file)
+{
+	int file_handle = open(file_path, O_CREAT | O_WRONLY | O_APPEND, 0666);
+	if (file_handle == -1)
+	{
+		printf("[!] Unable to open file to write \"%s\" - Error: %d\n",
+		       file_path,
+		       errno);
+		return 0;
+	}
+
+	if (!buffer)
+	{
+		printf("[!] Buffer to write from is null\n");
+		close(file_handle);
+		return 0;
+	}
+
+	ssize_t bytes_written = write(file_handle, buffer, size);
+	if (bytes_written == -1)
+	{
+		printf("[!] Unable to write to file \"%s\" - Error: %d\n",
+		       file_path,
+		       errno);
+		close(file_handle);
+		return 0;
+	}
+
+	close(file_handle);
+	return (u32)bytes_written;
+}
+
+internal PLATFORM_BUFFER_LOAD_FROM_FILE(platform_linux_buffer_load_from_file)
+{
+	int file_handle = open(file_path, O_RDONLY);
+	if (file_handle == -1)
+	{
+		printf("[!] Unable to open file to read \"%s\" - Error: %d\n",
+		       file_path,
+		       errno);
+		return 0;
+	}
+
+	if (!buffer)
+	{
+		printf("[!] Buffer to load to is null\n");
+		close(file_handle);
+		return 0;
+	}
+
+	off_t file_size = lseek(file_handle, 0, SEEK_END);
+	lseek(file_handle, 0, SEEK_SET);
+
+	if (file_size > UINT_MAX)
+	{
+		printf("[!] File \"%s\" is too large to load\n",
+		       file_path);
+		close(file_handle);
+		return 0;
+	}
+
+	if (file_size > size)
+	{
+		printf("[!] Buffer is too small to load from file \"%s\"\n", file_path);
+		close(file_handle);
+		return 0;
+	}
+
+	ssize_t bytes_read = read(file_handle, buffer, file_size);
+	if (bytes_read == -1)
+	{
+		printf("[!] Unable to load from file \"%s\" - Error: %d\n",
+		       file_path,
+		       errno);
+		close(file_handle);
+		return 0;
+	}
+
+	close(file_handle);
+	return (u32)bytes_read;
+}
+
+internal PLATFORM_WALL_CLOCK(platform_linux_wall_clock)
+{
+	struct timespec result;
+	clock_gettime(CLOCK_MONOTONIC_RAW, &result);
+	return (u64)result.tv_sec * 1000000000 + (u64)result.tv_nsec;
+}
+
+internal PLATFORM_ELAPSED_SECONDS(platform_linux_elapsed_seconds)
+{
+	f32 result = (f32)(end - begin) / (f32)global_performance_frequency;
+	return result;
+}
+
+#if defined(YOTE_PLATFORM_USE_SOCKETS)
+internal PLATFORM_SOCKET_UDP_CREATE_AND_BIND(platform_linux_socket_udp_create_and_bind)
+{
+	Platform_Socket result = { 0 };
+	result.socket = socket(AF_INET, SOCK_DGRAM, 0);
+	if (result.socket == -1)
+	{
+		printf("[!] socket() failed: %d\n", errno);
+		return result;
+	}
+
+	// NOTE: Use non-blocking socket
+	int flags = fcntl(result.socket, F_GETFL, 0);
+	if (flags == -1)
+	{
+		printf("[!] fcntl(F_GETFL) failed: %d\n", errno);
+		goto socket_close;
+	}
+
+	if (fcntl(result.socket, F_SETFL, flags | O_NONBLOCK) == -1)
+	{
+		printf("[!] fcntl(F_SETFL) failed: %d\n", errno);
+		goto socket_close;
+	}
+
+	// NOTE: Bind
+	struct sockaddr_in addr =
+	{
+		.sin_family = AF_INET,
+		.sin_port = htons(port),
+		.sin_addr.s_addr = htonl(INADDR_ANY),
+	};
+
+	if (bind(result.socket, (struct sockaddr*)&addr, sizeof(addr)) == -1)
+	{
+		printf("[!] bind() failed: %d\n", errno);
+		goto socket_close;
+	}
+
+	result.is_valid = TRUE;
+	return result;
+
+socket_close:
+	if (close(result.socket) == -1)
+	{
+		// TODO: What do we even do at this point?
+		printf("[!] close() failed: %d\n", errno);
+	}
+	return result;
+}
+
+internal PLATFORM_RECEIVE_FROM(platform_linux_receive_from)
+{
+	struct sockaddr_in from_address = { 0 };
+	socklen_t from_address_size = sizeof(from_address);
+
+	ssize_t result = recvfrom(sock.socket,
+	                          buffer,
+	                          size,
+	                          0,
+	                          (struct sockaddr*)&from_address,
+	                          &from_address_size);
+
+	if (result == -1)
+	{
+		if (errno != EAGAIN && errno != EWOULDBLOCK)
+		{
+			printf("[!] recvfrom() failed: %d\n", errno);
+		}
+		return 0;
+	}
+	else if (!result)
+	{
+		printf("[!] recvfrom() returned 0\n");
+		return 0;
+	}
+
+	*from_ip = ntohl(from_address.sin_addr.s_addr);
+	*from_port = ntohs(from_address.sin_port);
+	return (u32)result;
+}
+
+internal PLATFORM_SEND_TO(platform_linux_send_to)
+{
+	struct sockaddr_in to_address =
+	{
+		.sin_family = AF_INET,
+		.sin_addr.s_addr = htonl(to_ip),
+		.sin_port = htons(to_port),
+	};
+
+	ssize_t result = sendto(sock.socket,
+	                        buffer,
+	                        size,
+	                        0,
+	                        (struct sockaddr*)&to_address,
+	                        sizeof(to_address));
+
+	if (result == -1)
+	{
+		printf("[!] sendto() failed: %d\n", errno);
+		return 0;
+	}
+
+	return (u32)result;
+}
+
+#endif // YOTE_PLATFORM_USE_SOCKETS
+
+#endif // YOTE_PLATFORM_LINUX
+
+#if defined(YOTE_PLATFORM_MACOS)
+
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <errno.h>
+
+// HACK(rhett): 
+global u64 global_performance_frequency;
+
+#if defined(YOTE_PLATFORM_USE_SOCKETS)
+#include <netdb.h>
+STATIC_ASSERT(SIZE_OF(int) == SIZE_OF(uptr));
+#endif // YOTE_PLATFORM_USE_SOCKETS
+
+internal PLATFORM_FOLDER_CREATE(platform_macos_folder_create)
+{
+	if (mkdir(folder_path, 0777) == -1)
+	{
+		if (errno != EEXIST)
+		{
+			printf("[!] mkdir error on \"%s\" - Error: %d\n",
+			       folder_path,
+			       errno);
+			return FALSE;
+		}
+	}
+
+	return TRUE;
+}
+
+internal PLATFORM_BUFFER_WRITE_TO_FILE(platform_macos_buffer_write_to_file)
+{
+	int file_handle = open(file_path, O_CREAT | O_WRONLY | O_APPEND, 0666);
+	if (file_handle == -1)
+	{
+		printf("[!] Unable to open file to write \"%s\" - Error: %d\n",
+		       file_path,
+		       errno);
+		return 0;
+	}
+
+	if (!buffer)
+	{
+		printf("[!] Buffer to write from is null\n");
+		close(file_handle);
+		return 0;
+	}
+
+	ssize_t bytes_written = write(file_handle, buffer, size);
+	if (bytes_written == -1)
+	{
+		printf("[!] Unable to write to file \"%s\" - Error: %d\n",
+		       file_path,
+		       errno);
+		close(file_handle);
+		return 0;
+	}
+
+	close(file_handle);
+	return (u32)bytes_written;
+}
+
+internal PLATFORM_BUFFER_LOAD_FROM_FILE(platform_macos_buffer_load_from_file)
+{
+	int file_handle = open(file_path, O_RDONLY);
+	if (file_handle == -1)
+	{
+		printf("[!] Unable to open file to read \"%s\" - Error: %d\n",
+		       file_path,
+		       errno);
+		return 0;
+	}
+
+	if (!buffer)
+	{
+		printf("[!] Buffer to load to is null\n");
+		close(file_handle);
+		return 0;
+	}
+
+	off_t file_size = lseek(file_handle, 0, SEEK_END);
+	lseek(file_handle, 0, SEEK_SET);
+
+	if (file_size > UINT_MAX)
+	{
+		printf("[!] File \"%s\" is too large to load\n",
+		       file_path);
+		close(file_handle);
+		return 0;
+	}
+
+	if (file_size > size)
+	{
+		printf("[!] Buffer is too small to load from file \"%s\"\n", file_path);
+		close(file_handle);
+		return 0;
+	}
+
+	ssize_t bytes_read = read(file_handle, buffer, file_size);
+	if (bytes_read == -1)
+	{
+		printf("[!] Unable to load from file \"%s\" - Error: %d\n",
+		       file_path,
+		       errno);
+		close(file_handle);
+		return 0;
+	}
+
+	close(file_handle);
+	return (u32)bytes_read;
+}
+
+internal PLATFORM_WALL_CLOCK(platform_macos_wall_clock)
+{
+	struct timespec result;
+	clock_gettime(CLOCK_MONOTONIC_RAW, &result);
+	return (u64)result.tv_sec * 1000000000 + (u64)result.tv_nsec;
+}
+
+internal PLATFORM_ELAPSED_SECONDS(platform_macos_elapsed_seconds)
+{
+	f32 result = (f32)(end - begin) / (f32)global_performance_frequency;
+	return result;
+}
+
+#if defined(YOTE_PLATFORM_USE_SOCKETS)
+internal PLATFORM_SOCKET_UDP_CREATE_AND_BIND(platform_macos_socket_udp_create_and_bind)
+{
+	Platform_Socket result = { 0 };
+	result.socket = socket(AF_INET, SOCK_DGRAM, 0);
+	if (result.socket == -1)
+	{
+		printf("[!] socket() failed: %d\n", errno);
+		return result;
+	}
+
+	// NOTE: Use non-blocking socket
+	int flags = fcntl(result.socket, F_GETFL, 0);
+	if (flags == -1)
+	{
+		printf("[!] fcntl(F_GETFL) failed: %d\n", errno);
+		goto socket_close;
+	}
+
+	if (fcntl(result.socket, F_SETFL, flags | O_NONBLOCK) == -1)
+	{
+		printf("[!] fcntl(F_SETFL) failed: %d\n", errno);
+		goto socket_close;
+	}
+
+	// NOTE: Bind
+	struct sockaddr_in addr =
+	{
+		.sin_family = AF_INET,
+		.sin_port = htons(port),
+		.sin_addr.s_addr = htonl(INADDR_ANY),
+	};
+
+	if (bind(result.socket, (struct sockaddr*)&addr, sizeof(addr)) == -1)
+	{
+		printf("[!] bind() failed: %d\n", errno);
+		goto socket_close;
+	}
+
+	result.is_valid = TRUE;
+	return result;
+
+socket_close:
+	if (close(result.socket) == -1)
+	{
+		// TODO: What do we even do at this point?
+		printf("[!] close() failed: %d\n", errno);
+	}
+	return result;
+}
+
+internal PLATFORM_RECEIVE_FROM(platform_macos_receive_from)
+{
+	struct sockaddr_in from_address = { 0 };
+	socklen_t from_address_size = sizeof(from_address);
+
+	ssize_t result = recvfrom(sock.socket,
+	                          buffer,
+	                          size,
+	                          0,
+	                          (struct sockaddr*)&from_address,
+	                          &from_address_size);
+
+	if (result == -1)
+	{
+		if (errno != EAGAIN && errno != EWOULDBLOCK)
+		{
+			printf("[!] recvfrom() failed: %d\n", errno);
+		}
+		return 0;
+	}
+	else if (!result)
+	{
+		printf("[!] recvfrom() returned 0\n");
+		return 0;
+	}
+
+	*from_ip = ntohl(from_address.sin_addr.s_addr);
+	*from_port = ntohs(from_address.sin_port);
+	return (u32)result;
+}
+
+internal PLATFORM_SEND_TO(platform_macos_send_to)
+{
+	struct sockaddr_in to_address =
+	{
+		.sin_family = AF_INET,
+		.sin_addr.s_addr = htonl(to_ip),
+		.sin_port = htons(to_port),
+	};
+
+	ssize_t result = sendto(sock.socket,
+	                        buffer,
+	                        size,
+	                        0,
+	                        (struct sockaddr*)&to_address,
+	                        sizeof(to_address));
+
+	if (result == -1)
+	{
+		printf("[!] sendto() failed: %d\n", errno);
+		return 0;
+	}
+
+	return (u32)result;
+}
+
+#endif // YOTE_PLATFORM_USE_SOCKETS
+
+#endif // YOTE_PLATFORM_MACOS
+
+//#endif // YOTE_PLATFORM_IMPLEMENTATION

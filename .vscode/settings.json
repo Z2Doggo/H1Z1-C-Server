@@ -16,6 +16,10 @@
         "xtr1common": "c",
         "xutility": "c",
         "xlocale": "c",
-        "atomic": "c"
+        "atomic": "c",
+        "yote.h": "c",
+        "game_server.h": "c",
+        "stb_sprintf.h": "c",
+        "packet_queue.h": "c"
     }
 }
