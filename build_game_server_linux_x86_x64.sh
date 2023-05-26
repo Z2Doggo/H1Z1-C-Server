@@ -1,7 +1,7 @@
 #!/bin/bash
 
-OUTPUT_NAME="game_server_linux_x64"
-SOURCES="../src/win32_game_server.c"
+OUTPUT_NAME="game_server_linux_x86_x64"
+SOURCES="../src/linux_game_server.c"
 
 DEFINES_SHARED=""
 DEFINES="$DEFINES_SHARED"
@@ -23,10 +23,10 @@ FLAGS_LINK="$FLAGS_LINK_SHARED -s"
 COMPILE_ARGS="-o $OUTPUT_NAME $DEFINES $FLAGS_COMPILE $SOURCES $FLAGS_LINK $LIBS"
 COMPILE_ARGS_D="-o $OUTPUT_NAME $DEFINES_D $FLAGS_COMPILE_D $SOURCES $FLAGS_LINK_D $LIBS_D"
 
-if [ ! -d "build_game_server_linux_x64" ]; then
-  mkdir build_game_server_linux_x64
+if [ ! -d "build_game_server_linux_x86_x64" ]; then
+  mkdir build_game_server_linux_x86_x64
 fi
-pushd build_game_server_linux_x64
+pushd build_game_server_linux_x86_x64
 
 gcc $FLAGS_COMPILE_D -o schema_tool ../src/schema_tool.c -lz
 ./schema_tool ../schema/client_protocol_1087.schm ../schema/output/client_protocol_1087.c
@@ -35,7 +35,7 @@ echo "LOCKED" > .reload-lock
 gcc $FLAGS_COMPILE_D -o game_server_module.so ../src/h1z1_game_server.c $DEFINES_D -shared $FLAGS_LINK_D $LIBS_D
 rm .reload-lock
 
-gcc $FLAGS_COMPILE_D -o game_server ../src/win32_game_server.c $DEFINES_D $FLAGS_LINK_D $LIBS_D
+gcc $FLAGS_COMPILE_D -o game_server ../src/linux_game_server.c $DEFINES_D $FLAGS_LINK_D $LIBS_D
 
 # If "packets" directory exists, remove it
 # if [ -d "packets" ]; then
