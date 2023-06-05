@@ -62,38 +62,16 @@ internal void zone_packet_handle(App_State* server_state,
 
 	if (data_length == 0)
 	{
-		printf(MESSAGE_CONCAT_WARN("Empty zone packet?\n\n"));
+		printf(MESSAGE_CONCAT_WARN("Empty zone packet????\n\n"));
 		return;
 	}
 
-	typedef enum packet_channel 
-	{
-		packet_channel_0 = 0,
-		packet_channel_1 = 1,
-		packet_channel_2 = 2,
-		packet_channel_3 = 3,
-		packet_channel_4 = 4,
-		packet_channel_5 = 5,
-		packet_channel_6 = 6,
-		packet_channel_7 = 7,
-	} packet_channel;
-
-	__time64_t timer64;
-	_time64(&timer64);
-
-	__time32_t timer32;
-	_time32(&timer32);
-
 	// TODO(rhett): once we start receiving packets, we'll need to handle subcodes
-	// (doggo) ^ done!
 	// TODO(rhett): OPTIMIZE THIS !!!!!!!!
 	// TODO(rhett): also this is SLOPPY
 	u32 packet_temp;
-	u32 packet_id = *data;
-	u32 sub_packet_id = data[1];
+	u32 packet_id;
 	u32 packet_iter;
-	u8 channel = *data >> 5;
-
 	if (data_length > 0)
 	{
 		for (packet_iter = Zone_Packet_Kind_Unhandled + 1; packet_iter < Zone_Packet_Kind__End; packet_iter++)
@@ -101,7 +79,7 @@ internal void zone_packet_handle(App_State* server_state,
 			if (data[0] == zone_registered_ids[packet_iter])
 			{
 				packet_id = *data;
-				goto switch_gateway_channel;
+				goto packet_id_switch;
 			}
 		}
 	}
@@ -114,7 +92,7 @@ internal void zone_packet_handle(App_State* server_state,
 			if (packet_temp == zone_registered_ids[packet_iter])
 			{
 				packet_id = packet_temp;
-				goto switch_gateway_channel;
+				goto packet_id_switch;
 			}
 		}
 	}
@@ -127,74 +105,34 @@ internal void zone_packet_handle(App_State* server_state,
 			if (packet_temp == zone_registered_ids[packet_iter])
 			{
 				packet_id = packet_temp;
-				goto switch_gateway_channel;
+				goto packet_id_switch;
 			}
 		}
 	}
 
+	__time64_t timer64;
+	_time64(&timer64);
+
+	__time32_t timer32;
+	_time32(&timer32);
+
 	packet_id = *data;
 	goto packet_id_fail;
-	
-	local_persist u8 test = FALSE;
-	
-	// (doggo)makes it easier to send packets that need to be sent on the proper gateway channel, 
-	switch_gateway_channel:
-	switch (channel)
+
+
+	packet_id_switch:
+		switch (packet_id)
 	{
-		case packet_channel_0:
-		{ 
-			switch (packet_id)
-			{
-				case ZONE_CLIENTISREADY_ID:
+		case ZONE_CLIENTISREADY_ID:
 				{
 					packet_kind = Zone_Packet_Kind_ClientIsReady;
 					printf("[Zone] Handling ZONE_CLIENTISREADY_ID\n");
-
-					Zone_Packet_AddSimpleNpc simple_npc =
-					{
-						.character_id = get_guid(session_state->character_id),
-						.transient_id = get_guid(session_state->transient_id.value),
-						.unk_byte_1 = 50,
-						.position = 602.91, 71.62, -1301.5,
-						.rotation = 0, -0.9944087862968445, 0,
-						.unk_dword_1 = 23,
-						.unk_dword_2 = 23,
-						.model_id = 0,
-						.scale = 1,1,1,1,
-						.unk_unk_dword_3 = 23,
-						.show_health = TRUE,
-						.health = 100,
-					};
-					
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(25), Zone_Packet_Kind_AddSimpleNpc, &simple_npc);
-					
-					Zone_Packet_Character_UpdateCharacterState updt_char_state = 
-					{
-						.character_id = get_guid(session_state->character_id),
-						.state1 = FALSE,
-						.state2 = FALSE,
-						.state3 = FALSE,
-						.state4 = FALSE,
-						.state5 = FALSE,
-						.state6 = FALSE,
-						.state7 = FALSE,
-					};
-
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_UpdateCharacterState, &updt_char_state);
 
 					Zone_Packet_ClientUpdate_DoneSendingPreloadCharacters preload_done =
 					{
 						.is_done = TRUE,
 					};					
 					
-					Zone_Packet_Character_CharacterStateDelta character_state_delta =
-					{
-						.guid_1 	= get_guid(session_state->guid),
-						.guid_3 	= 0x0000000040000000,
-						.game_time 	= (timer32 & 0xffffffff) >> 0,
-					};
-
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_CharacterStateDelta, &character_state_delta);
 					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(30), Zone_Packet_Kind_ClientUpdate_DoneSendingPreloadCharacters, &preload_done);
 					zone_packet_send(0, server_state,session_state,&server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ZoneDoneSendingInitialData, 0);
 					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_NetworkProximityUpdatesComplete, 	0);			
@@ -205,19 +143,20 @@ internal void zone_packet_handle(App_State* server_state,
 				case ZONE_CLIENTFINISHEDLOADING_ID:
 				{
 					packet_kind = Zone_Packet_Kind_ClientFinishedLoading;
-					
+					if(session_state->finished_loading == FALSE) 
+					{
 						printf("[Zone] Handling ZONE_CLIENTFINISHEDLOADING_ID\n");
 
 						Zone_Packet_Character_UpdateCharacterState updt_char_state = 
 						{
 							.character_id = get_guid(session_state->character_id),
-							.state1 = FALSE,
-							.state2 = FALSE,
-							.state3 = FALSE,
-							.state4 = FALSE,
-							.state5 = FALSE,
-							.state6 = FALSE,
-							.state7 = FALSE,
+							.state1 = 0,
+							.state2 = 0,
+							.state3 = 0,
+							.state4 = 0,
+							.state5 = 0,
+							.state6 = 0,
+							.state7 = 0,
 						};
 
 						zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_UpdateCharacterState, &updt_char_state);
@@ -303,7 +242,8 @@ internal void zone_packet_handle(App_State* server_state,
 						};
 						
 						zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Command_RunSpeed, &run_speed);
-
+					}
+					
 					break;
 				}
 				case ZONE_LOBBYGAMEDEFINITION_DEFINITIONSREQUEST_ID:
@@ -421,6 +361,7 @@ internal void zone_packet_handle(App_State* server_state,
 					//Zone_Packet_GameTimeSync result = { 0 };
 					//zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
 
+					/*
 					Zone_Packet_GameTimeSync time_sync =
 					{
 						.time = timer64,
@@ -428,8 +369,8 @@ internal void zone_packet_handle(App_State* server_state,
 						.unk_bool = FALSE,
 					};
 
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(time_sync), Zone_Packet_Kind_GameTimeSync, &time_sync);
-					
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_GameTimeSync, &time_sync);
+					*/
 					/*
 					char local_message[36] = { 0 };					
 					
@@ -533,7 +474,7 @@ internal void zone_packet_handle(App_State* server_state,
 					
 					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
 					
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(respawn_locations), Zone_Packet_Kind_ClientUpdate_RespawnLocations, &respawn_locations);
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_RespawnLocations, &respawn_locations);
 
 					break;
 				}
@@ -618,7 +559,7 @@ internal void zone_packet_handle(App_State* server_state,
 					
 					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
 					
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(respawn_locations), Zone_Packet_Kind_ClientUpdate_RespawnLocations, &respawn_locations);
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_RespawnLocations, &respawn_locations);
 
 					break;
 				}
@@ -699,7 +640,7 @@ internal void zone_packet_handle(App_State* server_state,
 								.zone_description_id = 1,
 
 								.zone_name_length = 2,
-								.zone_name = "Z1",
+								.zone_name = "Z2",
 								.hex_size = 100,
 								.is_production_zone = 1,
 							}
@@ -788,329 +729,28 @@ internal void zone_packet_handle(App_State* server_state,
 					packet_kind = Zone_Packet_Kind_KeepAlive;
 					printf("[Zone] Handling KeepAlive\n");
 
+				/*
 					Zone_Packet_KeepAlive keep_alive =
 					{
 						.game_time = timer32,
 					};
 
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(keep_alive), Zone_Packet_Kind_KeepAlive, &keep_alive);
-					
-					break;
-				}
-			}
-			
-			break;
-		}
-		case packet_channel_1:
-		{	
-			switch (packet_id)
-			{
-				/*
-				case ZONE_KEEPALIVE_ID:
-				{
-					packet_kind = Zone_Packet_Kind_KeepAlive;
-					printf("[Zone] Handling KeepAlive\n");
-
-					Zone_Packet_KeepAlive keep_alive =
-					{
-						.game_time = timer32,
-					};
-
-					zone_packet_send(1, server_state, session_state, &server_state->arena_per_tick, sizeof(keep_alive), Zone_Packet_Kind_KeepAlive, &keep_alive);
-					
-					break;
-				}
+					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_KeepAlive, &keep_alive);
 				*/
-
-				break;
-			}
-
-			break;
-		}
-		case packet_channel_2:
-		{
-			switch (packet_id)
-			{
-				/*
-				case ZONE_PLAYERUPDATEPOSITION_ID:
-				{
-			
-					u32 offset = 0;
-
-					u16 flags = endian_read_u16_little(data + offset);
-					offset += sizeof(u16);
-
-					u32 sequence = endian_read_u32_little(data + offset);
-					offset += sizeof(u32);
-
-					u8 unk_u8_data		= endian_read_u8_little(data + offset);
-					offset += sizeof(u8);
-
-					Zone_Packet_PlayerUpdatePosition updt_pos =
-					{
-						.transient_id.value = get_transient_id(session_state->transient_id.value),
-						.flag = flags,
-						.sequence = sequence
-						.unk_u8_data = unk_u8_data,
-					};
-
-					if (flags & 1)
-					{
-						int2b v = endian_read_int2b_little(data, offset);
-						offset += v.length;
-
-						session_state->stance = v.value;
-					}
-
-					if (flags & 2)
-					{
-						i32 position[3];
-						int2b v;
-
-						v = endian_read_int2b_little(data, offset);
-						offset += v.length;
-
-						position[0] = v.value / 100;
-
-						v = endian_read_int2b_little(data, offset);
-						offset += v.length;
-
-						position[1] = v.value / 100;
-
-						v = endian_read_int2b_little(data, offset);
-						offset += v.length;
-
-						position[2] = v.value / 100;
-
-						session_state->position[0] = position[0];
-						session_state->position[1] = position[1];
-						session_state->position[2] = position[2];
-
-					}
-
-					if (flags & 0x20)
-					{
-						f32 v = endian_read_f32_little(data + offset);
-						offset += sizeof(f32);
-
-						session_state->orientation = v;
-					}
-
-					if (flags & 0x40)
-					{
-						int2b v = endian_read_int2b_little(data, offset);
-						offset += v.length;
-
-						session_state->front_tilt = v.value;
-					}
-
-					if (flags & 0x80)
-					{
-						int2b v = endian_read_int2b_little(data, offset);
-						offset += v.length;
-
-						session_state->side_tilt = v.value;
-					}
-
-					if (flags & 4)
-					{
-						int2b v = endian_read_int2b_little(data, offset);
-						offset += v.length;
-
-						session_state->angle_change = v.value;
-					}
-
-					if (flags & 0x8)
-					{
-						int2b v = endian_read_int2b_little(data, offset);
-						offset += v.length;
-
-						session_state->vertical_speed = v.value;
-					}
-
-					if (flags & 0x10)
-					{
-						int2b v = endian_read_int2b_little(data, offset);
-						offset += v.length;
-
-						session_state->horizontal_speed = v.value;
-					}
-
-					if (flags & 0x100)
-					{
-						int2b v = endian_read_int2b_little(data, offset);
-						offset += v.length;
-
-						v = endian_read_int2b_little(data, offset);
-						offset += v.length;
-
-						v = endian_read_int2b_little(data, offset);
-						offset += v.length;
-					}
-
-					if (flags & 0x200) {
-						euler_angle rotation_euler;
-
-						int2b v = endian_read_int2b_little(data, offset);
-						rotation_euler.pitch = v.value / 100;
-						offset += v.length;
-
-						v = endian_read_int2b_little(data, offset);
-						rotation_euler.yaw = v.value / 100;
-						offset += v.length;
-
-						v = endian_read_int2b_little(data, offset);
-						rotation_euler.roll = v.value / 100;
-						offset += v.length;
-
-						v = endian_read_int2b_little(data, offset);
-						//rotation_euler.w = v.value / 100;
-						offset += v.length;
-
-						//vec4_i32 rotation = euler_to_quaternion(rotation_euler);
-					}
-
-					if (flags & 0x400)
-					{
-						int2b v = endian_read_int2b_little(data, offset);
-						offset += v.length;
-				
-						session_state->direction = v.value / 10;
-					}
-
-					if (flags & 0x800)
-					{
-						int2b v = endian_read_int2b_little(data, offset);
-						offset += v.length;
-
-						session_state->engine_rpm = v.value / 10;
-					}
-
-					if (test == FALSE)
-						return;
-
-					updt_pos.unk_u8_data = malloc(data_length);
-					memcpy(updt_pos.unk_u8_data, data + 7, data_length - 7);
-
-					zone_packet_send(2, server_state, session_state, &server_state->arena_per_tick, sizeof(updt_pos), Zone_Packet_Kind_PlayerUpdatePosition, &updt_pos);
-
 					break;
 				}
-				*/
-			
-				break;
-			}
-
-			break;
-		}	
-		case packet_channel_3:
-		{
-			switch (packet_id)
-			{
-				case ZONE_CLIENTINITIALIZATIONDETAILS_ID:
-				{
-					packet_kind = Zone_Packet_Kind_ClientInitializationDetails;
-					printf("[Zone] Handling ClientInitializationDetails\n");
-					
-					Zone_Packet_ClientInitializationDetails init_details = 
-					{
-						.unk_u32_1 = 0,
-					};
-					
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientInitializationDetails, &init_details);
-
-					break;
-				}
-			}
-			
-			break;
-		}
-		case packet_channel_4:
-		{
-			switch (packet_id)
-			{
-				case ZONE_SYNCHRONIZATION_ID:
-				{
-					if (session_state->is_synced == FALSE)
-					{
-						packet_kind = Zone_Packet_Kind_Synchronization;
-						printf("[Zone] Handling Synchronization\n");
-
-						session_state->is_synced = TRUE;
-
-						Zone_Packet_Synchronization sync_packet =
-						{
-							.server_time = timer64,
-							.server_time_2 = timer64,
-							.unk_time = timer64 + 2,
-						};
-			
-						zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(sync_packet), Zone_Packet_Kind_Synchronization, &sync_packet);
-					}
-
-					break;
-				}
-			}
-
-			break;
-		}
-		case packet_channel_5:
-		{
-			switch (packet_id)
-			{
-				case ZONE_GETREWARDBUFFINFO_ID:
-				{
-					Zone_Packet_RewardBuffInfo buff_info =
-					{
-						.unk_float_1 = 1,
-						.unk_float_2 = 2,
-						.unk_float_3 = 3,
-						.unk_float_4 = 4,
-						.unk_float_5 = 5,
-						.unk_float_6 = 6,
-						.unk_float_7 = 7,
-						.unk_float_8 = 8,
-						.unk_float_9 = 9,
-						.unk_float_10 = 10,
-						.unk_float_11 = 11,
-						.unk_float_12 = 12,
-					};
-
-					zone_packet_send(0, server_state, session_state, &server_state->arena_per_tick, sizeof(buff_info), Zone_Packet_Kind_RewardBuffInfo, &buff_info);
-				
-					break;
-				}
-			}
-			
-			break;
-		}	
-		case packet_channel_6:
-		{
-			switch (packet_id)
-			{
-				break;
-			}
-
-			break;
-		}
-		// (doggo) haven't seen packets on anything above gateway_channel_7, keep like this for now		
-		case packet_channel_7:
-		{
-			switch (packet_id)
-			{
-				break;
-			}
-
-			break;
-		}
 		default:
 		{
 			packet_id_fail:
 				packet_kind = Zone_Packet_Kind_Unhandled;
-				
-			printf("[!] Unhandled zone packet from:\n gateway channel: [%x],\n packet opcode: [0x%x],\n sub packet opcode: [0x%x],\n\n", channel, packet_id, sub_packet_id);
+			printf(MESSAGE_CONCAT_WARN("Unhandled zone packet 0x%02x\n"), packet_id);
+
+			if (session_state->connection_args.should_dump_zone)
+			{
+				char dump_path[256] = { 0 };
+				stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_C_zone_%s.bin", global_tick_count, global_packet_dump_count++, zone_packet_names[packet_kind]);
+				server_state->platform_api->buffer_write_to_file(dump_path, data, data_length);
+			}
 		}
 	}
-
-	return;
 }

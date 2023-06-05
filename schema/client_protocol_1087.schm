@@ -1907,6 +1907,7 @@ u32        	name_id
 u8         	unk_bool2
 string:u32 	lighting
 u8         	unk_bool3
+u8 unk_bool4
 
 packet 0x17 ReferenceDataBase
 

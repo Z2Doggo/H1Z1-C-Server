@@ -77,7 +77,7 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 					},
 				},
 				.application_payload_length = 2,
-				.application_payload 		= "EU",
+				.application_payload 		= "US",
 				.error_details_count 		= 1,
 				.error_details =
 					(struct error_details_s[1])
@@ -92,7 +92,7 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 					},
 				},
 				.ip_country_code_length = 2,
-				.ip_country_code 		= "EU",
+				.ip_country_code 		= "US",
 			};
 
 			login_packet_send(server, session, &server->arena_per_tick, KB(10), FALSE, Login_Packet_Kind_LoginReply, &login_reply);
@@ -134,7 +134,7 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 				.character_id = session->character_id,
 			};
 
-			login_packet_send(server, session, &server->arena_per_tick, KB(1), FALSE, Login_Packet_Kind_CharacterCreateReply, &character_create_reply);
+			login_packet_send(server, session, &server->arena_per_tick, KB(10), FALSE, Login_Packet_Kind_CharacterCreateReply, &character_create_reply);
 
 			break;
 		}
@@ -153,7 +153,7 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 			Login_Packet_CharacterSelectInfoReply character_info_reply =		
 			{
 				.character_status = 1,
-				.can_bypass_server_lock = 1,
+				.can_bypass_server_lock = TRUE,
 			};
 
 			login_packet_send(server,
@@ -187,17 +187,17 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 						.id 						= 1,
 						.state 						= 2,
 						.is_locked 					= FALSE,
-						.name_length 				= 5,
-						.name 						= "SoloServer",
+						.name_length 				= 4,
+						.name 						= "Solo",
 						.name_id 					= 195,
-						.description_length 		= 10,
+						.description_length 		= 4,
 						.description 				= "yeah",
 						.description_id 			= 1362,
-						.server_info_length 		= 165,
-						.server_info 				= "<ServerInfo Region=\"CharacterCreate.RegionEu\" Subregion=\"UI.SubregionEu\" IsRecommended=\"1\" IsRecommendedVS=\"0\" IsRecommendedNC=\"0\" IsRecommendedTR=\"0\" />",
+						.server_info_length 		= 168,
+						.server_info 				= "<ServerInfo Region=\"CharacterCreate.RegionUs\" Subregion=\"UI.SubregionUS\" IsRecommended=\"1\" IsRecommendedVS=\"0\" IsRecommendedNC=\"0\" IsRecommendedTR=\"0\" />",
 						.population_level			= 0,
-						.population_data_length 	= 436,
-						.population_data 			= "<Population ServerCapacity=\"0\" PingAdr=\"127.0.0.1:1117\" Rulesets=\"Permadeath\"><factionlist IsList=\"1\"><faction Id=\"1\" Percent=\"0\" TargetPopPct=\"0\" RewardBuff=\"52\" XPBuff=\"52\" PercentAvg=\"0\"/><faction Id=\"2\" Percent=\"0\" TargetPopPct=\"1\" RewardBuff=\"0\" XPBuff=\"0\" PercentAvg=\"0\"/><faction Id=\"3\" Percent=\"0\" TargetPopPct=\"1\" RewardBuff=\"0\" XPBuff=\"0\" PercentAvg=\"1\"/></factionlist></Population>",
+						.population_data_length 	= 240,
+						.population_data 			= "<Population PctCap=\"0\" PingAdr=\"127.0.0.1:60000\" Rulesets=\"\" Mode=\"13\" IsLogin=\"1\" IsWL=\"0\" IsEvt=\"0\" PL=\"0\" DC=\"LVS\" PopLock=\"0\" GP=\"100\" BP=\"175\" MaxPop=\"4000\" Subregion=\"US\"><Fac IsList=\"1\"/></Population>",
 						.is_access_allowed 			= TRUE,
 					},
 				},
@@ -231,12 +231,15 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 			Login_Packet_CharacterLoginReply character_login_reply =
 			{
 				.character_id = session->character_id,
-				.server_id = session->selected_server_id,
+				.server_id = 0,
+				.last_login = 0,
 				.status = 1,
 				.login_payload =
 					(struct login_payload_s[1]) {
-					[0] =
-					{
+					[0] =					
+					{	
+						.unk_byte_1 = 0,
+						.unk_byte_2 = 0,
 						.server_address_length = 15,
 						.server_address = "127.0.0.1:60000",
 						.server_ticket_length = 15,
@@ -252,7 +255,7 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 			login_packet_send(server,
 			                  session,
 			                  &server->arena_per_tick,
-			                  KB(1),
+			                  KB(10),
 			                  FALSE,
 			                  Login_Packet_Kind_CharacterLoginReply,
 			                  &character_login_reply);

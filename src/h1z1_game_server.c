@@ -132,8 +132,8 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 
 	Zone_Packet_SendZoneDetails send_zone_details =
 	{
-		.zone_name_length 	= 2,
-		.zone_name 			= "Z1",
+		.zone_name_length 	= 9,
+		.zone_name 			= "LoginZone",
 		.zone_type 			= 4,
 		.unk_bool 			= FALSE,
 
@@ -164,8 +164,9 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 		.name_id			= 7699,
 		.unk_bool2			= TRUE,
 		.lighting_length 	= 15,
-		.lighting			= "Lighting.txt",
+		.lighting			= "Lighting_Z2.txt",
 		.unk_bool3			= FALSE,
+		.unk_bool4 = FALSE,
 	};
 
 	Zone_Packet_CommandItemDefinitions item_defs = 
@@ -902,7 +903,8 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_UpdateWeatherData, &updt_weather_data);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightPc, &lightweightpc);
 	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightNpc, &lightweightnpc);
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(500), Zone_Packet_Kind_SendSelfToClient, &send_self);	// (doggo)if this packet was a person, I would beat the ever-living shit out of it!
+	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(500), Zone_Packet_Kind_SendSelfToClient, &send_self);	// (doggo)if this packet was a person, I would beat the ever-living shit out of it!	
+
 
 	//zone_packet_raw_file_send(0, app_state, session_state, &app_state->arena_per_tick, KB(40), "C:\\Users\\epicg\\OneDrive\\Desktop\\send_self\\" "5.bin");
 }
