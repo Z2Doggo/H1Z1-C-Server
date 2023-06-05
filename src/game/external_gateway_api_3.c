@@ -288,7 +288,6 @@
 
 	internal void gateway_tunnel_data_send(App_State* server_state,
 	                                       Session_State* session_state,
-	                                       u8 channel,
 	                                       u8* base_buffer,
 	                                       u32 total_length)
 	{
@@ -296,7 +295,7 @@
 		//              enough space for the tunnel data header
 		Gateway_Packet_TunnelPacket tunnel_packet =
 		{
-			.channel = channel,
+			.channel = 0,
 			.data = base_buffer + TUNNEL_DATA_HEADER_LENGTH,
 			.data_length = total_length - TUNNEL_DATA_HEADER_LENGTH,
 		};

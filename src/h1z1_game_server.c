@@ -38,7 +38,6 @@ static void platform_win_console_write(char* format, ...);
 #include "shared/session.h"
 #include "shared/packet_queue.h"
 #include "shared/packet_queue.c"
-#include "thirdparty/cJSON.h"
 
 global u64 global_packet_dump_count;
 // HACK(rhett):
@@ -894,16 +893,16 @@ internal void gateway_on_login(App_State* app_state, Session_State* session_stat
 		.actorModelId 			= 9240,
 	};			
 
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(40), Zone_Packet_Kind_CommandItemDefinitions, &item_defs);
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(40), Zone_Packet_Kind_ReferenceDataWeaponDefinitions, &weapon_defs);
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientGameSettings, &game_settings);
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ContainerInitEquippedContainers, &init_equipped_containers);
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_UpdateWeatherData, &updt_weather_data);
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightPc, &lightweightpc);
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightNpc, &lightweightnpc);
-	zone_packet_send(0, app_state, session_state, &app_state->arena_per_tick, KB(500), Zone_Packet_Kind_SendSelfToClient, &send_self);	// (doggo)if this packet was a person, I would beat the ever-living shit out of it!	
+	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
+	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
+	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(40), Zone_Packet_Kind_CommandItemDefinitions, &item_defs);
+	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(40), Zone_Packet_Kind_ReferenceDataWeaponDefinitions, &weapon_defs);
+	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientGameSettings, &game_settings);
+	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ContainerInitEquippedContainers, &init_equipped_containers);
+	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_UpdateWeatherData, &updt_weather_data);
+	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightPc, &lightweightpc);
+	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightNpc, &lightweightnpc);
+	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(500), Zone_Packet_Kind_SendSelfToClient, &send_self);	// (doggo)if this packet was a person, I would beat the ever-living shit out of it!	
 
 
 	//zone_packet_raw_file_send(0, app_state, session_state, &app_state->arena_per_tick, KB(40), "C:\\Users\\epicg\\OneDrive\\Desktop\\send_self\\" "5.bin");
