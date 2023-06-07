@@ -138,7 +138,7 @@ u32 unk_u32;
 u32 char_payload_length;
 struct char_payload_s
 {
-b8 empire_id;
+u8 empire_id;
 u32 head_type;
 u32 profile_type;
 u32 gender;
@@ -662,9 +662,9 @@ printf("-- STREAM_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->char_paylo
 u32 will_pack_char_payload = packet->char_payload_length == ~(u32)0 ? 0 : 1;
 for (u32 char_payload_iter = 0; char_payload_iter < will_pack_char_payload; char_payload_iter++)
 {
-// b8 empire_id
-endian_write_b8_little(buffer + offset, packet->char_payload[char_payload_iter].empire_id);
-offset += sizeof(b8);
+// u8 empire_id
+endian_write_u8_little(buffer + offset, packet->char_payload[char_payload_iter].empire_id);
+offset += sizeof(u8);
 printf("-- empire_id               \t%lld\t%llxh\t%f\n", (i64)packet->char_payload[char_payload_iter].empire_id, (u64)packet->char_payload[char_payload_iter].empire_id, (f64)packet->char_payload[char_payload_iter].empire_id);
 
 // u32 head_type
@@ -2033,9 +2033,9 @@ packet->char_payload = arena_push_size(arena, packet->char_payload_length * size
 printf("-- STREAM_LENGTH           \t%d\n", packet->char_payload_length);
 for (u32 char_payload_iter = 0; char_payload_iter < (packet->char_payload_length > (u32)0 ? (u32)1 : (u32)0); char_payload_iter++)
 {
-// b8 empire_id
-packet->char_payload[char_payload_iter].empire_id = endian_read_b8_little(data + offset);
-offset += sizeof(b8);
+// u8 empire_id
+packet->char_payload[char_payload_iter].empire_id = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
 printf("-- empire_id               \t%lld\t%llxh\t%f\n", (i64)packet->char_payload[char_payload_iter].empire_id, (u64)packet->char_payload[char_payload_iter].empire_id, (f64)packet->char_payload[char_payload_iter].empire_id);
 
 // u32 head_type

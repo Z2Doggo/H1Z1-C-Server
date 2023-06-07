@@ -1571,6 +1571,57 @@ stream:u32 item_def_reply_2
 
 packet 0xa AdminBase
 packet 0xb ClientBeginZoning
+string:u32 zone_name
+u32 zone_type
+vec4 pos
+vec4 rot
+
+// skydata begin
+f32 		unknownDword1
+f32 		fog_density
+f32 		fog_floor
+f32 		fog_gradient
+f32 		rain
+f32 		temp
+f32 		color_gradient
+f32 		unknown_dword8
+f32 		unknown_dword9
+f32 		unknown_dword10
+f32 		unknown_dword11
+f32 		unknown_dword12
+f32 		sun_axis_x
+f32 		sun_axis_y
+f32 		unknown_dword15
+f32 		disable_trees
+f32 		disable_trees1
+f32 		disable_trees2
+f32 		wind
+f32 		unknown_dword20
+f32 		unknown_dword21
+string:u32 	name
+f32 		unknown_dword22
+f32 		unknown_dword23
+f32 		unknown_dword24
+f32 		unknown_dword25
+f32 		unknown_dword26
+f32 		unknown_dword27
+f32 		unknown_dword28
+f32 		unknown_dword29
+f32 		ao_size
+f32 		ao_gamma
+f32 		ao_blackpoint
+f32 		unknown_dword33
+//skydata end
+
+u8 unk_byte_1
+u32 zone_id_1
+u32 zone_id_2
+u32 name_id
+u32 unk_dword_1
+b8 unk_bool_1
+b8 wait_for_zone_ready
+b8 unk_bool_2
+
 packet 0xc CombatBase
 packet 0xd ProjectileDebug
 packet 0xe MailBase
@@ -2895,9 +2946,7 @@ vec4 scale
 string:u32 texture
 string:u32 unknownString2
 u32 unknownDword1
-f32 position_x
-f32 position_y
-f32 position_z
+vec3 position
 vec4 rotation
 vec4 unknownFloatVector4
 

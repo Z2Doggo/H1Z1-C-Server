@@ -20,6 +20,8 @@
         "yote.h": "c",
         "game_server.h": "c",
         "stb_sprintf.h": "c",
-        "packet_queue.h": "c"
+        "packet_queue.h": "c",
+        "stdbool.h": "c",
+        "stream.h": "c"
     }
 }

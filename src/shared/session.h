@@ -102,10 +102,10 @@ struct Session_State
 	uint2b 			transient_id;
 
 	u32 			selected_server_id;
-	u8 				finished_loading;
-	u8 				first_login;
-	u8 				gateway_channel;
-	u8 				is_synced;
+	b8 				finished_loading;
+	b8 				first_login;
+	b8 				gateway_channel;
+	b8 				is_synced;
 
 	Session_Kind kind;
 	Connection_Args connection_args;
@@ -123,25 +123,25 @@ struct Session_State
 	Output_Stream output_stream;
 	
 	// begin world_character struct
-	u8 				character_released;
-	u8				is_loading;
-	u8              is_moving;
-	u8              is_running;
-	u8              is_jumping;
-	u8              is_in_air;
-	u8              is_walking;
-	u8              is_hidden;
-	u8              is_bleeding;
-	u8              is_bandaged;
-	u8              is_exhausted;
-	u8              is_alive;
-	u8              is_respawning;
-	u8              is_spectator;
-	u8              is_muted;
-	u8              is_admin;
-	u8				is_ready;
-	u8              has_god_mode;
-	u8              has_conveys;
+	b8 				character_released;
+	b8				is_loading;
+	b8              is_moving;
+	b8              is_running;
+	b8              is_jumping;
+	b8              is_in_air;
+	b8              is_walking;
+	b8              is_hidden;
+	b8              is_bleeding;
+	b8              is_bandaged;
+	b8              is_exhausted;
+	b8              is_alive;
+	b8              is_respawning;
+	b8              is_spectator;
+	b8              is_muted;
+	b8              is_admin;
+	b8				is_ready;
+	b8              has_god_mode;
+	b8              has_conveys;
 
 	u64             creation_date;
 	u64             last_login_date;

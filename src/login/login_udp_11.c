@@ -131,7 +131,7 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 			Login_Packet_CharacterCreateReply character_create_reply =
 			{
 				.status = 1,
-				.character_id = session->character_id,
+				.character_id = 0x133742069,
 			};
 
 			login_packet_send(server, session, &server->arena_per_tick, KB(10), FALSE, Login_Packet_Kind_CharacterCreateReply, &character_create_reply);
@@ -142,7 +142,7 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 		{
 			packet_kind = Login_Packet_Kind_CharacterSelectInfoRequest;
 			printf(MESSAGE_CONCAT_INFO("Recieved %s\n"), login_packet_names[packet_kind]);
-
+			
 			if (session->connection_args.should_dump_login)
 			{
 				char dump_path[256] = { 0 };
@@ -163,7 +163,7 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 			                  FALSE,
 			                  Login_Packet_Kind_CharacterSelectInfoReply,
 			                  &character_info_reply);
-		};
+		} break;
 
 		case LOGIN_SERVERLISTREQUEST_ID:
 		{
@@ -230,7 +230,7 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 
 			Login_Packet_CharacterLoginReply character_login_reply =
 			{
-				.character_id = session->character_id,
+				.character_id = 0x0,
 				.server_id = 0,
 				.last_login = 0,
 				.status = 1,
@@ -240,14 +240,20 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 					{	
 						.unk_byte_1 = 0,
 						.unk_byte_2 = 0,
-						.server_address_length = 15,
+						.server_address_length = 16,
 						.server_address = "127.0.0.1:60000",
-						.server_ticket_length = 15,
+						.server_ticket_length = 16,
 						.server_ticket = "7y3Bh44sKWZCYZH",
 						.encryption_key_length = 16,
 						.encryption_key = (u8*)"\x17\xbd\x08\x6b\x1b\x94\xf0\x2f\xf0\xec\x53\xd7\x63\x58\x9b\x5f",
-						.soe_protocol_version	= 3,
-						.character_id = session->character_id,
+						.soe_protocol_version = 3,
+						.character_id = 0x133742069,
+						.unk_u64 = 0x0,
+						.station_name_length = 20,
+						.station_name = "doggos battlestation",
+						.character_name_length = 5,
+						.character_name = "doggo",
+						.server_feature_bit = 0x0000000000000000,
 					},
 				},
 			};
@@ -278,7 +284,7 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
 
 			Login_Packet_CharacterDeleteReply character_delete_reply =
 			{
-				.character_id = session->character_id,
+				.character_id = 0x133742069,
 				.status = 1,
 			};
 
@@ -344,7 +350,7 @@ internal void login_packet_handle(App_State* server, Session_State* session, u8*
                     		.status = packet_status,
                 		},
             		},
-        		.data_server_length = 14 + char_name.length,
+        		.data_server_length = 14,
     		};
 
     		login_packet_send(server, session, &server->arena_per_tick, KB(100), FALSE, Login_Packet_Kind_TunnelAppPacketServerToClient, &tunnel_app_packet_server_to_client);

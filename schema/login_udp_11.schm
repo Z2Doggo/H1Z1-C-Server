@@ -46,7 +46,7 @@ u32 			unk_u32
 stream:u32 		char_payload
 {
 
-	b8 			empire_id
+	u8 			empire_id
 	u32 		head_type
 	u32 		profile_type
 	u32 		gender
