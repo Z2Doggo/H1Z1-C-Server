@@ -57,11 +57,12 @@ internal void zone_packet_raw_file_send(App_State *server_state,
 	gateway_tunnel_data_send(server_state, session_state, base_buffer, total_length);
 }
 
-FunctionHookType myFunction(void* args) {
-    FunctionHookType result;
-    result.boolean = true;
-    result.voidptr = NULL;
-    return result;
+FunctionHookType myFunction(void *args)
+{
+	FunctionHookType result;
+	result.boolean = true;
+	result.voidptr = NULL;
+	return result;
 }
 
 internal void zone_packet_handle(App_State *server_state,
@@ -132,6 +133,12 @@ internal void zone_packet_handle(App_State *server_state,
 	packet_id = *data;
 	goto packet_id_fail;
 
+	switch (session_state->gateway_channel)
+	{
+	case 1:
+		break;
+	}
+
 packet_id_switch:
 	switch (packet_id)
 	{
@@ -160,31 +167,32 @@ packet_id_switch:
 		hookManager.enableHooks = true;
 		Hooks hookOne;
 		hookOne.hookName = "OnClientFinishedLoading";
-		hookOne.HookLen = strlen(hookOne.hookName);   
+		hookOne.HookLen = strlen(hookOne.hookName);
 		hook(&hookManager, hookOne, myFunction);
-    	void* args = NULL;
+		void *args = NULL;
 		bool result = checkHook(&hookManager, hookOne, args);
 		if (!result)
-		return;
+			return;
 
-		if (session_state->first_login) {
+		if (session_state->first_login)
+		{
 			Zone_Packet_AddLightweightNpc lightweightnpc =
-			{
-				.characterId 			= 0x0000000000000001,
-				.transientId.value		= 0,
-				.actorModelId 			= 2,
-				.position				= {0, 0, 0},
-				.rotation 				= {0, 0, 0, 0},
-				.scale 					= {0.001, 0.001, 0.001, 0.001},
-				.positionUpdateType     = 0,
-				.profileId              = 0,
-				.isLightweight          = FALSE,
-				.flags1                 = 0,
-				.flags2					= 0,
-				.flags3					= 0,
-				.headActor_length		= 0,
-				.headActor				= "",
-			};	
+				{
+					.characterId = 0x0000000000000001,
+					.transientId.value = 0,
+					.actorModelId = 2,
+					.position = {0, 0, 0},
+					.rotation = {0, 0, 0, 0},
+					.scale = {0.001, 0.001, 0.001, 0.001},
+					.positionUpdateType = 0,
+					.profileId = 0,
+					.isLightweight = FALSE,
+					.flags1 = 0,
+					.flags2 = 0,
+					.flags3 = 0,
+					.headActor_length = 0,
+					.headActor = "",
+				};
 
 			Zone_Packet_Character_WeaponStance weapon_stance =
 				{
