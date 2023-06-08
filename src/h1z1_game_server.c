@@ -119,16 +119,10 @@ internal void gateway_on_login(App_State *app_state, Session_State *session_stat
 	character_id_get = get_guid(session_state->character_id);
 	transient_id_get = get_transient_id(session_state->transient_id.value);
 
-	__time64_t timer64;
-	_time64(&timer64);
-
-	__time32_t timer32;
-	_time32(&timer32);
-
 	Zone_Packet_InitializationParameters init_params =
 		{
-			.environment_length = 4,
-			.environment = "LIVE",
+			.environment_length = 9,
+			.environment = "LIVE_KOTK",
 		};
 
 	Zone_Packet_SendZoneDetails send_zone_details =
@@ -138,21 +132,38 @@ internal void gateway_on_login(App_State *app_state, Session_State *session_stat
 			.zone_type = 4,
 			.unk_bool = FALSE,
 
-			// todo: set sky_data
-			.name = "sky_Z_clouds.dds",
-
-			.color_gradient = 0.,
-			.color_gradient = 0.,
+			// set skydata
+			.unknownDword1 = 1,
+			.fog_density = 0.0001733333,
+			.fog_floor = 10,
+			.fog_gradient = 0.0144,
+			.rain = 1,
+			.temp = 75,
+			.color_gradient = 0,
 			.unknown_dword8 = 0.05,
+			.unknown_dword9 = 0,
 			.unknown_dword10 = 0.05,
 			.unknown_dword11 = 0.15,
+			.unknown_dword12 = 0,
+			.sun_axis_x = 38,
+			.sun_axis_y = -15,
+			.unknown_dword15 = 0,
+			.disable_trees = -1,
+			.disable_trees1 = -0.05,
+			.disable_trees2 = -1,
 			.wind = 3,
+			.unknown_dword20 = 0,
 			.unknown_dword21 = 1,
+
+			.name_length = 16,
+			.name = "sky_Z_clouds.dds",
+
 			.unknown_dword22 = 0.3,
 			.unknown_dword23 = -0.002,
 			.unknown_dword24 = 0,
 			.unknown_dword25 = 1000,
 			.unknown_dword26 = 0.2,
+			.unknown_dword27 = 0,
 			.unknown_dword28 = 0.002,
 			.unknown_dword29 = 8000,
 			.ao_size = 0,
@@ -687,8 +698,8 @@ internal void gateway_on_login(App_State *app_state, Session_State *session_stat
 						.character_name_length = 5,
 						.character_name = "doggo",
 						.gender1 = 1 || 2,
-						.creation_date = timer64,
-						.last_login_date = timer64,
+						.creation_date = 0x133333333,
+						.last_login_date = 0x133333333,
 
 						.loadout_id = 3,
 						.loadout_slots_array_count = 1,
@@ -869,27 +880,6 @@ internal void gateway_on_login(App_State *app_state, Session_State *session_stat
 			.unknown_dword33 = 0.5,
 		};
 
-	Zone_Packet_AddLightweightPc lightweightpc =
-		{
-			.character_id = character_id_get,
-			.transient_id.value = transient_id_get,
-			.unknownByte1 = 2,
-			.actorModelId = 9474,
-			.unknownDword1 = 270,
-			.unknownFloat1 = 4.7,
-			.mountSeatId = 0xffffffff,
-			.mountRelatedDword1 = 0xffffffff,
-			.unknownQword1 = 0x0100000000100000,
-			.unknownDword5 = 665,
-
-			.id_characterName_length = 0,
-			.id_characterName = "",
-
-			.position_x = 1024,
-			.position_y = 79,
-			.position_z = 3295,
-		};
-
 	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
 	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
 	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(40), Zone_Packet_Kind_CommandItemDefinitions, &item_defs);
@@ -897,10 +887,10 @@ internal void gateway_on_login(App_State *app_state, Session_State *session_stat
 	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientGameSettings, &game_settings);
 	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ContainerInitEquippedContainers, &init_equipped_containers);
 	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_UpdateWeatherData, &updt_weather_data);
-	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightPc, &lightweightpc);
 	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(500), Zone_Packet_Kind_SendSelfToClient, &send_self); // (doggo)if this packet was a person, I would beat the ever-living shit out of it!
 
-	// zone_packet_raw_file_send(0, app_state, session_state, &app_state->arena_per_tick, KB(40), "C:\\Users\\epicg\\OneDrive\\Desktop\\send_self\\" "5.bin");
+	// zone_packet_raw_file_send(app_state, session_state, &app_state->arena_per_tick, KB(40), "C:\\Users\\epicg\\OneDrive\\Desktop\\send_self\\"
+	// "5.bin");
 }
 
 internal void gateway_on_tunnel_data_from_client(App_State *app_state, Session_State *session_state, u8 *data, u32 data_length)

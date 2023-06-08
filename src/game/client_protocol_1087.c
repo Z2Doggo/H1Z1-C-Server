@@ -57,14 +57,6 @@ internal void zone_packet_raw_file_send(App_State *server_state,
 	gateway_tunnel_data_send(server_state, session_state, base_buffer, total_length);
 }
 
-FunctionHookType myFunction(void *args)
-{
-	FunctionHookType result;
-	result.boolean = true;
-	result.voidptr = NULL;
-	return result;
-}
-
 internal void zone_packet_handle(App_State *server_state,
 								 Session_State *session_state,
 								 u8 *data,
@@ -72,74 +64,11 @@ internal void zone_packet_handle(App_State *server_state,
 {
 	Zone_Packet_Kind packet_kind;
 
-	printf("\n");
+	u32 packet_id = *data;
+	u32 sub_packet_id = data[1];
 
-	if (data_length == 0)
-	{
-		printf(MESSAGE_CONCAT_WARN("Empty zone packet????\n\n"));
-		return;
-	}
+	local_persist u8 test = FALSE;
 
-	// TODO(rhett): once we start receiving packets, we'll need to handle subcodes
-	// TODO(rhett): OPTIMIZE THIS !!!!!!!!
-	// TODO(rhett): also this is SLOPPY
-	u32 packet_temp;
-	u32 packet_id;
-	u32 packet_iter;
-	if (data_length > 0)
-	{
-		for (packet_iter = Zone_Packet_Kind_Unhandled + 1; packet_iter < Zone_Packet_Kind__End; packet_iter++)
-		{
-			if (data[0] == zone_registered_ids[packet_iter])
-			{
-				packet_id = *data;
-				goto packet_id_switch;
-			}
-		}
-	}
-
-	if (data_length > 1)
-	{
-		packet_temp = (((0ul | data[0]) << 8) | data[1]);
-		for (packet_iter = Zone_Packet_Kind_Unhandled + 1; packet_iter < Zone_Packet_Kind__End; packet_iter++)
-		{
-			if (packet_temp == zone_registered_ids[packet_iter])
-			{
-				packet_id = packet_temp;
-				goto packet_id_switch;
-			}
-		}
-	}
-
-	if (data_length > 2)
-	{
-		packet_temp = ((0ul | data[0]) << 16) | endian_read_u16_little(data + 1);
-		for (packet_iter = Zone_Packet_Kind_Unhandled + 1; packet_iter < Zone_Packet_Kind__End; packet_iter++)
-		{
-			if (packet_temp == zone_registered_ids[packet_iter])
-			{
-				packet_id = packet_temp;
-				goto packet_id_switch;
-			}
-		}
-	}
-
-	__time64_t timer64;
-	_time64(&timer64);
-
-	__time32_t timer32;
-	_time32(&timer32);
-
-	packet_id = *data;
-	goto packet_id_fail;
-
-	switch (session_state->gateway_channel)
-	{
-	case 1:
-		break;
-	}
-
-packet_id_switch:
 	switch (packet_id)
 	{
 	case ZONE_CLIENTISREADY_ID:
@@ -155,27 +84,32 @@ packet_id_switch:
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(30), Zone_Packet_Kind_ClientUpdate_DoneSendingPreloadCharacters, &preload_done);
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ZoneDoneSendingInitialData, 0);
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_NetworkProximityUpdatesComplete, 0);
+
+		__time64_t timer;
+		_time64(&timer);
+
+		Zone_Packet_Character_CharacterStateDelta character_state_delta =
+			{
+				.guid_1 = session_state->character_id,
+				.guid_3 = 0x0000000040000000,
+				.game_time = timer,
+			};
+
+		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, sizeof(character_state_delta), Zone_Packet_Kind_Character_CharacterStateDelta, &character_state_delta);
 	}
 	break;
 	// (doggo) need to figure out a way to confirm the ClientFinishedLoading packet, because, right now this packet is not working and is being spammed and called an unhandled packet, baffles me
 	case ZONE_CLIENTFINISHEDLOADING_ID:
 	{
-		packet_kind = Zone_Packet_Kind_ClientFinishedLoading;
-		printf("[Zone] Handling ZONE_CLIENTFINISHEDLOADING_ID\n");
+		// zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_NetworkProximityUpdatesComplete, 0);
 
-		HookManager hookManager;
-		hookManager.enableHooks = true;
-		Hooks hookOne;
-		hookOne.hookName = "OnClientFinishedLoading";
-		hookOne.HookLen = strlen(hookOne.hookName);
-		hook(&hookManager, hookOne, myFunction);
-		void *args = NULL;
-		bool result = checkHook(&hookManager, hookOne, args);
-		if (!result)
-			return;
-
-		if (session_state->first_login)
+		if (session_state->finished_loading == FALSE)
 		{
+			session_state->finished_loading = TRUE;
+
+			packet_kind = Zone_Packet_Kind_ClientFinishedLoading;
+			printf("[Zone] Handling ClientFinishedLoading\n");
+
 			Zone_Packet_AddLightweightNpc lightweightnpc =
 				{
 					.characterId = 0x0000000000000001,
@@ -252,6 +186,26 @@ packet_id_switch:
 					.unk_bool_2 = TRUE,
 				};
 
+			Zone_Packet_Loadout_SetLoadoutSlots ldt_setldtslots = {
+				.character_id = 0x133742069,
+				.loadout_id = 0,
+				.loadout_slot_data_count = 1,
+				.loadout_slot_data =
+					(struct loadout_slot_data_s[1]){
+						[0] = {
+							.hotbar_slot_id = 0,
+							.loadout_id_1 = 0,
+							.slot_id = 0,
+							.item_def_id1 = 0,
+							.loadout_item_guid = 0x0,
+							.unk_byte_1 = 255,
+							.unk_dword_1 = 0,
+						},
+					},
+
+				.current_slot_id = 0,
+			};
+
 			Zone_Packet_Command_AddWorldCommand command_help =
 				{
 					.command_length = 5,
@@ -263,16 +217,26 @@ packet_id_switch:
 					.run_speed = 10.0f,
 				};
 
+			Zone_Packet_Character_StartMultiStateDeath multi_state_dth = {
+				.character_id = 0x0000000000000000,
+				.unk_byte_1 = 0,
+				.unk_byte_2 = 1,
+				.unk_byte_3 = 0,
+			};
+
 			session_state->first_login = FALSE;
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Command_AddWorldCommand, &command_help);
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_WeaponStance, &weapon_stance);
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Equipment_SetCharacterEquipment, &set_character_equipment);
+			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Loadout_SetLoadoutSlots, &ldt_setldtslots);
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Command_RunSpeed, &run_speed);
-			session_state->is_ready = TRUE;
+			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_StartMultiStateDeath, &multi_state_dth);
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightNpc, &lightweightnpc);
+			session_state->is_ready = TRUE;
 		}
+
+		break;
 	}
-	break;
 	case ZONE_LOBBYGAMEDEFINITION_DEFINITIONSREQUEST_ID:
 	{
 		packet_kind = Zone_Packet_Kind_LobbyGameDefinition_DefinitionsRequest;
@@ -308,15 +272,6 @@ packet_id_switch:
 		session_state->is_running = FALSE;
 		session_state->is_respawning = FALSE;
 		session_state->is_in_air = FALSE;
-
-		resource_ids resource_id = {
-			.HEALTH_ID = 10000,
-			.HUNGER_ID = 10000,
-			.HYDRATION_ID = 10000,
-			.STAMINA_ID = 600,
-			.VIRUS_ID = 0,
-			.BLEEDING_ID = -40,
-		};
 
 		Zone_Packet_Character_RespawnReply respawn_reply =
 			{
@@ -643,7 +598,7 @@ packet_id_switch:
 
 		Zone_Packet_ClientUpdate_MonitorTimeDrift time_drift =
 			{
-				.time_drift = timer32,
+				.time_drift = 0,
 			};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, sizeof(time_drift), Zone_Packet_Kind_ClientUpdate_MonitorTimeDrift, &time_drift);
@@ -665,8 +620,8 @@ packet_id_switch:
 								.info_name_id = 1,
 								.zone_description_id = 1,
 
-								.zone_name_length = 2,
-								.zone_name = "Z2",
+								.zone_name_length = 9,
+								.zone_name = "LoginZone",
 								.hex_size = 100,
 								.is_production_zone = 1,
 							}}};
@@ -762,9 +717,8 @@ packet_id_switch:
 	break;
 	default:
 	{
-	packet_id_fail:
 		packet_kind = Zone_Packet_Kind_Unhandled;
-		printf(MESSAGE_CONCAT_WARN("Unhandled zone packet 0x%02x\n"), packet_id);
+		printf(MESSAGE_CONCAT_WARN("Unhandled zone packet 0x%02x 0x%02x\n"), packet_id, sub_packet_id);
 
 		if (session_state->connection_args.should_dump_zone)
 		{

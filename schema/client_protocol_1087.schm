@@ -1626,7 +1626,13 @@ packet 0xc CombatBase
 packet 0xd ProjectileDebug
 packet 0xe MailBase
 
-packet 0xf CharacterBase
+packet 0xf 0:u16 CharacterBase
+packet 0xf 0x4f:u16 Character_StartMultiStateDeath
+u64 character_id
+u8 unk_byte_1
+u8 unk_byte_2
+u8 unk_byte_3
+
 packet 0xf 0x1:u16 Character_RemovePlayer
 u64 character_id
 u16 unk_u16
@@ -2458,7 +2464,7 @@ packet 0x79 PlayerUpdatePosition
 uint2b transient_id
 u16 flag
 u32 sequence
-bytes:u8 unk_u8_data
+bytes:u8 test
 
 packet 0x7a InviteAndStartMiniGame
 packet 0x7b QuizBase
@@ -2497,7 +2503,24 @@ packet 0x85 0x16:u16 Facility_FacilityUpdateRequest
 packet 0x85 0x17:u16 Facility_EmpireScoreValueUpdate
 
 packet 0x86 0:u16 SkillsBase
+
 packet 0x87 0:u16 LoadoutsBase
+packet 0x87 0x4:u16 Loadout_SetLoadoutSlots
+u64 character_id
+u32 loadout_id
+list:u32 loadout_slot_data
+{
+	u32 hotbar_slot_id
+	u32 loadout_id_1
+	u32 slot_id
+
+	u32 item_def_id1
+	u64 loadout_item_guid
+	u8 unk_byte_1
+	u32 unk_dword_1
+}
+u32 current_slot_id
+
 packet 0x88 0:u16 ExperienceBase
 
 packet 0x89 0:u16 VehicleBase
