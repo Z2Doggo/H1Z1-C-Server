@@ -98,7 +98,6 @@ internal void zone_packet_handle(App_State *server_state,
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, sizeof(character_state_delta), Zone_Packet_Kind_Character_CharacterStateDelta, &character_state_delta);
 	}
 	break;
-	// (doggo) need to figure out a way to confirm the ClientFinishedLoading packet, because, right now this packet is not working and is being spammed and called an unhandled packet, baffles me
 	case ZONE_CLIENTFINISHEDLOADING_ID:
 	{
 		// zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_NetworkProximityUpdatesComplete, 0);
