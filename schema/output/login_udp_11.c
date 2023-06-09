@@ -112,10 +112,10 @@ u32 id;
 b8 active;
 u32 remaining_count;
 u32 raw_data_length;
-u8* raw_data;
+char* raw_data;
 }* account_features;
 u32 application_payload_length;
-u8* application_payload;
+char* application_payload;
 u32 error_details_count;
 struct error_details_s
 {
@@ -552,25 +552,25 @@ endian_write_u32_little(buffer + offset, packet->account_features[account_featur
 offset += sizeof(u32);
 printf("-- remaining_count         \t%lld\t%llxh\t%f\n", (i64)packet->account_features[account_features_iter].remaining_count, (u64)packet->account_features[account_features_iter].remaining_count, (f64)packet->account_features[account_features_iter].remaining_count);
 
-// bytes raw_data
+// string raw_data
 endian_write_u32_little(buffer + offset, packet->account_features[account_features_iter].raw_data_length);
 offset += sizeof(u32);
-printf("-- BYTES_LENGTH            \t%lld\t%llxh\t%f\n", (i64)packet->account_features[account_features_iter].raw_data_length, (u64)packet->account_features[account_features_iter].raw_data_length, (f64)packet->account_features[account_features_iter].raw_data_length);
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->account_features[account_features_iter].raw_data_length, (u64)packet->account_features[account_features_iter].raw_data_length, (f64)packet->account_features[account_features_iter].raw_data_length);
 for (u32 raw_data_iter = 0; raw_data_iter < packet->account_features[account_features_iter].raw_data_length; raw_data_iter++)
 {
-endian_write_u8_little(buffer + offset, packet->account_features[account_features_iter].raw_data[raw_data_iter]);
+endian_write_i8_little(buffer + offset, packet->account_features[account_features_iter].raw_data[raw_data_iter]);
 offset++;
 }
 
 } // account_features
 
-// bytes application_payload
+// string application_payload
 endian_write_u32_little(buffer + offset, packet->application_payload_length);
 offset += sizeof(u32);
-printf("-- BYTES_LENGTH            \t%lld\t%llxh\t%f\n", (i64)packet->application_payload_length, (u64)packet->application_payload_length, (f64)packet->application_payload_length);
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->application_payload_length, (u64)packet->application_payload_length, (f64)packet->application_payload_length);
 for (u32 application_payload_iter = 0; application_payload_iter < packet->application_payload_length; application_payload_iter++)
 {
-endian_write_u8_little(buffer + offset, packet->application_payload[application_payload_iter]);
+endian_write_i8_little(buffer + offset, packet->application_payload[application_payload_iter]);
 offset++;
 }
 
@@ -1938,27 +1938,27 @@ packet->account_features[account_features_iter].remaining_count = endian_read_u3
 offset += sizeof(u32);
 printf("-- remaining_count         \t%lld\t%llxh\t%f\n", (i64)packet->account_features[account_features_iter].remaining_count, (u64)packet->account_features[account_features_iter].remaining_count, (f64)packet->account_features[account_features_iter].remaining_count);
 
-// bytes raw_data
+// string raw_data
 packet->account_features[account_features_iter].raw_data_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
 packet->account_features[account_features_iter].raw_data = arena_push_size(arena, packet->account_features[account_features_iter].raw_data_length);
-printf("-- BYTES_LENGTH            \t%d\n", packet->account_features[account_features_iter].raw_data_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->account_features[account_features_iter].raw_data_length);
 for (u32 raw_data_iter = 0; raw_data_iter < packet->account_features[account_features_iter].raw_data_length; raw_data_iter++)
 {
-packet->account_features[account_features_iter].raw_data[raw_data_iter] = *(u8*)((uptr)data + offset);
+packet->account_features[account_features_iter].raw_data[raw_data_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
 } // account_features
 
-// bytes application_payload
+// string application_payload
 packet->application_payload_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
 packet->application_payload = arena_push_size(arena, packet->application_payload_length);
-printf("-- BYTES_LENGTH            \t%d\n", packet->application_payload_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->application_payload_length);
 for (u32 application_payload_iter = 0; application_payload_iter < packet->application_payload_length; application_payload_iter++)
 {
-packet->application_payload[application_payload_iter] = *(u8*)((uptr)data + offset);
+packet->application_payload[application_payload_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 

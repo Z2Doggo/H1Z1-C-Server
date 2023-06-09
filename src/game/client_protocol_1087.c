@@ -253,7 +253,7 @@ internal void zone_packet_handle(App_State *server_state,
 			Zone_Packet_ClientUpdate_UpdateLocation updt_loc = {
 				.position = {-32.26f, 506.41f, 280.21f, 1.0f},
 				.rotation = {-0.11f, -0.58f, -0.08f, 1.0f},
-				.trigger_loading_screen = TRUE,
+				.trigger_loading_screen = FALSE,
 				.unk_u8_1 = 0,
 				.unk_bool = FALSE,
 			};

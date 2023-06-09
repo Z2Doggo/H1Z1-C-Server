@@ -24,9 +24,9 @@ list:u32 account_features
     u32        	id
     b8         	active
     u32        	remaining_count
-    bytes:u32  	raw_data
+    string:u32  raw_data
 }
-bytes:u32 application_payload
+string:u32 application_payload
 list:u32 error_details
 {
     u32 		unknown_dword1
