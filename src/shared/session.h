@@ -150,6 +150,10 @@ struct Session_State
 
 	i32 stance;
 	i32 position[3];
+	i32 unknown12_f32[3];
+	i32 rotation[4];
+	i32 rotationRaw[4];
+	i32 lookAt[4];
 	f32 orientation;
 	i32 direction;
 	i32 front_tilt;
