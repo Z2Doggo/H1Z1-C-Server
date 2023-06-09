@@ -154,7 +154,7 @@ internal void core_packet_unpack(u8* data, i32 data_length, Core_Packet_Kind pac
 			offset += 4;
 			packet->crc_length = *(u8*)(data + offset);
 			offset += 1;
-			packet->compression = endian_read_u16_big(data + offset);
+			packet->compression = (u8)endian_read_u16_big(data + offset);
 			offset += 2;
 			packet->udp_length = endian_read_u32_big(data + offset);
 			offset += 4;

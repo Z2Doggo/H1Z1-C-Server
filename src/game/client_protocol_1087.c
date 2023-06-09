@@ -85,17 +85,14 @@ internal void zone_packet_handle(App_State *server_state,
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ZoneDoneSendingInitialData, 0);
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_NetworkProximityUpdatesComplete, 0);
 
-		__time64_t timer;
-		_time64(&timer);
-
 		Zone_Packet_Character_CharacterStateDelta character_state_delta =
 			{
 				.guid_1 = session_state->character_id,
 				.guid_3 = 0x0000000040000000,
-				.game_time = timer,
+				.game_time = 11,
 			};
 
-		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, sizeof(character_state_delta), Zone_Packet_Kind_Character_CharacterStateDelta, &character_state_delta);
+		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_CharacterStateDelta, &character_state_delta);
 
 		break;
 	}
@@ -113,9 +110,9 @@ internal void zone_packet_handle(App_State *server_state,
 					.characterId = 0x0000000000000001,
 					.transientId.value = 0,
 					.actorModelId = 2,
-					.position = {0, 0, 0},
-					.rotation = {0, 0, 0, 0},
-					.scale = {0.001, 0.001, 0.001, 0.001},
+					.position = {0.0f, 0.0f, 0.0f},
+					.rotation = {0.0f, 0.0f, 0.0f, 0.0f},
+					.scale = {0.001f, 0.001f, 0.001f, 0.001f},
 					.positionUpdateType = 0,
 					.profileId = 0,
 					.isLightweight = FALSE,
@@ -243,19 +240,19 @@ internal void zone_packet_handle(App_State *server_state,
 		Zone_Packet_StaticViewRequest request;
 		zone_packet_unpack(data, data_length, packet_kind, &request.viewpoint, &server_state->arena_per_tick);
 
-		if (strcmp(request.viewpoint, "kotkdefault") == 0)
-		{
+		if (strcmp(request.viewpoint, "kotkdefault") == 0) {
 			Zone_Packet_StaticViewReply staticview_reply = {
-				.position = {74.8, 201.5, 458.1, 99.01},
-				.rotation = {199.99, 289.99999, 370.17, 6.79},
-				.look_at = {69.81, 56, 0, 0},
+				.state = 0,
+				.position = {74.8f, 201.5f, 458.1f, 99.01f},
+				.rotation = {199.99f, 289.99999f, 370.17f, 6.79f},
+				.look_at = {69.81f, 56.0f, 0.0f},
 				.unk_byte_1 = 255,
 				.unk_bool_1 = TRUE,
 			};
 
 			Zone_Packet_ClientUpdate_UpdateLocation updt_loc = {
-				.position = -32.26, 506.41, 280.21, 1,
-				.rotation = {-0.11, -0.58, -0.08, 1},
+				.position = {-32.26f, 506.41f, 280.21f, 1.0f},
+				.rotation = {-0.11f, -0.58f, -0.08f, 1.0f},
 				.trigger_loading_screen = TRUE,
 				.unk_u8_1 = 0,
 				.unk_bool = FALSE,
@@ -379,7 +376,7 @@ internal void zone_packet_handle(App_State *server_state,
 		Zone_Packet_GameTimeSync time_sync =
 		{
 			.time = timer64,
-			.cycle_speed = 12.0f,
+			.cycle_speed = 12.0.0f,
 			.unk_bool = FALSE,
 		};
 
@@ -421,10 +418,7 @@ internal void zone_packet_handle(App_State *server_state,
 							{
 								.guid = get_guid(session_state->character_id),
 								.respawn_type = 4,
-								.position = 602.91,
-								71.62,
-								-1301.5,
-								1,
+								.position = {602.91f, 71.62f, -1301.5f, 1.0f},
 								.unk_dword_1 = 1,
 								.unk_dword_2 = 1,
 								.icon_id_1 = 1,
@@ -455,10 +449,7 @@ internal void zone_packet_handle(App_State *server_state,
 							{
 								.guid = get_guid(session_state->character_id),
 								.respawn_type = 4,
-								.position = 602.91,
-								71.62,
-								-1301.5,
-								1,
+								.position = {602.91f, 71.62f, -1301.5f, 1.0f},
 								.unk_dword_1 = 1,
 								.unk_dword_2 = 1,
 								.icon_id_1 = 1,
@@ -512,10 +503,7 @@ internal void zone_packet_handle(App_State *server_state,
 							{
 								.guid = get_guid(session_state->character_id),
 								.respawn_type = 4,
-								.position = 602.91,
-								71.62,
-								-1301.5,
-								1,
+								.position = {602.91f, 71.62f, -1301.5f, 1.0f},
 								.unk_dword_1 = 1,
 								.unk_dword_2 = 1,
 								.icon_id_1 = 1,
@@ -546,10 +534,7 @@ internal void zone_packet_handle(App_State *server_state,
 							{
 								.guid = get_guid(session_state->character_id),
 								.respawn_type = 4,
-								.position = 602.91,
-								71.62,
-								-1301.5,
-								1,
+								.position = {602.91f, 71.62f, -1301.5f, 1.0f},
 								.unk_dword_1 = 1,
 								.unk_dword_2 = 1,
 								.icon_id_1 = 1,
@@ -642,10 +627,10 @@ internal void zone_packet_handle(App_State *server_state,
 
 		Zone_Packet_ClientUpdate_MonitorTimeDrift time_drift =
 			{
-				.time_drift = 0,
+				.time_drift = 1,
 			};
 
-		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, sizeof(time_drift), Zone_Packet_Kind_ClientUpdate_MonitorTimeDrift, &time_drift);
+		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_MonitorTimeDrift, &time_drift);
 
 		break;
 	}
@@ -671,7 +656,7 @@ internal void zone_packet_handle(App_State *server_state,
 								.is_production_zone = 1,
 							}}};
 
-		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, sizeof(battle_info), Zone_Packet_Kind_ContinentBattleInfo, &battle_info);
+		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ContinentBattleInfo, &battle_info);
 
 		break;
 	}

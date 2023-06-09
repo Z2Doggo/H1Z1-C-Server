@@ -1,4 +1,4 @@
-// #include "ps2_admin_server.h"
+#include <math.h>
 
 //----------------------------------------------------------------
 // F16 Conversion Tables
@@ -664,15 +664,6 @@ struct vec4
 	f32 w;
 };
 
-typedef struct vec4_i32 vec4_i32;
-struct vec4_i32
-{
-	i32 x;
-	i32 y;
-	i32 z;
-	i32 w;
-};
-
 typedef struct euler_angle euler_angle;
 struct euler_angle
 {
@@ -680,24 +671,6 @@ struct euler_angle
 	i32 yaw;
 	i32 roll;
 };
-
-internal vec4_i32
-	euler_to_quaternion(euler_angle euler) {
-	i32 cos_pitch = cos(euler.pitch / 2);
-	i32 sin_pitch = sin(euler.pitch / 2);
-	i32 cos_yaw = cos(euler.yaw / 2);
-	i32 sin_yaw = sin(euler.yaw / 2);
-	i32 cos_roll = cos(euler.roll / 2);
-	i32 sin_roll = sin(euler.roll / 2);
-
-	vec4_i32 q;
-	q.x = cos_pitch * cos_yaw * cos_roll + sin_pitch * sin_yaw * sin_roll;
-	q.y = sin_pitch * cos_yaw * cos_roll - cos_pitch * sin_yaw * sin_roll;
-	q.z = cos_pitch * sin_yaw * cos_roll + sin_pitch * cos_yaw * sin_roll;
-	q.w = cos_pitch * cos_yaw * sin_roll - sin_pitch * sin_yaw * cos_roll;
-
-	return q;
-}
 
 internal vec3
 endian_read_vec3_little(u8* data)
