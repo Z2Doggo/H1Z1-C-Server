@@ -22,6 +22,7 @@
         "stb_sprintf.h": "c",
         "packet_queue.h": "c",
         "stdbool.h": "c",
-        "stream.h": "c"
+        "stream.h": "c",
+        "shared.h": "c"
     }
 }
