@@ -64,11 +64,59 @@ internal void zone_packet_handle(App_State *server_state,
 {
 	Zone_Packet_Kind packet_kind;
 
+	printf("\n");
+
+	if (data_length == 0)
+	{
+		printf(MESSAGE_CONCAT_WARN("Empty zone packet????\n\n"));
+		return;
+	}
+
+	u32 packet_temp;
 	u32 packet_id = *data;
 	u32 sub_packet_id = data[1];
+	u32 packet_iter;
+	if (data_length > 0)
+	{
+		for (packet_iter = Zone_Packet_Kind_Unhandled + 1; packet_iter < Zone_Packet_Kind__End; packet_iter++)
+		{
+			if (data[0] == zone_registered_ids[packet_iter])
+			{
+				packet_id = *data;
+				goto packet_id_switch;
+			}
+		}
+	}
 
-	local_persist u8 test = FALSE;
+	if (data_length > 1)
+	{
+		packet_temp = (((0ul | data[0]) << 8) | data[1]);
+		for (packet_iter = Zone_Packet_Kind_Unhandled + 1; packet_iter < Zone_Packet_Kind__End; packet_iter++)
+		{
+			if (packet_temp == zone_registered_ids[packet_iter])
+			{
+				packet_id = packet_temp;
+				goto packet_id_switch;
+			}
+		}
+	}
 
+	if (data_length > 2)
+	{
+		packet_temp = ((0ul | data[0]) << 16) | endian_read_u16_little(data + 1);
+		for (packet_iter = Zone_Packet_Kind_Unhandled + 1; packet_iter < Zone_Packet_Kind__End; packet_iter++)
+		{
+			if (packet_temp == zone_registered_ids[packet_iter])
+			{
+				packet_id = packet_temp;
+				goto packet_id_switch;
+			}
+		}
+	}
+
+	goto packet_id_fail;
+
+	packet_id_switch:
 	switch (packet_id)
 	{
 	case ZONE_CLIENTISREADY_ID:
@@ -238,9 +286,9 @@ internal void zone_packet_handle(App_State *server_state,
 		printf("[Zone] Handling StaticViewRequest\n");
 
 		Zone_Packet_StaticViewRequest request;
-		zone_packet_unpack(data, data_length, packet_kind, &request.viewpoint, &server_state->arena_per_tick);
+		request.viewpoint = "kotkdefault";
 
-		if (strcmp(request.viewpoint, "kotkdefault") == 0) {
+		if (strcmp(request.viewpoint, "kotkdefault") != 0) {
 			Zone_Packet_StaticViewReply staticview_reply = {
 				.state = 0,
 				.position = {74.8f, 201.5f, 458.1f, 99.01f},
@@ -253,7 +301,27 @@ internal void zone_packet_handle(App_State *server_state,
 			Zone_Packet_ClientUpdate_UpdateLocation updt_loc = {
 				.position = {-32.26f, 506.41f, 280.21f, 1.0f},
 				.rotation = {-0.11f, -0.58f, -0.08f, 1.0f},
-				.trigger_loading_screen = FALSE,
+				.trigger_loading_screen = TRUE,
+				.unk_u8_1 = 0,
+				.unk_bool = FALSE,
+			};
+
+			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_UpdateLocation, &updt_loc);
+			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_StaticViewReply, &staticview_reply);
+		} else if (strcmp(request.viewpoint, "kotkdefault") == 0) {
+				Zone_Packet_StaticViewReply staticview_reply = {
+				.state = 0,
+				.position = {74.8f, 201.5f, 458.1f, 99.01f},
+				.rotation = {199.99f, 289.99999f, 370.17f, 6.79f},
+				.look_at = {69.81f, 56.0f, 0.0f},
+				.unk_byte_1 = 255,
+				.unk_bool_1 = TRUE,
+			};
+
+			Zone_Packet_ClientUpdate_UpdateLocation updt_loc = {
+				.position = {-32.26f, 506.41f, 280.21f, 1.0f},
+				.rotation = {-0.11f, -0.58f, -0.08f, 1.0f},
+				.trigger_loading_screen = TRUE,
 				.unk_u8_1 = 0,
 				.unk_bool = FALSE,
 			};
@@ -751,6 +819,7 @@ internal void zone_packet_handle(App_State *server_state,
 	}
 	default:
 	{
+		packet_id_fail:
 		packet_kind = Zone_Packet_Kind_Unhandled;
 		printf(MESSAGE_CONCAT_WARN("Unhandled zone packet 0x%02x 0x%02x\n"), packet_id, sub_packet_id);
 
