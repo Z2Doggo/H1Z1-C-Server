@@ -96,8 +96,9 @@ internal void zone_packet_handle(App_State *server_state,
 			};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, sizeof(character_state_delta), Zone_Packet_Kind_Character_CharacterStateDelta, &character_state_delta);
+
+		break;
 	}
-	break;
 	case ZONE_CLIENTFINISHEDLOADING_ID:
 	{
 		// zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_NetworkProximityUpdatesComplete, 0);
@@ -236,6 +237,38 @@ internal void zone_packet_handle(App_State *server_state,
 
 		break;
 	}
+	case ZONE_STATICVIEWREQUEST_ID:
+	{
+		packet_kind = Zone_Packet_Kind_StaticViewRequest;
+		printf("[Zone] Handling StaticViewRequest\n");
+
+		Zone_Packet_StaticViewRequest request;
+		zone_packet_unpack(data, data_length, packet_kind, &request.viewpoint, &server_state->arena_per_tick);
+
+		if (strcmp(request.viewpoint, "kotkdefault") == 0)
+		{
+			Zone_Packet_StaticViewReply staticview_reply = {
+				.position = {74.8, 201.5, 458.1, 99.01},
+				.rotation = {199.99, 289.99999, 370.17, 6.79},
+				.look_at = {69.81, 56, 0, 0},
+				.unk_byte_1 = 255,
+				.unk_bool_1 = TRUE,
+			};
+
+			Zone_Packet_ClientUpdate_UpdateLocation updt_loc = {
+				.position = {-32.26, 506.41, 280.21, 1},
+				.rotation = {-0.11, -0.58, -0.08, 1},
+				.trigger_loading_screen = TRUE,
+				.unk_u8_1 = 0,
+				.unk_bool = FALSE,
+			};
+
+			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_UpdateLocation, &updt_loc);
+			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_StaticViewReply, &staticview_reply);
+		}
+
+		break;
+	}
 	case ZONE_LOBBYGAMEDEFINITION_DEFINITIONSREQUEST_ID:
 	{
 		packet_kind = Zone_Packet_Kind_LobbyGameDefinition_DefinitionsRequest;
@@ -254,8 +287,9 @@ internal void zone_packet_handle(App_State *server_state,
 			};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_LobbyGameDefinition_DefinitionsResponse, &lobby_def_reply);
+
+		break;
 	}
-	break;
 	case ZONE_CHARACTER_RESPAWN_ID:
 	{
 		packet_kind = Zone_Packet_Kind_Character_Respawn;
@@ -279,8 +313,9 @@ internal void zone_packet_handle(App_State *server_state,
 			};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
+
+		break;
 	}
-	break;
 	case ZONE_CLIENTLOGOUT_ID:
 	{
 		packet_kind = Zone_Packet_Kind_ClientLogout;
@@ -300,20 +335,23 @@ internal void zone_packet_handle(App_State *server_state,
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_TextAlert, &text_alert);
 		*/
+
+		break;
 	}
-	break;
 	case ZONE_INGAMEPURCHASEBASE_ID:
 	{
 		packet_kind = Zone_Packet_Kind_InGamePurchaseBase;
 		printf("[Zone] Handling InGamePurchaseBase\n");
+
+		break;
 	}
-	break;
 	case ZONE_CLIENTLOG_ID:
 	{
 		packet_kind = Zone_Packet_Kind_ClientLog;
 		printf("[Zone] Handling ClientLog\n");
+
+		break;
 	}
-	break;
 	case ZONE_CHAT_CHAT_ID:
 	{
 		packet_kind = Zone_Packet_Kind_Chat_Chat;
@@ -328,8 +366,9 @@ internal void zone_packet_handle(App_State *server_state,
 		// };
 
 		// zone_packet_send(server_state,session_state, &server_state->arena_per_tick, KB(30), Zone_Packet_Kind_Chat_ChatText, &packet);
+
+		break;
 	}
-	break;
 	case ZONE_GAMETIMESYNC_ID:
 	{
 		packet_kind = Zone_Packet_Kind_GameTimeSync;
@@ -367,8 +406,9 @@ internal void zone_packet_handle(App_State *server_state,
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_TextAlert, &text_alert);
 		}
 		*/
+
+		break;
 	}
-	break;
 	case ZONE_GETRESPAWNLOCATIONS_ID:
 	{
 		packet_kind = Zone_Packet_Kind_GetRespawnLocations;
@@ -457,8 +497,9 @@ internal void zone_packet_handle(App_State *server_state,
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_RespawnLocations, &respawn_locations);
+
+		break;
 	}
-	break;
 	case ZONE_CLIENTUPDATE_RESPAWNLOCATIONS_ID:
 	{
 		packet_kind = Zone_Packet_Kind_ClientUpdate_RespawnLocations;
@@ -547,20 +588,23 @@ internal void zone_packet_handle(App_State *server_state,
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_RespawnLocations, &respawn_locations);
+
+		break;
 	}
-	break;
 	case ZONE_SETLOCALE_ID:
 	{
 		packet_kind = Zone_Packet_Kind_SetLocale;
 		printf("[Zone] Handling SetLocale\n");
+
+		break;
 	}
-	break;
 	case ZONE_CLIENTINITIALIZATIONDETAILS_ID:
 	{
 		packet_kind = Zone_Packet_Kind_ClientInitializationDetails;
 		printf("[Zone] Handling ClientInitializationDetails\n");
+
+		break;
 	}
-	break;
 
 	case ZONE_WALLOFDATA_UIEVENT_ID:
 	{
@@ -569,8 +613,9 @@ internal void zone_packet_handle(App_State *server_state,
 
 		Zone_Packet_WallOfData_UIEvent result = {0};
 		zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
+
+		break;
 	}
-	break;
 
 	case ZONE_WALLOFDATA_CLIENTSYSTEMINFO_ID:
 	{
@@ -579,8 +624,9 @@ internal void zone_packet_handle(App_State *server_state,
 
 		Zone_Packet_WallOfData_ClientSystemInfo result = {0};
 		zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
+
+		break;
 	}
-	break;
 	case ZONE_WALLOFDATA_CLIENTTRANSITION_ID:
 	{
 		packet_kind = Zone_Packet_Kind_WallOfData_ClientTransition;
@@ -588,8 +634,9 @@ internal void zone_packet_handle(App_State *server_state,
 
 		Zone_Packet_WallOfData_ClientTransition result = {0};
 		zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
+
+		break;
 	}
-	break;
 	case ZONE_CLIENTUPDATE_MONITORTIMEDRIFT_ID:
 	{
 		packet_kind = Zone_Packet_Kind_ClientUpdate_MonitorTimeDrift;
@@ -601,8 +648,9 @@ internal void zone_packet_handle(App_State *server_state,
 			};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, sizeof(time_drift), Zone_Packet_Kind_ClientUpdate_MonitorTimeDrift, &time_drift);
+
+		break;
 	}
-	break;
 	case ZONE_GETCONTINENTBATTLEINFO_ID:
 	{
 		packet_kind = Zone_Packet_Kind_GetContinentBattleInfo;
@@ -626,8 +674,9 @@ internal void zone_packet_handle(App_State *server_state,
 							}}};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, sizeof(battle_info), Zone_Packet_Kind_ContinentBattleInfo, &battle_info);
+
+		break;
 	}
-	break;
 	case ZONE_RESOURCEEVENTBASE_ID:
 	{
 		packet_kind = Zone_Packet_Kind_ResourceEventBase;
@@ -689,16 +738,18 @@ internal void zone_packet_handle(App_State *server_state,
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, sizeof(rsrc_event_base), Zone_Packet_Kind_ResourceEventBase, &rsrc_event_base);
 		*/
+
+		break;
 	}
-	break;
 	case ZONE_CLIENTUPDATE_UPDATEBATTLEYEREGISTRATION_ID:
 	{
 		packet_kind = Zone_Packet_Kind_ClientUpdate_UpdateBattlEyeRegistration;
 		printf("[Zone] Handling ClientUpdate.UpdateBattlEyeRegistration\n");
 
 		// (doggo)keep empty, don't need this
+
+		break;
 	}
-	break;
 	case ZONE_KEEPALIVE_ID:
 	{
 		packet_kind = Zone_Packet_Kind_KeepAlive;
@@ -712,8 +763,9 @@ internal void zone_packet_handle(App_State *server_state,
 
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_KeepAlive, &keep_alive);
 		*/
+
+		break;
 	}
-	break;
 	default:
 	{
 		packet_kind = Zone_Packet_Kind_Unhandled;
