@@ -3073,10 +3073,10 @@ packet 0xe6 BattlEyeData
 packet 0xe7 OnlineIdBase
 packet 0xe8 Ps4PlayGoBase
 packet 0xe9 SynchronizedTeleportBase
-packet 0xea 0x100:u16 StaticViewRequest
+packet 0xea 0x1:u8 StaticViewRequest
 string:u32 viewpoint
 
-packet 0xea 0x200:u16 StaticViewReply
+packet 0xea 0x2:u8 StaticViewReply
 u32 state
 vec4 position
 vec4 rotation

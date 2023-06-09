@@ -101,8 +101,6 @@ internal void zone_packet_handle(App_State *server_state,
 	}
 	case ZONE_CLIENTFINISHEDLOADING_ID:
 	{
-		// zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_NetworkProximityUpdatesComplete, 0);
-
 		if (session_state->finished_loading == FALSE)
 		{
 			session_state->finished_loading = TRUE;
@@ -256,7 +254,7 @@ internal void zone_packet_handle(App_State *server_state,
 			};
 
 			Zone_Packet_ClientUpdate_UpdateLocation updt_loc = {
-				.position = {-32.26, 506.41, 280.21, 1},
+				.position = -32.26, 506.41, 280.21, 1,
 				.rotation = {-0.11, -0.58, -0.08, 1},
 				.trigger_loading_screen = TRUE,
 				.unk_u8_1 = 0,

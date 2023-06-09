@@ -27,9 +27,7 @@ static void platform_win_console_write(char *format, ...);
 #include "utility/crypt_rc4.c"
 #include "utility/character_id_gen.c"
 #include "utility/transient_id_gen.c"
-#include "utility/read_json.c"
 #include "utility/shared.c"
-#include "utility/hook_manager.c"
 #include "shared/protocol/stream.h"
 #include "shared/protocol/fragment_pool.c"
 #include "shared/protocol/input_stream.c"
@@ -39,7 +37,6 @@ static void platform_win_console_write(char *format, ...);
 #include "shared/session.h"
 #include "shared/packet_queue.h"
 #include "shared/packet_queue.c"
-#include "thirdparty/base64.c"
 
 global u64 global_packet_dump_count;
 // HACK(rhett):
