@@ -1,7 +1,7 @@
 // NOTE(rhett): Fix complaints by the VS address sanitizer 
 #define STBSP__ASAN __declspec(no_sanitize_address)
 #define STB_SPRINTF_IMPLEMENTATION
-#include "thirdparty/stb_sprintf.h"
+#include "thirdparty_utility/stb_sprintf.h"
 
 //#if defined(YOTE_INTERNAL)
 ////#include <stdio.h>
