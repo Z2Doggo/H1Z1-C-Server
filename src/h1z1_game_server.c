@@ -676,15 +676,12 @@ internal void gateway_on_login(App_State *app_state, Session_State *session_stat
 				(struct payload_self_s[1]){
 					[0] = {
 						.guid = guid_get,
-						.character_id = 0x1337, // (doggo)hacky work-around l33t solution for now...
 						.transient_id.value = transient_id_get,
 						.actor_model_id = 9474,
 						.head_actor_length = 26,
 						.head_actor = "SurvivorFemale_Head_02.adr",
 						.hair_model_length = 32,
 						.hair_model = "SurvivorFemale_Hair_ShortBun.adr",
-						.position = {74.8f, 201.5f, 458.1f, 99.01f},
-						.rotation = {199.99f, 289.99999f, 370.17f, 6.79f},
 						.is_respawning = FALSE,
 						.character_name_length = 5,
 						.character_name = "doggo",

@@ -409,10 +409,12 @@ internal void zone_packet_handle(App_State *server_state,
 		packet_kind = Zone_Packet_Kind_StaticViewRequest;
 		printf("[Zone] Handling StaticViewRequest\n");
 
-		Zone_Packet_StaticViewRequest request;
-		request.viewpoint = "kotkdefault";
+		Zone_Packet_StaticViewRequest request = {
+			.viewpoint_length = 11,
+			.viewpoint = "kotkdefault",
+		};
 
-		if (strcmp(request.viewpoint, "kotkdefault") != 0) {
+		if (strcmp(request.viewpoint, "kotkdefault") == 0) {
 			Zone_Packet_StaticViewReply staticview_reply = {
 				.state = 0,
 				.position = {74.8f, 201.5f, 458.1f, 99.01f},
@@ -432,7 +434,7 @@ internal void zone_packet_handle(App_State *server_state,
 
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_UpdateLocation, &updt_loc);
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_StaticViewReply, &staticview_reply);
-		} else if (strcmp(request.viewpoint, "kotkdefault") == 0) {
+		} else if (strcmp(request.viewpoint, "kotkdefault") != 0) {
 				Zone_Packet_StaticViewReply staticview_reply = {
 				.state = 0,
 				.position = {74.8f, 201.5f, 458.1f, 99.01f},
