@@ -57,15 +57,6 @@ internal void zone_packet_raw_file_send(App_State *server_state,
 	gateway_tunnel_data_send(server_state, session_state, base_buffer, total_length);
 }
 
-void concatBuffers(u8** data, u8* buffer, usize length) {
-    // Concatenate the provided buffer to the existing data buffer
-    // and update the data pointer accordingly
-    u8* newData = (u8*)realloc(*data, length);
-    memcpy(newData, *data, length - sizeof(u8));
-    memcpy(newData + length - sizeof(u8), buffer, sizeof(u8));
-    *data = newData;
-}
-
 internal u32 readPlayerUpdatePosData(Zone_Packet_PlayerUpdatePosition *obj, 
 									  App_State *server_state,
 									  Session_State *session_state,
