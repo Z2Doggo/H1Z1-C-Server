@@ -7,12 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+
 #include "shared/base.h"
-
-#include "utility/strings.c"
 #include "utility/util.c"
-//#include "platform/os_win32.c"
-
 
 internal u32
 	win32_buffer_load_from_file(char* file_path, u8* buffer, u32 buffer_length)
