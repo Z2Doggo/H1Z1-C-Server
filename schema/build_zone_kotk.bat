@@ -1,1 +1,0 @@
-schema_tool.exe client_protocol_1087.schm output/client_protocol_1087.c
