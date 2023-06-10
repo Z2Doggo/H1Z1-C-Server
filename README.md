@@ -12,11 +12,11 @@
 - [ ] Reverse all vital packets in-order to function as it was then in 2017
 
 ## Credits
-Rhett (Made the server to begin with)
-Doggo (Me - H1Emu)
-GhostsKappa (H1Emu)
-LegendsNeveerrDie (Independent)
-Chriis (H1Emu)
+- Rhett (Made the server to begin with)
+- Doggo (Me - H1Emu)
+- GhostsKappa (H1Emu)
+- LegendsNeveerrDie (Independent)
+- Chriis (H1Emu)
 
 
 ## Contributions
