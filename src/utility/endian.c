@@ -664,6 +664,15 @@ struct vec4
 	f32 w;
 };
 
+typedef struct vecf64 vecf64;
+struct vecf64
+{
+	f64 x;
+	f64 y;
+	f64 z;
+	f64 w;
+};
+
 typedef struct euler_angle euler_angle;
 struct euler_angle
 {
@@ -671,6 +680,24 @@ struct euler_angle
 	i32 yaw;
 	i32 roll;
 };
+
+internal vecf64
+euler_to_quaternion(euler_angle euler) {
+    f64 cos_pitch = cos(euler.pitch / 2);
+    f64 sin_pitch = sin(euler.pitch / 2);
+    f64 cos_yaw = cos(euler.yaw / 2);
+    f64 sin_yaw = sin(euler.yaw / 2);
+    f64 cos_roll = cos(euler.roll / 2);
+    f64 sin_roll = sin(euler.roll / 2);
+
+    vecf64 q;
+    q.x = cos_pitch * cos_yaw * cos_roll + sin_pitch * sin_yaw * sin_roll;
+    q.y = sin_pitch * cos_yaw * cos_roll - cos_pitch * sin_yaw * sin_roll;
+    q.z = cos_pitch * sin_yaw * cos_roll + sin_pitch * cos_yaw * sin_roll;
+    q.w = cos_pitch * cos_yaw * sin_roll - sin_pitch * sin_yaw * cos_roll;
+
+    return q;
+}
 
 internal vec3
 endian_read_vec3_little(u8* data)

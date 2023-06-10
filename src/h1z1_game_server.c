@@ -1,4 +1,5 @@
 #if defined(YOTE_INTERNAL)
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,7 +28,6 @@ static void platform_win_console_write(char *format, ...);
 #include "utility/crypt_rc4.c"
 #include "utility/character_id_gen.c"
 #include "utility/transient_id_gen.c"
-#include "utility/shared.c"
 #include "shared/protocol/stream.h"
 #include "shared/protocol/fragment_pool.c"
 #include "shared/protocol/input_stream.c"
