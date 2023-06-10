@@ -148,19 +148,21 @@ struct Session_State
 	u64 creation_date;
 	u64 last_login_date;
 
-	i32 stance;
-	i32 position[3];
-	i32 unknown12_f32[3];
+	u32 stance;
+	u32 position[3];
+	u32 unknown12_f32[3];
 	vecf64 rotation;
 	euler_angle rotationRaw;
 	vecf64 lookAt;
 	f32 orientation;
-	i32 direction;
-	i32 front_tilt;
-	i32 side_tilt;
-	i32 angle_change;
-	i32 vertical_speed;
-	i32 horizontal_speed;
-	i32 engine_rpm;
+	u32 direction;
+	u32 front_tilt;
+	u32 side_tilt;
+	u32 angle_change;
+	u32 vertical_speed;
+	u32 horizontal_speed;
+	u32 engine_rpm;
+	u32 sequence_time;
+	u8 unk_byte;
 	// end world_character struct
 };

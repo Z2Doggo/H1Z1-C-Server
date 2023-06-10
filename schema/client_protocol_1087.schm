@@ -2430,9 +2430,7 @@ list:u32 ruleset_definitions
     }
 }
 
-
 packet 0x70 0:u16 ActivityBase
-
 
 packet 0x71 MountBase
 packet 0x71 0x1:u16 Mount_MountRequest
@@ -2464,7 +2462,7 @@ packet 0x79 PlayerUpdatePosition
 uint2b transient_id
 u16 flag
 u32 sequence
-u8 unk_byte
+bytes:u8 unk_byte
 
 packet 0x7a InviteAndStartMiniGame
 packet 0x7b QuizBase
