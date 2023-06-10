@@ -1345,7 +1345,7 @@ packet 0x7 ClientLogout
 packet 0x8 TargetClientNotOnline
 
 packet 0x9 CommandBase
-packet 0x9 0xc604:u32 Command_RunSpeed
+packet 0x09 0xc604:u16 Command_RunSpeed
 f32 run_speed
 
 packet 0x9 0x1:u16 Command_ShowDialog
@@ -1376,11 +1376,11 @@ packet 0x9 0xe:u16 Command_StartFlashGame
 packet 0x9 0xf:u16 Command_SetProfile
 u32 profile_id
 u32 interaction_id
-packet 0x9 0x3f:u32 Command_AddWorldCommand
+packet 0x09 0x3f:u8 Command_AddWorldCommand
 string:u32 command
-packet 0x9 0x45:u32 Command_ItemDefinitionRequest
+packet 0x09 0x45:u8 Command_ItemDefinitionRequest
 u32 id
-packet 0x9 0x46:u32 Command_ItemDefinitionReply
+packet 0x09 0x46:u8 Command_ItemDefinitionReply
 stream:u32 item_def_reply_1
 {
 	u8 bitflags1
@@ -1463,7 +1463,7 @@ stream:u32 item_def_reply_1
 	}
 }
 
-packet 0x9 0x47:u32 CommandItemDefinitions
+packet 0x09 0x47:u8 CommandItemDefinitions
 stream:u32 item_def_reply_2
 {
 	list:u32 item_defs
@@ -2835,7 +2835,7 @@ packet 0xc6 StatsBase
 packet 0xc7 ScoreBase
 packet 0xc8 ResourcesBase
 
-packet 0xc9 0x02:u32 ContainerInitEquippedContainers
+packet 0xc9 0x02:u8 ContainerInitEquippedContainers
 u64 ignore_this
 u64 character_id
 
