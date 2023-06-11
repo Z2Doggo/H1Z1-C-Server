@@ -142,9 +142,9 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 							[0] = {
 								.name_length = 5,
 								.name = "doggo",
-								.head_id = 9474,
+								.head_id = 1,
 								.model_id = 9474,
-								.gender = 2,
+								.gender = 1 || 2,
 							},
 						},
 					},
