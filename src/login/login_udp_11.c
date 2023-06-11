@@ -127,6 +127,28 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 			{
 				.character_status = 1,
 				.can_bypass_server_lock = TRUE,
+				
+				.characters_count = 1,
+				.characters = 
+				(struct characters_s[1]) {
+					[0] = {
+						.character_id = 0x133742069,
+						.server_id = 1,
+						.last_login_date = 0x0,
+						.status = 1,
+
+						.payload4 = 
+						(struct payload4_s[1]) {
+							[0] = {
+								.name_length = 5,
+								.name = "doggo",
+								.head_id = 9474,
+								.model_id = 9474,
+								.gender = 2,
+							},
+						},
+					},
+				},
 			};
 
 		login_packet_send(server,
