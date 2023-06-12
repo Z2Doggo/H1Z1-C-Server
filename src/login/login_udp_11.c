@@ -111,55 +111,6 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 
 		break;
 	}
-	case LOGIN_CHARACTERSELECTINFOREQUEST_ID:
-	{
-		packet_kind = Login_Packet_Kind_CharacterSelectInfoRequest;
-		printf(MESSAGE_CONCAT_INFO("Recieved %s\n"), login_packet_names[packet_kind]);
-
-		if (session->connection_args.should_dump_login)
-		{
-			char dump_path[256] = {0};
-			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_login_%s.bin", global_tick_count, global_packet_dump_count++, login_packet_names[packet_kind]);
-			server->platform_api->buffer_write_to_file(dump_path, data, data_length);
-		}
-
-		Login_Packet_CharacterSelectInfoReply character_info_reply =
-			{
-				.character_status = 1,
-				.can_bypass_server_lock = TRUE,
-				
-				.characters_count = 1,
-				.characters = 
-				(struct characters_s[1]) {
-					[0] = {
-						.character_id = 0x133742069,
-						.server_id = 1,
-						.last_login_date = 0x0,
-						.status = 1,
-
-						.payload4 = 
-						(struct payload4_s[1]) {
-							[0] = {
-								.name_length = 5,
-								.name = "doggo",
-								.head_id = 1,
-								.model_id = 9474,
-								.gender = 1 || 2,
-							},
-						},
-					},
-				},
-			};
-
-		login_packet_send(server,
-						  session,
-						  &server->arena_per_tick,
-						  KB(500),
-						  FALSE,
-						  Login_Packet_Kind_CharacterSelectInfoReply,
-						  &character_info_reply);
-	}
-	break;
 
 	case LOGIN_SERVERLISTREQUEST_ID:
 	{
@@ -374,6 +325,54 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 		login_packet_send(server, session, &server->arena_per_tick, KB(100), FALSE, Login_Packet_Kind_TunnelAppPacketServerToClient, &tunnel_app_packet_server_to_client);
 
 		break;
+	}
+	case LOGIN_CHARACTERSELECTINFOREQUEST_ID:
+	{
+		packet_kind = Login_Packet_Kind_CharacterSelectInfoRequest;
+		printf(MESSAGE_CONCAT_INFO("Recieved %s\n"), login_packet_names[packet_kind]);
+
+		if (session->connection_args.should_dump_login)
+		{
+			char dump_path[256] = {0};
+			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_login_%s.bin", global_tick_count, global_packet_dump_count++, login_packet_names[packet_kind]);
+			server->platform_api->buffer_write_to_file(dump_path, data, data_length);
+		}
+
+		Login_Packet_CharacterSelectInfoReply character_info_reply =
+			{
+				.character_status = 1,
+				.can_bypass_server_lock = TRUE,
+				
+				.characters_count = 1,
+				.characters = 
+				(struct characters_s[1]) {
+					[0] = {
+						.character_id = 0x133742069,
+						.server_id = 1,
+						.last_login_date = 0x0,
+						.status = 1,
+
+						.payload4 = 
+						(struct payload4_s[1]) {
+							[0] = {
+								.head_id = 1,
+								.model_id = 9474,
+								.gender = 2,
+							},
+						},
+					},
+				},
+			};
+
+		login_packet_send(server,
+						  session,
+						  &server->arena_per_tick,
+						  KB(500),
+						  FALSE,
+						  Login_Packet_Kind_CharacterSelectInfoReply,
+						  &character_info_reply);
+
+	break;
 	}
 	default:
 	{
