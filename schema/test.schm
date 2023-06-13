@@ -1,0 +1,61 @@
+group Test
+
+packet 0xaa TestSchema
+// TODO(rhett): Test schema
+u8 byte_0?
+
+switch:u64 entry_data
+{
+	case 0 vartype_0
+	u32 val
+	u8 val_2
+
+	case 1 vartype_1
+	f32 val_3
+	string:u32 val_4
+}
+
+switch:u8 entry_data_2
+{
+	case 0 vartype_2
+	u32 val
+	u8 val_2
+
+	case 1 vartype_3
+	f32 val_3
+	string:u32 val_4
+}
+
+uint2b test_uint2b
+vec4   test_position
+
+list:0x03 test_repeat
+{
+	u32 value
+}
+
+list:u16 list_0
+{
+	u8 nested_0?
+	// TODO(rhett): if stream length is ~0, stream is empty when packing
+	stream:u32 stream_0
+	{
+		string:u32 name
+		u32 id?
+	}
+	stream:u32 stream_0_1
+	{
+		string:u32 name
+		u32 id?
+	}
+	list:u32 list_1
+	{
+		u8 nested_1
+		list:u32 list_2
+		{
+			u32 nested_2
+		}
+	}
+}
+u8 byte_1
+
