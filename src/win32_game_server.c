@@ -80,8 +80,7 @@ internal void win32_app_code_unload(App_Code* app_code)
 }
 
 b32 is_running = TRUE;
-
-// Thread function for the server tick
+// (doggo)thread function for the server tick
 DWORD WINAPI serverTickThread(LPVOID lpParameter)
 {
 	App_Memory* app_memory = (App_Memory*)lpParameter;
@@ -175,8 +174,6 @@ int mainCRTStartup(void)
 
 	while (is_running)
 	{
-		// Handle other tasks or events in the main thread
-
 #if defined(TERMINAL_UI)
 		DWORD bytes_written;
 		WriteConsoleOutputCharacter(console_handle,
@@ -216,10 +213,9 @@ int mainCRTStartup(void)
 		app_memory.tick_count++;
 	}
 
-	// Wait for the server tick thread to complete
 	WaitForSingleObject(server_tick_thread_handle, INFINITE);
 
-	// Clean up resources
+	// (doggo)clean up resources and free memory
 	CloseHandle(server_tick_thread_handle);
 	win32_app_code_unload(&app_code);
 	VirtualFree(app_memory.backing_memory.data, 0, MEM_RELEASE);
