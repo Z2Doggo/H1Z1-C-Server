@@ -2466,7 +2466,7 @@ packet 0x79 PlayerUpdatePosition
 uint2b transient_id
 u16 flag
 u32 sequence
-bytes:u8 unk_byte
+u8 unk_byte
 
 packet 0x7a InviteAndStartMiniGame
 packet 0x7b QuizBase
@@ -3079,7 +3079,7 @@ packet 0xea 0x01:u8 StaticViewRequest
 string:u32 viewpoint
 
 packet 0xea 0x02:u8 StaticViewReply
-i32 state
+u32 state
 vec4 position
 vec4 rotation
 vec4 look_at
@@ -3103,3 +3103,4 @@ packet 0xf5 WeaponLagLockParameters
 packet 0xf6 CrateOpeningBase
 packet 0xf7 PlayerHeatWarning
 packet 0xf8 AnimationBase
+packet 0xf9 ProximateItemBase

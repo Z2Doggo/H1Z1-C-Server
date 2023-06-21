@@ -21,7 +21,7 @@ static void platform_win_console_write(char* format, ...);
 #define MAX_FRAGMENTS       12000
 #define MAX_PACKET_LENGTH   512
 #define DATA_HEADER_LENGTH  4
-#define MAX_SESSIONS_COUNT  4
+#define MAX_SESSIONS_COUNT  16
 
 #include "utility/endian.c"
 #include "utility/util.c"

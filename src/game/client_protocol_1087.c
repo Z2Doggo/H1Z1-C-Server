@@ -57,130 +57,6 @@ internal void zone_packet_raw_file_send(App_State *server_state,
 	gateway_tunnel_data_send(server_state, session_state, base_buffer, total_length);
 }
 
-internal u32 readPlayerUpdatePosData( App_State *server_state,
-									  Session_State *session_state,
-									  u8 *data, 
-									  u32 offset) 
-{
-	Zone_Packet_PlayerUpdatePosition obj = {0};
-
-	offset = 0;
-	u32 startOffset;
-	startOffset = offset;
-	uint2b uv;
-	int2b v;
-	
-	if (obj.flag & 1) {
-		uv = endian_read_uint2b_little(data);
-		session_state->stance = uv.value;
-		offset += uv.length;
-	}
-
-	if (obj.flag & 2) {
-		v = endian_read_int2b_little(data, offset);
-		session_state->position[0] = v.value / 100;
-		offset += v.length;
-
-		v = endian_read_int2b_little(data, offset);
-		session_state->position[1] = v.value / 100;
-		offset += v.length;
-
-		v = endian_read_int2b_little(data, offset);
-		session_state->position[2] = v.value / 100;
-		offset += v.length;
-	}
-
-	if (obj.flag & 0x20) {
-		session_state->orientation = endian_read_f32_little(data + offset);
-		offset += 4;
-	}
-
-	if(obj.flag & 0x40) {
-		v = endian_read_int2b_little(data, offset);
-		session_state->front_tilt = v.value / 100;
-		offset += v.length;
-	}
-
-	if (obj.flag & 0x80) {
-		v = endian_read_int2b_little(data, offset);
-		session_state->side_tilt = v.value / 100;
-		offset += v.length;
-	}
-
-	if (obj.flag & 4) {
-		v = endian_read_int2b_little(data, offset);
-		session_state->angle_change = v.value / 100;
-		offset += v.length;
-	}
-
-	if (obj.flag & 0x8) {
-		v = endian_read_int2b_little(data, offset);
-		session_state->vertical_speed = v.value / 100;
-		offset += v.length;
-	}
-
-	if (obj.flag & 0x10) {
-		v = endian_read_int2b_little(data, offset);
-		session_state->horizontal_speed = v.value / 10;
-		offset += v.length;
-	}
-
-	if (obj.flag & 0x100) {
-		v = endian_read_int2b_little(data, offset);
-		session_state->unknown12_f32[0] = v.value / 100;
-		offset += v.length; 
-
-		v = endian_read_int2b_little(data, offset);
-		session_state->unknown12_f32[1] = v.value / 100;
-		offset += v.length; 
-
-		v = endian_read_int2b_little(data, offset);
-		session_state->unknown12_f32[2] = v.value / 100;
-		offset += v.length; 
-	}
-
-	if(obj.flag & 0x200) {
-		euler_angle rotation_euler;
-
-		v = endian_read_int2b_little(data, offset);
-		rotation_euler.pitch = v.value / 100;
-		offset += v.length; 
-				
-		v = endian_read_int2b_little(data, offset);
-		rotation_euler.yaw = v.value / 100;
-		offset += v.length; 
-
-		v = endian_read_int2b_little(data, offset);
-		rotation_euler.roll = v.value / 100;
-		offset += v.length; 
-
-		session_state->rotation = euler_to_quaternion(rotation_euler);
-		session_state->rotationRaw = rotation_euler;
-		session_state->lookAt = euler_to_quaternion(rotation_euler);
-		offset += v.length;
-	}
-
-	if (obj.flag & 0x400) {
-		v = endian_read_int2b_little(data, offset);
-		session_state->direction = v.value / 10;
-		offset += v.length; 
-	}
-
-	if (obj.flag & 0x800) {
-		v = endian_read_int2b_little(data, offset);
-		session_state->engine_rpm = v.value / 10;
-		offset += v.length; 
-	}
-	
-	Gateway_Packet_TunnelPacket* tunnel_packet = {0};
-	obj.unk_byte = malloc(tunnel_packet->data_length);
-	obj.unk_byte_length = 0;
-	memcpy(obj.unk_byte, tunnel_packet->data + 7, tunnel_packet->data_length - 7);
-
-	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(50), Zone_Packet_Kind_PlayerUpdatePosition, &obj);
-	return obj, offset - startOffset;
-}
-
 internal void zone_packet_handle(App_State *server_state,
 								 Session_State *session_state,
 								 u8 *data,
@@ -410,20 +286,20 @@ internal void zone_packet_handle(App_State *server_state,
 		printf("[Zone] Handling StaticViewRequest\n");
 
 			Zone_Packet_StaticViewReply staticview_reply = {
-				.state = 1,
+				.state = 0,
 				.position = {74.8f, 201.5f, 458.1f, 99.01f},
 				.rotation = {199.99f, 289.99999f, 370.17f, 6.79f},
-				.look_at = {69.81f, 56.0f, 0.0f},
-				.unk_byte_1 = 255,
+				.look_at = {69.81f, 56.0f, 0.0f, 0.0f},
+				.unk_byte_1 = 0,
 				.unk_bool_1 = TRUE,
 			};
 
 			Zone_Packet_ClientUpdate_UpdateLocation updt_loc = {
 				.position = {-32.26f, 506.41f, 280.21f, 1.0f},
 				.rotation = {-0.11f, -0.58f, -0.08f, 1.0f},
-				.trigger_loading_screen = TRUE,
+				.trigger_loading_screen = FALSE,
 				.unk_u8_1 = 0,
-				.unk_bool = FALSE,
+				.unk_bool = TRUE,
 			};
 
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_UpdateLocation, &updt_loc);
@@ -1128,6 +1004,129 @@ internal void zone_packet_handle(App_State *server_state,
 
 		break;
 	}
+	/*
+	case ZONE_PLAYERUPDATEPOSITION_ID:
+	{
+		packet_kind = Zone_Packet_Kind_PlayerUpdatePosition;
+		printf("[Server] Handling PlayerUpdatePosition\n");
+
+		Zone_Packet_PlayerUpdatePosition obj = {0};
+
+		u32 offset = 0;
+		u32 startOffset;
+		startOffset = offset;
+		uint2b uv;
+		int2b v;
+		
+		if (obj.flag & 1) {
+			uv = endian_read_uint2b_little(data);
+			session_state->stance = uv.value;
+			offset += uv.length;
+		}
+
+		if (obj.flag & 2) {
+			v = endian_read_int2b_little(data, offset);
+			session_state->position[0] = v.value / 100;
+			offset += v.length;
+
+			v = endian_read_int2b_little(data, offset);
+			session_state->position[1] = v.value / 100;
+			offset += v.length;
+
+			v = endian_read_int2b_little(data, offset);
+			session_state->position[2] = v.value / 100;
+			offset += v.length;
+		}
+
+		if (obj.flag & 0x20) {
+			session_state->orientation = endian_read_f32_little(data + offset);
+			offset += 4;
+		}
+
+		if(obj.flag & 0x40) {
+			v = endian_read_int2b_little(data, offset);
+			session_state->front_tilt = v.value / 100;
+			offset += v.length;
+		}
+
+		if (obj.flag & 0x80) {
+			v = endian_read_int2b_little(data, offset);
+			session_state->side_tilt = v.value / 100;
+			offset += v.length;
+		}
+
+		if (obj.flag & 4) {
+			v = endian_read_int2b_little(data, offset);
+			session_state->angle_change = v.value / 100;
+			offset += v.length;
+		}
+
+		if (obj.flag & 0x8) {
+			v = endian_read_int2b_little(data, offset);
+			session_state->vertical_speed = v.value / 100;
+			offset += v.length;
+		}
+
+		if (obj.flag & 0x10) {
+			v = endian_read_int2b_little(data, offset);
+			session_state->horizontal_speed = v.value / 10;
+			offset += v.length;
+		}
+
+		if (obj.flag & 0x100) {
+			v = endian_read_int2b_little(data, offset);
+			session_state->unknown12_f32[0] = v.value / 100;
+			offset += v.length; 
+
+			v = endian_read_int2b_little(data, offset);
+			session_state->unknown12_f32[1] = v.value / 100;
+			offset += v.length; 
+
+			v = endian_read_int2b_little(data, offset);
+			session_state->unknown12_f32[2] = v.value / 100;
+			offset += v.length; 
+		}
+
+		if(obj.flag & 0x200) {
+			euler_angle rotation_euler;
+
+			v = endian_read_int2b_little(data, offset);
+			rotation_euler.pitch = v.value / 100;
+			offset += v.length; 
+					
+			v = endian_read_int2b_little(data, offset);
+			rotation_euler.yaw = v.value / 100;
+			offset += v.length; 
+
+			v = endian_read_int2b_little(data, offset);
+			rotation_euler.roll = v.value / 100;
+			offset += v.length; 
+
+			session_state->rotation = euler_to_quaternion(rotation_euler);
+			session_state->rotationRaw = rotation_euler;
+			session_state->lookAt = euler_to_quaternion(rotation_euler);
+			offset += v.length;
+		}
+
+		if (obj.flag & 0x400) {
+			v = endian_read_int2b_little(data, offset);
+			session_state->direction = v.value / 10;
+			offset += v.length; 
+		}
+
+		if (obj.flag & 0x800) {
+			v = endian_read_int2b_little(data, offset);
+			session_state->engine_rpm = v.value / 10;
+			offset += v.length; 
+		}
+		
+		Gateway_Packet_TunnelPacket* tunnel_packet = {0};
+		obj.unk_byte = malloc(tunnel_packet->data_length);
+		memcpy(obj.unk_byte, tunnel_packet->data + 7, tunnel_packet->data_length - 7);
+
+		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(50), Zone_Packet_Kind_PlayerUpdatePosition, &obj);
+	}
+	*/
 	default:
 	{
 		packet_id_fail:

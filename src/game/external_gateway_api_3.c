@@ -406,7 +406,7 @@
 				};
 				gateway_packet_send(server_state, session_state, &server_state->arena_per_tick, 32, Gateway_Packet_Kind_ChannelIsRoutable, &channel_is_routable_1);
 
-				gateway_on_login(server_state, session_state, packet.character_id);
+				gateway_on_login(server_state, session_state);
 
 			} break;
 
