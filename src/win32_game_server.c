@@ -169,7 +169,7 @@ int mainCRTStartup(void)
 	App_Code app_code = win32_app_code_load();
 	u64 previous_counter = platform_win_wall_clock();
 
-	// Create and start the server tick thread
+	// (doggo)create and start the server tick thread
 	HANDLE server_tick_thread_handle = CreateThread(NULL, 0, serverTickThread, &app_memory, 0, NULL);
 
 	while (is_running)

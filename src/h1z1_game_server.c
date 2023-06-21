@@ -373,6 +373,82 @@ internal void gateway_on_login(App_State *app_state, Session_State *session_stat
 		.unknown_dword33 = 0.5f,
 	};
 	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_UpdateWeatherData, &updt_weather_data);
+
+	Zone_Packet_Equipment_SetCharacterEquipment set_character_equipment =
+	{
+		.length_1_length = 1,
+		.length_1 =
+			(struct length_1_s[1]) {
+				[0] = {
+					.profile_id = 5,
+					.character_id = 0x133742069,
+				},
+			},
+		.unk_dword_1 = 0,
+		.unk_string_1_length = 7,
+		.unk_string_1 = "Default",
+		.unk_string_2_length = 1,
+		.unk_string_2 = "#",
+		.equipment_slot_array_count = 1,
+		.equipment_slot_array = 
+		(struct equipment_slot_array_s[1]) {
+			[0] =
+			{
+				.equipment_slot_id_1 = 0,
+				.length_2_length = 1,
+				.length_2 = (struct length_2_s[1]){
+					[0] = {
+						.equipment_slot_id_2 = 0,
+						.guid = 0, // keep guid as a 0
+						.tint_alias_length = 7,
+						.tint_alias = "Default",
+						.decal_alias_length = 1,
+						.decal_alias = "#",
+					},
+				},
+			},
+		},
+
+		.attachments_data_1_count = 1,
+		.attachments_data_1 = (struct attachments_data_1_s[1]){
+			[0] = 
+			{
+				.model_name_length = 0,
+				.model_name = "",
+				.texture_alias_length = 0,
+				.texture_alias = "",
+				.tint_alias_length = 7,
+				.tint_alias = "Default",
+				.decal_alias_length = 1,
+				.decal_alias = "#",
+				.slot_id = 0,
+			},
+		},
+		.unk_bool_2 = TRUE,
+	};
+	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_Equipment_SetCharacterEquipment, &set_character_equipment);
+
+	Zone_Packet_Loadout_SetLoadoutSlots ldt_setldtslots = 
+	{
+		.character_id = 0x133742069,
+		.loadout_id = 0,
+		.loadout_slot_data_count = 1,
+		.loadout_slot_data =
+		(struct loadout_slot_data_s[1]) {
+			[0] = 
+			{
+				.hotbar_slot_id = 0,
+				.loadout_id_1 = 0,
+				.slot_id = 0,
+				.item_def_id1 = 0,
+				.loadout_item_guid = 0x0,
+				.unk_byte_1 = 255,
+				.unk_dword_1 = 0,
+			},
+		},
+		.current_slot_id = 0,
+	};
+	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_Loadout_SetLoadoutSlots, &ldt_setldtslots);
 }
 
 

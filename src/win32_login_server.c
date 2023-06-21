@@ -108,7 +108,7 @@ int mainCRTStartup(void)
 	QueryPerformanceFrequency(&local_performance_frequency);
 	global_performance_frequency = local_performance_frequency.QuadPart;
 	b32 is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
-	f32 tick_rate = 128.0f;
+	f32 tick_rate = 64.0f;
 	f32 target_seconds_per_tick = 1.0f / tick_rate;
 
 #if defined(TERMINAL_UI)
