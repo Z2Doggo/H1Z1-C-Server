@@ -1,7 +1,3 @@
 # Specify filepatterns you want git to ignore.
 build*/
 schema/output/
-_IGNORE_*
-GAME_PACKETS/
-LOGIN_PACKETS/
-*.bkp

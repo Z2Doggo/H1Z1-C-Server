@@ -1,5 +1,5 @@
 {
-    "C_Cpp.errorSquiggles": "disabled",
+    "C_Cpp.errorSquiggles": "enabled",
     "files.associations": {
         "string.h": "c",
         "time.h": "c",
@@ -23,6 +23,10 @@
         "packet_queue.h": "c",
         "stdbool.h": "c",
         "stream.h": "c",
-        "shared.h": "c"
+        "shared.h": "c",
+        "jansson_config.h": "c",
+        "zone_server.h": "c",
+        "lz4.h": "c",
+        "windows.h": "c"
     }
 }

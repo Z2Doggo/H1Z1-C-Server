@@ -7,12 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include "_OLD/_shared/_base.h"
 
-#include "_OLD/utility/_strings.c"
+#include "shared/base.h"
 #include "utility/util.c"
-//#include "platform/os_win32.c"
-
 
 internal u32
 	win32_buffer_load_from_file(char* file_path, u8* buffer, u32 buffer_length)
@@ -120,8 +117,8 @@ TOKEN_KIND(T_String,  "string"), \
 TOKEN_KIND(T_Bytes,   "bytes"), \
 TOKEN_KIND(T_Stream,  "stream"), \
 TOKEN_KIND(T_Uint2b,  "uint2b"), \
-TOKEN_KIND(T_Vec3,    "vec3"), \
 TOKEN_KIND(T_Vec4,    "vec4"), \
+TOKEN_KIND(T_Vec3,    "vec3"), \
 TOKEN_KIND(T_Switch,  "switch"), \
 TOKEN_KIND(T_Case,    "case"), \
 TOKEN_KIND(T__Special_Type_End, ""), \
@@ -656,8 +653,8 @@ typedef enum Parser_Object_Kind
 	PO_Field_Basic,
 	PO_Field_String,
 	PO_Field_Uint2b,
-	PO_Field_Vec3,
 	PO_Field_Vec4,
+	PO_Field_Vec3,
 	PO_Field_Bytes,
 	PO_List_Enter,
 	PO_List_Exit,
@@ -1288,45 +1285,6 @@ state_field_enter(Parser* parser)
 			parser->state_stack_tail--;
 		} break;
 
-		case T_Vec3:
-		{
-			parser->state_stack_tail++;
-			//parser->state_stack[parser->state_stack_tail].endian = State_Basic;
-			parser->state_stack[parser->state_stack_tail].endian = parser->state_stack[parser->state_stack_tail - 1].endian;
-			parser->state_stack[parser->state_stack_tail].group = parser->state_stack[parser->state_stack_tail - 1].group;
-			parser->state_stack[parser->state_stack_tail].packet = parser->state_stack[parser->state_stack_tail - 1].packet;
-			parser->state_stack[parser->state_stack_tail].opcode = parser->state_stack[parser->state_stack_tail - 1].opcode;
-			parser->state_stack[parser->state_stack_tail].opcode_length_type = parser->state_stack[parser->state_stack_tail - 1].opcode_length_type;
-			parser->state_stack[parser->state_stack_tail].subcode = parser->state_stack[parser->state_stack_tail - 1].subcode;
-			parser->state_stack[parser->state_stack_tail].subcode_length_type = parser->state_stack[parser->state_stack_tail - 1].subcode_length_type;
-			parser->state_stack[parser->state_stack_tail].data_type = parser->tokens[parser->tokens_tail];
-			parser->state_stack[parser->state_stack_tail].parent = parser->state_stack[parser->state_stack_tail - 1].parent;
-			parser->tokens_tail++;
-
-			if (parser->tokens[parser->tokens_tail].kind != T_Identifier)
-			{
-				printf("[X] Expected identifier for field at line: %u\n", parser->tokens[parser->tokens_tail].line);
-				abort();
-			}
-			parser->state_stack[parser->state_stack_tail].identifier = parser->tokens[parser->tokens_tail];
-			parser->tokens_tail++;
-
-			if (parser->tokens[parser->tokens_tail].kind != T_New_Line)
-			{
-				printf("[X] Expected newline after field at line: %u\n", parser->tokens[parser->tokens_tail].line);
-				abort();
-			}
-			parser->tokens_tail++;
-
-			if (parser->emit_func)
-			{
-				parser->emit_func(PO_Field_Vec3, parser->state_stack, parser->state_stack_tail, parser->output_buffers, 0, parser->depth);
-			}
-
-			memset(&parser->state_stack[parser->state_stack_tail], 0, sizeof(parser->state_stack[parser->state_stack_tail]));
-			parser->state_stack_tail--;
-		} break;
-
 		case T_Vec4:
 		{
 			parser->state_stack_tail++;
@@ -1360,6 +1318,45 @@ state_field_enter(Parser* parser)
 			if (parser->emit_func)
 			{
 				parser->emit_func(PO_Field_Vec4, parser->state_stack, parser->state_stack_tail, parser->output_buffers, 0, parser->depth);
+			}
+
+			memset(&parser->state_stack[parser->state_stack_tail], 0, sizeof(parser->state_stack[parser->state_stack_tail]));
+			parser->state_stack_tail--;
+		} break;
+
+		case T_Vec3:
+		{
+			parser->state_stack_tail++;
+			//parser->state_stack[parser->state_stack_tail].endian = State_Basic;
+			parser->state_stack[parser->state_stack_tail].endian = parser->state_stack[parser->state_stack_tail - 1].endian;
+			parser->state_stack[parser->state_stack_tail].group = parser->state_stack[parser->state_stack_tail - 1].group;
+			parser->state_stack[parser->state_stack_tail].packet = parser->state_stack[parser->state_stack_tail - 1].packet;
+			parser->state_stack[parser->state_stack_tail].opcode = parser->state_stack[parser->state_stack_tail - 1].opcode;
+			parser->state_stack[parser->state_stack_tail].opcode_length_type = parser->state_stack[parser->state_stack_tail - 1].opcode_length_type;
+			parser->state_stack[parser->state_stack_tail].subcode = parser->state_stack[parser->state_stack_tail - 1].subcode;
+			parser->state_stack[parser->state_stack_tail].subcode_length_type = parser->state_stack[parser->state_stack_tail - 1].subcode_length_type;
+			parser->state_stack[parser->state_stack_tail].data_type = parser->tokens[parser->tokens_tail];
+			parser->state_stack[parser->state_stack_tail].parent = parser->state_stack[parser->state_stack_tail - 1].parent;
+			parser->tokens_tail++;
+
+			if (parser->tokens[parser->tokens_tail].kind != T_Identifier)
+			{
+				printf("[X] Expected identifier for field at line: %u\n", parser->tokens[parser->tokens_tail].line);
+				abort();
+			}
+			parser->state_stack[parser->state_stack_tail].identifier = parser->tokens[parser->tokens_tail];
+			parser->tokens_tail++;
+
+			if (parser->tokens[parser->tokens_tail].kind != T_New_Line)
+			{
+				printf("[X] Expected newline after field at line: %u\n", parser->tokens[parser->tokens_tail].line);
+				abort();
+			}
+			parser->tokens_tail++;
+
+			if (parser->emit_func)
+			{
+				parser->emit_func(PO_Field_Vec3, parser->state_stack, parser->state_stack_tail, parser->output_buffers, 0, parser->depth);
 			}
 
 			memset(&parser->state_stack[parser->state_stack_tail], 0, sizeof(parser->state_stack[parser->state_stack_tail]));
@@ -1712,7 +1709,7 @@ emit_c_source(Parser_Object_Kind kind,
 		case PO_Group_Enter:
 		{
 			output_buffers->kind_buffer_tail += sprintf(output_buffers->kind_buffer + output_buffers->kind_buffer_tail,
-																									"\n#define %s_PACKET_KINDS \\\n%s_PACKET_KIND(%s_Packet_Kind_Unhandled, \"UNHANDLED\"), \\\n",
+																									"\n#define %s_PACKET_KINDS \\\n%s_PACKET_KIND(%s_Packet_Kind_Unhandled, \"Unhandled\"), \\\n",
 																									group_buffer_upper,
 																									group_buffer_upper,
 																									group_buffer);
@@ -1901,94 +1898,6 @@ emit_c_source(Parser_Object_Kind kind,
 			}
 		} break;
 
-		case PO_Field_Vec3:
-		{
-			output_buffers->main_struct_buffer_tail += sprintf(output_buffers->main_struct_buffer + output_buffers->main_struct_buffer_tail,
-			                                                   "%s %s;\n",
-			                                                   token_names[state_stack[state_stack_tail].data_type.kind],
-			                                                   identifier_buffer);
-
-
-			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
-																										"// %s %s\n",
-																										token_names[state_stack[state_stack_tail].data_type.kind],
-																										identifier_buffer);
-
-			// TODO(rhett): store function names somewhere, switch depending on endianess
-			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
-																										"endian_write_%s_%s(buffer + offset, ",
-																										token_names[state_stack[state_stack_tail].data_type.kind],
-																										token_names[state_stack[state_stack_tail].endian]);
-
-			output_buffers->packer_buffer_tail += write_field_parents(output_buffers->packer_buffer, output_buffers->packer_buffer_tail, state_stack, state_stack_tail, depth);
-			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
-																										"%s);\noffset += sizeof(f32) * 3;\n",
-																										identifier_buffer);
-
-			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
-																										"printf(\"-- %-24s\\t%%f\\t%%f\\t%%f\\n\", (f64)",
-																										identifier_buffer);
-
-			output_buffers->packer_buffer_tail += write_field_parents(output_buffers->packer_buffer, output_buffers->packer_buffer_tail, state_stack, state_stack_tail, depth);
-			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
-																										"%s.x, (f64)",
-																										identifier_buffer);
-
-			output_buffers->packer_buffer_tail += write_field_parents(output_buffers->packer_buffer, output_buffers->packer_buffer_tail, state_stack, state_stack_tail, depth);
-			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
-																										"%s.y, (f64)",
-																										identifier_buffer);
-
-			//output_buffers->packer_buffer_tail += write_field_parents(output_buffers->packer_buffer, output_buffers->packer_buffer_tail, state_stack, state_stack_tail, depth);
-			//output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
-																										//"%s.z, (f64)",
-																										//identifier_buffer);
-
-			output_buffers->packer_buffer_tail += write_field_parents(output_buffers->packer_buffer, output_buffers->packer_buffer_tail, state_stack, state_stack_tail, depth);
-			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
-																										"%s.z);\n\n",
-																										identifier_buffer);
-
-
-			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-																											"// %s %s\n",
-																											token_names[state_stack[state_stack_tail].data_type.kind],
-																											identifier_buffer);
-
-			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth);
-
-			// TODO(rhett): store function names somewhere, switch depending on endianess
-			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-																											"%s = endian_read_%s_%s(data + offset);\noffset += sizeof(f32) * 3;\n",
-																											identifier_buffer,
-																											token_names[state_stack[state_stack_tail].data_type.kind],
-																											token_names[state_stack[state_stack_tail].endian]);
-
-			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-																											"printf(\"-- %-24s\\t%%f\\t%%f\\t%%f\\n\", (f64)",
-																											identifier_buffer);
-
-			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth);
-			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-																											"%s.x, (f64)",
-																											identifier_buffer);
-
-			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth);
-			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-																											"%s.y, (f64)",
-																											identifier_buffer);
-
-			//output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth);
-			//output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-																											//"%s.z, (f64)",
-																											//identifier_buffer);
-
-			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth);
-			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-																											"%s.z);\n\n",
-																											identifier_buffer);
-		} break;
-
 		case PO_Field_Vec4:
 		{
 			output_buffers->main_struct_buffer_tail += sprintf(output_buffers->main_struct_buffer + output_buffers->main_struct_buffer_tail,
@@ -2075,6 +1984,84 @@ emit_c_source(Parser_Object_Kind kind,
 			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
 																											"%s.w);\n\n",
 																											identifier_buffer);
+		} break;
+
+		case PO_Field_Vec3:
+		{
+			output_buffers->main_struct_buffer_tail += sprintf(output_buffers->main_struct_buffer + output_buffers->main_struct_buffer_tail,
+			                                                   "%s %s;\n",
+			                                                   token_names[state_stack[state_stack_tail].data_type.kind],
+			                                                   identifier_buffer);
+
+
+			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
+																										"// %s %s\n",
+																										token_names[state_stack[state_stack_tail].data_type.kind],
+																										identifier_buffer);
+
+			// TODO(rhett): store function names somewhere, switch depending on endianess
+			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
+																										"endian_write_%s_%s(buffer + offset, ",
+																										token_names[state_stack[state_stack_tail].data_type.kind],
+																										token_names[state_stack[state_stack_tail].endian]);
+
+			output_buffers->packer_buffer_tail += write_field_parents(output_buffers->packer_buffer, output_buffers->packer_buffer_tail, state_stack, state_stack_tail, depth);
+			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
+																										"%s);\noffset += sizeof(f32) * 3;\n",
+																										identifier_buffer);
+
+			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
+																										"printf(\"-- %-24s\\t%%f\\t%%f\\t%%f\\n\", (f64)",
+																										identifier_buffer);
+
+			output_buffers->packer_buffer_tail += write_field_parents(output_buffers->packer_buffer, output_buffers->packer_buffer_tail, state_stack, state_stack_tail, depth);
+			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
+																										"%s.x, (f64)",
+																										identifier_buffer);
+
+			output_buffers->packer_buffer_tail += write_field_parents(output_buffers->packer_buffer, output_buffers->packer_buffer_tail, state_stack, state_stack_tail, depth);
+			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
+																										"%s.y, (f64)",
+																										identifier_buffer);
+
+			output_buffers->packer_buffer_tail += write_field_parents(output_buffers->packer_buffer, output_buffers->packer_buffer_tail, state_stack, state_stack_tail, depth);
+			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
+																										"%s.x);\n\n",
+																										identifier_buffer);
+
+			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
+																											"// %s %s\n",
+																											token_names[state_stack[state_stack_tail].data_type.kind],
+																											identifier_buffer);
+
+			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth);
+
+			// TODO(rhett): store function names somewhere, switch depending on endianess
+			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
+																											"%s = endian_read_%s_%s(data + offset);\noffset += sizeof(f32) * 3;\n",
+																											identifier_buffer,
+																											token_names[state_stack[state_stack_tail].data_type.kind],
+																											token_names[state_stack[state_stack_tail].endian]);
+
+			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
+																											"printf(\"-- %-24s\\t%%f\\t%%f\\t%%f\\n\", (f64)",
+																											identifier_buffer);
+
+			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth);
+			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
+																											"%s.x, (f64)",
+																											identifier_buffer);
+
+			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth);
+			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
+																											"%s.y, (f64)",
+																											identifier_buffer);
+
+			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth);
+			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
+																											"%s.z);\n\n",
+																											identifier_buffer);
+
 		} break;
 
 		case PO_Field_Basic:
@@ -2279,7 +2266,7 @@ emit_c_source(Parser_Object_Kind kind,
 
 			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth);
 			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-																											"%s[%s_iter] = *(i8*)((u64)data + offset);\n",
+																											"%s[%s_iter] = *(i8*)((uptr)data + offset);\n",
 																											identifier_buffer,
 																											identifier_buffer);
 		
@@ -2484,7 +2471,7 @@ emit_c_source(Parser_Object_Kind kind,
 
 			output_buffers->unpacker_buffer_tail += write_field_parents(output_buffers->unpacker_buffer, output_buffers->unpacker_buffer_tail, state_stack, state_stack_tail, depth);
 			output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-																											"%s[%s_iter] = *(u8*)((u64)data + offset);\n",
+																											"%s[%s_iter] = *(u8*)((uptr)data + offset);\n",
 																											identifier_buffer,
 																											identifier_buffer);
 		
@@ -2788,7 +2775,7 @@ emit_c_source(Parser_Object_Kind kind,
 																										identifier_buffer);
 
 			output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
-																										"endian_write_%s_%s((u8*)%s_length_ptr, (%s)((u64)buffer + (u64)offset - (u64)%s_length_ptr - sizeof(%s)));\n\n",
+																										"endian_write_%s_%s((u8*)%s_length_ptr, (%s)((uptr)buffer + (uptr)offset - (uptr)%s_length_ptr - sizeof(%s)));\n\n",
 																										token_names[state_stack[state_stack_tail].length_type],
 																										token_names[state_stack[state_stack_tail].endian],
 																										identifier_buffer,

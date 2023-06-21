@@ -1,11 +1,11 @@
 @echo off
 
-IF EXIST LOGIN_PACKETS rmdir /S /Q LOGIN_PACKETS
-pushd build_login_server
+pushd build_login_server_win_x64
+IF EXIST packets rmdir /S /Q packets
 start login_server.exe
 popd
 
-IF EXIST GAME_PACKETS rmdir /S /Q GAME_PACKETS
-pushd build_game_server
+pushd build_game_server_win_x64
+IF EXIST packets rmdir /S /Q packets
 start game_server.exe
 popd

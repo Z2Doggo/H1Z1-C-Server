@@ -19,7 +19,7 @@
 #define LOGIN_SERVERUPDATE_ID 0xf
 
 #define LOGIN_PACKET_KINDS \
-LOGIN_PACKET_KIND(Login_Packet_Kind_Unhandled, "UNHANDLED"), \
+LOGIN_PACKET_KIND(Login_Packet_Kind_Unhandled, "Unhandled"), \
 LOGIN_PACKET_KIND(Login_Packet_Kind_LoginRequest, "LoginRequest"), \
 LOGIN_PACKET_KIND(Login_Packet_Kind_LoginReply, "LoginReply"), \
 LOGIN_PACKET_KIND(Login_Packet_Kind_Logout, "Logout"), \
@@ -693,7 +693,7 @@ offset++;
 }
 
 } // char_payload
-endian_write_u32_little((u8*)char_payload_length_ptr, (u32)((u64)buffer + (u64)offset - (u64)char_payload_length_ptr - sizeof(u32)));
+endian_write_u32_little((u8*)char_payload_length_ptr, (u32)((uptr)buffer + (uptr)offset - (uptr)char_payload_length_ptr - sizeof(u32)));
 
 } break;
 
@@ -769,7 +769,7 @@ offset += sizeof(u32);
 printf("-- preferred_gateway_id    \t%lld\t%llxh\t%f\n", (i64)packet->payload2[payload2_iter].preferred_gateway_id, (u64)packet->payload2[payload2_iter].preferred_gateway_id, (f64)packet->payload2[payload2_iter].preferred_gateway_id);
 
 } // payload2
-endian_write_u32_little((u8*)payload2_length_ptr, (u32)((u64)buffer + (u64)offset - (u64)payload2_length_ptr - sizeof(u32)));
+endian_write_u32_little((u8*)payload2_length_ptr, (u32)((uptr)buffer + (uptr)offset - (uptr)payload2_length_ptr - sizeof(u32)));
 
 } break;
 
@@ -900,7 +900,7 @@ offset += sizeof(u64);
 printf("-- server_feature_bit      \t%lld\t%llxh\t%f\n", (i64)packet->login_payload[login_payload_iter].server_feature_bit, (u64)packet->login_payload[login_payload_iter].server_feature_bit, (f64)packet->login_payload[login_payload_iter].server_feature_bit);
 
 } // login_payload
-endian_write_u32_little((u8*)login_payload_length_ptr, (u32)((u64)buffer + (u64)offset - (u64)login_payload_length_ptr - sizeof(u32)));
+endian_write_u32_little((u8*)login_payload_length_ptr, (u32)((uptr)buffer + (uptr)offset - (uptr)login_payload_length_ptr - sizeof(u32)));
 
 } break;
 
@@ -966,7 +966,7 @@ offset++;
 }
 
 } // data_client
-endian_write_u32_little((u8*)data_client_length_ptr, (u32)((u64)buffer + (u64)offset - (u64)data_client_length_ptr - sizeof(u32)));
+endian_write_u32_little((u8*)data_client_length_ptr, (u32)((uptr)buffer + (uptr)offset - (uptr)data_client_length_ptr - sizeof(u32)));
 
 } break;
 
@@ -1032,7 +1032,7 @@ offset += sizeof(u32);
 printf("-- status                  \t%lld\t%llxh\t%f\n", (i64)packet->data_server[data_server_iter].status, (u64)packet->data_server[data_server_iter].status, (f64)packet->data_server[data_server_iter].status);
 
 } // data_server
-endian_write_u32_little((u8*)data_server_length_ptr, (u32)((u64)buffer + (u64)offset - (u64)data_server_length_ptr - sizeof(u32)));
+endian_write_u32_little((u8*)data_server_length_ptr, (u32)((uptr)buffer + (uptr)offset - (uptr)data_server_length_ptr - sizeof(u32)));
 
 } break;
 
@@ -1673,7 +1673,7 @@ offset += sizeof(u64);
 printf("-- last_use_date           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].last_use_date, (u64)packet->characters[characters_iter].payload4[payload4_iter].last_use_date, (f64)packet->characters[characters_iter].payload4[payload4_iter].last_use_date);
 
 } // payload4
-endian_write_u32_little((u8*)payload4_length_ptr, (u32)((u64)buffer + (u64)offset - (u64)payload4_length_ptr - sizeof(u32)));
+endian_write_u32_little((u8*)payload4_length_ptr, (u32)((uptr)buffer + (uptr)offset - (uptr)payload4_length_ptr - sizeof(u32)));
 
 } // characters
 
@@ -1833,7 +1833,7 @@ packet->session_id = arena_push_size(arena, packet->session_id_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->session_id_length);
 for (u32 session_id_iter = 0; session_id_iter < packet->session_id_length; session_id_iter++)
 {
-packet->session_id[session_id_iter] = *(i8*)((u64)data + offset);
+packet->session_id[session_id_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -1844,7 +1844,7 @@ packet->system_fingerprint = arena_push_size(arena, packet->system_fingerprint_l
 printf("-- STRING_LENGTH           \t%d\n", packet->system_fingerprint_length);
 for (u32 system_fingerprint_iter = 0; system_fingerprint_iter < packet->system_fingerprint_length; system_fingerprint_iter++)
 {
-packet->system_fingerprint[system_fingerprint_iter] = *(i8*)((u64)data + offset);
+packet->system_fingerprint[system_fingerprint_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -1907,7 +1907,7 @@ packet->namespace_name = arena_push_size(arena, packet->namespace_name_length);
 printf("-- STRING_LENGTH           \t%d\n", packet->namespace_name_length);
 for (u32 namespace_name_iter = 0; namespace_name_iter < packet->namespace_name_length; namespace_name_iter++)
 {
-packet->namespace_name[namespace_name_iter] = *(i8*)((u64)data + offset);
+packet->namespace_name[namespace_name_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -1945,7 +1945,7 @@ packet->account_features[account_features_iter].raw_data = arena_push_size(arena
 printf("-- STRING_LENGTH           \t%d\n", packet->account_features[account_features_iter].raw_data_length);
 for (u32 raw_data_iter = 0; raw_data_iter < packet->account_features[account_features_iter].raw_data_length; raw_data_iter++)
 {
-packet->account_features[account_features_iter].raw_data[raw_data_iter] = *(i8*)((u64)data + offset);
+packet->account_features[account_features_iter].raw_data[raw_data_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -1958,7 +1958,7 @@ packet->application_payload = arena_push_size(arena, packet->application_payload
 printf("-- STRING_LENGTH           \t%d\n", packet->application_payload_length);
 for (u32 application_payload_iter = 0; application_payload_iter < packet->application_payload_length; application_payload_iter++)
 {
-packet->application_payload[application_payload_iter] = *(i8*)((u64)data + offset);
+packet->application_payload[application_payload_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -1981,7 +1981,7 @@ packet->error_details[error_details_iter].name = arena_push_size(arena, packet->
 printf("-- STRING_LENGTH           \t%d\n", packet->error_details[error_details_iter].name_length);
 for (u32 name_iter = 0; name_iter < packet->error_details[error_details_iter].name_length; name_iter++)
 {
-packet->error_details[error_details_iter].name[name_iter] = *(i8*)((u64)data + offset);
+packet->error_details[error_details_iter].name[name_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -1992,7 +1992,7 @@ packet->error_details[error_details_iter].value = arena_push_size(arena, packet-
 printf("-- STRING_LENGTH           \t%d\n", packet->error_details[error_details_iter].value_length);
 for (u32 value_iter = 0; value_iter < packet->error_details[error_details_iter].value_length; value_iter++)
 {
-packet->error_details[error_details_iter].value[value_iter] = *(i8*)((u64)data + offset);
+packet->error_details[error_details_iter].value[value_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2005,7 +2005,7 @@ packet->ip_country_code = arena_push_size(arena, packet->ip_country_code_length)
 printf("-- STRING_LENGTH           \t%d\n", packet->ip_country_code_length);
 for (u32 ip_country_code_iter = 0; ip_country_code_iter < packet->ip_country_code_length; ip_country_code_iter++)
 {
-packet->ip_country_code[ip_country_code_iter] = *(i8*)((u64)data + offset);
+packet->ip_country_code[ip_country_code_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2060,7 +2060,7 @@ packet->char_payload[char_payload_iter].character_name = arena_push_size(arena, 
 printf("-- STRING_LENGTH           \t%d\n", packet->char_payload[char_payload_iter].character_name_length);
 for (u32 character_name_iter = 0; character_name_iter < packet->char_payload[char_payload_iter].character_name_length; character_name_iter++)
 {
-packet->char_payload[char_payload_iter].character_name[character_name_iter] = *(i8*)((u64)data + offset);
+packet->char_payload[char_payload_iter].character_name[character_name_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2119,7 +2119,7 @@ packet->payload2[payload2_iter].locale = arena_push_size(arena, packet->payload2
 printf("-- STRING_LENGTH           \t%d\n", packet->payload2[payload2_iter].locale_length);
 for (u32 locale_iter = 0; locale_iter < packet->payload2[payload2_iter].locale_length; locale_iter++)
 {
-packet->payload2[payload2_iter].locale[locale_iter] = *(i8*)((u64)data + offset);
+packet->payload2[payload2_iter].locale[locale_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2186,7 +2186,7 @@ packet->login_payload[login_payload_iter].server_address = arena_push_size(arena
 printf("-- STRING_LENGTH           \t%d\n", packet->login_payload[login_payload_iter].server_address_length);
 for (u32 server_address_iter = 0; server_address_iter < packet->login_payload[login_payload_iter].server_address_length; server_address_iter++)
 {
-packet->login_payload[login_payload_iter].server_address[server_address_iter] = *(i8*)((u64)data + offset);
+packet->login_payload[login_payload_iter].server_address[server_address_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2197,7 +2197,7 @@ packet->login_payload[login_payload_iter].server_ticket = arena_push_size(arena,
 printf("-- STRING_LENGTH           \t%d\n", packet->login_payload[login_payload_iter].server_ticket_length);
 for (u32 server_ticket_iter = 0; server_ticket_iter < packet->login_payload[login_payload_iter].server_ticket_length; server_ticket_iter++)
 {
-packet->login_payload[login_payload_iter].server_ticket[server_ticket_iter] = *(i8*)((u64)data + offset);
+packet->login_payload[login_payload_iter].server_ticket[server_ticket_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2208,7 +2208,7 @@ packet->login_payload[login_payload_iter].encryption_key = arena_push_size(arena
 printf("-- BYTES_LENGTH            \t%d\n", packet->login_payload[login_payload_iter].encryption_key_length);
 for (u32 encryption_key_iter = 0; encryption_key_iter < packet->login_payload[login_payload_iter].encryption_key_length; encryption_key_iter++)
 {
-packet->login_payload[login_payload_iter].encryption_key[encryption_key_iter] = *(u8*)((u64)data + offset);
+packet->login_payload[login_payload_iter].encryption_key[encryption_key_iter] = *(u8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2234,7 +2234,7 @@ packet->login_payload[login_payload_iter].station_name = arena_push_size(arena, 
 printf("-- STRING_LENGTH           \t%d\n", packet->login_payload[login_payload_iter].station_name_length);
 for (u32 station_name_iter = 0; station_name_iter < packet->login_payload[login_payload_iter].station_name_length; station_name_iter++)
 {
-packet->login_payload[login_payload_iter].station_name[station_name_iter] = *(i8*)((u64)data + offset);
+packet->login_payload[login_payload_iter].station_name[station_name_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2245,7 +2245,7 @@ packet->login_payload[login_payload_iter].character_name = arena_push_size(arena
 printf("-- STRING_LENGTH           \t%d\n", packet->login_payload[login_payload_iter].character_name_length);
 for (u32 character_name_iter = 0; character_name_iter < packet->login_payload[login_payload_iter].character_name_length; character_name_iter++)
 {
-packet->login_payload[login_payload_iter].character_name[character_name_iter] = *(i8*)((u64)data + offset);
+packet->login_payload[login_payload_iter].character_name[character_name_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2256,7 +2256,7 @@ packet->login_payload[login_payload_iter].unk_str = arena_push_size(arena, packe
 printf("-- STRING_LENGTH           \t%d\n", packet->login_payload[login_payload_iter].unk_str_length);
 for (u32 unk_str_iter = 0; unk_str_iter < packet->login_payload[login_payload_iter].unk_str_length; unk_str_iter++)
 {
-packet->login_payload[login_payload_iter].unk_str[unk_str_iter] = *(i8*)((u64)data + offset);
+packet->login_payload[login_payload_iter].unk_str[unk_str_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2320,7 +2320,7 @@ packet->data_client[data_client_iter].character_name = arena_push_size(arena, pa
 printf("-- STRING_LENGTH           \t%d\n", packet->data_client[data_client_iter].character_name_length);
 for (u32 character_name_iter = 0; character_name_iter < packet->data_client[data_client_iter].character_name_length; character_name_iter++)
 {
-packet->data_client[data_client_iter].character_name[character_name_iter] = *(i8*)((u64)data + offset);
+packet->data_client[data_client_iter].character_name[character_name_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2367,7 +2367,7 @@ packet->data_server[data_server_iter].character_name = arena_push_size(arena, pa
 printf("-- STRING_LENGTH           \t%d\n", packet->data_server[data_server_iter].character_name_length);
 for (u32 character_name_iter = 0; character_name_iter < packet->data_server[data_server_iter].character_name_length; character_name_iter++)
 {
-packet->data_server[data_server_iter].character_name[character_name_iter] = *(i8*)((u64)data + offset);
+packet->data_server[data_server_iter].character_name[character_name_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2378,7 +2378,7 @@ packet->data_server[data_server_iter].character_name2 = arena_push_size(arena, p
 printf("-- STRING_LENGTH           \t%d\n", packet->data_server[data_server_iter].character_name2_length);
 for (u32 character_name2_iter = 0; character_name2_iter < packet->data_server[data_server_iter].character_name2_length; character_name2_iter++)
 {
-packet->data_server[data_server_iter].character_name2[character_name2_iter] = *(i8*)((u64)data + offset);
+packet->data_server[data_server_iter].character_name2[character_name2_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2413,7 +2413,7 @@ packet->payload3 = arena_push_size(arena, packet->payload3_length);
 printf("-- BYTES_LENGTH            \t%d\n", packet->payload3_length);
 for (u32 payload3_iter = 0; payload3_iter < packet->payload3_length; payload3_iter++)
 {
-packet->payload3[payload3_iter] = *(u8*)((u64)data + offset);
+packet->payload3[payload3_iter] = *(u8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2480,7 +2480,7 @@ packet->characters[characters_iter].payload4[payload4_iter].name = arena_push_si
 printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].name_length);
 for (u32 name_iter = 0; name_iter < packet->characters[characters_iter].payload4[payload4_iter].name_length; name_iter++)
 {
-packet->characters[characters_iter].payload4[payload4_iter].name[name_iter] = *(i8*)((u64)data + offset);
+packet->characters[characters_iter].payload4[payload4_iter].name[name_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2556,7 +2556,7 @@ packet->characters[characters_iter].payload4[payload4_iter].loadout_name = arena
 printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].loadout_name_length);
 for (u32 loadout_name_iter = 0; loadout_name_iter < packet->characters[characters_iter].payload4[payload4_iter].loadout_name_length; loadout_name_iter++)
 {
-packet->characters[characters_iter].payload4[payload4_iter].loadout_name[loadout_name_iter] = *(i8*)((u64)data + offset);
+packet->characters[characters_iter].payload4[payload4_iter].loadout_name[loadout_name_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2751,7 +2751,7 @@ packet->characters[characters_iter].payload4[payload4_iter].item_definitions[ite
 printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name_length);
 for (u32 model_name_iter = 0; model_name_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name_length; model_name_iter++)
 {
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name[model_name_iter] = *(i8*)((u64)data + offset);
+packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name[model_name_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2762,7 +2762,7 @@ packet->characters[characters_iter].payload4[payload4_iter].item_definitions[ite
 printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string_length);
 for (u32 unknown_string_iter = 0; unknown_string_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string_length; unknown_string_iter++)
 {
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string[unknown_string_iter] = *(i8*)((u64)data + offset);
+packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string[unknown_string_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2833,7 +2833,7 @@ packet->characters[characters_iter].payload4[payload4_iter].item_definitions[ite
 printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name_length);
 for (u32 tint_name_iter = 0; tint_name_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name_length; tint_name_iter++)
 {
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name[tint_name_iter] = *(i8*)((u64)data + offset);
+packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name[tint_name_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2894,7 +2894,7 @@ packet->characters[characters_iter].payload4[payload4_iter].item_definitions[ite
 printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture_length);
 for (u32 overlay_texture_iter = 0; overlay_texture_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture_length; overlay_texture_iter++)
 {
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture[overlay_texture_iter] = *(i8*)((u64)data + offset);
+packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture[overlay_texture_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2905,7 +2905,7 @@ packet->characters[characters_iter].payload4[payload4_iter].item_definitions[ite
 printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot_length);
 for (u32 decal_slot_iter = 0; decal_slot_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot_length; decal_slot_iter++)
 {
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot[decal_slot_iter] = *(i8*)((u64)data + offset);
+packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot[decal_slot_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -2936,7 +2936,7 @@ packet->characters[characters_iter].payload4[payload4_iter].item_definitions[ite
 printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance_length);
 for (u32 override_appearance_iter = 0; override_appearance_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance_length; override_appearance_iter++)
 {
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance[override_appearance_iter] = *(i8*)((u64)data + offset);
+packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance[override_appearance_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -3045,7 +3045,7 @@ packet->servers[servers_iter].name = arena_push_size(arena, packet->servers[serv
 printf("-- STRING_LENGTH           \t%d\n", packet->servers[servers_iter].name_length);
 for (u32 name_iter = 0; name_iter < packet->servers[servers_iter].name_length; name_iter++)
 {
-packet->servers[servers_iter].name[name_iter] = *(i8*)((u64)data + offset);
+packet->servers[servers_iter].name[name_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -3061,7 +3061,7 @@ packet->servers[servers_iter].description = arena_push_size(arena, packet->serve
 printf("-- STRING_LENGTH           \t%d\n", packet->servers[servers_iter].description_length);
 for (u32 description_iter = 0; description_iter < packet->servers[servers_iter].description_length; description_iter++)
 {
-packet->servers[servers_iter].description[description_iter] = *(i8*)((u64)data + offset);
+packet->servers[servers_iter].description[description_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -3082,7 +3082,7 @@ packet->servers[servers_iter].server_info = arena_push_size(arena, packet->serve
 printf("-- STRING_LENGTH           \t%d\n", packet->servers[servers_iter].server_info_length);
 for (u32 server_info_iter = 0; server_info_iter < packet->servers[servers_iter].server_info_length; server_info_iter++)
 {
-packet->servers[servers_iter].server_info[server_info_iter] = *(i8*)((u64)data + offset);
+packet->servers[servers_iter].server_info[server_info_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -3098,7 +3098,7 @@ packet->servers[servers_iter].population_data = arena_push_size(arena, packet->s
 printf("-- STRING_LENGTH           \t%d\n", packet->servers[servers_iter].population_data_length);
 for (u32 population_data_iter = 0; population_data_iter < packet->servers[servers_iter].population_data_length; population_data_iter++)
 {
-packet->servers[servers_iter].population_data[population_data_iter] = *(i8*)((u64)data + offset);
+packet->servers[servers_iter].population_data[population_data_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
@@ -3109,7 +3109,7 @@ packet->servers[servers_iter].access_expression = arena_push_size(arena, packet-
 printf("-- STRING_LENGTH           \t%d\n", packet->servers[servers_iter].access_expression_length);
 for (u32 access_expression_iter = 0; access_expression_iter < packet->servers[servers_iter].access_expression_length; access_expression_iter++)
 {
-packet->servers[servers_iter].access_expression[access_expression_iter] = *(i8*)((u64)data + offset);
+packet->servers[servers_iter].access_expression[access_expression_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 

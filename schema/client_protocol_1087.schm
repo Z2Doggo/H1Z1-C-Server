@@ -1463,7 +1463,7 @@ stream:u32 item_def_reply_1
 	}
 }
 
-packet 0x09 0x47:u8 CommandItemDefinitions
+packet 0x09 0x4700:u16 CommandItemDefinitions
 stream:u32 item_def_reply_2
 {
 	list:u32 item_defs
@@ -1627,6 +1627,9 @@ packet 0xd ProjectileDebug
 packet 0xe MailBase
 
 packet 0xf 0:u16 CharacterBase
+packet 0x0f 0x45:u8 Character_FullCharacterDataRequest
+u64 character_id
+
 packet 0xf 0x4f:u16 Character_StartMultiStateDeath
 u64 character_id
 u8 unk_byte_1
@@ -1899,9 +1902,10 @@ packet 0x11 0x40:u16 ClientUpdate_AddNotifications
 packet 0x11 0x41:u16 ClientUpdate_RemoveNotifications
 packet 0x11 0x42:u16 ClientUpdate_NpcRelevance
 packet 0x11 0x43:u16 ClientUpdate_InitiateNameChange
-packet 0x11 0x44:u16 ClientUpdate_NameChangeResult
-packet 0x11 0x45:u16 ClientUpdate_MonitorTimeDrift
+packet 0x11 0x44:u16 ClientUpdate_MonitorTimeDrift
 u32 time_drift
+
+packet 0x11 0x45:u16 ClientUpdate_NameChangeResult
 
 packet 0x11 0x46:u16 ClientUpdate_NotifyServerOfStalledEvent
 packet 0x11 0x47:u16 ClientUpdate_UpdateSights
@@ -3085,7 +3089,11 @@ b8 unk_bool_1
 packet 0xeb ReplicationBase
 packet 0xec DatasheetsBase
 packet 0xed PlayerWorldTransferRequest
+u32 world_id_request
+
 packet 0xee PlayerWorldTransferReply
+u32 world_id_reply
+
 packet 0xef CancelQueueOnWorld
 packet 0xf0 DeclineEnterGameOnWorld
 packet 0xf1 AccessedCharacterBase
