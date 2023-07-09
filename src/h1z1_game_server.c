@@ -99,7 +99,7 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 
 internal void gateway_on_login(App_State *app_state, Session_State *session_state)
 {
-	printf("[!] Character %llxh trying to login to zone server\n", session_state->character_id);
+	printf("[!] Character %llxh trying to login to zone server\n", 0x133742069);
 
 	Zone_Packet_InitializationParameters init_params = 
 	{ 

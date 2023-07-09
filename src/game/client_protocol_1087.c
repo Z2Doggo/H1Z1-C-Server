@@ -6,31 +6,65 @@
 	}                                                                                    \
 	break;
 
-internal void zone_packet_send(App_State *server_state,
-							   Session_State *session_state,
-							   Arena *arena,
-							   u32 max_length,
-							   Zone_Packet_Kind packet_kind,
-							   void *packet_ptr)
-{
-	u8 *base_buffer = arena_push_size(arena, max_length);
-	u8 *packed_buffer = base_buffer + TUNNEL_DATA_HEADER_LENGTH;
-	u32 packed_length = zone_packet_pack(packet_kind,
-										 packet_ptr,
-										 packed_buffer);
-	u32 total_length = packed_length + TUNNEL_DATA_HEADER_LENGTH;
-	arena_rewind(arena, max_length - total_length);
+typedef struct {
+    App_State *server_state;
+    Session_State *session_state;
+    Arena *arena;
+    u32 max_length;
+    Zone_Packet_Kind packet_kind;
+    void *packet_ptr;
+} ThreadParams;
 
-	if (session_state->connection_args.should_dump_zone)
-	{
-		char dump_path[256] = {0};
-		stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_S_zone_%s.bin", global_tick_count, global_packet_dump_count++, zone_packet_names[packet_kind]);
-		server_state->platform_api->buffer_write_to_file(dump_path, packed_buffer, packed_length);
-	}
+DWORD WINAPI zone_packet_send_thread(LPVOID lpParam) {
+    ThreadParams* params = (ThreadParams*)lpParam;
+    App_State* server_state = params->server_state;
+    Session_State* session_state = params->session_state;
+    Arena* arena = params->arena;
+    u32 max_length = params->max_length;
+    Zone_Packet_Kind packet_kind = params->packet_kind;
+    void* packet_ptr = params->packet_ptr;
 
-	// TODO(rhett): still only one client for now
-	gateway_tunnel_data_send(server_state, session_state, base_buffer, total_length);
+    // Your existing code for zone_packet_send goes here
+    u8* base_buffer = arena_push_size(arena, max_length);
+    u8* packed_buffer = base_buffer + TUNNEL_DATA_HEADER_LENGTH;
+    u32 packed_length = zone_packet_pack(packet_kind, packet_ptr, packed_buffer);
+    u32 total_length = packed_length + TUNNEL_DATA_HEADER_LENGTH;
+    arena_rewind(arena, max_length - total_length);
+
+    if (session_state->connection_args.should_dump_zone) {
+        char dump_path[256] = { 0 };
+        stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_S_zone_%s.bin", global_tick_count, global_packet_dump_count++, zone_packet_names[packet_kind]);
+        server_state->platform_api->buffer_write_to_file(dump_path, packed_buffer, packed_length);
+    }
+
+    gateway_tunnel_data_send(server_state, session_state, base_buffer, total_length);
+
+    return 0;
 }
+
+internal void zone_packet_send(App_State *server_state, Session_State *session_state, Arena *arena, u32 max_length, Zone_Packet_Kind packet_kind, void *packet_ptr) {
+    // Create thread parameters
+    ThreadParams params;
+    params.server_state = server_state;
+    params.session_state = session_state;
+    params.arena = arena;
+    params.max_length = max_length;
+    params.packet_kind = packet_kind;
+    params.packet_ptr = packet_ptr;
+
+    // Create thread handle
+    HANDLE threadHandle = CreateThread(NULL, 0, zone_packet_send_thread, &params, 0, NULL);
+    if (threadHandle == NULL) {
+       printf("Thread failed to create!");
+	   TRY_AGAIN;
+    }
+
+    // Optionally, you can wait for the thread to finish using WaitForSingleObject or WaitForMultipleObjects
+    WaitForSingleObject(threadHandle, INFINITE);
+
+    // Close the thread handle (when you no longer need it)
+    CloseHandle(threadHandle);
+} // (doggo) thanks chatgpt!
 
 internal void zone_packet_raw_file_send(App_State *server_state,
 										Session_State *session_state,
