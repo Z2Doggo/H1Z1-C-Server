@@ -1,3 +1,10 @@
 # Specify filepatterns you want git to ignore.
 build*/
+schema/output/login_udp_11.c
+schema/output/client_protocol_1087.c
 schema/output/*
+_IGNORE_*
+GAME_PACKETS/
+LOGIN_PACKETS/
+*.bkp
+zig/*

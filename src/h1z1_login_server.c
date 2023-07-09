@@ -26,7 +26,6 @@ static void platform_win_console_write(char* format, ...);
 #include "utility/endian.c"
 #include "utility/util.c"
 #include "utility/crypt_rc4.c"
-#include "utility/character_id_gen.c"
 #include "shared/protocol/stream.h"
 #include "shared/protocol/fragment_pool.c"
 #include "shared/protocol/input_stream.c"

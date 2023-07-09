@@ -26,8 +26,6 @@ static void platform_win_console_write(char *format, ...);
 #include "utility/endian.c"
 #include "utility/util.c"
 #include "utility/crypt_rc4.c"
-#include "utility/character_id_gen.c"
-#include "utility/transient_id_gen.c"
 #include "shared/protocol/stream.h"
 #include "shared/protocol/fragment_pool.c"
 #include "shared/protocol/input_stream.c"
@@ -101,7 +99,7 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 
 internal void gateway_on_login(App_State *app_state, Session_State *session_state)
 {
-	printf("[!] Character %llxh trying to login to zone server\n", 0x133742069);
+	printf("[!] Character %llxh trying to login to zone server\n", session_state->character_id);
 
 	Zone_Packet_InitializationParameters init_params = 
 	{ 
@@ -183,8 +181,8 @@ internal void gateway_on_login(App_State *app_state, Session_State *session_stat
 		{
 			[0] = 
 			{ 
-				.guid = 0x133742069,
-				.transient_id.value = 0x1337420,
+				.guid = session_state->character_id,
+				.transient_id.value = session_state->transient_id.value,
 				.actor_model_id = 9474,
 				.head_actor_length = 26,
 				.head_actor = "SurvivorFemale_Head_02.adr",

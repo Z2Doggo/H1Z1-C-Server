@@ -173,7 +173,7 @@ internal void zone_packet_handle(App_State *server_state,
 
 			Zone_Packet_Character_WeaponStance weapon_stance =
 				{
-					.character_id = get_guid(session_state->character_id),
+					.character_id = session_state->character_id,
 					.stance = 1,
 				};
 
@@ -184,7 +184,7 @@ internal void zone_packet_handle(App_State *server_state,
 						(struct length_1_s[1]){
 							[0] = {
 								.profile_id = 5,
-								.character_id = get_guid(session_state->character_id),
+								.character_id = session_state->character_id,
 							},
 						},
 					.unk_dword_1 = 0,
@@ -503,7 +503,7 @@ internal void zone_packet_handle(App_State *server_state,
 
 		Zone_Packet_Character_RespawnReply respawn_reply =
 			{
-				.character_id_1_1 = get_guid(session_state->character_id),
+				.character_id_1_1 = session_state->character_id,
 				.status = TRUE,
 			};
 
@@ -616,7 +616,7 @@ internal void zone_packet_handle(App_State *server_state,
 					(struct locations1_s[1]){
 						[0] =
 							{
-								.guid = get_guid(session_state->character_id),
+								.guid = session_state->character_id,
 								.respawn_type = 4,
 								.position = {602.91f, 71.62f, -1301.5f, 1.0f},
 								.unk_dword_1 = 1,
@@ -647,7 +647,7 @@ internal void zone_packet_handle(App_State *server_state,
 					(struct locations2_s[1]){
 						[0] =
 							{
-								.guid = get_guid(session_state->character_id),
+								.guid = session_state->character_id,
 								.respawn_type = 4,
 								.position = {602.91f, 71.62f, -1301.5f, 1.0f},
 								.unk_dword_1 = 1,
@@ -679,7 +679,7 @@ internal void zone_packet_handle(App_State *server_state,
 
 		Zone_Packet_Character_RespawnReply respawn_reply =
 			{
-				.character_id_1_1 = get_guid(session_state->character_id),
+				.character_id_1_1 = session_state->character_id,
 				.status = TRUE,
 			};
 
@@ -701,7 +701,7 @@ internal void zone_packet_handle(App_State *server_state,
 					(struct locations1_s[1]){
 						[0] =
 							{
-								.guid = get_guid(session_state->character_id),
+								.guid = session_state->character_id,
 								.respawn_type = 4,
 								.position = {602.91f, 71.62f, -1301.5f, 1.0f},
 								.unk_dword_1 = 1,
@@ -732,7 +732,7 @@ internal void zone_packet_handle(App_State *server_state,
 					(struct locations2_s[1]){
 						[0] =
 							{
-								.guid = get_guid(session_state->character_id),
+								.guid = session_state->character_id,
 								.respawn_type = 4,
 								.position = {602.91f, 71.62f, -1301.5f, 1.0f},
 								.unk_dword_1 = 1,
@@ -764,7 +764,7 @@ internal void zone_packet_handle(App_State *server_state,
 
 		Zone_Packet_Character_RespawnReply respawn_reply =
 			{
-				.character_id_1_1 = get_guid(session_state->character_id),
+				.character_id_1_1 = session_state->character_id,
 				.status = TRUE,
 			};
 
@@ -806,7 +806,7 @@ internal void zone_packet_handle(App_State *server_state,
 		printf("[Zone] Handling Character.FullCharacterDataRequeso\n");
 
 		Zone_Packet_Character_FullCharacterDataRequest full_data_request = {
-			.character_id = get_guid(session_state->character_id),
+			.character_id = session_state->character_id,
 		};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_FullCharacterDataRequest, &full_data_request);
@@ -928,7 +928,7 @@ internal void zone_packet_handle(App_State *server_state,
 			(struct set_character_resources_1_s[1]) {
 				[0] =
 				{
-					.character_id_1 = get_guid(session_state->character_id),
+					.character_id_1 = session_state->character_id,
 
 					.character_resources_1_count = 1,
 					.character_resources_1 =
@@ -947,7 +947,7 @@ internal void zone_packet_handle(App_State *server_state,
 			(struct set_character_resources_2_s[1]) {
 				[0] =
 				{
-					.character_id_2 = get_guid(session_state->character_id),
+					.character_id_2 = session_state->character_id,
 
 					.character_resources_2_count = 1,
 					.character_resources_2 =
@@ -966,7 +966,7 @@ internal void zone_packet_handle(App_State *server_state,
 			(struct updt_character_resources_s[1]) {
 				[0] =
 				{
-					.character_id_3 = get_guid(session_state->character_id),
+					.character_id_3 = session_state->character_id,
 					.resource_id_2 = session_state->resource_id,
 					.resource_type_3 = session_state->resource_type ? session_state->resource_type : session_state->resource_id,
 					.initial_value = 1000 >= 0 ? 1000 : 0,

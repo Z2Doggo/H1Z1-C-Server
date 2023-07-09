@@ -28,8 +28,6 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 {
 	Login_Packet_Kind packet_kind;
 
-	generate_guid(session->character_id);
-
 	printf("\n");
 	u8 packet_id = *data;
 	i32 offset = sizeof(u8);
