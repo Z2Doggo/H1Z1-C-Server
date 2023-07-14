@@ -82,7 +82,9 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #include "shared/protocol/core_protocol.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE  "Login"
+#define printf(...)
 #include "../schema/output/login_udp_11.c"
+#undef printf
 #include "login/login_udp_11.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE  MESSAGE_NAMESPACE_DEFAULT
@@ -264,6 +266,9 @@ __declspec(dllexport) APP_TICK(server_tick)
 		app_state->platform_api->folder_create("packets");
 	}
 
+	/*
+	(doggo)not needed right now, since I don't compile when the server is up and the game is running /shrug!
+
 	if (should_reload)
 	{
 		printf(MESSAGE_CONCAT_INFO("Reloading function table...\n"));
@@ -272,6 +277,7 @@ __declspec(dllexport) APP_TICK(server_tick)
 		app_state->stream_function_table->login_output_data = on_output_stream_data;
 		app_state->stream_function_table->ping_input_data = on_ping_input_stream_data;
 	}
+	*/
 
 	global_tick_count = *app_state->tick_count;
 

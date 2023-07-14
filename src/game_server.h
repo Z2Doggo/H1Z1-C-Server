@@ -71,7 +71,7 @@ struct App_Memory
 };
 
 #if defined(YOTE_INTERNAL)
-#define APP_TICK(name) void name(App_Memory* app_memory, b32 should_reload)
+#define APP_TICK(name) void name(App_Memory* app_memory) // (doggo)should remove this but I probably revert this later on!
 #else
 #define APP_TICK(name) void name(App_Memory* app_memory)
 #endif // YOTE_INTERNAL

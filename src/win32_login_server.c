@@ -27,7 +27,6 @@ struct App_Code
 APP_TICK(app_tick_stub)
 {
 	UNUSED(app_memory);
-	UNUSED(should_reload);
 }
 
 internal FILETIME win32_get_last_write_time(char* filename)
@@ -131,36 +130,7 @@ int mainCRTStartup(void)
 	b32 is_running = TRUE;
 	while (is_running)
 	{
-#if defined(YOTE_INTERNAL)
-		WIN32_FILE_ATTRIBUTE_DATA unused;
-		b32 is_code_locked = GetFileAttributesExA(MODULE_LOCK_FILE, GetFileExInfoStandard, &unused);
-		FILETIME new_module_write_time = win32_get_last_write_time(MODULE_FILE);
-		b32 should_reload = !is_code_locked && CompareFileTime(&new_module_write_time, &app_code.module_last_write_time);
-		if (should_reload)
-		{
-			printf("\n=======================================================================\n");
-			printf("  Reloading...\n");
-			printf("=======================================================================\n");
-			app_code.module_last_write_time = new_module_write_time;
-			win32_app_code_unload(&app_code);
-			app_code = win32_app_code_load();
-		}
-#endif
-
-		//for (i32 key = 0; key < 0xff; key++)
-		//{
-			//app_memory.key_states[key] = FALSE;
-			//if (GetAsyncKeyState(key) & 0x8000)
-			//{
-				//app_memory.key_states[key] = TRUE;
-			//}
-		//}
-
-		app_code.tick_func(&app_memory
-		                   #if defined(YOTE_INTERNAL)
-		                   , should_reload
-		                   #endif
-		                   );
+		app_code.tick_func(&app_memory);
 		
 #if defined(TERMINAL_UI)
 		DWORD bytes_written;

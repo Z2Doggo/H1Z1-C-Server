@@ -1,3 +1,5 @@
+#define printf(...)
+
 internal u32 core_packet_pack(Core_Packet_Kind packet_kind, void* packet_ptr, u8* buffer, b32 is_sub_packet, Connection_Args* connection_args)
 {
 	u32 offset = 0;
@@ -539,3 +541,4 @@ internal void core_packet_handle(App_State* app_state, Platform_Api* platform, S
 	
 }
 #endif // FL_PROXY
+#undef printf
