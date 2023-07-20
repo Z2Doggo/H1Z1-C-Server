@@ -39,13 +39,6 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 		packet_kind = Login_Packet_Kind_LoginRequest;
 		printf(MESSAGE_CONCAT_INFO("Handling %s...\n"), login_packet_names[packet_kind]);
 
-		if (session->connection_args.should_dump_login)
-		{
-			char dump_path[256] = {0};
-			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_login_%s.bin", global_tick_count, global_packet_dump_count++, login_packet_names[packet_kind]);
-			server->platform_api->buffer_write_to_file(dump_path, data, data_length);
-		}
-
 		// TODO(rhett): I don't care about the contents of the request packet right now
 		Login_Packet_LoginRequest packet = {0};
 		login_packet_unpack(data + offset, data_length - offset, packet_kind, &packet, &server->arena_per_tick);
