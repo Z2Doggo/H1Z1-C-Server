@@ -33,9 +33,9 @@ WARNING: This will only work if you have 'Z1: Battle Royale' formerly known as '
 Use the latest version of [DepotDownloader](https://github.com/SteamRE/DepotDownloader)
 
 Example (Downloading H1Z1: King of the Kill)
-AppID : 433850  DepotID : 433851   ManifestID : 4670795968887971433
+AppID : 433850  DepotID : 433851   ManifestID : 6098349229565958949
 
-cmd : `dotnet .\DepotDownloader.dll -app 433850 -depot 433851 -manifest 4670795968887971433 -username YOURUSERNAME -password YOURPASSWORD`
+cmd : `dotnet .\DepotDownloader.dll -app 433850 -depot 433851 -manifest 6098349229565958949 -username YOURUSERNAME -password YOURPASSWORD`
 
 ## Setup ClientConfig.ini
 In the H1Z1 Folder you will have a file called "ClientConfig.ini".
