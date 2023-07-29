@@ -2696,7 +2696,7 @@ uint2b transient_id
 packet 0x93 PlayerUpdateVehicleWeapon
 packet 0x94 ProfileStatsBase
 
-packet 0x95 0x1:u16 Equipment_SetCharacterEquipment
+packet 0x95 0x01:u8 Equipment_SetCharacterEquipment
 stream:u32 length_1
 {
 u32 profile_id
