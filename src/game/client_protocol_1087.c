@@ -182,7 +182,6 @@ internal void zone_packet_handle(App_State *server_state,
 	{
 		if (session_state->finished_loading == FALSE)
 		{
-			session_state->finished_loading = TRUE;
 
 			packet_kind = Zone_Packet_Kind_ClientFinishedLoading;
 			printf("[Zone] Handling ClientFinishedLoading\n");
@@ -310,6 +309,7 @@ internal void zone_packet_handle(App_State *server_state,
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_StartMultiStateDeath, &multi_state_dth);
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightNpc, &lightweightnpc);
 			session_state->is_ready = TRUE;
+			session_state->finished_loading = TRUE;
 		}
 
 		break;
@@ -538,7 +538,7 @@ internal void zone_packet_handle(App_State *server_state,
 		Zone_Packet_Character_RespawnReply respawn_reply =
 			{
 				.character_id_1_1 = session_state->character_id,
-				.status = TRUE,
+				.status = 1,
 			};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
