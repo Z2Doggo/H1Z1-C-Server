@@ -171,7 +171,7 @@ internal void zone_packet_handle(App_State *server_state,
 			{
 				.guid_1 = session_state->character_id,
 				.guid_3 = 0x0000000040000000,
-				.game_time = 11,
+				.game_time = 0,
 			};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_CharacterStateDelta, &character_state_delta);
@@ -916,7 +916,7 @@ internal void zone_packet_handle(App_State *server_state,
 
 		Zone_Packet_ClientUpdate_MonitorTimeDrift time_drift =
 			{
-				.time_drift = 1,
+				.time_drift = 0,
 			};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_MonitorTimeDrift, &time_drift);

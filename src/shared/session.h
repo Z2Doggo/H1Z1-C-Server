@@ -22,33 +22,134 @@ struct character_name_string
 	char *content;
 };
 
-typedef struct resource_ids resource_ids;
-struct resource_ids
+typedef enum ResourceIds 
 {
-	int HEALTH_ID;
-	int HUNGER_ID;
-	int HYDRATION_ID;
-	int STAMINA_ID;
-	int VIRUS_ID;
-	int BLEEDING_ID;
-	int COMFORT_ID;
-	int FUEL_ID;
-	int CONDITION_ID;
-};
+  HEALTH = 1,
+  HUNGER = 4,
+  HYDRATION = 5,
+  STAMINA = 6,
+  VIRUS = 12,
+  BLEEDING = 21,
+  COMFORT = 68,
+  FUEL = 396,
+  CONDITION = 561,
+  CONSTRUCTION_CONDITION = 567
+} ResourceIds;
 
-typedef struct resource_types resource_types;
-struct resource_types
+typedef struct oldPosition 
 {
-	u32 CONDITION;
-	u32 HEALTH;
-	u32 HUNGER;
-	u32 HYDRATION;
-	u32 STAMINA;
-	u32 VIRUS;
-	u32 BLEEDING;
-	u32 COMFORT;
-	u32 FUEL;
-};
+    vec4 position;
+    u32 time;
+} oldPosition;
+
+typedef struct pvpStatsStruct 
+{
+    u32 shotsFired;
+    u32 shotsHit;
+    u32 head;
+    u32 spine;
+    u32 hands;
+    u32 legs;
+} pvpStatsStruct;
+
+typedef struct clientLogging 
+{
+    u32 logLength;
+    char* logString;
+    b8 isSuspicious;
+} clientLogging;
+
+typedef struct lastDeatherReportStruct 
+{
+    vec4 position;
+    vec4 enemyPosition;
+    u32 distance;
+    // zoneClient* client;
+} lastDeatherReportStruct;
+
+typedef struct dtosSpawned 
+{
+    void* spawnedDTOs; // hacky way of making an 'any' variable!;
+} dtosSpawned;
+
+typedef struct characterState 
+{
+    vec4 position;
+    vec4 rotation;
+} characterState;
+
+typedef struct BaseEntity 
+{
+    u64 characterId;
+    u32 transientIdValue;
+    u32 actorModelId;
+    characterState* state;
+    vec4 scale; // value is { 1, 1, 1, 1 };
+    u32 npcRenderDistance;
+    u32 interactionDistance;
+} BaseEntity;
+
+typedef struct zoneClient 
+{
+    u64 guid;
+    u32 currentPOI;
+    b8 firstLoading; // FALSE
+    b8 isLoading; // TRUE
+    b8 characterReleased; // FALSE
+    b8 isSynced; // FALSE
+    b8 isInteracting; // FALSE
+    b8 isAdmin; // FALSE
+    b8 isDebugMode; // FALSE
+    b8 isDecoy; // FALSE
+    u64 banType;
+    u64 HWID;
+    vec4 posAtLastRoutine; // not sure if needed
+    vec4 posAtTimerStart; // also not sure if needed either?
+    oldPosition* oldPos;
+    b8 enableChecks; // TRUE
+    u32 speedWarnsNumber;
+    pvpStatsStruct* pvpStats;
+    clientLogging* clientLogs;
+    u32 reports;
+    lastDeatherReportStruct* lastDeathReport;
+    // hud timer is null?
+    dtosSpawned* spawnedDTOs;
+    BaseEntity* spawnedEntities;
+    BaseEntity* sentInteractionData;
+    b8 radio; // FALSE
+    u64 loginSessionId;
+    // don't need pingTimer from the typescript server!
+    u32 sessionId;
+    u64 soeClientId;
+    u32 lastKeepAliveTime; // default value is 0;
+    u32 pings;
+    u32 averagePing;
+    u32 averagePingLength; // default value is 4;
+    u32 pingWarnings;
+    b8 isWeaponLock; // FALSE
+    b8 averagePingReady; // FALSE
+    // do I need to add chunkRenderDistance from the typescript server? probably not, but will keep this comment just in case I change my mind;
+    u32 routineCounter;
+    u32 zonePings;
+    b8 properlyLoggedOut; // FALSE
+    u32 permisssionLvl; // default is 0
+    // wtf is fireHints on the typescript server?
+    b8 isInAir; // FALSE
+    u32 startLocation; // 0 is default;
+    vec4 startingPosition;
+    b8 firstReleased; // TRUE
+    b8 isMuted; // FALSE
+    u32 blockedPositionUpdates; // 0
+    u32 flaggedShots; // 0
+    b8 isFairPlayFlagged; // FALSE, keep in my that I will most likely do a proper version of server side anticheat than convert h1emu's fairplay method?
+
+    // string array
+    char** managedObjects;
+    i32 managedObjectsCount;
+    // end of string array
+
+    b8 initialized; // dunno what value the bool is supposed to be?
+} zoneClient;
 
 typedef struct Session_State Session_State;
 struct Session_State
@@ -57,6 +158,7 @@ struct Session_State
 	u32 id;
 
 	character_name_string name_self;
+	zoneClient clientKOTK;
 
 	u64 character_id;
 	u64 guid;
