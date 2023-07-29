@@ -96,6 +96,7 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #undef printf
 #include "../schema/output/login_udp_11.c"
 #include "game/client_protocol_1087.c"
+#include "data/characterData.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 
