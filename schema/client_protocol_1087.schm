@@ -1577,40 +1577,40 @@ vec4 pos
 vec4 rot
 
 // skydata begin
-f32 		unknownDword1
-f32 		fog_density
-f32 		fog_floor
-f32 		fog_gradient
-f32 		rain
-f32 		temp
-f32 		color_gradient
-f32 		unknown_dword8
-f32 		unknown_dword9
-f32 		unknown_dword10
-f32 		unknown_dword11
-f32 		unknown_dword12
-f32 		sun_axis_x
-f32 		sun_axis_y
-f32 		unknown_dword15
-f32 		disable_trees
-f32 		disable_trees1
-f32 		disable_trees2
+f32 		overcast
+f32 		fogDensity
+f32 		fogFloor
+f32 		fogGradient
+f32 		globalPrecipitation
+f32 		temperature
+f32 		skyClarity
+f32 		cloudWeight0
+f32 		cloudWeight1
+f32 		cloudWeight2
+f32 		cloudWeight3
+f32 		transitionTime
+f32 		sunAxisX
+f32 		sunAxisY
+f32 		sunAxisZ
+f32 		windDirX
+f32 		windDirY
+f32 		windDirZ
 f32 		wind
-f32 		unknown_dword20
-f32 		unknown_dword21
-string:u32 	name
-f32 		unknown_dword22
-f32 		unknown_dword23
-f32 		unknown_dword24
-f32 		unknown_dword25
-f32 		unknown_dword26
-f32 		unknown_dword27
-f32 		unknown_dword28
-f32 		unknown_dword29
-f32 		ao_size
-f32 		ao_gamma
-f32 		ao_blackpoint
-f32 		unknown_dword33
+f32 		rainMinStrength
+f32 		rainRampUpTimeSeconds
+string:u32 	cloudFile
+f32 		stratusCloudTiling
+f32 		stratusCloudScrollU
+f32 		stratusCloudScrollV
+f32 		stratusCloudHeight
+f32 		cumulusCloudTiling
+f32 		cumulusCloudScrollU
+f32 		cumulusCloudScrollV
+f32 		cumulusCloudHeight
+f32 		cloudAnimationSpeed
+f32 		cloudSilverLiningThickness
+f32 		cloudSilverLiningBrightness
+f32 		cloudShadows
 //skydata end
 
 u8 unk_byte_1
@@ -1863,6 +1863,9 @@ list:u32 locations2
 }
 
 packet 0x11 0x20:u16 ClientUpdate_ModifyMovementSpeed
+f32 speed
+u8 movementVersion
+
 packet 0x11 0x21:u16 ClientUpdate_ModifyTurnRate
 packet 0x11 0x22:u16 ClientUpdate_ModifyStrafeSpeed
 packet 0x11 0x23:u16 ClientUpdate_UpdateManagedLocation
@@ -1973,7 +1976,7 @@ u8 unk_bool4
 
 packet 0x17 ReferenceDataBase
 
-packet 0x17 0x04:u16 ReferenceDataWeaponDefinitions
+packet 0x17 0x04:u8 ReferenceDataWeaponDefinitions
 stream:u32 weapon_byteswithlength
 {
 	list:u32 weapon_defs
@@ -2093,6 +2096,7 @@ stream:u32 weapon_byteswithlength
 	f32 recoil_horizontal_max
 	f32 recoil_magnitude_min
 	f32 recoil_magnitude_max
+	f32 unkRefFloat1
 	u16 recoil_recovery_delay_ms
 	f32 recoil_recovery_rate
 	f32 recoil_recovery_acceleration
@@ -2229,6 +2233,7 @@ stream:u32 weapon_byteswithlength
 	f32 tp_cr_camera_pos_offset_y_mov
 	f32 tp_cr_camera_look_offset_y_mov
 	b8 tp_allow_move_heights
+	u32 unkRefDword1
 	}
 
 	list:u32 player_state_group_defs
@@ -2477,7 +2482,29 @@ packet 0x7e 0:u16 TargetBase
 packet 0x80 GuideStoneBase
 packet 0x81 0:u16 RaidsBase
 packet 0x82 0:u16 VoiceBase
-packet 0x83 0:u16 WeaponBase
+packet 0x83 0x00:u8 WeaponBase
+packet 0x83 0x01:u8 Weapon_FireStateUpdate
+u64 guid 
+u8 firestate
+u8 unkByte1
+
+packet 0x83 0x02:u8 Weapon_FireStateTargetedUpdate
+
+packet 0x83 0x03:u8 Weapon_Fire
+u64 guid 
+vec3 position 
+u32 weaponProjectileCount
+u32 sessionProjectileCount
+u32 unkDword1 
+
+packet 0x83 0x04:u8 Weapon_FireWithDefinitionMapping
+packet 0x83 0x05:u8 Weapon_FireNoProjectile
+packet 0x83 0x06:u8 Weapon_ProjectileHitReport
+packet 0x83 0x07:u8 Weapon_ReloadRequest
+u64 characterId
+
+packet 0x83 0x07:u8 Weapon_ReloadRequest
+
 packet 0x84 MatchScheduleBase
 
 packet 0x85 0:u16 FacilityBase
@@ -3081,9 +3108,18 @@ string:u32 viewpoint
 
 packet 0xea 0x02:u8 StaticViewReply
 u32 state
-vec4 position
-vec4 rotation
-vec4 look_at
+f32 pos1
+f32 pos2
+f32 pos3
+f32 pos4
+f32 rot1
+f32 rot2
+f32 rot3
+f32 rot4
+f32 look1
+f32 look2
+f32 look3
+f32 look4
 u8 unk_byte_1
 b8 unk_bool_1
 

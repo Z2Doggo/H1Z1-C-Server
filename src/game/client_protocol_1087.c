@@ -308,6 +308,13 @@ internal void zone_packet_handle(App_State *server_state,
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Command_RunSpeed, &run_speed);
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_StartMultiStateDeath, &multi_state_dth);
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightNpc, &lightweightnpc);
+
+			Zone_Packet_ClientUpdate_ModifyMovementSpeed modifyMovement = 
+			{
+				.speed = 10,
+				.movementVersion = 6,
+			};
+			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_ModifyMovementSpeed, &modifyMovement);
 			session_state->is_ready = TRUE;
 			session_state->finished_loading = TRUE;
 		}
@@ -318,12 +325,28 @@ internal void zone_packet_handle(App_State *server_state,
 	{
 		packet_kind = Zone_Packet_Kind_StaticViewRequest;
 		printf("[Zone] Handling StaticViewRequest\n");
+		
+		Zone_Packet_StaticViewRequest req = 
+		{
+			.viewpoint_length = 11,
+			.viewpoint = "kotkdefault",
+		};
+		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_StaticViewRequest, &req);
 
 			Zone_Packet_StaticViewReply staticview_reply = {
 				.state = 0,
-				.position = {74.8f, 201.5f, 458.1f, 99.01f},
-				.rotation = {199.99f, 289.99999f, 370.17f, 6.79f},
-				.look_at = {69.81f, 56.0f, 0.0f, 0.0f},
+				.pos1 = 74.8f,
+				.pos2 = 201.5f,
+				.pos3 = 458.1f,
+				.pos4 = 99.01f,
+				.rot1 = 199.99f,
+				.rot2 = 289.99999f,
+				.rot3 = 370.17f,
+				.rot4 = 6.79f,
+				.look1 = 69.81f,
+				.look2 = 56.0f,
+				.look3 = 0.0f,
+				.look4 = 0.0f,
 				.unk_byte_1 = 0,
 				.unk_bool_1 = TRUE,
 			};
@@ -333,7 +356,7 @@ internal void zone_packet_handle(App_State *server_state,
 				.rotation = {-0.11f, -0.58f, -0.08f, 1.0f},
 				.trigger_loading_screen = FALSE,
 				.unk_u8_1 = 0,
-				.unk_bool = TRUE,
+				.unk_bool = FALSE,
 			};
 
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_UpdateLocation, &updt_loc);
@@ -349,7 +372,6 @@ internal void zone_packet_handle(App_State *server_state,
 		Zone_Packet_PlayerWorldTransferReply reply = {
 			.world_id_reply = 1,
 		};
-			
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_PlayerWorldTransferReply, &reply);
 
 		Zone_Packet_ClientUpdate_UpdateLocation update_loc = {
@@ -359,7 +381,6 @@ internal void zone_packet_handle(App_State *server_state,
 			.unk_u8_1 = 0,
 			.unk_bool = FALSE,
 		};
-
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_UpdateLocation, &update_loc);
 
 		Zone_Packet_ClientBeginZoning begin_zoning = {
@@ -370,55 +391,169 @@ internal void zone_packet_handle(App_State *server_state,
 			.rot = {0.10f, -0.50f, 0.00f, 1.0f},
 
 			// set skydata
-			.unknownDword1 = 1.0f,
-			.fog_density = 0.0001733333f,
-			.fog_floor = 10.0f,
-			.fog_gradient = 0.0144f,
-			.rain = 1.0f,
-			.temp = 75.0f,
-			.color_gradient = 0.0f,
-			.unknown_dword8 = 0.05f,
-			.unknown_dword9 = 0.0f,
-			.unknown_dword10 = 0.05f,
-			.unknown_dword11 = 0.15f,
-			.unknown_dword12 = 0.0f,
-			.sun_axis_x = 38.0f,
-			.sun_axis_y = -15.0f,
-			.unknown_dword15 = 0.0f,
-			.disable_trees = -1.0f,
-			.disable_trees1 = -0.05f,
-			.disable_trees2 = -1.0f,
-			.wind = 3.0f,
-			.unknown_dword20 = 0.0f,
-			.unknown_dword21 = 1.0f,
-
-			.name_length = 16,
-			.name = "sky_Z_clouds.dds",
-
-			.unknown_dword22 = 0.3f,
-			.unknown_dword23 = -0.002f,
-			.unknown_dword24 = 0.0f,
-			.unknown_dword25 = 1000.0f,
-			.unknown_dword26 = 0.2f,
-			.unknown_dword27 = 0.0f,
-			.unknown_dword28 = 0.002f,
-			.unknown_dword29 = 8000.0f,
-			.ao_size = 0.0f,
-			.ao_gamma = 0.25f,
-			.ao_blackpoint = 7.0f,
-			.unknown_dword33 = 0.5f,
+			.overcast = 0,
+			.fogDensity = 0,
+			.fogFloor = 14.8f,
+			.fogGradient = 0.0144f,
+			.globalPrecipitation = 0,
+			.temperature = 75,
+			.skyClarity = 0,
+			.cloudWeight0 = 0.16f,
+			.cloudWeight1 = 0.16f,
+			.cloudWeight2 = 0.13f,
+			.cloudWeight3 = 0.13f,
+			.transitionTime = 0,
+			.sunAxisX = 40,
+			.sunAxisY = 0,
+			.sunAxisZ = 0,
+			.windDirX = -1.0f,
+			.windDirY = -0.5f,
+			.windDirZ = 1.0f,
+			.wind = 3,
+			.rainMinStrength = 0,
+			.rainRampUpTimeSeconds = 0,
+			.cloudFile_length = 16,
+			.cloudFile = "sky_Z_clouds.dds",
+			.stratusCloudTiling = 0.2f,
+			.stratusCloudScrollU = -0.002f,
+			.stratusCloudScrollV = 0,
+			.stratusCloudHeight = 1000,
+			.cumulusCloudTiling = 0.2f,
+			.cumulusCloudScrollU = 0,
+			.cumulusCloudScrollV = 0.002f,
+			.cumulusCloudHeight = 8000,
+			.cloudAnimationSpeed = 0,
+			.cloudSilverLiningThickness = 0.39f,
+			.cloudSilverLiningBrightness = 0.5f,
+			.cloudShadows = 0.2f,
 
 			.unk_byte_1 = 5,
 			.zone_id_1 = 5,
 			.zone_id_2 = 0,
 			.name_id = 7699,
 			.unk_dword_1 = 674234378,
-			.unk_bool_1 = TRUE,
+			.unk_bool_1 = FALSE,
 			.wait_for_zone_ready = FALSE,
-			.unk_bool_2 = FALSE,
+			.unk_bool_2 = TRUE,
 		};
-
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientBeginZoning, &begin_zoning);
+
+		Zone_Packet_SendSelfToClient send_self = 
+	{ 
+    .payload_self =
+    (struct payload_self_s[1])
+    {
+        [0] = 
+        { 
+            .guid = session_state->guid,
+            .character_id = session_state->character_id,
+            .transient_id.value = session_state->transient_id.value,
+            .actor_model_id = 9474,
+            .head_actor_length = 26,
+			.position = {74.8f, 201.5f, 458.1f, 99.01f},
+			.rotation = {199.99f, 289.99999f, 370.17f, 6.79f},
+            .head_actor = "SurvivorFemale_Head_02.adr",
+            .hair_model_length = 32,
+            .hair_model = "SurvivorFemale_Hair_ShortBun.adr",
+            .is_respawning = FALSE,
+            .character_name_length = 5,
+            .character_name = "doggo",
+            .gender1 = 2,
+            .creation_date = 0x133333333,
+            .last_login_date = 0x133333333,
+            .loadout_id = 3,
+            .loadout_slots_array_count = 1,
+            .loadout_slots_array = 
+			(struct loadout_slots_array_s[1]) 
+			{
+				[0] =
+				{
+        			.hotbar_slot_id = 0,
+					.loadout_id = 0,
+					.slot_id = 0,
+					.item_def_id4 = 0,
+					.loadout_item_guid = 0x0,
+					.unk_byte_17 = 255,
+					.unk_dword_111 = 0,
+				},
+			},
+            .current_slot_id = 7,
+            .equipment_slots_count = 1,
+            .equipment_slots = 
+			(struct equipment_slots_s[1])
+			{
+				[0] =
+				{
+					.equipment_slot_id2 = 0,
+					.equipment_slot_id3 = 0,
+					.guid = 0,
+					.tint_alias_length = 7,
+					.tint_alias = "Default",
+					.decal_alias_length = 1,
+					.decal_alias = "#",
+				},
+			},
+            .character_resources_count = 1,
+            .character_resources =
+            (struct character_resources_s[1])
+            { 	
+                [0] = 
+                { 
+                    .resource_type1 = 1,
+                    .resource_id = 1,
+                    .resource_type2 = 1,
+                    .value = 10000,
+                },
+            },
+            .containers_count = 1,
+            .containers = 
+			(struct containers_s[1]) 
+			{
+				[0] =
+				{
+				    .loadout_slot_id = 0,
+					.guid = 0x133742069,
+					.def_id = 0,
+					.associated_character_id = 0x133742069,
+					.slots = 0,
+					.items2_count = 1,
+					.items2 = 
+					(struct items2_s[1]) 
+					{
+						[0] =
+						{
+							.item_def_id5 = 0,
+							.item_def_id6 = 0,
+							.tint_id = 0,
+							.guid = 0x133742069,
+							.count = 1,
+							.unk_qword_43 = 0,
+							.unk_dword_132 = 0,
+							.unk_dword_296 = 0,
+							.container_guid = 0,
+							.container_def_id = 0,
+							.container_slot_id = 0,
+							.base_durability = 0,
+							.current_durability = 0,
+							.max_durability_from_def = 0,
+							.unk_bool_116 = FALSE,
+							.owner_character_id = 0x133742069,
+							.unk_dword_9 = 0,
+							.show_bulk = TRUE,
+							.max_bulk = 0,
+							.unk_dword_133 = 0,
+							.bulk_used = 0,
+							.has_bulk_limit = TRUE,
+						},
+					},
+					},
+				},
+            	.is_admin = TRUE,
+			}, 
+        },
+    };
+	// (doggo)if this packet was a person, I would beat the ever-living shit out of it!
+	zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendSelfToClient, &send_self);
 
 		Zone_Packet_Equipment_SetCharacterEquipment set_character_equipment =
 				{
@@ -471,7 +606,6 @@ internal void zone_packet_handle(App_State *server_state,
 
 					.unk_bool_2 = TRUE,
 				};
-
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Equipment_SetCharacterEquipment, &set_character_equipment);
 
 			Zone_Packet_Loadout_SetLoadoutSlots ldt_setldtslots = {
@@ -493,8 +627,14 @@ internal void zone_packet_handle(App_State *server_state,
 
 					.current_slot_id = 0,
 				};
-
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Loadout_SetLoadoutSlots, &ldt_setldtslots);
+		Zone_Packet_Character_RespawnReply respawn_reply =
+			{
+				.character_id_1_1 = session_state->character_id,
+				.status = 1,
+			};
+
+		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
 
 		break;
 	}
@@ -517,6 +657,15 @@ internal void zone_packet_handle(App_State *server_state,
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_LobbyGameDefinition_DefinitionsResponse, &lobby_def_reply);
 
+		break;
+	}
+	case ZONE_REFERENCEDATAWEAPONDEFINITIONS_ID:
+	{
+		packet_kind = Zone_Packet_Kind_ReferenceDataWeaponDefinitions;
+		printf("[Zone] Handling Weapon Definitions!\n");
+	
+		Zone_Packet_ReferenceDataWeaponDefinitions weaponDefs = {0};
+		zone_packet_unpack(data, data_length, packet_kind, &weaponDefs, &server_state->arena_per_tick);
 		break;
 	}
 	case ZONE_CHARACTER_RESPAWN_ID:
