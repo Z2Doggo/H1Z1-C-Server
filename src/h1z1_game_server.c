@@ -219,9 +219,6 @@ internal void gateway_on_login(App_State *app_state, Session_State *session_stat
         .cloudShadows = 0.2f,
 	};
 	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_UpdateWeatherData, &updt_weather_data);
-
-	// (doggo)rawpacket of sendself for testing
-	//zone_packet_raw_file_send(app_state, session_state, &app_state->arena_per_tick, KB(40), "E:\\H1Z1-C-Server\\send_self\\" "5.bin");
 }
 
 
