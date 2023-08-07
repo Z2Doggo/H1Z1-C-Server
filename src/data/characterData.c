@@ -1,0 +1,1 @@
+// will input character data here for stuff like respawning the player character and setting the resources, i.e. health, bleeding, etc;etc!

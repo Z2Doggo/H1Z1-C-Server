@@ -22,19 +22,30 @@ struct character_name_string
 	char *content;
 };
 
-typedef enum ResourceIds 
-{
-  HEALTH = 1,
-  HUNGER = 4,
-  HYDRATION = 5,
-  STAMINA = 6,
-  VIRUS = 12,
-  BLEEDING = 21,
-  COMFORT = 68,
-  FUEL = 396,
-  CONDITION = 561,
-  CONSTRUCTION_CONDITION = 567
+typedef enum {
+    HEALTH = 1,
+    HUNGER = 4,
+    HYDRATION = 5,
+    STAMINA = 6,
+    VIRUS = 12,
+    BLEEDING = 21,
+    COMFORT = 68,
+    FUEL = 396,
+    CONDITION = 561,
+    CONSTRUCTION_CONDITION = 567
 } ResourceIds;
+
+typedef enum {
+    RESOURCE_HEALTH = 1,
+    RESOURCE_HUNGER = 4,
+    RESOURCE_HYDRATION = 5,
+    RESOURCE_STAMINA = 6,
+    RESOURCE_VIRUS = 12,
+    RESOURCE_BLEEDING = 21,
+    RESOURCE_COMFORT = 68,
+    RESOURCE_FUEL = 50,
+    RESOURCE_CONDITION = 1,
+} ResourceTypes;
 
 typedef struct oldPosition 
 {

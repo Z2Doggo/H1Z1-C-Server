@@ -2503,8 +2503,6 @@ packet 0x83 0x06:u8 Weapon_ProjectileHitReport
 packet 0x83 0x07:u8 Weapon_ReloadRequest
 u64 characterId
 
-packet 0x83 0x07:u8 Weapon_ReloadRequest
-
 packet 0x84 MatchScheduleBase
 
 packet 0x85 0:u16 FacilityBase

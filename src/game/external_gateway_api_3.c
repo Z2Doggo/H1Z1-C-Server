@@ -432,7 +432,6 @@
 				}
 
 				gateway_on_tunnel_data_from_client(server_state, session_state, tunnel_data.data, tunnel_data.data_length);
-
 			} break;
 
 			default:
