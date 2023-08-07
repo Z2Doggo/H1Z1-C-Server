@@ -1,5 +1,3 @@
-#define MAX_RESOURCES 10000
-
 ResourceIds getResourceType(ResourceIds resourceId) 
 	{
 		switch (resourceId) 
