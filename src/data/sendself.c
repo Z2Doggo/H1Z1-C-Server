@@ -153,5 +153,5 @@ void sendSelf(App_State *app_state, Session_State *session_state)
     };
 	free(resourceData);
 	// (doggo)if this packet was a person, I would beat the ever-living shit out of it!
-	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendSelfToClient, &send_self);
+	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(100), Zone_Packet_Kind_SendSelfToClient, &send_self);
 };
