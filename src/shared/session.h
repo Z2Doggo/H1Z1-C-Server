@@ -95,10 +95,20 @@ typedef struct BaseEntity
     u32 transientIdValue;
     u32 actorModelId;
     characterState* state;
-    vec4 scale; // value is { 1, 1, 1, 1 };
+    vec4 scale; // default value is { 1, 1, 1, 1 };
     u32 npcRenderDistance;
     u32 interactionDistance;
 } BaseEntity;
+
+typedef struct DamageInfo 
+{
+    u32 entity_len;
+    char* entity;
+    u32 damage;
+    b8 causeBleed;
+    u32 message_len;
+    char* message;
+} DamageInfo;
 
 typedef struct zoneClient 
 {
@@ -153,7 +163,7 @@ typedef struct zoneClient
     u32 blockedPositionUpdates; // 0
     u32 flaggedShots; // 0
     b8 isFairPlayFlagged; // FALSE, keep in my that I will most likely do a proper version of server side anticheat than convert h1emu's fairplay method?
-
+    DamageInfo damageInfo;
     // string array
     char** managedObjects;
     i32 managedObjectsCount;

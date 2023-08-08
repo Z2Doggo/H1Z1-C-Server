@@ -25,27 +25,36 @@ ResourceIds getResourceType(ResourceIds resourceId)
 		};
 	};
 
-struct character_resources_s* getResourceData(u32* resources, u32 numResources) {
+struct character_resources_s* pGetResources(u32* resources, u32 numResources) {
     struct character_resources_s* result = (struct character_resources_s*)malloc(numResources * sizeof(struct character_resources_s));
+    if (!result) {
+        return NULL; // failed to allocate memory
+    }
 
     for (u32 i = 0; i < numResources; i++) {
-        u32 resourceId = resources[i];
+        u32 resourceId = i;
         u32 resourceType = getResourceType(resourceId);
-        u32 value = resources[i] > 0 ? resources[i] : 0;
+        u32 value = resources[resourceId] > 0 ? resources[resourceId] : 0;
 
         result[i].resource_type1 = resourceType;
         result[i].resource_id = resourceId;
         result[i].resource_type2 = resourceType;
         result[i].value = value;
-    };
+    }
+
     return result;
+}
+
+void yuh()
+{
+	
 }
 
 void sendSelf(App_State *app_state, Session_State *session_state)
 {
  	u32 resources[] = {RESOURCE_HEALTH, RESOURCE_BLEEDING, RESOURCE_COMFORT, RESOURCE_CONDITION};
     u32 numResources = sizeof(resources) / sizeof(resources[0]);
-    struct character_resources_s* resourceData = getResourceData(resources, numResources);
+    struct character_resources_s* resourceData = pGetResources(resources, numResources);
 
 	Zone_Packet_SendSelfToClient send_self = 
 	{ 
@@ -64,7 +73,7 @@ void sendSelf(App_State *app_state, Session_State *session_state)
             .head_actor = "SurvivorFemale_Head_02.adr",
             .hair_model_length = 32,
             .hair_model = "SurvivorFemale_Hair_ShortBun.adr",
-            .is_respawning = FALSE,
+            .is_respawning = session_state->is_respawning,
             .character_name_length = 5,
             .character_name = "doggo",
             .gender1 = 2,
@@ -102,7 +111,7 @@ void sendSelf(App_State *app_state, Session_State *session_state)
 					.decal_alias = "#",
 				},
 			},
-            .character_resources_count = numResources,
+            .character_resources_count = 1,
             .character_resources = resourceData,
             .containers_count = 1,
             .containers = 

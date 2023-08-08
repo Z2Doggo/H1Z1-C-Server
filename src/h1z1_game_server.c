@@ -166,7 +166,6 @@ internal void gateway_on_login(App_State *app_state, Session_State *session_stat
 		.unk_bool4 = TRUE,
 	};
 	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
-	sendSelf(app_state, session_state);
 
 	Zone_Packet_ClientGameSettings game_settings = 
 	{ 
@@ -219,8 +218,8 @@ internal void gateway_on_login(App_State *app_state, Session_State *session_stat
         .cloudShadows = 0.2f,
 	};
 	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_UpdateWeatherData, &updt_weather_data);
+	loadCharacterData(app_state, session_state);
 }
-
 
 internal void gateway_on_tunnel_data_from_client(App_State *app_state, Session_State *session_state, u8 *data, u32 data_length)
 {
