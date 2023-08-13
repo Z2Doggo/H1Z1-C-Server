@@ -27,6 +27,9 @@
         "jansson_config.h": "c",
         "zone_server.h": "c",
         "lz4.h": "c",
-        "windows.h": "c"
+        "windows.h": "c",
+        "stdlib.h": "c",
+        "connection.h": "c",
+        "timeapi.h": "c"
     }
 }

@@ -172,6 +172,12 @@ typedef struct zoneClient
     b8 initialized; // dunno what value the bool is supposed to be?
 } zoneClient;
 
+typedef struct characterName characterName;
+struct characterName {
+    u32 nameLength;
+    char* nameContent;
+};
+
 typedef struct Session_State Session_State;
 struct Session_State
 {
@@ -180,6 +186,7 @@ struct Session_State
 
 	character_name_string name_self;
 	zoneClient clientKOTK;
+    characterName charName;
 
 	u64 character_id;
 	u64 guid;

@@ -302,4 +302,3 @@ util_base64_decode(u8* data, u32 data_length, u8* buffer)
 
     return util_base64_calculate_decoded_length(data, data_length);
     }
-

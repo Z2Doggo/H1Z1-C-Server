@@ -20,6 +20,7 @@
 // Base - Required by all lower layers. Includes other 'Base' layers
 //====================================================================================================
 
+#include <stdbool.h>
 #include <stdint.h>
 
 typedef    int8_t  i8;
@@ -59,8 +60,6 @@ typedef double  f64;
 #define global         static
 
 // TODO(rhett): windows.h will probably override this. think about it
-#define TRUE   (0 == 0)
-#define FALSE  (0 != 0)
 
 #define KB(n)  ((n)   * 1024)
 #define MB(n)  (KB(n) * 1024)
@@ -224,7 +223,7 @@ internal uptr base_align_forward(uptr ptr, isize align)
 // TODO(rhett): Re-write debug/internal code
 // TODO(rhett): is this a fine default?
 #define ARENA_ALIGN_DEFAULT (sizeof(void*) * 2)
-#define ARENA_DEFAULT_PARAMS  PASS_PARAMS((.should_clear=TRUE, .alignment=ARENA_ALIGN_DEFAULT))
+#define ARENA_DEFAULT_PARAMS  PASS_PARAMS((.should_clear=true, .alignment=ARENA_ALIGN_DEFAULT))
 
 
 typedef struct Arena Arena;
@@ -257,8 +256,8 @@ PARAMS_DECLARE(void*, arena_push_size, Arena* arena; isize size; b32 should_clea
 	//isize size = params.size;
 	ASSERT(params.arena);
 	ASSERT(params.size);
-	// NOTE(rhett): default must be FALSE since FALSE is a valid input
-	//b32 PARAMS_DEFAULT(should_skip_clear, FALSE);
+	// NOTE(rhett): default must be false since false is a valid input
+	//b32 PARAMS_DEFAULT(should_skip_clear, false);
 	//isize PARAMS_DEFAULT(alignment, ARENA_ALIGN_DEFAULT);
 
 	uptr aligned_ptr = base_align_forward((uptr)params.arena->buffer + params.arena->tail_offset, params.alignment);
@@ -401,9 +400,9 @@ Substring_List string_ztstring_copy_and_split(char* source, char delim, isize ma
 		.substrings = arena_push_array(arena, Buffer, max_substrings),
 	};
 
-	b32 is_within_quotes = FALSE;
-	b32 was_within_quotes = FALSE;
-	b32 is_within_arg = FALSE;
+	b32 is_within_quotes = false;
+	b32 was_within_quotes = false;
+	b32 is_within_arg = false;
 	isize arg_start = 0;
 
 	isize source_size = base_ztstring_size((u8*)source);
@@ -422,21 +421,21 @@ Substring_List string_ztstring_copy_and_split(char* source, char delim, isize ma
 		{
 			if (is_within_arg)
 			{
-				is_within_arg = FALSE;
+				is_within_arg = false;
 				isize substring_size = source_pos - arg_start - was_within_quotes;
 				result.substrings[result.substrings_count].size = substring_size;
 				result.substrings[result.substrings_count].data = arena_push_copy_zero_terminate(arena, (void*)((uptr)source + arg_start), substring_size);
 				//printf("> : %lld\n", result.substrings_count);
 				//EVAL_PRINT_I64(substring_size);
 				result.substrings_count += 1;
-				was_within_quotes = FALSE;
+				was_within_quotes = false;
 			}
 		}
 		else
 		{
 			if (!is_within_arg)
 			{
-				is_within_arg = TRUE;
+				is_within_arg = true;
 				arg_start = source_pos;
 				//printf("<");
 			}
@@ -446,14 +445,14 @@ Substring_List string_ztstring_copy_and_split(char* source, char delim, isize ma
 
 	if (is_within_arg)
 	{
-		is_within_arg = FALSE;
+		is_within_arg = false;
 		isize substring_size = source_pos - arg_start - was_within_quotes;
 		result.substrings[result.substrings_count].size = substring_size;
 		result.substrings[result.substrings_count].data = arena_push_copy_zero_terminate(arena, (void*)((uptr)source + arg_start), substring_size);
 		//printf("> : %lld\n", result.substrings_count);
 		//EVAL_PRINT_I64(substring_size);
 		result.substrings_count += 1;
-		was_within_quotes = FALSE;
+		was_within_quotes = false;
 	}
 
 	return result;

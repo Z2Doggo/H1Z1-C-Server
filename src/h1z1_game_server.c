@@ -1,10 +1,10 @@
 #if defined(YOTE_INTERNAL)
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <math.h>
 #include <string.h>
 #include <time.h>
-#include <stdint.h>
 #else
 static void platform_win_console_write(char *format, ...);
 #define printf(s, ...) platform_win_console_write(s, __VA_ARGS__)
@@ -96,15 +96,16 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #undef printf
 #include "../schema/output/login_udp_11.c"
 #include "game/client_protocol_1087.c"
-#include "data/sendself.c"
-#include "data/characterData.c"
+#include "data/sendSelf.c"
+#include "data/loginCharacterData.c"
+#include "data/zoneCharacterData.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 
 internal void gateway_on_login(App_State *app_state, Session_State *session_state)
 {
-	session_state->is_respawning = FALSE;
-	printf("[!] Character %llxh trying to login to zone server\n", 0x133742069); // (doggo)temp characterId until I implement a decent enough solution!
+	session_state->is_respawning = false;
+	printf("[!] Character %llxh trying to login to zone server\n", session_state->character_id); // (doggo)temp characterId until I implement a decent enough solution!
 
 	Zone_Packet_InitializationParameters init_params = 
 	{ 
@@ -118,7 +119,7 @@ internal void gateway_on_login(App_State *app_state, Session_State *session_stat
 		.zone_name_length = 9,
 		.zone_name = "LoginZone",
 		.zone_type = 4,
-		.unk_bool = FALSE,
+		.unk_bool = false,
 
 		.overcast = 0,
         .fogDensity = 0,
@@ -159,18 +160,18 @@ internal void gateway_on_login(App_State *app_state, Session_State *session_stat
 		.zone_id = 5,
 		.zone_id_2 = 5,
 		.name_id = 7699,
-		.unk_bool2 = TRUE,
+		.unk_bool2 = true,
 		.lighting_length = 15,
 		.lighting = "Lighting_Z2.txt",
-		.unk_bool3 = FALSE,
-		.unk_bool4 = TRUE,
+		.unk_bool3 = false,
+		.unk_bool4 = true,
 	};
 	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
 
 	Zone_Packet_ClientGameSettings game_settings = 
 	{ 
 		.interact_glow_and_dist = 16,
-		.unk_bool = TRUE,
+		.unk_bool = true,
 		.timescale = 1.0,
 		.enable_weapons = 1,
 		.unk_u32_2 = 1,
@@ -271,8 +272,8 @@ internal OUTPUT_STREAM_CALLBACK_DATA(on_output_stream_data)
 // TODO(rhett): STBSP_SPRINTF breaks if this is less than 4 bytes each? or sanitizer issue
 char toggle_state_text[2][4] =
 	{
-		[FALSE] = "--",
-		[TRUE] = "ON",
+		[false] = "--",
+		[true] = "ON",
 };
 
 __declspec(dllexport) APP_TICK(server_tick)
@@ -329,12 +330,12 @@ __declspec(dllexport) APP_TICK(server_tick)
 
 		app_state->connection_args.udp_length = MAX_PACKET_LENGTH;
 		// TODO(rhett): encryption should probably be kept disabled initially and toggled on in higher layers
-		// app_state->connection_args.use_encryption = FALSE;
-		app_state->connection_args.should_dump_core = TRUE;
-		app_state->connection_args.should_dump_login = TRUE;
-		app_state->connection_args.should_dump_tunnel = TRUE;
-		app_state->connection_args.should_dump_gateway = TRUE;
-		app_state->connection_args.should_dump_zone = TRUE;
+		// app_state->connection_args.use_encryption = false;
+		app_state->connection_args.should_dump_core = true;
+		app_state->connection_args.should_dump_login = true;
+		app_state->connection_args.should_dump_tunnel = true;
+		app_state->connection_args.should_dump_gateway = true;
+		app_state->connection_args.should_dump_zone = true;
 
 		app_state->sessions_capacity = MAX_SESSIONS_COUNT;
 		app_state->socket = app_state->platform_api->socket_udp_create_and_bind(LOCAL_PORT);
@@ -466,11 +467,11 @@ __declspec(dllexport) APP_TICK(server_tick)
 					app_state->sessions[first_free_session].input_stream = input_stream_init(&app_state->sessions[first_free_session].input_fragment_pool,
 																							 app_state->rc4_key_decoded,
 																							 app_state->rc4_key_decoded_length,
-																							 FALSE);
+																							 false);
 					app_state->sessions[first_free_session].output_stream = output_stream_init(&app_state->sessions[first_free_session].output_fragment_pool,
 																							   app_state->rc4_key_decoded,
 																							   app_state->rc4_key_decoded_length,
-																							   FALSE);
+																							   false);
 
 					app_state->sessions[first_free_session].input_stream.ack_callback_ptr = &app_state->stream_function_table->game_input_ack;
 					app_state->sessions[first_free_session].input_stream.data_callback_ptr = &app_state->stream_function_table->game_input_data;
@@ -490,7 +491,7 @@ __declspec(dllexport) APP_TICK(server_tick)
 			}
 			else
 			{
-				core_packet_handle(app_state, app_state->platform_api, &app_state->sessions[known_session], incoming_buffer, receive_result, FALSE);
+				core_packet_handle(app_state, app_state->platform_api, &app_state->sessions[known_session], incoming_buffer, receive_result, false);
 			}
 
 			// Zone_Packet_ClientUpdatePacketModifyMovementSpeed speed = { .speed = 4.0f, .unk_bool = 1};

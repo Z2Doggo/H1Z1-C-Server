@@ -288,22 +288,22 @@ internal void core_packet_send(Platform_Socket socket, Platform_Api* platform, u
 	{
 		case Core_Packet_Kind_Session_Reply:
 		{
-			packed_length = core_packet_pack(packet_kind, packet_ptr, buffer, FALSE, connection_args);
+			packed_length = core_packet_pack(packet_kind, packet_ptr, buffer, false, connection_args);
 			break;
 		}
 		case Core_Packet_Kind_Data:
 		{
-			packed_length = core_packet_pack(packet_kind, packet_ptr, buffer, FALSE, connection_args);
+			packed_length = core_packet_pack(packet_kind, packet_ptr, buffer, false, connection_args);
 			break;
 		}
 		case Core_Packet_Kind_Data_Fragment:
 		{
-			packed_length = core_packet_pack(packet_kind, packet_ptr, buffer, FALSE, connection_args);
+			packed_length = core_packet_pack(packet_kind, packet_ptr, buffer, false, connection_args);
 			break;
 		}
 		case Core_Packet_Kind_Ack:
 		{
-			packed_length = core_packet_pack(packet_kind, packet_ptr, buffer, FALSE, connection_args);
+			packed_length = core_packet_pack(packet_kind, packet_ptr, buffer, false, connection_args);
 			break;
 		}
 		default:
@@ -410,8 +410,8 @@ internal void core_packet_handle(App_State* app_state, Platform_Api* platform, S
 
 			if (strcmp(packet.protocol_name,"LoginUdp_11") == 0)
 			{
-				session->input_stream.use_encryption 	= TRUE;
-				session->output_stream.use_encryption 	= TRUE;
+				session->input_stream.use_encryption 	= true;
+				session->output_stream.use_encryption 	= true;
 
 				printf("[*] Enabling encryption for session\n");
 			}
@@ -459,7 +459,7 @@ internal void core_packet_handle(App_State* app_state, Platform_Api* platform, S
 				u32 chunk_length;
 				offset += input_stream_read_chunk_length((u8*)((uptr)data + offset), &chunk_length);
 
-				core_packet_handle(app_state, platform, session, data + offset, chunk_length, TRUE);
+				core_packet_handle(app_state, platform, session, data + offset, chunk_length, true);
 				offset += chunk_length;
 			}
 
@@ -480,7 +480,7 @@ internal void core_packet_handle(App_State* app_state, Platform_Api* platform, S
 			Data packet = { 0 };
 			core_packet_unpack(data, data_length, packet_kind, &packet, is_sub_packet, &session->connection_args);
 
-			input_stream_write(&session->input_stream, packet.data, packet.data_length, packet.sequence, FALSE, app_state, session);
+			input_stream_write(&session->input_stream, packet.data, packet.data_length, packet.sequence, false, app_state, session);
 
 			break;
 		}
@@ -500,7 +500,7 @@ internal void core_packet_handle(App_State* app_state, Platform_Api* platform, S
 			Data packet = { 0 };
 			core_packet_unpack(data, data_length, packet_kind, &packet, is_sub_packet, &session->connection_args);
 
-			input_stream_write(&session->input_stream, packet.data, packet.data_length, packet.sequence, TRUE, app_state, session);
+			input_stream_write(&session->input_stream, packet.data, packet.data_length, packet.sequence, true, app_state, session);
 
 			break;
 		}

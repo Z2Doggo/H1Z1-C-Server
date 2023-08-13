@@ -5,6 +5,7 @@ static void platform_win_console_write(char* format, ...);
 #define printf(s, ...) platform_win_console_write(s, __VA_ARGS__)
 #endif // YOTE_INTERNAL
 
+#include <stdbool.h>
 #include "yote.h"
 #define YOTE_PLATFORM_USE_SOCKETS  1
 #define YOTE_PLATFORM_WINDOWS      1
@@ -47,7 +48,7 @@ internal App_Code win32_app_code_load()
 	App_Code result = { 0 };
 
 	result.module_last_write_time = win32_get_last_write_time(MODULE_FILE);
-	CopyFileA(MODULE_FILE, MODULE_FILE_TEMP, FALSE);
+	CopyFileA(MODULE_FILE, MODULE_FILE_TEMP, false);
 
 	result.module = LoadLibraryA(MODULE_FILE_TEMP);
 	if (result.module)
@@ -72,7 +73,7 @@ internal void win32_app_code_unload(App_Code* app_code)
 		app_code->module = 0;
 	}
 
-	app_code->is_valid = FALSE;
+	app_code->is_valid = false;
 	app_code->tick_func = app_tick_stub;
 }
 
@@ -117,17 +118,17 @@ int mainCRTStartup(void)
 	                                                  CONSOLE_TEXTMODE_BUFFER,
 	                                                  NULL);
 	SMALL_RECT window_rect = { 0, 0, 1, 1 };
-	SetConsoleWindowInfo(console_handle, TRUE, &window_rect);
+	SetConsoleWindowInfo(console_handle, true, &window_rect);
 	SetConsoleScreenBufferSize(console_handle, (COORD) { SCREEN_WIDTH, SCREEN_HEIGHT });
 	SetConsoleActiveScreenBuffer(console_handle);
 
 	window_rect = (SMALL_RECT) { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1 };
-	SetConsoleWindowInfo(console_handle, TRUE, &window_rect);
+	SetConsoleWindowInfo(console_handle, true, &window_rect);
 #endif // TERMINAL_UI
 
 	App_Code app_code = win32_app_code_load();
 	u64 previous_counter = platform_win_wall_clock();
-	b32 is_running = TRUE;
+	b32 is_running = true;
 	while (is_running)
 	{
 		app_code.tick_func(&app_memory);

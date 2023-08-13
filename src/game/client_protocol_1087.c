@@ -6,64 +6,69 @@
 	}                                                                                    \
 	break;
 
-typedef struct {
-    App_State *server_state;
-    Session_State *session_state;
-    Arena *arena;
-    u32 max_length;
-    Zone_Packet_Kind packet_kind;
-    void *packet_ptr;
+typedef struct
+{
+	App_State *server_state;
+	Session_State *session_state;
+	Arena *arena;
+	u32 max_length;
+	Zone_Packet_Kind packet_kind;
+	void *packet_ptr;
 } ThreadParams;
 
-DWORD WINAPI zone_packet_send_thread(LPVOID lpParam) {
-    ThreadParams* params = (ThreadParams*)lpParam;
-    App_State* server_state = params->server_state;
-    Session_State* session_state = params->session_state;
-    Arena* arena = params->arena;
-    u32 max_length = params->max_length;
-    Zone_Packet_Kind packet_kind = params->packet_kind;
-    void* packet_ptr = params->packet_ptr;
+DWORD WINAPI zone_packet_send_thread(LPVOID lpParam)
+{
+	ThreadParams *params = (ThreadParams *)lpParam;
+	App_State *server_state = params->server_state;
+	Session_State *session_state = params->session_state;
+	Arena *arena = params->arena;
+	u32 max_length = params->max_length;
+	Zone_Packet_Kind packet_kind = params->packet_kind;
+	void *packet_ptr = params->packet_ptr;
 
-    // Your existing code for zone_packet_send goes here
-    u8* base_buffer = arena_push_size(arena, max_length);
-    u8* packed_buffer = base_buffer + TUNNEL_DATA_HEADER_LENGTH;
-    u32 packed_length = zone_packet_pack(packet_kind, packet_ptr, packed_buffer);
-    u32 total_length = packed_length + TUNNEL_DATA_HEADER_LENGTH;
-    arena_rewind(arena, max_length - total_length);
+	// Your existing code for zone_packet_send goes here
+	u8 *base_buffer = arena_push_size(arena, max_length);
+	u8 *packed_buffer = base_buffer + TUNNEL_DATA_HEADER_LENGTH;
+	u32 packed_length = zone_packet_pack(packet_kind, packet_ptr, packed_buffer);
+	u32 total_length = packed_length + TUNNEL_DATA_HEADER_LENGTH;
+	arena_rewind(arena, max_length - total_length);
 
-    if (session_state->connection_args.should_dump_zone) {
-        char dump_path[256] = { 0 };
-        stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_S_zone_%s.bin", global_tick_count, global_packet_dump_count++, zone_packet_names[packet_kind]);
-        server_state->platform_api->buffer_write_to_file(dump_path, packed_buffer, packed_length);
-    }
+	if (session_state->connection_args.should_dump_zone)
+	{
+		char dump_path[256] = {0};
+		stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_S_zone_%s.bin", global_tick_count, global_packet_dump_count++, zone_packet_names[packet_kind]);
+		server_state->platform_api->buffer_write_to_file(dump_path, packed_buffer, packed_length);
+	}
 
-    gateway_tunnel_data_send(server_state, session_state, base_buffer, total_length);
+	gateway_tunnel_data_send(server_state, session_state, base_buffer, total_length);
 
-    return 0;
+	return 0;
 }
 
-internal void zone_packet_send(App_State *server_state, Session_State *session_state, Arena *arena, u32 max_length, Zone_Packet_Kind packet_kind, void *packet_ptr) {
-    // Create thread parameters
-    ThreadParams params;
-    params.server_state = server_state;
-    params.session_state = session_state;
-    params.arena = arena;
-    params.max_length = max_length;
-    params.packet_kind = packet_kind;
-    params.packet_ptr = packet_ptr;
+internal void zone_packet_send(App_State *server_state, Session_State *session_state, Arena *arena, u32 max_length, Zone_Packet_Kind packet_kind, void *packet_ptr)
+{
+	// Create thread parameters
+	ThreadParams params;
+	params.server_state = server_state;
+	params.session_state = session_state;
+	params.arena = arena;
+	params.max_length = max_length;
+	params.packet_kind = packet_kind;
+	params.packet_ptr = packet_ptr;
 
-    // Create thread handle
-    HANDLE threadHandle = CreateThread(NULL, 0, zone_packet_send_thread, &params, 0, NULL);
-    if (threadHandle == NULL) {
-       printf("Thread failed to create!");
-	   TRY_AGAIN;
-    }
+	// Create thread handle
+	HANDLE threadHandle = CreateThread(NULL, 0, zone_packet_send_thread, &params, 0, NULL);
+	if (threadHandle == NULL)
+	{
+		printf("Thread failed to create!");
+		TRY_AGAIN;
+	}
 
-    // Optionally, you can wait for the thread to finish using WaitForSingleObject or WaitForMultipleObjects
-    WaitForSingleObject(threadHandle, INFINITE);
+	// Optionally, you can wait for the thread to finish using WaitForSingleObject or WaitForMultipleObjects
+	WaitForSingleObject(threadHandle, INFINITE);
 
-    // Close the thread handle (when you no longer need it)
-    CloseHandle(threadHandle);
+	// Close the thread handle (when you no longer need it)
+	CloseHandle(threadHandle);
 } // (doggo) thanks chatgpt!
 
 internal void zone_packet_raw_file_send(App_State *server_state,
@@ -150,7 +155,7 @@ internal void zone_packet_handle(App_State *server_state,
 
 	goto packet_id_fail;
 
-	packet_id_switch:
+packet_id_switch:
 	switch (packet_id)
 	{
 	case ZONE_CLIENTISREADY_ID:
@@ -160,7 +165,7 @@ internal void zone_packet_handle(App_State *server_state,
 
 		Zone_Packet_ClientUpdate_DoneSendingPreloadCharacters preload_done =
 			{
-				.is_done = TRUE,
+				.is_done = true,
 			};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(30), Zone_Packet_Kind_ClientUpdate_DoneSendingPreloadCharacters, &preload_done);
@@ -180,7 +185,7 @@ internal void zone_packet_handle(App_State *server_state,
 	}
 	case ZONE_CLIENTFINISHEDLOADING_ID:
 	{
-		if (session_state->finished_loading == FALSE)
+		if (session_state->finished_loading == false)
 		{
 
 			packet_kind = Zone_Packet_Kind_ClientFinishedLoading;
@@ -196,7 +201,7 @@ internal void zone_packet_handle(App_State *server_state,
 					.scale = {0.001f, 0.001f, 0.001f, 0.001f},
 					.positionUpdateType = 0,
 					.profileId = 0,
-					.isLightweight = FALSE,
+					.isLightweight = false,
 					.flags1 = 0,
 					.flags2 = 0,
 					.flags3 = 0,
@@ -259,7 +264,7 @@ internal void zone_packet_handle(App_State *server_state,
 						},
 					},
 
-					.unk_bool_2 = TRUE,
+					.unk_bool_2 = true,
 				};
 
 			Zone_Packet_Loadout_SetLoadoutSlots ldt_setldtslots = {
@@ -300,7 +305,7 @@ internal void zone_packet_handle(App_State *server_state,
 				.unk_byte_3 = 0,
 			};
 
-			session_state->first_login = FALSE;
+			session_state->first_login = false;
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Command_AddWorldCommand, &command_help);
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_WeaponStance, &weapon_stance);
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Equipment_SetCharacterEquipment, &set_character_equipment);
@@ -309,14 +314,14 @@ internal void zone_packet_handle(App_State *server_state,
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_StartMultiStateDeath, &multi_state_dth);
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightNpc, &lightweightnpc);
 
-			Zone_Packet_ClientUpdate_ModifyMovementSpeed modifyMovement = 
-			{
-				.speed = 10,
-				.movementVersion = 6,
-			};
+			Zone_Packet_ClientUpdate_ModifyMovementSpeed modifyMovement =
+				{
+					.speed = 10,
+					.movementVersion = 6,
+				};
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_ModifyMovementSpeed, &modifyMovement);
-			session_state->is_ready = TRUE;
-			session_state->finished_loading = TRUE;
+			session_state->is_ready = true;
+			session_state->finished_loading = true;
 		}
 
 		break;
@@ -325,42 +330,42 @@ internal void zone_packet_handle(App_State *server_state,
 	{
 		packet_kind = Zone_Packet_Kind_StaticViewRequest;
 		printf("[Zone] Handling StaticViewRequest\n");
-		
-		Zone_Packet_StaticViewRequest req = 
-		{
-			.viewpoint_length = 11,
-			.viewpoint = "kotkdefault",
-		};
+
+		Zone_Packet_StaticViewRequest req =
+			{
+				.viewpoint_length = 11,
+				.viewpoint = "kotkdefault",
+			};
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_StaticViewRequest, &req);
 
-			Zone_Packet_StaticViewReply staticview_reply = {
-				.state = 0,
-				.pos1 = 74.8f,
-				.pos2 = 201.5f,
-				.pos3 = 458.1f,
-				.pos4 = 99.01f,
-				.rot1 = 199.99f,
-				.rot2 = 289.99999f,
-				.rot3 = 370.17f,
-				.rot4 = 6.79f,
-				.look1 = 69.81f,
-				.look2 = 56.0f,
-				.look3 = 0.0f,
-				.look4 = 0.0f,
-				.unk_byte_1 = 0,
-				.unk_bool_1 = TRUE,
-			};
+		Zone_Packet_StaticViewReply staticview_reply = {
+			.state = 0,
+			.pos1 = 74.8f,
+			.pos2 = 201.5f,
+			.pos3 = 458.1f,
+			.pos4 = 99.01f,
+			.rot1 = 199.99f,
+			.rot2 = 289.99999f,
+			.rot3 = 370.17f,
+			.rot4 = 6.79f,
+			.look1 = 69.81f,
+			.look2 = 56.0f,
+			.look3 = 0.0f,
+			.look4 = 0.0f,
+			.unk_byte_1 = 0,
+			.unk_bool_1 = true,
+		};
 
-			Zone_Packet_ClientUpdate_UpdateLocation updt_loc = {
-				.position = {-32.26f, 506.41f, 280.21f, 1.0f},
-				.rotation = {-0.11f, -0.58f, -0.08f, 1.0f},
-				.trigger_loading_screen = FALSE,
-				.unk_u8_1 = 0,
-				.unk_bool = FALSE,
-			};
+		Zone_Packet_ClientUpdate_UpdateLocation updt_loc = {
+			.position = {-32.26f, 506.41f, 280.21f, 1.0f},
+			.rotation = {-0.11f, -0.58f, -0.08f, 1.0f},
+			.trigger_loading_screen = false,
+			.unk_u8_1 = 0,
+			.unk_bool = false,
+		};
 
-			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_UpdateLocation, &updt_loc);
-			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_StaticViewReply, &staticview_reply);
+		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_UpdateLocation, &updt_loc);
+		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_StaticViewReply, &staticview_reply);
 
 		break;
 	}
@@ -376,10 +381,10 @@ internal void zone_packet_handle(App_State *server_state,
 
 		Zone_Packet_ClientUpdate_UpdateLocation update_loc = {
 			.position = {-32.26f, 506.41f, 280.21f, 1.0f},
-			.rotation = {-0.11f, -0.58f, -0.08f, 1.0f}, 
-			.trigger_loading_screen = TRUE,
+			.rotation = {-0.11f, -0.58f, -0.08f, 1.0f},
+			.trigger_loading_screen = true,
 			.unk_u8_1 = 0,
-			.unk_bool = FALSE,
+			.unk_bool = false,
 		};
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_UpdateLocation, &update_loc);
 
@@ -387,7 +392,7 @@ internal void zone_packet_handle(App_State *server_state,
 			.zone_name_length = 2,
 			.zone_name = "Z2",
 			.zone_type = 4,
-			.pos = {-229.88f, 506.44f, -4885.03f, 1.0f}, 
+			.pos = {-229.88f, 506.44f, -4885.03f, 1.0f},
 			.rot = {0.10f, -0.50f, 0.00f, 1.0f},
 
 			// set skydata
@@ -432,85 +437,85 @@ internal void zone_packet_handle(App_State *server_state,
 			.zone_id_2 = 0,
 			.name_id = 7699,
 			.unk_dword_1 = 674234378,
-			.unk_bool_1 = FALSE,
-			.wait_for_zone_ready = FALSE,
-			.unk_bool_2 = TRUE,
+			.unk_bool_1 = false,
+			.wait_for_zone_ready = false,
+			.unk_bool_2 = true,
 		};
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientBeginZoning, &begin_zoning);
 
 		Zone_Packet_Equipment_SetCharacterEquipment set_character_equipment =
-				{
-					.length_1_length = 1,
-					.length_1 =
-						(struct length_1_s[1]){
-							[0] = {
-								.profile_id = 5,
-								.character_id = 0x133742069,
-							},
-						},
-					.unk_dword_1 = 0,
-					.unk_string_1_length = 7,
-					.unk_string_1 = "Default",
-					.unk_string_2_length = 1,
-					.unk_string_2 = "#",
-
-					.equipment_slot_array_count = 1,
-					.equipment_slot_array = (struct equipment_slot_array_s[1]){
+			{
+				.length_1_length = 1,
+				.length_1 =
+					(struct length_1_s[1]){
 						[0] = {
-							.equipment_slot_id_1 = 0,
-							.length_2_length = 1,
-							.length_2 = (struct length_2_s[1]){
-								[0] = {
-									.equipment_slot_id_2 = 0,
-									.guid = 0, // keep guid as a 0
-									.tint_alias_length = 7,
-									.tint_alias = "Default",
-									.decal_alias_length = 1,
-									.decal_alias = "#",
-								},
+							.profile_id = 5,
+							.character_id = 0x133742069,
+						},
+					},
+				.unk_dword_1 = 0,
+				.unk_string_1_length = 7,
+				.unk_string_1 = "Default",
+				.unk_string_2_length = 1,
+				.unk_string_2 = "#",
+
+				.equipment_slot_array_count = 1,
+				.equipment_slot_array = (struct equipment_slot_array_s[1]){
+					[0] = {
+						.equipment_slot_id_1 = 0,
+						.length_2_length = 1,
+						.length_2 = (struct length_2_s[1]){
+							[0] = {
+								.equipment_slot_id_2 = 0,
+								.guid = 0, // keep guid as a 0
+								.tint_alias_length = 7,
+								.tint_alias = "Default",
+								.decal_alias_length = 1,
+								.decal_alias = "#",
 							},
 						},
 					},
+				},
 
-					.attachments_data_1_count = 1,
-					.attachments_data_1 = (struct attachments_data_1_s[1]){
-						[0] = {
-							.model_name_length = 0,
-							.model_name = "",
-							.texture_alias_length = 0,
-							.texture_alias = "",
-							.tint_alias_length = 7,
-							.tint_alias = "Default",
-							.decal_alias_length = 1,
-							.decal_alias = "#",
-							.slot_id = 0,
-						},
+				.attachments_data_1_count = 1,
+				.attachments_data_1 = (struct attachments_data_1_s[1]){
+					[0] = {
+						.model_name_length = 0,
+						.model_name = "",
+						.texture_alias_length = 0,
+						.texture_alias = "",
+						.tint_alias_length = 7,
+						.tint_alias = "Default",
+						.decal_alias_length = 1,
+						.decal_alias = "#",
+						.slot_id = 0,
 					},
+				},
 
-					.unk_bool_2 = TRUE,
-				};
-			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Equipment_SetCharacterEquipment, &set_character_equipment);
+				.unk_bool_2 = true,
+			};
+		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Equipment_SetCharacterEquipment, &set_character_equipment);
 
-			Zone_Packet_Loadout_SetLoadoutSlots ldt_setldtslots = {
-					.character_id = 0x133742069,
-					.loadout_id = 0,
-					.loadout_slot_data_count = 1,
-					.loadout_slot_data =
-						(struct loadout_slot_data_s[1]){
-							[0] = {
-								.hotbar_slot_id = 0,
-								.loadout_id_1 = 0,
-								.slot_id = 0,
-								.item_def_id1 = 0,
-								.loadout_item_guid = 0x0,
-								.unk_byte_1 = 255,
-								.unk_dword_1 = 0,
-							},
-						},
+		Zone_Packet_Loadout_SetLoadoutSlots ldt_setldtslots = {
+			.character_id = 0x133742069,
+			.loadout_id = 0,
+			.loadout_slot_data_count = 1,
+			.loadout_slot_data =
+				(struct loadout_slot_data_s[1]){
+					[0] = {
+						.hotbar_slot_id = 0,
+						.loadout_id_1 = 0,
+						.slot_id = 0,
+						.item_def_id1 = 0,
+						.loadout_item_guid = 0x0,
+						.unk_byte_1 = 255,
+						.unk_dword_1 = 0,
+					},
+				},
 
-					.current_slot_id = 0,
-				};
-			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Loadout_SetLoadoutSlots, &ldt_setldtslots);
+			.current_slot_id = 0,
+		};
+		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Loadout_SetLoadoutSlots, &ldt_setldtslots);
 		Zone_Packet_Character_RespawnReply respawn_reply =
 			{
 				.character_id_1_1 = session_state->character_id,
@@ -518,7 +523,6 @@ internal void zone_packet_handle(App_State *server_state,
 			};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
-
 		break;
 	}
 	case ZONE_LOBBYGAMEDEFINITION_DEFINITIONSREQUEST_ID:
@@ -546,7 +550,7 @@ internal void zone_packet_handle(App_State *server_state,
 	{
 		packet_kind = Zone_Packet_Kind_ReferenceDataWeaponDefinitions;
 		printf("[Zone] Handling Weapon Definitions!\n");
-	
+
 		Zone_Packet_ReferenceDataWeaponDefinitions weaponDefs = {0};
 		zone_packet_unpack(data, data_length, packet_kind, &weaponDefs, &server_state->arena_per_tick);
 		break;
@@ -559,13 +563,13 @@ internal void zone_packet_handle(App_State *server_state,
 		Zone_Packet_Character_Respawn result = {0};
 		zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
 
-		session_state->is_loading = TRUE;
-		session_state->character_released = FALSE;
+		session_state->is_loading = true;
+		session_state->character_released = false;
 		// (doggo)input last login date here
-		session_state->is_alive = TRUE;
-		session_state->is_running = FALSE;
-		session_state->is_respawning = FALSE;
-		session_state->is_in_air = FALSE;
+		session_state->is_alive = true;
+		session_state->is_running = false;
+		session_state->is_respawning = false;
+		session_state->is_in_air = false;
 
 		Zone_Packet_Character_RespawnReply respawn_reply =
 			{
@@ -643,7 +647,7 @@ internal void zone_packet_handle(App_State *server_state,
 		{
 			.time = timer64,
 			.cycle_speed = 12.0.0f,
-			.unk_bool = FALSE,
+			.unk_bool = false,
 		};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_GameTimeSync, &time_sync);
@@ -656,7 +660,7 @@ internal void zone_packet_handle(App_State *server_state,
 
 		if (!session_state->first_login)
 		{
-			session_state->first_login = TRUE;
+			session_state->first_login = true;
 
 			Zone_Packet_ClientUpdate_TextAlert text_alert =
 			{
@@ -746,7 +750,7 @@ internal void zone_packet_handle(App_State *server_state,
 		Zone_Packet_Character_RespawnReply respawn_reply =
 			{
 				.character_id_1_1 = session_state->character_id,
-				.status = TRUE,
+				.status = true,
 			};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
@@ -831,7 +835,7 @@ internal void zone_packet_handle(App_State *server_state,
 		Zone_Packet_Character_RespawnReply respawn_reply =
 			{
 				.character_id_1_1 = session_state->character_id,
-				.status = TRUE,
+				.status = true,
 			};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
@@ -845,11 +849,11 @@ internal void zone_packet_handle(App_State *server_state,
 		packet_kind = Zone_Packet_Kind_SetLocale;
 		printf("[Zone] Handling SetLocale\n");
 
-		Zone_Packet_SetLocale setLocale = 
-		{
-			.locale_length = 5,
-			.locale = "en_US",
-		};
+		Zone_Packet_SetLocale setLocale =
+			{
+				.locale_length = 5,
+				.locale = "en_US",
+			};
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_SetLocale, &setLocale);
 
 		break;
@@ -884,49 +888,49 @@ internal void zone_packet_handle(App_State *server_state,
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_FullCharacterDataRequest, &full_data_request);
 
-		break; 
-	}
-
-    /*
-	case ZONE_COMMAND_ITEMDEFINITIONREQUEST_ID:
-	{
-		packet_kind = Zone_Packet_Kind_Command_ItemDefinitionRequest;
-		printf("[Zone] Handling Command.ItemDefinitionRequest\n");
-
-		Zone_Packet_Command_ItemDefinitionRequest request = {0};
-		zone_packet_unpack(data, data_length, packet_kind, &request, &server_state->arena_per_tick);
-
-		Zone_Packet_CommandItemDefinitions commandItemDefs = {0};
-
-		    int defsCount = 0;
-			Zone_Packet_CommandItemDefinitions defs[5000];
-
-			for (int i = 0; i < 5000; i++) {
-				Items items = commandItemDefs.item_def_reply_2->item_defs[i].defs_id;
-
-				switch (items) {
-					case FANNY_PACK_DEV:
-					case HEAD_6LIGHTS_ATV_6:
-					case HEAD_3LIGHTS_OFFROADER_6:
-					case HEAD_4LIGHTS_PICKUP:
-					case HEAD_5LIGHTS_POLICE:
-					case AIRDROP_CODE:
-						defs[defsCount].item_def_reply_2->item_defs[i].defs_id = items;
-						defs[defsCount].item_def_reply_2->item_defs[i].hud_image_set_id = commandItemDefs.item_def_reply_2->item_defs->image_set_id;
-						defs[defsCount].item_def_reply_2->item_defs[i].item_type_1 = commandItemDefs.item_def_reply_2->item_defs->item_type_1;
-						defs[defsCount].item_def_reply_2->item_defs[i].bitflags1 = commandItemDefs.item_def_reply_2->item_defs->bitflags1;
-						defs[defsCount].item_def_reply_2->item_defs[i].bitflags2 = commandItemDefs.item_def_reply_2->item_defs->bitflags2;
-						defs[defsCount].item_def_reply_2->item_defs[i].stats_item_def_2 = NULL;
-						defsCount++;
-						break;
-				}
-			}
-			
-			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(500), Zone_Packet_Kind_CommandItemDefinitions, defs);
-
 		break;
 	}
-	*/
+
+		/*
+		case ZONE_COMMAND_ITEMDEFINITIONREQUEST_ID:
+		{
+			packet_kind = Zone_Packet_Kind_Command_ItemDefinitionRequest;
+			printf("[Zone] Handling Command.ItemDefinitionRequest\n");
+
+			Zone_Packet_Command_ItemDefinitionRequest request = {0};
+			zone_packet_unpack(data, data_length, packet_kind, &request, &server_state->arena_per_tick);
+
+			Zone_Packet_CommandItemDefinitions commandItemDefs = {0};
+
+				int defsCount = 0;
+				Zone_Packet_CommandItemDefinitions defs[5000];
+
+				for (int i = 0; i < 5000; i++) {
+					Items items = commandItemDefs.item_def_reply_2->item_defs[i].defs_id;
+
+					switch (items) {
+						case FANNY_PACK_DEV:
+						case HEAD_6LIGHTS_ATV_6:
+						case HEAD_3LIGHTS_OFFROADER_6:
+						case HEAD_4LIGHTS_PICKUP:
+						case HEAD_5LIGHTS_POLICE:
+						case AIRDROP_CODE:
+							defs[defsCount].item_def_reply_2->item_defs[i].defs_id = items;
+							defs[defsCount].item_def_reply_2->item_defs[i].hud_image_set_id = commandItemDefs.item_def_reply_2->item_defs->image_set_id;
+							defs[defsCount].item_def_reply_2->item_defs[i].item_type_1 = commandItemDefs.item_def_reply_2->item_defs->item_type_1;
+							defs[defsCount].item_def_reply_2->item_defs[i].bitflags1 = commandItemDefs.item_def_reply_2->item_defs->bitflags1;
+							defs[defsCount].item_def_reply_2->item_defs[i].bitflags2 = commandItemDefs.item_def_reply_2->item_defs->bitflags2;
+							defs[defsCount].item_def_reply_2->item_defs[i].stats_item_def_2 = NULL;
+							defsCount++;
+							break;
+					}
+				}
+
+				zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(500), Zone_Packet_Kind_CommandItemDefinitions, defs);
+
+			break;
+		}
+		*/
 
 	case ZONE_WALLOFDATA_CLIENTSYSTEMINFO_ID:
 	{
@@ -1090,7 +1094,7 @@ internal void zone_packet_handle(App_State *server_state,
 		startOffset = offset;
 		uint2b uv;
 		int2b v;
-		
+
 		if (obj.flag & 1) {
 			uv = endian_read_uint2b_little(data);
 			session_state->stance = uv.value;
@@ -1149,15 +1153,15 @@ internal void zone_packet_handle(App_State *server_state,
 		if (obj.flag & 0x100) {
 			v = endian_read_int2b_little(data, offset);
 			session_state->unknown12_f32[0] = v.value / 100;
-			offset += v.length; 
+			offset += v.length;
 
 			v = endian_read_int2b_little(data, offset);
 			session_state->unknown12_f32[1] = v.value / 100;
-			offset += v.length; 
+			offset += v.length;
 
 			v = endian_read_int2b_little(data, offset);
 			session_state->unknown12_f32[2] = v.value / 100;
-			offset += v.length; 
+			offset += v.length;
 		}
 
 		if(obj.flag & 0x200) {
@@ -1165,15 +1169,15 @@ internal void zone_packet_handle(App_State *server_state,
 
 			v = endian_read_int2b_little(data, offset);
 			rotation_euler.pitch = v.value / 100;
-			offset += v.length; 
-					
+			offset += v.length;
+
 			v = endian_read_int2b_little(data, offset);
 			rotation_euler.yaw = v.value / 100;
-			offset += v.length; 
+			offset += v.length;
 
 			v = endian_read_int2b_little(data, offset);
 			rotation_euler.roll = v.value / 100;
-			offset += v.length; 
+			offset += v.length;
 
 			session_state->rotation = euler_to_quaternion(rotation_euler);
 			session_state->rotationRaw = rotation_euler;
@@ -1184,15 +1188,15 @@ internal void zone_packet_handle(App_State *server_state,
 		if (obj.flag & 0x400) {
 			v = endian_read_int2b_little(data, offset);
 			session_state->direction = v.value / 10;
-			offset += v.length; 
+			offset += v.length;
 		}
 
 		if (obj.flag & 0x800) {
 			v = endian_read_int2b_little(data, offset);
 			session_state->engine_rpm = v.value / 10;
-			offset += v.length; 
+			offset += v.length;
 		}
-		
+
 		Gateway_Packet_TunnelPacket* tunnel_packet = {0};
 		obj.unk_byte = malloc(tunnel_packet->data_length);
 		memcpy(obj.unk_byte, tunnel_packet->data + 7, tunnel_packet->data_length - 7);
@@ -1202,7 +1206,7 @@ internal void zone_packet_handle(App_State *server_state,
 	*/
 	default:
 	{
-		packet_id_fail:
+	packet_id_fail:
 		packet_kind = Zone_Packet_Kind_Unhandled;
 		printf(MESSAGE_CONCAT_WARN("Unhandled zone packet 0x%02x 0x%02x\n"), packet_id, sub_packet_id);
 
