@@ -77,11 +77,11 @@ internal PLATFORM_FOLDER_CREATE(platform_win_folder_create)
 			printf("[!] CreateDirectory error on \"%s\" - Error: %u\n",
 				   folder_path,
 				   last_error);
-			return FALSE;
+			return false;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 internal PLATFORM_BUFFER_WRITE_TO_FILE(platform_win_buffer_write_to_file)
@@ -219,7 +219,7 @@ internal b32 platform_win_wsa_initialize()
 	// if (global_is_wsa_initialized)
 	//{
 	// printf("[!] WSA already initialized\n");
-	// return TRUE;
+	// return true;
 	//}
 
 	WSADATA wsa_data;
@@ -227,10 +227,10 @@ internal b32 platform_win_wsa_initialize()
 	if (error)
 	{
 		printf("[!] WSAStartup failed - Error: %d\n", error);
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 internal PLATFORM_SOCKET_UDP_CREATE_AND_BIND(platform_win_socket_udp_create_and_bind)
@@ -251,7 +251,7 @@ internal PLATFORM_SOCKET_UDP_CREATE_AND_BIND(platform_win_socket_udp_create_and_
 	}
 
 	// NOTE(rhett): Use non-blocking socket
-	u_long cmd_arg = TRUE;
+	u_long cmd_arg = true;
 	if (ioctlsocket(result.socket, FIONBIO, &cmd_arg) == SOCKET_ERROR)
 	{
 		printf("[!] ioctlsocket() failed: %d\n", WSAGetLastError());
@@ -273,7 +273,7 @@ internal PLATFORM_SOCKET_UDP_CREATE_AND_BIND(platform_win_socket_udp_create_and_
 		goto socket_close;
 	}
 
-	result.is_valid = TRUE;
+	result.is_valid = true;
 	return result;
 
 socket_close:
