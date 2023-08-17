@@ -319,8 +319,7 @@ struct item_definitions_s
 {
 u32 item_id;
 u32 item_id_2;
-u8 flags_1;
-u8 flags_2;
+u16 flags_1;
 u32 name_id;
 u32 description_id;
 u32 unknown_dword_1;
@@ -383,7 +382,7 @@ u32 attachment_id;
 u32 attachment_id_2;
 u32 group_id;
 u32 item_line_id;
-u32 flags;
+u8 flags;
 u32 classes_count;
 struct classes_s
 {
@@ -1337,15 +1336,10 @@ endian_write_u32_little(buffer + offset, packet->characters[characters_iter].pay
 offset += sizeof(u32);
 printf("-- item_id_2               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id_2, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id_2, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id_2);
 
-// u8 flags_1
-endian_write_u8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1);
-offset += sizeof(u8);
+// u16 flags_1
+endian_write_u16_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1);
+offset += sizeof(u16);
 printf("-- flags_1                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1);
-
-// u8 flags_2
-endian_write_u8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_2);
-offset += sizeof(u8);
-printf("-- flags_2                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_2, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_2, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_2);
 
 // u32 name_id
 endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].name_id);
@@ -1646,9 +1640,9 @@ endian_write_u32_little(buffer + offset, packet->characters[characters_iter].pay
 offset += sizeof(u32);
 printf("-- item_line_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].item_line_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].item_line_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].item_line_id);
 
-// u32 flags
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags);
-offset += sizeof(u32);
+// u8 flags
+endian_write_u8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags);
+offset += sizeof(u8);
 printf("-- flags                   \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags);
 
 // list classes
@@ -2664,15 +2658,10 @@ packet->characters[characters_iter].payload4[payload4_iter].item_definitions[ite
 offset += sizeof(u32);
 printf("-- item_id_2               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id_2, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id_2, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id_2);
 
-// u8 flags_1
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1 = endian_read_u8_little(data + offset);
-offset += sizeof(u8);
+// u16 flags_1
+packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1 = endian_read_u16_little(data + offset);
+offset += sizeof(u16);
 printf("-- flags_1                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1);
-
-// u8 flags_2
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_2 = endian_read_u8_little(data + offset);
-offset += sizeof(u8);
-printf("-- flags_2                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_2, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_2, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_2);
 
 // u32 name_id
 packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].name_id = endian_read_u32_little(data + offset);
@@ -2979,9 +2968,9 @@ packet->characters[characters_iter].payload4[payload4_iter].attachment_definitio
 offset += sizeof(u32);
 printf("-- item_line_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].item_line_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].item_line_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].item_line_id);
 
-// u32 flags
-packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
+// u8 flags
+packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
 printf("-- flags                   \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags);
 
 // list classes

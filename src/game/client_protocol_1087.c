@@ -191,14 +191,18 @@ packet_id_switch:
 			packet_kind = Zone_Packet_Kind_ClientFinishedLoading;
 			printf("[Zone] Handling ClientFinishedLoading\n");
 
-			Zone_Packet_AddLightweightNpc lightweightnpc =
+			vec4 scale = {1.0f, 1.0f, 1.0f, 1.0f}; // default value is {1.0f, 1.0f, 1.0f, 1.0f};
+			session_state->client.spawnedEntities->scale = scale;
+
+			Zone_Packet_AddLightweightNpc lightweightNpc =
 				{
-					.characterId = 0x0000000000000001,
-					.transientId.value = 0,
-					.actorModelId = 2,
-					.position = {0.0f, 0.0f, 0.0f},
-					.rotation = {0.0f, 0.0f, 0.0f, 0.0f},
-					.scale = {0.001f, 0.001f, 0.001f, 0.001f},
+					.characterId = session_state->character_id,
+					.transientId.value = session_state->transient_id.value,
+					.nameId = 0,
+					.actorModelId = 0,
+					.position = session_state->position, // need to figure out how to make a proper update character position func for this?
+					.rotation = session_state->rotation, // as well as this too!
+					.scale = {1.0f, 1.0f, 1.0f, 1.0f},
 					.positionUpdateType = 0,
 					.profileId = 0,
 					.isLightweight = false,
@@ -312,7 +316,7 @@ packet_id_switch:
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Loadout_SetLoadoutSlots, &ldt_setldtslots);
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Command_RunSpeed, &run_speed);
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_StartMultiStateDeath, &multi_state_dth);
-			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightNpc, &lightweightnpc);
+			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightNpc, &lightweightNpc);
 
 			Zone_Packet_ClientUpdate_ModifyMovementSpeed modifyMovement =
 				{
@@ -516,13 +520,8 @@ packet_id_switch:
 			.current_slot_id = 0,
 		};
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Loadout_SetLoadoutSlots, &ldt_setldtslots);
-		Zone_Packet_Character_RespawnReply respawn_reply =
-			{
-				.character_id_1_1 = session_state->character_id,
-				.status = 1,
-			};
+		// loadCharacterData(server_state, session_state);
 
-		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
 		break;
 	}
 	case ZONE_LOBBYGAMEDEFINITION_DEFINITIONSREQUEST_ID:

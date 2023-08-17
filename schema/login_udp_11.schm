@@ -200,8 +200,7 @@ list:u32 characters
 			
 			// item_definition_data
             u32 item_id_2
-            u8 flags_1
-            u8 flags_2
+            u16 flags_1
             u32 name_id
             u32 description_id
             u32 unknown_dword_1
@@ -259,7 +258,7 @@ list:u32 characters
 				u32 attachment_id_2
 				u32 group_id
 				u32 item_line_id
-				u32 flags
+				u8 flags
 				
 				list:u32 classes
 				{

@@ -21,7 +21,7 @@ static void platform_win_console_write(char *format, ...);
 #define MAX_FRAGMENTS 12000
 #define MAX_PACKET_LENGTH 512
 #define DATA_HEADER_LENGTH 4
-#define MAX_SESSIONS_COUNT 16
+#define MAX_SESSIONS_COUNT 16 // will increase as time goes on but good enough for testing right now
 
 #include "utility/endian.c"
 #include "utility/util.c"
@@ -35,9 +35,6 @@ static void platform_win_console_write(char *format, ...);
 #include "shared/session.h"
 #include "shared/packet_queue.h"
 #include "shared/packet_queue.c"
-
-// thirdparty utility headers go here
-#include "thirdparty_utility/jansson.h"
 
 global u64 global_packet_dump_count;
 // HACK(rhett):
@@ -78,6 +75,9 @@ struct App_State
 	Session_State sessions[MAX_SESSIONS_COUNT];
 };
 
+void onZoneLogin(App_State *app_state, Session_State *session_state);
+void pGetLightWeight(App_State *app_state, Session_State *session_state);
+void loadCharacterData(App_State *app_state, Session_State *session_state);
 internal void gateway_on_login(App_State *app_state, Session_State *session_state);
 internal void gateway_on_tunnel_data_from_client(App_State *app_state, Session_State *session_state, u8 *data, u32 data_length);
 internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
@@ -96,130 +96,17 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #undef printf
 #include "../schema/output/login_udp_11.c"
 #include "game/client_protocol_1087.c"
-#include "data/sendSelf.c"
-#include "data/loginCharacterData.c"
-#include "data/zoneCharacterData.c"
+#include "data/zoneData/onZoneLogin.c"
+#include "data/zoneData/sendSelf.c"
+#include "data/zoneData/zoneCharacterData.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 
 internal void gateway_on_login(App_State *app_state, Session_State *session_state)
 {
-	session_state->is_respawning = false;
-	printf("[!] Character %llxh trying to login to zone server\n", session_state->character_id); // (doggo)temp characterId until I implement a decent enough solution!
+	printf("[!] Character %llxh trying to login to zone server\n", 0x1234567890u); // (doggo)temp characterId until I implement a decent enough solution!
 
-	Zone_Packet_InitializationParameters init_params = 
-	{ 
-		.environment_length = 9,
-		.environment = "LIVE_KOTK",
-	};
-	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
-
-	Zone_Packet_SendZoneDetails send_zone_details = 
-	{ 
-		.zone_name_length = 9,
-		.zone_name = "LoginZone",
-		.zone_type = 4,
-		.unk_bool = false,
-
-		.overcast = 0,
-        .fogDensity = 0,
-        .fogFloor = 14.8f,
-        .fogGradient = 15.25f,
-        .globalPrecipitation = 0,
-        .temperature = 75,
-        .skyClarity = 0,
-        .cloudWeight0 = 0.16f,
-        .cloudWeight1 = 0.16f,
-        .cloudWeight2 = 0.13f,
-        .cloudWeight3 = 0.13f,
-        .transitionTime = 0,
-        .sunAxisX = 40,
-        .sunAxisY = 0,
-        .sunAxisZ = 0,
-        .windDirX = -1.0f,
-        .windDirY = -0.5f,
-        .windDirZ = 1.0f,
-        .wind = 3,
-        .rainMinStrength = 0,
-        .rainRampUpTimeSeconds = 1,
-        .cloudFile_length = 16,
-        .cloudFile = "sky_Z_clouds.dds",
-        .stratusCloudTiling = 0.2f,
-        .stratusCloudScrollU = -0.002f,
-        .stratusCloudScrollV = 0,
-        .stratusCloudHeight = 1000,
-        .cumulusCloudTiling = 0.2f,
-        .cumulusCloudScrollU = 0,
-        .cumulusCloudScrollV = 0.002f,
-        .cumulusCloudHeight = 8000,
-        .cloudAnimationSpeed = 0,
-        .cloudSilverLiningThickness = 0.39f,
-        .cloudSilverLiningBrightness = 0.5f,
-        .cloudShadows = 0.2f,
-
-		.zone_id = 5,
-		.zone_id_2 = 5,
-		.name_id = 7699,
-		.unk_bool2 = true,
-		.lighting_length = 15,
-		.lighting = "Lighting_Z2.txt",
-		.unk_bool3 = false,
-		.unk_bool4 = true,
-	};
-	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
-
-	Zone_Packet_ClientGameSettings game_settings = 
-	{ 
-		.interact_glow_and_dist = 16,
-		.unk_bool = true,
-		.timescale = 1.0,
-		.enable_weapons = 1,
-		.unk_u32_2 = 1,
-		.unk_float2 = 15.,
-		.damage_multiplier = 11.,
-	};
-	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientGameSettings, &game_settings);
-
-	Zone_Packet_UpdateWeatherData updt_weather_data = 
-	{	
-		.overcast = 0,
-        .fogDensity = 0,
-        .fogFloor = 14.8f,
-        .fogGradient = 0.0144f,
-        .globalPrecipitation = 0,
-        .temperature = 75,
-        .skyClarity = 0,
-        .cloudWeight0 = 0.16f,
-        .cloudWeight1 = 0.16f,
-        .cloudWeight2 = 0.13f,
-        .cloudWeight3 = 0.13f,
-        .transitionTime = 0,
-        .sunAxisX = 40,
-        .sunAxisY = 0,
-        .sunAxisZ = 0,
-        .windDirX = -1.0f,
-        .windDirY = -0.5f,
-        .windDirZ = 1.0f,
-        .wind = 3,
-        .rainMinStrength = 0,
-        .rainRampUpTimeSeconds = 0,
-        .cloudFile_length = 16,
-        .cloudFile = "sky_Z_clouds.dds",
-        .stratusCloudTiling = 0.2f,
-        .stratusCloudScrollU = -0.002f,
-        .stratusCloudScrollV = 0,
-        .stratusCloudHeight = 1000,
-        .cumulusCloudTiling = 0.2f,
-        .cumulusCloudScrollU = 0,
-        .cumulusCloudScrollV = 0.002f,
-        .cumulusCloudHeight = 8000,
-        .cloudAnimationSpeed = 0,
-        .cloudSilverLiningThickness = 0.39f,
-        .cloudSilverLiningBrightness = 0.5f,
-        .cloudShadows = 0.2f,
-	};
-	zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_UpdateWeatherData, &updt_weather_data);
-	loadCharacterData(app_state, session_state);
+	onZoneLogin(app_state, session_state);
 }
 
 internal void gateway_on_tunnel_data_from_client(App_State *app_state, Session_State *session_state, u8 *data, u32 data_length)

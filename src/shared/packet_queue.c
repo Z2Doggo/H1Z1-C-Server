@@ -1,9 +1,9 @@
-internal Packet_Queue packet_queue_create(Arena* arena,
-    i32 entries_capacity,
-    i32 buffer_capacity,
-    packet_queue_send_t* packet_queue_send_func)
+internal Packet_Queue packet_queue_create(Arena *arena,
+                                          i32 entries_capacity,
+                                          i32 buffer_capacity,
+                                          packet_queue_send_t *packet_queue_send_func)
 {
-    Packet_Queue result = { 0 };
+    Packet_Queue result = {0};
 
     result.entries = arena_push_array(arena, Packet_Queue_Entry, entries_capacity);
     // result.entries = arena_allocate(arena, sizeof(*result.entries) * entries_capacity);
@@ -18,12 +18,12 @@ internal Packet_Queue packet_queue_create(Arena* arena,
     return result;
 }
 
-internal void packet_queue_push(Packet_Queue* queue,
-    void* session_state,
-    // i32 max_packed_length,
-    // i32 packet_kind,
-    u8* data,
-    i32 data_length)
+internal void packet_queue_push(Packet_Queue *queue,
+                                void *session_state,
+                                // i32 max_packed_length,
+                                // i32 packet_kind,
+                                u8 *data,
+                                i32 data_length)
 {
     // if (queue->entries_tail == queue->entries_capacity)
     //{
@@ -39,7 +39,7 @@ internal void packet_queue_push(Packet_Queue* queue,
     // abort();
     //}
 
-    Packet_Queue_Entry* entry = &queue->entries[queue->entries_tail];
+    Packet_Queue_Entry *entry = &queue->entries[queue->entries_tail];
     // entry->packet_kind = packet_kind;
     entry->buffer_offset = queue->buffer_tail;
     entry->length = data_length;
@@ -48,14 +48,14 @@ internal void packet_queue_push(Packet_Queue* queue,
     queue->entries_tail += 1;
 
     base_memory_copy(queue->buffer + queue->buffer_tail,
-        data,
-        data_length);
+                     data,
+                     data_length);
     queue->buffer_tail += data_length;
 }
 
 // TODO(rhett): don't think I'm happy with how this works yet
-internal void packet_queue_pop_and_send(Packet_Queue* queue,
-    void* server_state)
+internal void packet_queue_pop_and_send(Packet_Queue *queue,
+                                        void *server_state)
 {
     // if (!queue->entries_tail)
     //{
@@ -72,21 +72,21 @@ internal void packet_queue_pop_and_send(Packet_Queue* queue,
     // abort();
     //}
 
-    Packet_Queue_Entry* entry = &queue->entries[queue->entries_tail - 1];
+    Packet_Queue_Entry *entry = &queue->entries[queue->entries_tail - 1];
 
     queue->packet_queue_send(server_state,
-        entry->session_state,
-        queue->buffer + entry->buffer_offset,
-        entry->length);
+                             entry->session_state,
+                             queue->buffer + entry->buffer_offset,
+                             entry->length);
 
     // TODO(rhett): do we need to zero the buffer?
     base_memory_fill(queue->buffer + entry->buffer_offset,
-        0,
-        entry->length);
+                     0,
+                     entry->length);
 
     queue->buffer_tail -= entry->length;
     queue->entries_tail -= 1;
-    *entry = (Packet_Queue_Entry) { 0 };
+    *entry = (Packet_Queue_Entry){0};
 
     // return result;
 }

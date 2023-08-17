@@ -1,4 +1,4 @@
-internal Fragment_Pool fragment_pool_create(u32 capacity, u32 packet_length, Arena* arena)
+internal Fragment_Pool fragment_pool_create(u32 capacity, u32 packet_length, Arena *arena)
 {
     Fragment_Pool result = {
         .capacity = capacity,
@@ -13,9 +13,10 @@ internal Fragment_Pool fragment_pool_create(u32 capacity, u32 packet_length, Are
 }
 
 // TODO(rhett): make sure we're taking crc length into account in the fragment pool and we snip it off
-internal void fragment_pool_insert(Fragment_Pool* pool, i32 sequence, u8* data, u32 data_length, b32 is_fragment)
+internal void fragment_pool_insert(Fragment_Pool *pool, i32 sequence, u8 *data, u32 data_length, b32 is_fragment)
 {
-    if (sequence < pool->sequence_base) {
+    if (sequence < pool->sequence_base)
+    {
         printf("[!!!] Attempting to insert older sequence (%d), rejecting\n", sequence);
         return;
     }
@@ -23,7 +24,7 @@ internal void fragment_pool_insert(Fragment_Pool* pool, i32 sequence, u8* data, 
     i32 index = sequence - pool->sequence_base;
 
     printf("[***] fragment_pool_insert: sequence=%d,  data=%p, data_length=%d, is_fragment=%d, index=%d\n",
-        sequence, data, data_length, is_fragment, index);
+           sequence, data, data_length, is_fragment, index);
 
     // if (index > pool->capacity)
     //{
@@ -49,7 +50,8 @@ internal void fragment_pool_insert(Fragment_Pool* pool, i32 sequence, u8* data, 
     // abort();
     //}
 
-    if (index == 0 && is_fragment) {
+    if (index == 0 && is_fragment)
+    {
         pool->buffer_target_length = endian_read_u32_big(data);
         printf("[***] Fragment_Pool target length updated: %d\n", pool->buffer_target_length);
         data_length -= 4;
@@ -58,11 +60,14 @@ internal void fragment_pool_insert(Fragment_Pool* pool, i32 sequence, u8* data, 
 
     pool->fragments[index].is_fragment = is_fragment;
     pool->fragments[index].data_length = data_length;
-    if (is_fragment) {
+    if (is_fragment)
+    {
         // NOTE(rhett): Overlap fragment boundaries
         pool->fragments[index].data = pool->buffer + pool->buffer_tail;
         pool->buffer_tail += data_length;
-    } else {
+    }
+    else
+    {
         // NOTE(rhett): Align to fragment boundaries
         pool->fragments[index].data = pool->buffer + (index * pool->packet_length);
         pool->buffer_tail += (index + 1) * pool->packet_length;
@@ -72,7 +77,7 @@ internal void fragment_pool_insert(Fragment_Pool* pool, i32 sequence, u8* data, 
     pool->fragments_count++;
 }
 
-internal void fragment_pool_advance(Fragment_Pool* pool)
+internal void fragment_pool_advance(Fragment_Pool *pool)
 {
     pool->sequence_base += pool->fragments_count;
     printf("[***] Advancing Fragment_Pool; New base: %d\n", pool->sequence_base);
@@ -84,7 +89,8 @@ internal void fragment_pool_advance(Fragment_Pool* pool)
     //     }
     pool->buffer_tail = 0;
 
-    for (u32 i = 0; i < pool->fragments_count; i++) {
+    for (u32 i = 0; i < pool->fragments_count; i++)
+    {
         pool->fragments[i].data = 0;
         pool->fragments[i].data_length = 0;
         pool->fragments[i].is_fragment = 0;

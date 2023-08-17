@@ -1,5 +1,6 @@
 typedef struct Connection_Args Connection_Args;
-struct Connection_Args {
+struct Connection_Args
+{
     u32 crc_seed;
     u8 crc_length;
     u8 compression;

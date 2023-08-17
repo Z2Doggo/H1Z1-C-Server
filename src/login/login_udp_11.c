@@ -102,63 +102,6 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 
 		break;
 	}
-	case LOGIN_CHARACTERSELECTINFOREQUEST_ID:
-	{
-		packet_kind = Login_Packet_Kind_CharacterSelectInfoRequest;
-		printf(MESSAGE_CONCAT_INFO("Recieved %s\n"), login_packet_names[packet_kind]);
-
-		if (session->connection_args.should_dump_login)
-		{
-			char dump_path[256] = {0};
-			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_login_%s.bin", global_tick_count, global_packet_dump_count++, login_packet_names[packet_kind]);
-			server->platform_api->buffer_write_to_file(dump_path, data, data_length);
-		}
-
-		Login_Packet_CharacterSelectInfoReply character_info_reply =
-			{
-				.character_status = 1,
-				.can_bypass_server_lock = true,
-				
-				.characters_count = 1,
-				.characters = 
-				(struct characters_s[1]) {
-					[0] = {
-						.character_id = session->character_id,
-						.server_id = 1,
-						.last_login_date = 0x0ull,
-						.status = 1,
-
-						.payload4 = 
-						(struct payload4_s[1]) {
-							[0] = {
-								.name_length = session->charName.nameLength,
-								.name = session->charName.nameContent,
-								.head_id = 5,
-								.empire_id = 1,
-								.battle_rank = 12,
-								.model_id = 9240,
-								.gender = 1,
-								//.loadout_id = 20,
-								.profile_id = 22,
-								.unknown_dword = 1,
-								//.unknown_dword_1 = 22,
-								//.unknown_byte_1 = 1,
-							},
-						},
-					},
-				},
-			};
-
-		login_packet_send(server,
-						  session,
-						  &server->arena_per_tick,
-						  KB(500),
-						  false,
-						  Login_Packet_Kind_CharacterSelectInfoReply,
-						  &character_info_reply);
-	}
-	break;
-
 	case LOGIN_SERVERLISTREQUEST_ID:
 	{
 		packet_kind = Login_Packet_Kind_ServerListRequest;
@@ -182,14 +125,15 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 							.is_locked = false,
 							.name_length = 4,
 							.name = "KotK",
-							.name_id = 195,
+							.name_id = 193,
 							.description_length = 4,
 							.description = "test",
 							.description_id = 1362,
-							.server_info_length = 168,
+                            .req_feature_id = 0,
+							.server_info_length = 153,
 							.server_info = "<ServerInfo Region=\"CharacterCreate.RegionUs\" Subregion=\"UI.SubregionUS\" IsRecommended=\"1\" IsRecommendedVS=\"0\" IsRecommendedNC=\"0\" IsRecommendedTR=\"0\" />",
 							.population_level = 0,
-							.population_data_length = 240,
+							.population_data_length = 207,
 							.population_data = "<Population PctCap=\"0\" PingAdr=\"127.0.0.1:60000\" Rulesets=\"\" Mode=\"13\" IsLogin=\"1\" IsWL=\"0\" IsEvt=\"0\" PL=\"0\" DC=\"LVS\" PopLock=\"0\" GP=\"100\" BP=\"175\" MaxPop=\"4000\" Subregion=\"US\"><Fac IsList=\"1\"/></Population>",
 							.is_access_allowed = true,
 						},
@@ -240,54 +184,55 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 
 		u32 packet_status = 1; // default status is 1
 
-		session->charName.nameLength = packet.data_client->character_name_length;
-		session->charName.nameContent = (char*)malloc(session->charName.nameLength); // don't need null terminator since it fucks up the characters name
-		memcpy(session->charName.nameContent, packet.data_client->character_name, session->charName.nameLength);
+		u32 char_name_length = packet.data_client->character_name_length;
+    	char* char_name_content = packet.data_client->character_name;
 
-		// check if character name has less than 3 or more than 20 letters
-		if (session->charName.nameLength < 3 || session->charName.nameLength > 20)
-		{
-			packet_status = 3; // invalid length
-		}
-		else
-		{
-			// check if character name contains only alphabets
-			if (!isalpha(session->charName.nameContent[0]))
-			{
-				packet_status = 3; // first character is not alphabetic
-			}
-			else
-			{
-				for (u32 i = 1; i < session->charName.nameLength; i++)
-				{
-					if (!isalpha(session->charName.nameContent[i]))
-					{
-						packet_status = 3; // contains non-alphabetic character
-						break;
-					}
-				}
-			}
-		}
+        session->charName.nameLength = char_name_length;
+    	session->charName.nameContent = char_name_content;
 
-		Login_Packet_TunnelAppPacketServerToClient tunnel_app_packet_server_to_client =
-			{
-				.server_id = session->selected_server_id,
-				.data_server =
-					(struct data_server_s[1]){
-						[0] =
-							{
-								.tunnel_op_code = 0xa7,
-								.sub_op_code = 0x02,
-								.character_name_length = session->charName.nameLength,
-								.character_name = session->charName.nameContent,
-								.status = packet_status,
-							},
-					},
-				.data_server_length = 14,
-			};
+        if (session->charName.nameLength < 3 || session->charName.nameLength > 20)
+        {
+            packet_status = 3; // invalid length
+        }
+        else
+        {
+            // check if character name contains only alphabets
+            if (!isalpha(session->charName.nameContent[0]))
+            {
+                packet_status = 3; // first character is not alphabetic
+            }
+            else
+            {
+                for (u32 i = 1; i < session->charName.nameLength; i++)
+                {
+                    if (!isalpha(session->charName.nameContent[i]))
+                    {
+                        packet_status = 3; // contains non-alphabetic character
+                        break;
+                    }
+                }
+            }
+        }
+
+        Login_Packet_TunnelAppPacketServerToClient tunnel_app_packet_server_to_client =
+        {
+            .server_id = session->selected_server_id,
+            .data_server =
+            (struct data_server_s[1])
+            {
+                [0] =
+                {
+                    .tunnel_op_code = 0xa7,
+                    .sub_op_code = 0x02,
+                    .character_name_length = session->charName.nameLength,
+                    .character_name = session->charName.nameContent,
+                    .status = packet_status,
+                },
+            },
+            .data_server_length = 14,
+        };
 
 		login_packet_send(server, session, &server->arena_per_tick, KB(100), false, Login_Packet_Kind_TunnelAppPacketServerToClient, &tunnel_app_packet_server_to_client);
-		free(session->charName.nameContent);
         break;
 	}
 	case LOGIN_CHARACTERCREATEREQUEST_ID:
@@ -314,6 +259,62 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 		login_packet_send(server, session, &server->arena_per_tick, KB(10), false, Login_Packet_Kind_CharacterCreateReply, &character_create_reply);
         break;
 	}
+    case LOGIN_CHARACTERSELECTINFOREQUEST_ID:
+	{
+		packet_kind = Login_Packet_Kind_CharacterSelectInfoRequest;
+		printf(MESSAGE_CONCAT_INFO("Recieved %s\n"), login_packet_names[packet_kind]);
+
+		if (session->connection_args.should_dump_login)
+		{
+			char dump_path[256] = {0};
+			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_login_%s.bin", global_tick_count, global_packet_dump_count++, login_packet_names[packet_kind]);
+			server->platform_api->buffer_write_to_file(dump_path, data, data_length);
+		}
+
+		Login_Packet_CharacterSelectInfoReply character_info_reply =
+			{
+				.character_status = 1,
+				.can_bypass_server_lock = true,
+				
+				.characters_count = 1,
+				.characters = 
+				(struct characters_s[1]) {
+					[0] = {
+						.character_id = session->character_id,
+						.server_id = 1,
+						.last_login_date = 0x0ull, // will need to make a proper timestamp func for these kinds of things
+						.status = 1,
+                        
+						.payload4 = 
+						(struct payload4_s[1]) {
+							[0] = {
+								.name_length = 4,
+								.name = "test",
+								.head_id = 0,
+								.empire_id = 1,
+								.battle_rank = 100,
+								.model_id = 0,
+								.gender = 0,
+								.loadout_id = 0,
+								.profile_id = 0,
+								.unknown_dword = 0,
+								.unknown_dword_1 = 0,
+								.unknown_byte_1 = 0,
+							},
+						},
+					},
+				},
+			};
+
+		login_packet_send(server,
+						  session,
+						  &server->arena_per_tick,
+						  KB(500),
+						  false,
+						  Login_Packet_Kind_CharacterSelectInfoReply,
+						  &character_info_reply);
+	}
+	break;
 	case LOGIN_CHARACTERLOGINREQUEST_ID:
 	{
 		packet_kind = Login_Packet_Kind_CharacterLoginRequest;
@@ -331,7 +332,7 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 
 		Login_Packet_CharacterLoginReply character_login_reply =
 			{
-				.character_id = 0x0,
+				.character_id = 0x0ull,
 				.server_id = 0,
 				.last_login = 0,
 				.status = 1,
@@ -346,15 +347,12 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 								.server_ticket_length = 15,
 								.server_ticket = "7y3Bh44sKWZCYZH",
 								.encryption_key_length = 16,
-								.encryption_key = (u8 *)"\x17\xbd\x08\x6b\x1b\x94\xf0\x2f\xf0\xec\x53\xd7\x63\x58\x9b\x5f",
+								.encryption_key = (u8*)"\x17\xbd\x08\x6b\x1b\x94\xf0\x2f\xf0\xec\x53\xd7\x63\x58\x9b\x5f",
 								.soe_protocol_version = 3,
 								.character_id = session->character_id,
 								.unk_u64 = 0x0ull,
-								.station_name_length = 4,
-								.station_name = "test",
-								.character_name_length = session->charName.nameLength,
-								.character_name = session->charName.nameContent,
-								.server_feature_bit = 0x0000000000000000ull,
+								.character_name_length = 4,
+								.character_name = "test",
 							},
 					},
 			};

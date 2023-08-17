@@ -5,7 +5,6 @@
 #include "thirdparty_utility/stb_sprintf.h"
 #include <Windows.h>
 
-
 // #if defined(YOTE_INTERNAL)
 ////#include <stdio.h>
 ////#include <stdlib.h>
@@ -16,17 +15,18 @@
 // #endif // YOTE_INTERNAL
 
 #if !defined(YOTE_INTERNAL)
-internal void platform_win_console_write(char* format, ...)
+internal void platform_win_console_write(char *format, ...)
 {
     va_list args;
     va_start(args, format);
 
     local_persist HANDLE standard_handle;
-    if (!standard_handle) {
+    if (!standard_handle)
+    {
         standard_handle = GetStdHandle(STD_OUTPUT_HANDLE);
     }
 
-    char buffer[1024] = { 0 };
+    char buffer[1024] = {0};
     int to_write = stbsp_vsnprintf(buffer, sizeof(buffer), format, args);
 
     DWORD written;
@@ -54,11 +54,12 @@ typedef b32 Key_States[0xff];
 
 typedef struct App_State App_State;
 typedef struct App_Memory App_Memory;
-struct App_Memory {
+struct App_Memory
+{
     // Platform_State platform_state;
     Platform_Api platform_api;
     Buffer backing_memory;
-    App_State* app_state;
+    App_State *app_state;
 #if defined(TERMINAL_UI)
     Buffer screen;
 #endif // TERMINAL_UI
@@ -69,8 +70,8 @@ struct App_Memory {
 };
 
 #if defined(YOTE_INTERNAL)
-#define APP_TICK(name) void name(App_Memory* app_memory) // (doggo)should remove this but I probably revert this later on!
+#define APP_TICK(name) void name(App_Memory *app_memory) // (doggo)should remove this but I probably revert this later on!
 #else
-#define APP_TICK(name) void name(App_Memory* app_memory)
+#define APP_TICK(name) void name(App_Memory *app_memory)
 #endif // YOTE_INTERNAL
 typedef APP_TICK(app_tick_t);

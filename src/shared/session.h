@@ -15,13 +15,6 @@ union Session_Address
 	};
 };
 
-typedef struct character_name_string character_name_string;
-struct character_name_string
-{
-	u32 length;
-	char *content;
-};
-
 typedef enum {
     HEALTH = 1,
     HUNGER = 4,
@@ -163,7 +156,7 @@ typedef struct zoneClient
     u32 blockedPositionUpdates; // 0
     u32 flaggedShots; // 0
     b8 isFairPlayFlagged; // FALSE, keep in my that I will most likely do a proper version of server side anticheat than convert h1emu's fairplay method?
-    DamageInfo damageInfo;
+    DamageInfo* damageInfo;
     // string array
     char** managedObjects;
     i32 managedObjectsCount;
@@ -173,9 +166,21 @@ typedef struct zoneClient
 } zoneClient;
 
 typedef struct characterName characterName;
-struct characterName {
+struct characterName 
+{
     u32 nameLength;
     char* nameContent;
+};
+
+typedef struct pGetPlayerActorData pGetPlayerActorData;
+struct pGetPlayerActorData
+{
+    u32 actorModelId;
+    u32 hairModelLength;
+    char* hairModel;
+    u32 headActorLength;
+    char* headActor;
+    u32 gender;
 };
 
 typedef struct Session_State Session_State;
@@ -184,9 +189,9 @@ struct Session_State
 	Session_Address address;
 	u32 id;
 
-	character_name_string name_self;
-	zoneClient clientKOTK;
+	zoneClient client;
     characterName charName;
+    pGetPlayerActorData pGetPlayerActor;
 
 	u64 character_id;
 	u64 guid;
@@ -239,9 +244,9 @@ struct Session_State
 	u64 last_login_date;
 
 	u32 stance;
-	u32 position[3];
+	vec3 position;
 	u32 unknown12_f32[3];
-	vecf64 rotation;
+	vec4 rotation;
 	euler_angle rotationRaw;
 	vecf64 lookAt;
 	f32 orientation;

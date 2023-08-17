@@ -1383,6 +1383,7 @@ u32 id
 packet 0x09 0x46:u8 Command_ItemDefinitionReply
 stream:u32 item_def_reply_1
 {
+	u32 id
 	u8 bitflags1
 	u8 bitflags2
 	u32 name_id
@@ -2573,7 +2574,13 @@ packet 0x89 0x12:u16 Vehicle_LockOnInfo
 packet 0x89 0x13:u16 Vehicle_LockOnState
 packet 0x89 0x14:u16 Vehicle_TrackingState
 packet 0x89 0x15:u16 Vehicle_CounterMeasureState
-packet 0x89 0x16:u16 Vehicle_LoadVehicleDefinitionManager
+packet 0x89 0x16:u8 Vehicle_LoadVehicleDefinitionManager
+list:u32 vehicleDefs 
+{
+	u32 vehicleId
+	u32 modelId
+}
+
 packet 0x89 0x17:u16 Vehicle_AcquireState
 packet 0x89 0x18:u16 Vehicle_Dismiss
 packet 0x89 0x19:u16 Vehicle_AutoMount
@@ -2986,6 +2993,7 @@ u32 unknownDword4
 u64 unknownQword1
 u32 unknownDword5
 u8 flags1
+
 packet 0xd7 AddLightweightNpc
 u64 characterId
 uint2b transientId
