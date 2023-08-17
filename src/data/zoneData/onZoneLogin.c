@@ -477,5 +477,5 @@ void onZoneLogin(App_State *app, Session_State *session)
 	zone_packet_send(app, session, &app->arena_per_tick, KB(40), Zone_Packet_Kind_ReferenceDataWeaponDefinitions, &weapon_defs);
 
 	loadCharacterData(app, session);
-	pGetLightWeight(app, session);
+	// pGetLightWeight(app, session);
 }
