@@ -96,6 +96,7 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #undef printf
 #include "../schema/output/login_udp_11.c"
 #include "game/client_protocol_1087.c"
+#include "game/ping_responder.c"
 #include "data/zoneData/onZoneLogin.c"
 #include "data/zoneData/sendSelf.c"
 #include "data/zoneData/zoneCharacterData.c"
@@ -120,7 +121,7 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data)
 	UNUSED(session);
 	UNUSED(data);
 	UNUSED(data_length);
-	// ping_packet_handle(server, session, data, data_length);
+	ping_packet_handle(server, session, data, data_length);
 }
 
 internal INPUT_STREAM_CALLBACK_ACK(on_input_stream_ack)
@@ -371,23 +372,15 @@ __declspec(dllexport) APP_TICK(server_tick)
 		{
 			if (app_state->sessions[known_session].kind == Session_Kind_Ping_Responder)
 			{
-				// ping_packet_handle(app_state,
-				//&app_state->sessions[known_session],
-				// incoming_buffer,
-				// receive_result);
+				ping_packet_handle(app_state,
+								   &app_state->sessions[known_session],
+								   incoming_buffer,
+								   receive_result);
 			}
 			else
 			{
 				core_packet_handle(app_state, app_state->platform_api, &app_state->sessions[known_session], incoming_buffer, receive_result, false);
 			}
-
-			// Zone_Packet_ClientUpdatePacketModifyMovementSpeed speed = { .speed = 4.0f, .unk_bool = 1};
-
-			// local_persist b32 do_once_7 = 0;
-			// if (!do_once_7++)
-			//{
-			// DO_ONCE(printf("AAAAAAAAAAAAAAAAA\n\n"); zone_packet_send(app_state, &app_state->sessions[known_session], &app_state->arena_per_tick, KB(1), Zone_Packet_Kind_ClientUpdatePacketModifyMovementSpeed, &speed););
-			// }
 
 			if (app_state->sessions[known_session].ack_previous != app_state->sessions[known_session].ack_next)
 			{
