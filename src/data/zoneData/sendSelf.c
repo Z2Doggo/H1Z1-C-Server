@@ -27,6 +27,7 @@ u32 getResourceType(ResourceIds resourceId)
     };
 };
 
+/*
 struct character_resources_s *pGetResources(u32 *resources, u32 numResources)
 {
     struct character_resources_s *result = (struct character_resources_s *)malloc(numResources * sizeof(struct character_resources_s));
@@ -49,6 +50,7 @@ struct character_resources_s *pGetResources(u32 *resources, u32 numResources)
 
     return result;
 }
+*/
 
 void sendSelf(App_State *app_state, Session_State *session_state)
 {

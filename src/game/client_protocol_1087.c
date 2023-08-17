@@ -191,28 +191,6 @@ packet_id_switch:
 			packet_kind = Zone_Packet_Kind_ClientFinishedLoading;
 			printf("[Zone] Handling ClientFinishedLoading\n");
 
-			vec4 scale = {1.0f, 1.0f, 1.0f, 1.0f}; // default value is {1.0f, 1.0f, 1.0f, 1.0f};
-			session_state->client.spawnedEntities->scale = scale;
-
-			Zone_Packet_AddLightweightNpc lightweightNpc =
-				{
-					.characterId = session_state->character_id,
-					.transientId.value = session_state->transient_id.value,
-					.nameId = 0,
-					.actorModelId = 0,
-					.position = session_state->position, // need to figure out how to make a proper update character position func for this?
-					.rotation = session_state->rotation, // as well as this too!
-					.scale = {1.0f, 1.0f, 1.0f, 1.0f},
-					.positionUpdateType = 0,
-					.profileId = 0,
-					.isLightweight = false,
-					.flags1 = 0,
-					.flags2 = 0,
-					.flags3 = 0,
-					.headActor_length = 0,
-					.headActor = "",
-				};
-
 			Zone_Packet_Character_WeaponStance weapon_stance =
 				{
 					.character_id = session_state->character_id,
@@ -316,7 +294,6 @@ packet_id_switch:
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Loadout_SetLoadoutSlots, &ldt_setldtslots);
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Command_RunSpeed, &run_speed);
 			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_StartMultiStateDeath, &multi_state_dth);
-			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightNpc, &lightweightNpc);
 
 			Zone_Packet_ClientUpdate_ModifyMovementSpeed modifyMovement =
 				{
