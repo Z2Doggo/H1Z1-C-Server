@@ -6,3 +6,5 @@ GAME_PACKETS/
 LOGIN_PACKETS/
 *.bkp
 zig/*
+GamePatch/*
+src/cTesting/*

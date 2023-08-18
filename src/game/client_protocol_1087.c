@@ -103,6 +103,9 @@ internal void zone_packet_handle(App_State *server_state,
 {
 	Zone_Packet_Kind packet_kind;
 
+	__time64_t timer;
+	_time64(&timer);
+
 	printf("\n");
 
 	if (data_length == 0)
@@ -113,7 +116,7 @@ internal void zone_packet_handle(App_State *server_state,
 
 	u32 packet_temp;
 	u32 packet_id = *data;
-	u32 sub_packet_id = data[1];
+	u8 *sub_packet_id = &data[1];
 	u32 packet_iter;
 	if (data_length > 0)
 	{
@@ -175,8 +178,10 @@ packet_id_switch:
 		Zone_Packet_Character_CharacterStateDelta character_state_delta =
 			{
 				.guid_1 = session_state->character_id,
-				.guid_3 = 0x0000000040000000,
-				.game_time = 0,
+				.guid_2 = 0,
+				.guid_3 = 0x40000000,
+				.guid_4 = 0,
+				.game_time = timer & 0x7fffffff,
 			};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_CharacterStateDelta, &character_state_delta);
@@ -312,12 +317,8 @@ packet_id_switch:
 		packet_kind = Zone_Packet_Kind_StaticViewRequest;
 		printf("[Zone] Handling StaticViewRequest\n");
 
-		Zone_Packet_StaticViewRequest req =
-			{
-				.viewpoint_length = 11,
-				.viewpoint = "kotkdefault",
-			};
-		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_StaticViewRequest, &req);
+		// Zone_Packet_StaticViewRequest staticViewRequest = {0};
+		// zone_packet_unpack(data, data_length, packet_kind, &staticViewRequest, &server_state->arena_per_tick);
 
 		Zone_Packet_StaticViewReply staticview_reply = {
 			.state = 0,
@@ -338,8 +339,6 @@ packet_id_switch:
 		};
 
 		Zone_Packet_ClientUpdate_UpdateLocation updt_loc = {
-			.position = {-32.26f, 506.41f, 280.21f, 1.0f},
-			.rotation = {-0.11f, -0.58f, -0.08f, 1.0f},
 			.trigger_loading_screen = false,
 			.unk_u8_1 = 0,
 			.unk_bool = false,
@@ -423,6 +422,7 @@ packet_id_switch:
 			.unk_bool_2 = true,
 		};
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientBeginZoning, &begin_zoning);
+		// sendSelf(server_state, session_state);
 
 		Zone_Packet_Equipment_SetCharacterEquipment set_character_equipment =
 			{
@@ -497,7 +497,6 @@ packet_id_switch:
 			.current_slot_id = 0,
 		};
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Loadout_SetLoadoutSlots, &ldt_setldtslots);
-		// loadCharacterData(server_state, session_state);
 
 		break;
 	}
@@ -615,208 +614,14 @@ packet_id_switch:
 		packet_kind = Zone_Packet_Kind_GameTimeSync;
 		printf("[Zone] Handling GameTimeSync\n");
 
-		// Zone_Packet_GameTimeSync result = { 0 };
-		// zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
-
-		/*
 		Zone_Packet_GameTimeSync time_sync =
-		{
-			.time = timer64,
-			.cycle_speed = 12.0.0f,
-			.unk_bool = false,
-		};
+			{
+				.time = timer,
+				.cycle_speed = 12.0f,
+				.unk_bool = false,
+			};
 
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_GameTimeSync, &time_sync);
-		*/
-		/*
-		char local_message[36] = { 0 };
-
-		(doggo) not sure how to include the character's name, for this, will comment out for now
-		//stbsp_snprintf(local_message, sizeof(local_message), "%s joined the server", character_name);
-
-		if (!session_state->first_login)
-		{
-			session_state->first_login = true;
-
-			Zone_Packet_ClientUpdate_TextAlert text_alert =
-			{
-				.message_length = util_string_length(local_message),
-				.message = local_message,
-			};
-
-			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_TextAlert, &text_alert);
-		}
-		*/
-
-		break;
-	}
-	case ZONE_GETRESPAWNLOCATIONS_ID:
-	{
-		packet_kind = Zone_Packet_Kind_GetRespawnLocations;
-		printf("[Zone] Handling GetRespawnLocations\n");
-
-		Zone_Packet_ClientUpdate_RespawnLocations respawn_locations =
-			{
-				.locations1_count = 1,
-				.locations1 =
-					(struct locations1_s[1]){
-						[0] =
-							{
-								.guid = session_state->character_id,
-								.respawn_type = 4,
-								.position = {602.91f, 71.62f, -1301.5f, 1.0f},
-								.unk_dword_1 = 1,
-								.unk_dword_2 = 1,
-								.icon_id_1 = 1,
-								.icon_id_2 = 1,
-								.respawn_total_time = 10,
-								.respawn_time_ms = 10000,
-								.name_id = 1,
-								.distance = 1000,
-								.unk_byte_1 = 1,
-								.unk_byte_2 = 1,
-
-								.unk_byte_3 = 1,
-								.unk_byte_4 = 1,
-								.unk_byte_5 = 1,
-								.unk_byte_6 = 1,
-								.unk_byte_7 = 1,
-
-								.unk_dword_3 = 1,
-								.unk_byte_8 = 1,
-								.unk_byte_9 = 1,
-							},
-					},
-
-				.locations2_count = 1,
-				.locations2 =
-					(struct locations2_s[1]){
-						[0] =
-							{
-								.guid = session_state->character_id,
-								.respawn_type = 4,
-								.position = {602.91f, 71.62f, -1301.5f, 1.0f},
-								.unk_dword_1 = 1,
-								.unk_dword_2 = 1,
-								.icon_id_1 = 1,
-								.icon_id_2 = 1,
-								.respawn_total_time = 10,
-								.respawn_time_ms = 10000,
-								.name_id = 1,
-								.distance = 1000,
-								.unk_byte_1 = 1,
-								.unk_byte_2 = 1,
-
-								.unk_byte_3 = 1,
-								.unk_byte_4 = 1,
-								.unk_byte_5 = 1,
-								.unk_byte_6 = 1,
-								.unk_byte_7 = 1,
-
-								.unk_dword_3 = 1,
-								.unk_byte_8 = 1,
-								.unk_byte_9 = 1,
-							},
-					},
-			};
-
-		Zone_Packet_Character_Respawn result = {0};
-		zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
-
-		Zone_Packet_Character_RespawnReply respawn_reply =
-			{
-				.character_id_1_1 = session_state->character_id,
-				.status = true,
-			};
-
-		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
-
-		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_RespawnLocations, &respawn_locations);
-
-		break;
-	}
-	case ZONE_CLIENTUPDATE_RESPAWNLOCATIONS_ID:
-	{
-		packet_kind = Zone_Packet_Kind_ClientUpdate_RespawnLocations;
-		printf("[Zone] Handling ClientUpdate.RespawnLocations\n");
-
-		Zone_Packet_ClientUpdate_RespawnLocations respawn_locations =
-			{
-				.locations1_count = 1,
-				.locations1 =
-					(struct locations1_s[1]){
-						[0] =
-							{
-								.guid = session_state->character_id,
-								.respawn_type = 4,
-								.position = {602.91f, 71.62f, -1301.5f, 1.0f},
-								.unk_dword_1 = 1,
-								.unk_dword_2 = 1,
-								.icon_id_1 = 1,
-								.icon_id_2 = 1,
-								.respawn_total_time = 10,
-								.respawn_time_ms = 10000,
-								.name_id = 1,
-								.distance = 1000,
-								.unk_byte_1 = 1,
-								.unk_byte_2 = 1,
-
-								.unk_byte_3 = 1,
-								.unk_byte_4 = 1,
-								.unk_byte_5 = 1,
-								.unk_byte_6 = 1,
-								.unk_byte_7 = 1,
-
-								.unk_dword_3 = 1,
-								.unk_byte_8 = 1,
-								.unk_byte_9 = 1,
-							},
-					},
-
-				.locations2_count = 1,
-				.locations2 =
-					(struct locations2_s[1]){
-						[0] =
-							{
-								.guid = session_state->character_id,
-								.respawn_type = 4,
-								.position = {602.91f, 71.62f, -1301.5f, 1.0f},
-								.unk_dword_1 = 1,
-								.unk_dword_2 = 1,
-								.icon_id_1 = 1,
-								.icon_id_2 = 1,
-								.respawn_total_time = 10,
-								.respawn_time_ms = 10000,
-								.name_id = 1,
-								.distance = 1000,
-								.unk_byte_1 = 1,
-								.unk_byte_2 = 1,
-
-								.unk_byte_3 = 1,
-								.unk_byte_4 = 1,
-								.unk_byte_5 = 1,
-								.unk_byte_6 = 1,
-								.unk_byte_7 = 1,
-
-								.unk_dword_3 = 1,
-								.unk_byte_8 = 1,
-								.unk_byte_9 = 1,
-							},
-					},
-			};
-
-		Zone_Packet_Character_Respawn result = {0};
-		zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
-
-		Zone_Packet_Character_RespawnReply respawn_reply =
-			{
-				.character_id_1_1 = session_state->character_id,
-				.status = true,
-			};
-
-		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_Character_RespawnReply, &respawn_reply);
-
-		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_RespawnLocations, &respawn_locations);
 
 		break;
 	}
@@ -866,48 +671,44 @@ packet_id_switch:
 
 		break;
 	}
+	case ZONE_COMMAND_ITEMDEFINITIONREQUEST_ID:
+	{
+		packet_kind = Zone_Packet_Kind_Command_ItemDefinitionRequest;
+		printf("[Zone] Handling Command.ItemDefinitionRequest\n");
 
-		/*
-		case ZONE_COMMAND_ITEMDEFINITIONREQUEST_ID:
+		Zone_Packet_Command_ItemDefinitionRequest request = {0};
+		zone_packet_unpack(data, data_length, packet_kind, &request, &server_state->arena_per_tick);
+
+		u32 defsCount = 0;
+		Zone_Packet_CommandItemDefinitions defs[5000] = {0};
+
+		for (u32 i = 0; i < 5000; i++)
 		{
-			packet_kind = Zone_Packet_Kind_Command_ItemDefinitionRequest;
-			printf("[Zone] Handling Command.ItemDefinitionRequest\n");
+			u32 item_id = request.id;
 
-			Zone_Packet_Command_ItemDefinitionRequest request = {0};
-			zone_packet_unpack(data, data_length, packet_kind, &request, &server_state->arena_per_tick);
-
-			Zone_Packet_CommandItemDefinitions commandItemDefs = {0};
-
-				int defsCount = 0;
-				Zone_Packet_CommandItemDefinitions defs[5000];
-
-				for (int i = 0; i < 5000; i++) {
-					Items items = commandItemDefs.item_def_reply_2->item_defs[i].defs_id;
-
-					switch (items) {
-						case FANNY_PACK_DEV:
-						case HEAD_6LIGHTS_ATV_6:
-						case HEAD_3LIGHTS_OFFROADER_6:
-						case HEAD_4LIGHTS_PICKUP:
-						case HEAD_5LIGHTS_POLICE:
-						case AIRDROP_CODE:
-							defs[defsCount].item_def_reply_2->item_defs[i].defs_id = items;
-							defs[defsCount].item_def_reply_2->item_defs[i].hud_image_set_id = commandItemDefs.item_def_reply_2->item_defs->image_set_id;
-							defs[defsCount].item_def_reply_2->item_defs[i].item_type_1 = commandItemDefs.item_def_reply_2->item_defs->item_type_1;
-							defs[defsCount].item_def_reply_2->item_defs[i].bitflags1 = commandItemDefs.item_def_reply_2->item_defs->bitflags1;
-							defs[defsCount].item_def_reply_2->item_defs[i].bitflags2 = commandItemDefs.item_def_reply_2->item_defs->bitflags2;
-							defs[defsCount].item_def_reply_2->item_defs[i].stats_item_def_2 = NULL;
-							defsCount++;
-							break;
-					}
-				}
-
-				zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(500), Zone_Packet_Kind_CommandItemDefinitions, defs);
-
-			break;
+			switch (item_id)
+			{
+			case 1:
+			case 9:
+			case 1728:
+			case 1730:
+			case 2595:
+			case 2675:
+				defs[defsCount].item_def_reply_2->item_defs[i].defs_id = item_id;
+				defs[defsCount].item_def_reply_2->item_defs[i].hud_image_set_id = defs->item_def_reply_2->item_defs->image_set_id;
+				defs[defsCount].item_def_reply_2->item_defs[i].item_type_1 = defs->item_def_reply_2->item_defs->item_type_1;
+				defs[defsCount].item_def_reply_2->item_defs[i].bitflags1 = defs->item_def_reply_2->item_defs->bitflags1;
+				defs[defsCount].item_def_reply_2->item_defs[i].bitflags2 = defs->item_def_reply_2->item_defs->bitflags2;
+				defs[defsCount].item_def_reply_2->item_defs[i].stats_item_def_2 = NULL;
+				defsCount++;
+				break;
+			}
 		}
-		*/
 
+		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(500), Zone_Packet_Kind_CommandItemDefinitions, defs);
+
+		break;
+	}
 	case ZONE_WALLOFDATA_CLIENTSYSTEMINFO_ID:
 	{
 		packet_kind = Zone_Packet_Kind_WallOfData_ClientSystemInfo;
@@ -958,8 +759,8 @@ packet_id_switch:
 								.info_name_id = 1,
 								.zone_description_id = 1,
 
-								.zone_name_length = 2,
-								.zone_name = "Z2",
+								.zone_name_length = 9,
+								.zone_name = "LoginZone",
 								.hex_size = 100,
 								.is_production_zone = 1,
 							}}};
@@ -1041,23 +842,21 @@ packet_id_switch:
 
 		break;
 	}
+	/*
 	case ZONE_KEEPALIVE_ID:
 	{
 		packet_kind = Zone_Packet_Kind_KeepAlive;
 		printf("[Zone] Handling KeepAlive\n");
 
-		/*
-			Zone_Packet_KeepAlive keep_alive =
+		Zone_Packet_KeepAlive keep_alive =
 			{
-				.game_time = timer32,
+				.game_time = timer,
 			};
 
-			zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_KeepAlive, &keep_alive);
-		*/
+		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_KeepAlive, &keep_alive);
 
 		break;
 	}
-	/*
 	case ZONE_PLAYERUPDATEPOSITION_ID:
 	{
 		packet_kind = Zone_Packet_Kind_PlayerUpdatePosition;
@@ -1184,7 +983,7 @@ packet_id_switch:
 	{
 	packet_id_fail:
 		packet_kind = Zone_Packet_Kind_Unhandled;
-		printf(MESSAGE_CONCAT_WARN("Unhandled zone packet 0x%02x 0x%02x\n"), packet_id, sub_packet_id);
+		printf(MESSAGE_CONCAT_WARN("Unhandled zone packet %#x %#x\n"), packet_id, *sub_packet_id);
 
 		if (session_state->connection_args.should_dump_zone)
 		{

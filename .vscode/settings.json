@@ -1,6 +1,7 @@
 {
     "C_Cpp.errorSquiggles": "enabled",
     "files.associations": {
+        "*.c": "c",
         "string.h": "c",
         "time.h": "c",
         "stdint.h": "c",
@@ -30,6 +31,8 @@
         "windows.h": "c",
         "stdlib.h": "c",
         "connection.h": "c",
-        "timeapi.h": "c"
+        "timeapi.h": "c",
+        "test.h": "c",
+        "thread": "c"
     }
 }

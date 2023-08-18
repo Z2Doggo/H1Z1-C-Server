@@ -75,6 +75,7 @@ struct App_State
 	Session_State sessions[MAX_SESSIONS_COUNT];
 };
 
+// void sendSelf(App_State *app_state, Session_State *session_state);
 void onZoneLogin(App_State *app_state, Session_State *session_state);
 void pGetLightWeight(App_State *app_state, Session_State *session_state);
 void loadCharacterData(App_State *app_state, Session_State *session_state);
