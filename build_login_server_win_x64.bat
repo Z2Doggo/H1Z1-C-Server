@@ -22,7 +22,8 @@ set LIBS_D=!LIBS_SHARED!
 
 set FLAGS_COMPILE_SHARED=/FC /nologo /W4
 set FLAGS_COMPILE=  !FLAGS_COMPILE_SHARED! /O2 /GS-
-set FLAGS_COMPILE_D=!FLAGS_COMPILE_SHARED! /Od /Zi /RTC1 /fsanitize=address
+set FLAGS_COMPILE_D=!FLAGS_COMPILE_SHARED! /Od /Zi /RTC1
+rem set FLAGS_COMPILE_D=!FLAGS_COMPILE_SHARED! /Od /Zi /RTC1 /fsanitize=address
 
 set FLAGS_LINK_SHARED=/incremental:no
 set FLAGS_LINK=  !FLAGS_LINK_SHARED! /fixed /opt:icf /opt:ref
