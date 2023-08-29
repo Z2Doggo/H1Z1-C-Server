@@ -1,3 +1,6 @@
+
+#define _CRT_SECURE_NO_WARNINGS
+
 #if defined(YOTE_INTERNAL)
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,6 +29,8 @@ static void platform_win_console_write(char *format, ...);
 #include "utility/endian.c"
 #include "utility/util.c"
 #include "utility/crypt_rc4.c"
+#include "thirdparty/cJSON.c"
+#include "thirdparty/cJSON.h"
 #include "shared/protocol/stream.h"
 #include "shared/protocol/fragment_pool.c"
 #include "shared/protocol/input_stream.c"
@@ -85,6 +90,7 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #define printf(...)
 #include "../schema/output/login_udp_11.c"
 #undef printf
+#include "../schema/output/client_protocol_1087.c"
 #include "login/login_udp_11.c"
 #include "data/loginData/loginCharacterData.c"
 #undef MESSAGE_NAMESPACE

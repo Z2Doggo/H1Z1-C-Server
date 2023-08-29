@@ -33,6 +33,12 @@
         "connection.h": "c",
         "timeapi.h": "c",
         "test.h": "c",
-        "thread": "c"
-    }
+        "thread": "c",
+        "future": "c",
+        "complex": "c",
+        "functional": "c",
+        "regex": "c",
+        "xiosbase": "c"
+    },
+    "dotnet.defaultSolution": "disable"
 }

@@ -52,7 +52,7 @@ struct character_resources_s *pGetResources(u32 *resources, u32 numResources)
 }
 */
 
-void sendSelf(App_State *app_state, Session_State *session_state)
+void sendSelf(App_State *app, Session_State *session)
 {
     // u32 resources[] = { RESOURCE_HEALTH, RESOURCE_BLEEDING, RESOURCE_COMFORT, RESOURCE_CONDITION };
     // u32 numResources = sizeof(resources) / sizeof(resources[0]);
@@ -62,9 +62,9 @@ void sendSelf(App_State *app_state, Session_State *session_state)
         send_self = {
             .payload_self = (struct payload_self_s[1]){
                 [0] = {
-                    .guid = session_state->guid,
-                    .character_id = session_state->character_id,
-                    .transient_id.value = session_state->transient_id.value,
+                    .guid = session->guid,
+                    .character_id = session->character_id,
+                    .transient_id.value = session->transient_id.value,
                     .position = {74.8f, 201.5f, 458.1f, 99.01f},
                     .rotation = {199.99f, 289.99999f, 370.17f, 6.79f},
                     .actor_model_id = 9474,
@@ -126,9 +126,9 @@ void sendSelf(App_State *app_state, Session_State *session_state)
                     .containers = (struct containers_s[1]){
                         [0] = {
                             .loadout_slot_id = 0,
-                            .guid = session_state->guid,
+                            .guid = session->guid,
                             .def_id = 0,
-                            .associated_character_id = session_state->character_id,
+                            .associated_character_id = session->character_id,
                             .slots = 0,
                             .items2_count = 1,
                             .items2 = (struct items2_s[1]){
@@ -136,7 +136,7 @@ void sendSelf(App_State *app_state, Session_State *session_state)
                                     .item_def_id5 = 0,
                                     .item_def_id6 = 0,
                                     .tint_id = 0,
-                                    .guid = session_state->guid,
+                                    .guid = session->guid,
                                     .count = 1,
                                     .unk_qword_43 = 0,
                                     .unk_dword_132 = 0,
@@ -148,7 +148,7 @@ void sendSelf(App_State *app_state, Session_State *session_state)
                                     .current_durability = 0,
                                     .max_durability_from_def = 0,
                                     .unk_bool_116 = false,
-                                    .owner_character_id = session_state->character_id,
+                                    .owner_character_id = session->character_id,
                                     .unk_dword_9 = 0,
                                     .show_bulk = true,
                                     .max_bulk = 0,
@@ -164,6 +164,7 @@ void sendSelf(App_State *app_state, Session_State *session_state)
             },
         };
     // free(resourceData);
-    //  (doggo)if this packet was a person, I would beat the ever-living shit out of it!
-    zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(500), Zone_Packet_Kind_SendSelfToClient, &send_self);
+
+    // (doggo)if this packet was a person, I would beat the ever-living shit out of it!
+    zone_packet_send(app, session, &app->arena_per_tick, KB(10), Zone_Packet_Kind_SendSelfToClient, &send_self);
 };

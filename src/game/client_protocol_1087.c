@@ -69,7 +69,8 @@ internal void zone_packet_send(App_State *server_state, Session_State *session_s
 
 	// Close the thread handle (when you no longer need it)
 	CloseHandle(threadHandle);
-} // (doggo) thanks chatgpt!
+}
+// (doggo) thanks chatgpt!
 
 internal void zone_packet_raw_file_send(App_State *server_state,
 										Session_State *session_state,

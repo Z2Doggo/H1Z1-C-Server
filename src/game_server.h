@@ -2,7 +2,7 @@
 #define STBSP__ASAN __declspec(no_sanitize_address)
 #define STB_SPRINTF_IMPLEMENTATION
 
-#include "thirdparty_utility/stb_sprintf.h"
+#include "thirdparty/stb_sprintf.h"
 #include <Windows.h>
 
 // #if defined(YOTE_INTERNAL)
