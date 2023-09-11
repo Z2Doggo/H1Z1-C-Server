@@ -101,6 +101,7 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #include "data/zoneData/onZoneLogin.c"
 #include "data/zoneData/sendSelf.c"
 #include "data/zoneData/zoneCharacterData.c"
+#include "data/shared/sharedFuncs.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 

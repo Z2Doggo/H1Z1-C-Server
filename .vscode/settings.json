@@ -38,7 +38,9 @@
         "complex": "c",
         "functional": "c",
         "regex": "c",
-        "xiosbase": "c"
+        "xiosbase": "c",
+        "vector": "c",
+        "xstring": "c"
     },
     "dotnet.defaultSolution": "disable"
 }

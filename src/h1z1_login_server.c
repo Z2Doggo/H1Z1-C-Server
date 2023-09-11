@@ -1,6 +1,3 @@
-
-#define _CRT_SECURE_NO_WARNINGS
-
 #if defined(YOTE_INTERNAL)
 #include <stdio.h>
 #include <stdlib.h>
@@ -91,8 +88,10 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #include "../schema/output/login_udp_11.c"
 #undef printf
 #include "../schema/output/client_protocol_1087.c"
-#include "login/login_udp_11.c"
+#include "data/loginData/loginData.h"
 #include "data/loginData/loginCharacterData.c"
+#include "login/login_udp_11.c"
+#include "data/shared/sharedFuncs.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 

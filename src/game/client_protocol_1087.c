@@ -423,7 +423,6 @@ packet_id_switch:
 			.unk_bool_2 = true,
 		};
 		zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientBeginZoning, &begin_zoning);
-		// sendSelf(server_state, session_state);
 
 		Zone_Packet_Equipment_SetCharacterEquipment set_character_equipment =
 			{

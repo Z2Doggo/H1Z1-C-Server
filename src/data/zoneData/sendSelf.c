@@ -27,46 +27,17 @@ u32 getResourceType(ResourceIds resourceId)
     };
 };
 
-/*
-struct character_resources_s *pGetResources(u32 *resources, u32 numResources)
-{
-    struct character_resources_s *result = (struct character_resources_s *)malloc(numResources * sizeof(struct character_resources_s));
-    if (!result)
-    {
-        return NULL; // failed to allocate memory
-    }
-
-    for (u32 i = 0; i < numResources; i++)
-    {
-        u32 resourceId = i;
-        u32 resourceType = getResourceType(resourceId);
-        u32 value = resources[resourceId] > 0 ? resources[resourceId] : 0;
-
-        result[i].resource_type1 = resourceType;
-        result[i].resource_id = resourceId;
-        result[i].resource_type2 = resourceType;
-        result[i].value = value;
-    }
-
-    return result;
-}
-*/
-
 void sendSelf(App_State *app, Session_State *session)
 {
-    // u32 resources[] = { RESOURCE_HEALTH, RESOURCE_BLEEDING, RESOURCE_COMFORT, RESOURCE_CONDITION };
-    // u32 numResources = sizeof(resources) / sizeof(resources[0]);
-    // struct character_resources_s* resourceData = pGetResources(resources, numResources);
-
     Zone_Packet_SendSelfToClient
         send_self = {
             .payload_self = (struct payload_self_s[1]){
                 [0] = {
-                    .guid = session->guid,
-                    .character_id = session->character_id,
-                    .transient_id.value = session->transient_id.value,
-                    .position = {74.8f, 201.5f, 458.1f, 99.01f},
-                    .rotation = {199.99f, 289.99999f, 370.17f, 6.79f},
+                    .guid = 0x1ull,
+                    .character_id = 0x1ull,
+                    .transient_id.value = 52,
+                    .position = session->position.y++,
+                    .rotation = {0.0f, 0.0f, 0.0f, 1.0f},
                     .actor_model_id = 9474,
                     .head_actor_length = 26,
                     .head_actor = "SurvivorFemale_Head_02.adr",
@@ -75,7 +46,7 @@ void sendSelf(App_State *app, Session_State *session)
                     .is_respawning = false,
                     .character_name_length = 4,
                     .character_name = "test",
-                    .gender1 = 0,
+                    .gender1 = 2,
                     .creation_date = 0x0ull,
                     .last_login_date = 0x0ull,
                     .loadout_id = 3,
@@ -93,11 +64,18 @@ void sendSelf(App_State *app, Session_State *session)
                     },
                     .current_slot_id = 7,
                     .equipment_slots_count = 1,
+                    .equipment_slots_count = 1,
                     .equipment_slots = (struct equipment_slots_s[1]){
                         [0] = {
+                            .unk_dword_7199 = 0,
+                            .unk_dword_890 = 0,
+                            .unk_string_4_length = 0,
+                            .unk_string_4 = "",
+                            .unk_string_2_length = 0,
+                            .unk_string_2 = "",
                             .equipment_slot_id2 = 0,
                             .equipment_slot_id3 = 0,
-                            .guid = 0,
+                            .guid = 0x0ull,
                             .tint_alias_length = 7,
                             .tint_alias = "Default",
                             .decal_alias_length = 1,
@@ -148,7 +126,7 @@ void sendSelf(App_State *app, Session_State *session)
                                     .current_durability = 0,
                                     .max_durability_from_def = 0,
                                     .unk_bool_116 = false,
-                                    .owner_character_id = session->character_id,
+                                    .owner_character_id = 0x1ull,
                                     .unk_dword_9 = 0,
                                     .show_bulk = true,
                                     .max_bulk = 0,
@@ -163,7 +141,6 @@ void sendSelf(App_State *app, Session_State *session)
                 },
             },
         };
-    // free(resourceData);
 
     // (doggo)if this packet was a person, I would beat the ever-living shit out of it!
     zone_packet_send(app, session, &app->arena_per_tick, KB(10), Zone_Packet_Kind_SendSelfToClient, &send_self);

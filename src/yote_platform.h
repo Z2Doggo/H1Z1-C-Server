@@ -74,7 +74,7 @@ internal PLATFORM_FOLDER_CREATE(platform_win_folder_create)
 		DWORD last_error = GetLastError();
 		if (last_error != ERROR_ALREADY_EXISTS)
 		{
-			printf("[!] CreateDirectory error on \"%s\" - Error: %u\n",
+			printf("[!] CreateDirectory error on \"%s\" - Error: %lu\n",
 				   folder_path,
 				   last_error);
 			return false;
@@ -95,7 +95,7 @@ internal PLATFORM_BUFFER_WRITE_TO_FILE(platform_win_buffer_write_to_file)
 									 NULL);
 	if (file_handle == INVALID_HANDLE_VALUE)
 	{
-		printf("[!] Unable to open file to write \"%s\" - Error: %u\n",
+		printf("[!] Unable to open file to write \"%s\" - Error: %lu\n",
 			   file_path,
 			   GetLastError());
 		return 0;
@@ -120,7 +120,7 @@ internal PLATFORM_BUFFER_WRITE_TO_FILE(platform_win_buffer_write_to_file)
 				   &bytes_written,
 				   0))
 	{
-		printf("[!] Unable to write to file \"%s\" - Error: %u\n",
+		printf("[!] Unable to write to file \"%s\" - Error: %lu\n",
 			   file_path,
 			   GetLastError());
 		CloseHandle(file_handle);
@@ -143,7 +143,7 @@ internal PLATFORM_BUFFER_LOAD_FROM_FILE(platform_win_buffer_load_from_file)
 
 	if (file_handle == INVALID_HANDLE_VALUE)
 	{
-		printf("[!] Unable to open file to read \"%s\" - Error: %u\n",
+		printf("[!] Unable to open file to read \"%s\" - Error: %lu\n",
 			   file_path,
 			   GetLastError());
 		return 0;
@@ -159,7 +159,7 @@ internal PLATFORM_BUFFER_LOAD_FROM_FILE(platform_win_buffer_load_from_file)
 	LARGE_INTEGER file_size;
 	if (!GetFileSizeEx(file_handle, &file_size))
 	{
-		printf("[!] Unable to get size of \"%s\" - Error: %u\n",
+		printf("[!] Unable to get size of \"%s\" - Error: %lu\n",
 			   file_path,
 			   GetLastError());
 		CloseHandle(file_handle);
@@ -189,7 +189,7 @@ internal PLATFORM_BUFFER_LOAD_FROM_FILE(platform_win_buffer_load_from_file)
 				  &bytes_read,
 				  NULL))
 	{
-		printf("[!] Unable to load from file \"%s\" - Error: %u\n",
+		printf("[!] Unable to load from file \"%s\" - Error: %lu\n",
 			   file_path,
 			   GetLastError());
 		CloseHandle(file_handle);

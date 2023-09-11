@@ -192,7 +192,6 @@ struct Session_State
     u32 id;
 
     zoneClient client;
-    characterName charName;
     pGetPlayerActorData pGetPlayerActor;
 
     u64 character_id;
@@ -211,6 +210,7 @@ struct Session_State
 
     i32 ack_next;
     i32 ack_previous;
+    const char *authKey;
 
     Fragment_Pool input_fragment_pool;
     // TODO(rhett): is the output fragment pool packet length supposed to match a data header?
@@ -246,7 +246,8 @@ struct Session_State
     u64 last_login_date;
 
     u32 stance;
-    vec3 position;
+    vec4 position;
+    vec3 positionLW; // for lightweight packets
     u32 unknown12_f32[3];
     vec4 rotation;
     euler_angle rotationRaw;

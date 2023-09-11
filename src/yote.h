@@ -40,6 +40,7 @@ typedef i16 b16;
 typedef i32 b32;
 typedef i64 b64;
 
+typedef unsigned char uchar;
 typedef float f32;
 typedef double f64;
 
