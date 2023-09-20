@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+
 #if defined(YOTE_INTERNAL)
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,17 +25,17 @@ static void platform_win_console_write(char *format, ...);
 #define DATA_HEADER_LENGTH 4
 #define MAX_SESSIONS_COUNT 16 // will increase as time goes on but good enough for testing right now
 
-#include "utility/endian.c"
-#include "utility/util.c"
-#include "utility/crypt_rc4.c"
-#include "shared/protocol/stream.h"
+#include "util/endian.c"
+#include "util/util.c"
+#include "util/crypt_rc4.c"
+#include "headers/protocol_headers/stream.h"
 #include "shared/protocol/fragment_pool.c"
 #include "shared/protocol/input_stream.c"
 #include "shared/protocol/output_stream.c"
-#include "shared/protocol/core_protocol.h"
-#include "shared/connection.h"
-#include "shared/session.h"
-#include "shared/packet_queue.h"
+#include "headers/protocol_headers/core_protocol.h"
+#include "headers/protocol_headers/connection.h"
+#include "headers/protocol_headers/session.h"
+#include "headers/protocol_headers/packet_queue.h"
 #include "shared/packet_queue.c"
 
 global u64 global_packet_dump_count;
@@ -76,9 +78,6 @@ struct App_State
 };
 
 // void sendSelf(App_State *app_state, Session_State *session_state);
-void onZoneLogin(App_State *app_state, Session_State *session_state);
-void pGetLightWeight(App_State *app_state, Session_State *session_state);
-void loadCharacterData(App_State *app_state, Session_State *session_state);
 internal void gateway_on_login(App_State *app_state, Session_State *session_state);
 internal void gateway_on_tunnel_data_from_client(App_State *app_state, Session_State *session_state, u8 *data, u32 data_length);
 internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
@@ -88,20 +87,18 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #include "shared/protocol/core_protocol.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE "Gateway"
-#include "game/external_gateway_api_3.c"
+#include "game/zone/external_gateway_api_3.cpp"
 #undef MESSAGE_NAMESPACE
 // TODO(rhett): Client or Zone? Client is the word used by the game, but zone is more clear?
 #define MESSAGE_NAMESPACE "Zone"
+#include "core/core.cpp"
 #define printf(...)
 #include "../schema/output/client_protocol_1087.c"
 #undef printf
-#include "../schema/output/login_udp_11.c"
-#include "game/client_protocol_1087.c"
-#include "game/ping_responder.c"
-#include "data/zoneData/onZoneLogin.c"
-#include "data/zoneData/sendSelf.c"
-#include "data/zoneData/zoneCharacterData.c"
-#include "data/shared/sharedFuncs.c"
+#include "game/zone/client_protocol_1087.cpp"
+#include "game/zone/data/send_self.cpp"
+#include "game/zone/character/zone_character.cpp"
+#include "game/zone/character/zone_login.cpp"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 
@@ -123,7 +120,7 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data)
 	UNUSED(session);
 	UNUSED(data);
 	UNUSED(data_length);
-	ping_packet_handle(server, session, data, data_length);
+	// ping_packet_handle(server, session, data, data_length);
 }
 
 internal INPUT_STREAM_CALLBACK_ACK(on_input_stream_ack)
@@ -374,10 +371,10 @@ __declspec(dllexport) APP_TICK(server_tick)
 		{
 			if (app_state->sessions[known_session].kind == Session_Kind_Ping_Responder)
 			{
-				ping_packet_handle(app_state,
-								   &app_state->sessions[known_session],
-								   incoming_buffer,
-								   receive_result);
+				// ping_packet_handle(app_state,
+				//&app_state->sessions[known_session],
+				// incoming_buffer,
+				// receive_result);
 			}
 			else
 			{

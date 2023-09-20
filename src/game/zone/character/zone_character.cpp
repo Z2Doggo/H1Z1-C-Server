@@ -1,32 +1,6 @@
-// will input character data here for stuff like respawning the player
-// character and setting the resources, i.e. health, bleeding, etc;etc!
-
-void pGetLightWeight(App_State *app_state, Session_State *session_state)
-{
-    Zone_Packet_AddLightweightNpc lightweightNpc =
-        {
-            .characterId = session_state->character_id,
-            .transientId.value = session_state->transient_id.value,
-            .nameId = 0,
-            .actorModelId = 9240,
-            .position = session_state->positionLW, // need to figure out how to make a proper update character position func for this?
-            .rotation = session_state->rotation,   // as well as this too!
-            .scale = {1.0f, 1.0f, 1.0f, 1.0f},
-            .positionUpdateType = 0,
-            .profileId = 0,
-            .isLightweight = true,
-            .flags1 = 0,
-            .flags2 = 0,
-            .flags3 = 0,
-            .headActor_length = 26,
-            .headActor = "SurvivorFemale_Head_02.adr",
-        };
-    zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_AddLightweightNpc, &lightweightNpc);
-}
-
 void loadCharacterData(App_State *app_state, Session_State *session_state)
 {
-    sendSelf(app_state, session_state);
+    sendSelfTest(app_state, session_state);
 
     Zone_Packet_Equipment_SetCharacterEquipment set_character_equipment =
         {
@@ -52,7 +26,7 @@ void loadCharacterData(App_State *app_state, Session_State *session_state)
                     .length_2 = (struct length_2_s[1]){
                         [0] = {
                             .equipment_slot_id_2 = 0,
-                            .guid = 0x1ull, // keep guid as a 0
+                            .guid = 0x1ull, // keep guid as a 1 for now
                             .tint_alias_length = 7,
                             .tint_alias = "Default",
                             .decal_alias_length = 1,
