@@ -9,7 +9,7 @@
 #include <stdint.h>
 
 #include "yote.h"
-#include "utility/util.c"
+#include "util/util.c"
 
 internal u32
 win32_buffer_load_from_file(char *file_path, u8 *buffer, u32 buffer_length)

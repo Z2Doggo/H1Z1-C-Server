@@ -13,8 +13,8 @@ static void platform_win_console_write(char *format, ...);
 #include "yote_platform.h"
 #include "game_server.h"
 
-#define MODULE_FILE "game_server_module.dll"
-#define MODULE_FILE_TEMP "game_server_module_temp.dll"
+#define MODULE_FILE "zone_server_module.dll"
+#define MODULE_FILE_TEMP "zone_server_module_temp.dll"
 #define MODULE_LOCK_FILE ".reload-lock"
 
 typedef struct App_Code App_Code;

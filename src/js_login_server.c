@@ -23,19 +23,17 @@ static void platform_win_console_write(char *format, ...);
 #define DATA_HEADER_LENGTH 4
 #define MAX_SESSIONS_COUNT 16
 
-#include "utility/endian.c"
-#include "utility/util.c"
-#include "utility/crypt_rc4.c"
-#include "thirdparty/cJSON.c"
-#include "thirdparty/cJSON.h"
-#include "shared/protocol/stream.h"
+#include "util/endian.c"
+#include "util/util.c"
+#include "util/crypt_rc4.c"
+#include "headers/protocol_headers/stream.h"
 #include "shared/protocol/fragment_pool.c"
 #include "shared/protocol/input_stream.c"
 #include "shared/protocol/output_stream.c"
-#include "shared/protocol/core_protocol.h"
-#include "shared/connection.h"
-#include "shared/session.h"
-#include "shared/packet_queue.h"
+#include "headers/protocol_headers/core_protocol.h"
+#include "headers/protocol_headers/connection.h"
+#include "headers/protocol_headers/session.h"
+#include "headers/protocol_headers/packet_queue.h"
 #include "shared/packet_queue.c"
 
 global u64 global_packet_dump_count;
@@ -84,14 +82,11 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #include "shared/protocol/core_protocol.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE "Login"
+#include "core/core.c"
 #define printf(...)
-#include "../schema/output/login_udp_11.c"
+#include "../schema/output/js_login_udp_11.c"
 #undef printf
-#include "../schema/output/client_protocol_1087.c"
-#include "data/loginData/loginData.h"
-#include "data/loginData/loginCharacterData.c"
-#include "login/login_udp_11.c"
-#include "data/shared/sharedFuncs.c"
+#include "game/js_2016/login/login_udp_11.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 

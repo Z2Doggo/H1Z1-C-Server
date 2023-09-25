@@ -1,11 +1,11 @@
 @echo off
 
-pushd build_login_server_win_x64
+pushd build_js_login_server
 IF EXIST packets rmdir /S /Q packets
 start login_server.exe
 popd
 
-pushd build_game_server_win_x64
+pushd build_js_zone_server
 IF EXIST packets rmdir /S /Q packets
-start game_server.exe
+start zone_server.exe
 popd
