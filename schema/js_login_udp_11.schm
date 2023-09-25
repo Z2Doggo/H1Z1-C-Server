@@ -78,8 +78,6 @@ u32 			status
 
 stream:u32 login_payload
 {    
-    u8 unk_byte_1
-    u8 unk_byte_2
 	string:u32 	server_address
 	string:u32 	server_ticket
 	bytes:u32 	encryption_key
