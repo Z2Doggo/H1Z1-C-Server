@@ -87,6 +87,7 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #include "shared/protocol/core_protocol.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE "Gateway"
+<<<<<<< HEAD:src/js_zone_server.c
 #include "game/kotk_ps3/zone/external_gateway_api_3.c"
 #undef MESSAGE_NAMESPACE
 // TODO(rhett): Client or Zone? Client is the word used by the game, but zone is more clear?
@@ -99,6 +100,20 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #include "game/kotk_ps3/zone/data/send_self.c"
 #include "game/kotk_ps3/zone/character/zone_character.c"
 #include "game/kotk_ps3/zone/character/zone_login.c"
+=======
+#include "game/zone/external_gateway_api_3.cpp"
+#undef MESSAGE_NAMESPACE
+// TODO(rhett): Client or Zone? Client is the word used by the game, but zone is more clear?
+#define MESSAGE_NAMESPACE "Zone"
+#include "core/core.cpp"
+#define printf(...)
+#include "../schema/output/client_protocol_1087.c"
+#undef printf
+#include "game/zone/client_protocol_1087.cpp"
+#include "game/zone/data/send_self.cpp"
+#include "game/zone/character/zone_character.cpp"
+#include "game/zone/character/zone_login.cpp"
+>>>>>>> ca5d82985e26c3235ab62fd4e369f666a8d8ae27:src/h1z1_game_server.c
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 

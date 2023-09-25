@@ -82,11 +82,19 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #include "shared/protocol/core_protocol.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE "Login"
+<<<<<<< HEAD:src/js_login_server.c
 #include "core/core.c"
+=======
+#include "core/core.cpp"
+>>>>>>> ca5d82985e26c3235ab62fd4e369f666a8d8ae27:src/h1z1_login_server.c
 #define printf(...)
 #include "../schema/output/js_login_udp_11.c"
 #undef printf
+<<<<<<< HEAD:src/js_login_server.c
 #include "game/js_2016/login/login_udp_11.c"
+=======
+#include "game/login/login_udp_11.cpp"
+>>>>>>> ca5d82985e26c3235ab62fd4e369f666a8d8ae27:src/h1z1_login_server.c
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 
