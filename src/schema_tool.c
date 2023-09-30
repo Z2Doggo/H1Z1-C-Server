@@ -307,17 +307,6 @@ keyword_hash_map_value_get(Keyword_Hash_Map *map, char *key, u32 key_length)
 	return result;
 }
 
-internal void
-dump_char_table()
-{
-	char test[256] = {0};
-	for (int i = 0; i < sizeof(test); i++)
-	{
-		test[i] = (char)i;
-	}
-	util_byte_dump(test, sizeof(test));
-}
-
 internal b32
 is_hex_digit(char c)
 {

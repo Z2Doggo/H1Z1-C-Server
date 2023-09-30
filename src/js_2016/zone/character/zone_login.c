@@ -3,14 +3,14 @@ void onZoneLogin(App_State *app, Session_State *session)
 	Zone_Packet_InitializationParameters init_params =
 		{
 			.environment_length = 9,
-			.environment = "LIVE_KOTK",
+			.environment = "LIVE",
 		};
 	zone_packet_send(app, session, &app->arena_per_tick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
 
 	Zone_Packet_SendZoneDetails send_zone_details =
 		{
-			.zone_name_length = 9,
-			.zone_name = "LoginZone",
+			.zone_name_length = 2,
+			.zone_name = "Z1",
 			.zone_type = 4,
 			.unk_bool = false,
 
@@ -54,10 +54,9 @@ void onZoneLogin(App_State *app, Session_State *session)
 			.zone_id_2 = 5,
 			.name_id = 7699,
 			.unk_bool2 = true,
-			.lighting_length = 15,
-			.lighting = "Lighting_Z2.txt",
+			.lighting_length = 12,
+			.lighting = "Lighting.txt",
 			.unk_bool3 = false,
-			.unk_bool4 = true,
 		};
 	zone_packet_send(app, session, &app->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
 

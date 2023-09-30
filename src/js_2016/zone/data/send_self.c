@@ -1,32 +1,5 @@
 // this packet is so damn complicated, that it basically needs it own file!
 
-u32 getResourceType(ResourceIds resourceId)
-{
-    switch (resourceId)
-    {
-    case HEALTH:
-        return RESOURCE_HEALTH;
-    case HUNGER:
-        return RESOURCE_HUNGER;
-    case HYDRATION:
-        return RESOURCE_HYDRATION;
-    case STAMINA:
-        return RESOURCE_STAMINA;
-    case VIRUS:
-        return RESOURCE_VIRUS;
-    case BLEEDING:
-        return RESOURCE_BLEEDING;
-    case COMFORT:
-        return RESOURCE_COMFORT;
-    case FUEL:
-        return RESOURCE_FUEL;
-    case CONDITION:
-        return RESOURCE_CONDITION;
-    default:
-        return 0;
-    };
-};
-
 u32 getGender(u32 actorModelId)
 {
     switch (actorModelId)

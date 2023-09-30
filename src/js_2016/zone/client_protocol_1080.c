@@ -353,7 +353,7 @@ packet_id_switch:
     case ZONE_PLAYERWORLDTRANSFERREQUEST_ID:
     {
         packet_kind = Zone_Packet_Kind_PlayerWorldTransferRequest;
-        printf("[Zone] Zoning into Z2!");
+        printf("[Zone] Zoning into Z1!");
 
         Zone_Packet_PlayerWorldTransferReply reply = {
             .world_id_reply = 1,
@@ -371,7 +371,7 @@ packet_id_switch:
 
         Zone_Packet_ClientBeginZoning begin_zoning = {
             .zone_name_length = 2,
-            .zone_name = "Z2",
+            .zone_name = "Z1",
             .zone_type = 4,
             .pos = {-229.88f, 506.44f, -4885.03f, 1.0f},
             .rot = {0.10f, -0.50f, 0.00f, 1.0f},
@@ -759,8 +759,8 @@ packet_id_switch:
                                 .info_name_id = 1,
                                 .zone_description_id = 1,
 
-                                .zone_name_length = 9,
-                                .zone_name = "LoginZone",
+                                .zone_name_length = 2,
+                                .zone_name = "Z1",
                                 .hex_size = 100,
                                 .is_production_zone = 1,
                             }}};

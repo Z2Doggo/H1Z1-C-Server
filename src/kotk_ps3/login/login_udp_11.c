@@ -30,8 +30,8 @@ internal void login_packet_send(App_State *server_state,
 
 void CharacterCreateRequest(App_State *app, Session_State *session)
 {
-	session->character_id = generate_random_guid(); // store random guid in session characterId
-	u32 creation_status = 1;						// defualt
+	session->character_id = generateRandomGuid(); // store random guid in session characterId
+	u32 creation_status = 1;					  // defualt
 
 	Login_Packet_CharacterCreateReply createReply =
 		{

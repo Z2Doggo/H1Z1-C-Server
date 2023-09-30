@@ -85,26 +85,34 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE "Core"
 #include "shared/protocol/core_protocol.c"
+#include "core/core.c"
+#include "core/classes/base.h"
+#include "core/entities/core_base_full_character.h"
+#include "core/entities/core_base_entity.h"
+#include "core/classes/grid_cell.h"
+#include "core/core_server.h"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE "Gateway"
-#include "game/js_2016/zone/external_gateway_api_3.c"
+#include "js_2016/zone/external_gateway_api_3.c"
 #undef MESSAGE_NAMESPACE
 // TODO(rhett): Client or Zone? Client is the word used by the game, but zone is more clear?
 #define MESSAGE_NAMESPACE "Zone"
-#include "core/core.c"
 #define printf(...)
 #include "../schema/output/client_protocol_1080.c"
 #undef printf
-#include "game/js_2016/zone/client_protocol_1080.c"
-#include "game/js_2016/zone/data/send_self.c"
-#include "game/js_2016/zone/character/zone_character.c"
-#include "game/js_2016/zone/character/zone_login.c"
+#include "js_2016/zone/client_protocol_1080.c"
+#include "js_2016/zone/character/resources.h"
+#include "js_2016/zone/character/resources.c"
+#include "js_2016/zone/data/zone_client.c"
+#include "js_2016/zone/data/send_self.c"
+#include "js_2016/zone/character/zone_character.c"
+#include "js_2016/zone/character/zone_login.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 
 internal void gateway_on_login(App_State *app_state, Session_State *session_state)
 {
-	printf("[!] Character %llxh trying to login to zone server\n", 0x1234567890u); // (doggo)temp characterId until I implement a decent enough solution!
+	printf("[!] Character %llx trying to login to zone server\n", 0x1234567890u); // (doggo)temp characterId until I implement a decent enough solution!
 
 	onZoneLogin(app_state, session_state);
 }

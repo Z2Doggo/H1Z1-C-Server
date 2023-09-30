@@ -80,13 +80,18 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE "Core"
 #include "shared/protocol/core_protocol.c"
+#include "core/core.c"
+#include "core/classes/base.h"
+#include "core/entities/core_base_full_character.h"
+#include "core/entities/core_base_entity.h"
+#include "core/classes/grid_cell.h"
+#include "core/core_server.h"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE "Login"
-#include "core/core.c"
 #define printf(...)
 #include "../schema/output/js_login_udp_11.c"
 #undef printf
-#include "game/js_2016/login/login_udp_11.c"
+#include "js_2016/login/login_udp_11.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 

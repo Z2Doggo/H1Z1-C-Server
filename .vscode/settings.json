@@ -2,11 +2,20 @@
     "C_Cpp.errorSquiggles": "enabled",
     "files.associations": {
         "*.c": "c",
+        "*.h": "c",
         "core_protocol.h": "c",
         "connection.h": "c",
         "stream.h": "c",
         "session.h": "c",
         "packet_queue.h": "c",
-        "zone_character.cpp": "c"
+        "zone_character.cpp": "c",
+        "bit": "c",
+        "compare": "c",
+        "cstddef": "c",
+        "limits": "c",
+        "type_traits": "c",
+        "xmemory": "c",
+        "xutility": "c",
+        "algorithm": "c"
     }
 }

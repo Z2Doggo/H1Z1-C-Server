@@ -66,17 +66,6 @@ void loadCharacterData(App_State *app_state, Session_State *session_state)
         session_state->is_running = false;
         session_state->is_respawning = false;
         session_state->is_in_air = false;
-
-        if (!session_state->client.initialized)
-        {
-            Zone_Packet_Character_RespawnReply respawnReply = {
-                .character_id_1_1 = session_state->character_id,
-                .status = 1,
-            };
-            zone_packet_send(app_state, session_state, &app_state->arena_per_tick,
-                             KB(10), Zone_Packet_Kind_Character_RespawnReply,
-                             &respawnReply);
-        }
     }
 
     Zone_Packet_ResourceEventBase resourceEvent1 = {
@@ -148,5 +137,4 @@ void loadCharacterData(App_State *app_state, Session_State *session_state)
     };
     zone_packet_send(app_state, session_state, &app_state->arena_per_tick, KB(10), Zone_Packet_Kind_ResourceEventBase, &resourceEvent3);
     // free(resourceData);
-    session_state->client.initialized = true;
 }

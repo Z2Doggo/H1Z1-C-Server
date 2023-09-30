@@ -30,8 +30,8 @@ internal void login_packet_send(App_State *server_state,
 
 void CharacterCreateRequest(App_State *app, Session_State *session)
 {
-	session->character_id = generate_random_guid(); // store random guid in session characterId
-	u32 creation_status = 1;						// defualt
+	session->character_id = generateRandomGuid(); // store random guid in session characterId
+	u32 creation_status = 1;					  // defualt
 
 	Login_Packet_CharacterCreateReply createReply =
 		{
@@ -345,8 +345,6 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 					(struct login_payload_s[1]){
 						[0] =
 							{
-								.unk_byte_1 = 0,
-								.unk_byte_2 = 0,
 								.server_address_length = 15,
 								.server_address = "127.0.0.1:60000",
 								.server_ticket_length = 15,
