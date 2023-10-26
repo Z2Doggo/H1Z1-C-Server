@@ -1906,7 +1906,7 @@ packet 0x11 0x40:u16 ClientUpdate_AddNotifications
 packet 0x11 0x41:u16 ClientUpdate_RemoveNotifications
 packet 0x11 0x42:u16 ClientUpdate_NpcRelevance
 packet 0x11 0x43:u16 ClientUpdate_InitiateNameChange
-packet 0x11 0x44:u16 ClientUpdate_MonitorTimeDrift
+packet 0x11 0x4400:u16 ClientUpdate_MonitorTimeDrift
 u32 time_drift
 
 packet 0x11 0x45:u16 ClientUpdate_NameChangeResult
@@ -2473,7 +2473,7 @@ packet 0x79 PlayerUpdatePosition
 uint2b transient_id
 u16 flag
 u32 sequence
-u8 unk_byte
+bytes:u32 unk_byte
 
 packet 0x7a InviteAndStartMiniGame
 packet 0x7b QuizBase
@@ -3109,23 +3109,14 @@ packet 0xe6 BattlEyeData
 packet 0xe7 OnlineIdBase
 packet 0xe8 Ps4PlayGoBase
 packet 0xe9 SynchronizedTeleportBase
-packet 0xea 0x01:u8 StaticViewRequest
+packet 0xea 0x0100:u16 StaticViewRequest
 string:u32 viewpoint
 
-packet 0xea 0x02:u8 StaticViewReply
+packet 0xea 0x0200:u16 StaticViewReply
 u32 state
-f32 pos1
-f32 pos2
-f32 pos3
-f32 pos4
-f32 rot1
-f32 rot2
-f32 rot3
-f32 rot4
-f32 look1
-f32 look2
-f32 look3
-f32 look4
+vec4 position
+vec4 rotation
+vec4 lookAt
 u8 unk_byte_1
 b8 unk_bool_1
 

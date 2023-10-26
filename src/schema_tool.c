@@ -9,7 +9,7 @@
 #include <stdint.h>
 
 #include "yote.h"
-#include "utility/util.c"
+#include "util/util.c"
 
 internal u32
 win32_buffer_load_from_file(char *file_path, u8 *buffer, u32 buffer_length)
@@ -305,17 +305,6 @@ keyword_hash_map_value_get(Keyword_Hash_Map *map, char *key, u32 key_length)
 	printf("[*] Found %llu at bucket %d\n", result, index);
 #endif
 	return result;
-}
-
-internal void
-dump_char_table()
-{
-	char test[256] = {0};
-	for (int i = 0; i < sizeof(test); i++)
-	{
-		test[i] = (char)i;
-	}
-	util_byte_dump(test, sizeof(test));
 }
 
 internal b32

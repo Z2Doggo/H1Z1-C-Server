@@ -5,15 +5,6 @@
 #include "thirdparty/stb_sprintf.h"
 #include <Windows.h>
 
-// #if defined(YOTE_INTERNAL)
-////#include <stdio.h>
-////#include <stdlib.h>
-////#include <assert.h>
-// #else
-// static void platform_win_console_write(char* format, ...);
-// #define printf(s, ...) platform_win_console_write(s, __VA_ARGS__)
-// #endif // YOTE_INTERNAL
-
 #if !defined(YOTE_INTERNAL)
 internal void platform_win_console_write(char *format, ...)
 {
@@ -41,8 +32,6 @@ internal void platform_win_console_write(char *format, ...)
 #define printf
 #endif // TERMINAL_UI
 
-// #define TICK_RATE          60.0f
-
 #if defined(TERMINAL_UI)
 #define DISPLAY_RATE (TICK_RATE / 2.0f)
 #define SCREEN_WIDTH 80
@@ -53,8 +42,7 @@ internal void platform_win_console_write(char *format, ...)
 typedef b32 Key_States[0xff];
 
 typedef struct App_State App_State;
-typedef struct App_Memory App_Memory;
-struct App_Memory
+typedef struct App_Memory
 {
     // Platform_State platform_state;
     Platform_Api platform_api;
@@ -67,7 +55,7 @@ struct App_Memory
     f32 work_ms;
     u64 tick_count;
     Key_States key_states;
-};
+} App_Memory;
 
 #if defined(YOTE_INTERNAL)
 #define APP_TICK(name) void name(App_Memory *app_memory) // (doggo)should remove this but I probably revert this later on!
