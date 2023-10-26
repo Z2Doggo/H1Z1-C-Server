@@ -115,7 +115,6 @@ internal void zone_packet_handle(App_State *server_state,
         return;
     }
 
-    i32 offset = sizeof(u8);
     u32 packet_temp;
     u32 packet_id = *data;
     u8 *sub_packet_id = &data[1];
@@ -179,7 +178,7 @@ packet_id_switch:
 
         Zone_Packet_Character_CharacterStateDelta character_state_delta =
             {
-                .guid_1 = 0x1ull,
+                .guid_1 = session_state->character_id,
                 .guid_2 = 0,
                 .guid_3 = 0x40000000,
                 .guid_4 = 0,
@@ -200,7 +199,7 @@ packet_id_switch:
 
             Zone_Packet_Character_WeaponStance weapon_stance =
                 {
-                    .character_id = 0x1ull,
+                    .character_id = session_state->character_id,
                     .stance = 1,
                 };
 
@@ -211,7 +210,7 @@ packet_id_switch:
                         (struct length_1_s[1]){
                             [0] = {
                                 .profile_id = 5,
-                                .character_id = 0x1ull,
+                                .character_id = session_state->character_id,
                             },
                         },
                     .unk_dword_1 = 0,
@@ -228,7 +227,7 @@ packet_id_switch:
                             .length_2 = (struct length_2_s[1]){
                                 [0] = {
                                     .equipment_slot_id_2 = 0,
-                                    .guid = 0x1ull, // keep guid as a 0
+                                    .guid = 0, // keep guid as a 0
                                     .tint_alias_length = 7,
                                     .tint_alias = "Default",
                                     .decal_alias_length = 1,
@@ -257,7 +256,7 @@ packet_id_switch:
                 };
 
             Zone_Packet_Loadout_SetLoadoutSlots ldt_setldtslots = {
-                .character_id = 0x1ull,
+                .character_id = 0x133742069,
                 .loadout_id = 0,
                 .loadout_slot_data_count = 1,
                 .loadout_slot_data =
@@ -267,7 +266,7 @@ packet_id_switch:
                             .loadout_id_1 = 0,
                             .slot_id = 0,
                             .item_def_id1 = 0,
-                            .loadout_item_guid = 0x1ull,
+                            .loadout_item_guid = 0x0,
                             .unk_byte_1 = 255,
                             .unk_dword_1 = 0,
                         },
@@ -288,7 +287,7 @@ packet_id_switch:
                 };
 
             Zone_Packet_Character_StartMultiStateDeath multi_state_dth = {
-                .character_id = 0x0000000000000000ull,
+                .character_id = 0x0000000000000000,
                 .unk_byte_1 = 0,
                 .unk_byte_2 = 1,
                 .unk_byte_3 = 0,
@@ -319,32 +318,26 @@ packet_id_switch:
         packet_kind = Zone_Packet_Kind_StaticViewRequest;
         printf("[Zone] Handling StaticViewRequest\n");
 
-        Zone_Packet_StaticViewRequest viewRequest = {0};
-        zone_packet_unpack(data, data_length, packet_kind, &viewRequest, &server_state->arena_per_tick);
+        // Zone_Packet_StaticViewRequest staticViewRequest = {0};
+        // zone_packet_unpack(data, data_length, packet_kind, &staticViewRequest, &server_state->arena_per_tick);
 
-        if (viewRequest.viewpoint == "kotkdefault")
-        {
-            Zone_Packet_StaticViewReply viewReply =
-                {
-                    .state = 0,
-                    .position = {74.8f, 201.5f, 458.1f, 99.01f},
-                    .rotation = {199.99f, 289.99999f, 370.17f, 6.79f},
-                    .lookAt = {69.81f, 56.0f, 0.0f, 0.0f},
-                    .unk_byte_1 = 255,
-                    .unk_bool_1 = true,
-                };
-            zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_StaticViewReply, &viewReply);
+        Zone_Packet_StaticViewReply staticview_reply = {
+            .state = 0,
+            .position = {0, 0, 0, 1},
+            .rotation = {0, 0, 0, 1},
+            .lookAt = {0, 0, 0, 1},
+            .unk_byte_1 = 0,
+            .unk_bool_1 = true,
+        };
 
-            Zone_Packet_ClientUpdate_UpdateLocation updateLocation =
-                {
-                    .position = {-32.26f, 506.41f, 280.21f, 1.0f},
-                    .rotation = {-0.11f, -0.58f, -0.08f, 1.0f},
-                    .trigger_loading_screen = true,
-                    .unk_u8_1 = 0,
-                    .unk_bool = false,
-                };
-            zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_UpdateLocation, &updateLocation);
-        }
+        Zone_Packet_ClientUpdate_UpdateLocation updt_loc = {
+            .trigger_loading_screen = false,
+            .unk_u8_1 = 0,
+            .unk_bool = false,
+        };
+
+        zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_UpdateLocation, &updt_loc);
+        zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_StaticViewReply, &staticview_reply);
 
         break;
     }
@@ -429,7 +422,7 @@ packet_id_switch:
                     (struct length_1_s[1]){
                         [0] = {
                             .profile_id = 5,
-                            .character_id = 0x1ull,
+                            .character_id = 0x133742069,
                         },
                     },
                 .unk_dword_1 = 0,
@@ -446,7 +439,7 @@ packet_id_switch:
                         .length_2 = (struct length_2_s[1]){
                             [0] = {
                                 .equipment_slot_id_2 = 0,
-                                .guid = 0x1ull, // keep guid as a 0
+                                .guid = 0, // keep guid as a 0
                                 .tint_alias_length = 7,
                                 .tint_alias = "Default",
                                 .decal_alias_length = 1,
@@ -734,7 +727,7 @@ packet_id_switch:
 
         Zone_Packet_ClientUpdate_MonitorTimeDrift time_drift =
             {
-                .time_drift = timer,
+                .time_drift = 0,
             };
 
         zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_MonitorTimeDrift, &time_drift);
@@ -761,9 +754,7 @@ packet_id_switch:
                                 .zone_name = "LoginZone",
                                 .hex_size = 100,
                                 .is_production_zone = 1,
-                            },
-                    },
-            };
+                            }}};
 
         zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ContinentBattleInfo, &battle_info);
 
@@ -838,11 +829,11 @@ packet_id_switch:
         packet_kind = Zone_Packet_Kind_ClientUpdate_UpdateBattlEyeRegistration;
         printf("[Zone] Handling ClientUpdate.UpdateBattlEyeRegistration\n");
 
-        // (doggo)keep empty, don't need this packet!
+        // (doggo)keep empty, don't need this
 
         break;
     }
-
+    /*
     case ZONE_KEEPALIVE_ID:
     {
         packet_kind = Zone_Packet_Kind_KeepAlive;
@@ -863,7 +854,6 @@ packet_id_switch:
         printf("[Server] Handling PlayerUpdatePosition\n");
 
         Zone_Packet_PlayerUpdatePosition obj = {0};
-        zone_packet_unpack(data, data_length, packet_kind, &obj, &server_state->arena_per_tick);
 
         u32 offset = 0;
         u32 startOffset;
@@ -871,71 +861,62 @@ packet_id_switch:
         uint2b uv;
         int2b v;
 
-        if (obj.flag & 1)
-        {
+        if (obj.flag & 1) {
             uv = endian_read_uint2b_little(data);
             session_state->stance = uv.value;
             offset += uv.length;
         }
 
-        if (obj.flag & 2)
-        {
+        if (obj.flag & 2) {
             v = endian_read_int2b_little(data, offset);
-            session_state->position.x = v.value / 100;
+            session_state->position[0] = v.value / 100;
             offset += v.length;
 
             v = endian_read_int2b_little(data, offset);
-            session_state->position.y = v.value / 100;
+            session_state->position[1] = v.value / 100;
             offset += v.length;
 
             v = endian_read_int2b_little(data, offset);
-            session_state->position.z = v.value / 100;
+            session_state->position[2] = v.value / 100;
             offset += v.length;
         }
 
-        if (obj.flag & 0x20)
-        {
+        if (obj.flag & 0x20) {
             session_state->orientation = endian_read_f32_little(data + offset);
             offset += 4;
         }
 
-        if (obj.flag & 0x40)
-        {
+        if(obj.flag & 0x40) {
             v = endian_read_int2b_little(data, offset);
             session_state->front_tilt = v.value / 100;
             offset += v.length;
         }
 
-        if (obj.flag & 0x80)
-        {
+        if (obj.flag & 0x80) {
             v = endian_read_int2b_little(data, offset);
             session_state->side_tilt = v.value / 100;
             offset += v.length;
         }
 
-        if (obj.flag & 4)
-        {
+        if (obj.flag & 4) {
             v = endian_read_int2b_little(data, offset);
             session_state->angle_change = v.value / 100;
             offset += v.length;
         }
 
-        if (obj.flag & 0x8)
-        {
+        if (obj.flag & 0x8) {
             v = endian_read_int2b_little(data, offset);
             session_state->vertical_speed = v.value / 100;
             offset += v.length;
         }
 
-        if (obj.flag & 0x10)
-        {
+        if (obj.flag & 0x10) {
             v = endian_read_int2b_little(data, offset);
             session_state->horizontal_speed = v.value / 10;
             offset += v.length;
         }
 
-        if (obj.flag & 0x100)
-        {
+        if (obj.flag & 0x100) {
             v = endian_read_int2b_little(data, offset);
             session_state->unknown12_f32[0] = v.value / 100;
             offset += v.length;
@@ -949,8 +930,7 @@ packet_id_switch:
             offset += v.length;
         }
 
-        if (obj.flag & 0x200)
-        {
+        if(obj.flag & 0x200) {
             euler_angle rotation_euler;
 
             v = endian_read_int2b_little(data, offset);
@@ -971,29 +951,25 @@ packet_id_switch:
             offset += v.length;
         }
 
-        if (obj.flag & 0x400)
-        {
+        if (obj.flag & 0x400) {
             v = endian_read_int2b_little(data, offset);
             session_state->direction = v.value / 10;
             offset += v.length;
         }
 
-        if (obj.flag & 0x800)
-        {
+        if (obj.flag & 0x800) {
             v = endian_read_int2b_little(data, offset);
             session_state->engine_rpm = v.value / 10;
             offset += v.length;
         }
 
-        Gateway_Packet_TunnelPacket tunnel_packet = {0};
-        zone_packet_unpack(data, data_length, packet_kind, &tunnel_packet, &server_state->arena_per_tick);
-
-        obj.unk_byte = (u8 *)malloc(sizeof(tunnel_packet.data_length));
-        memcpy(&obj.unk_byte, tunnel_packet.data + 7, tunnel_packet.data_length - 7);
+        Gateway_Packet_TunnelPacket* tunnel_packet = {0};
+        obj.unk_byte = malloc(tunnel_packet->data_length);
+        memcpy(obj.unk_byte, tunnel_packet->data + 7, tunnel_packet->data_length - 7);
 
         zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(50), Zone_Packet_Kind_PlayerUpdatePosition, &obj);
-        break;
     }
+    */
     default:
     {
     packet_id_fail:

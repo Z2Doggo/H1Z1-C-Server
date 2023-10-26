@@ -1,14 +1,9 @@
-#if defined(YOTE_INTERNAL)
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <ctype.h>
 #include <string.h>
 #include <time.h>
-#else
-static void platform_win_console_write(char *format, ...);
-#define printf(s, ...) platform_win_console_write(s, __VA_ARGS__)
-#endif // YOTE_INTERNAL
 
 #define YOTE_USE_ARENA 1
 #define YOTE_USE_STRING 1
@@ -89,21 +84,9 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE "Login"
 #define printf(...)
-<<<<<<< HEAD
-<<<<<<<< HEAD:src/kotk_login_server.c
 #include "../schema/output/kotk_login_udp_11.c"
-#undef printf
 #include "login/login_udp_11.c"
-========
-#include "../schema/output/js_login_udp_11.c"
 #undef printf
-#include "js_2016/login/login_udp_11.c"
->>>>>>>> 215f4353346507dd61aeefb9a988d9fe5b650f5f:src/js_login_server.c
-=======
-#include "../schema/output/kotk_login_udp_11.c"
-#undef printf
-#include "kotk_ps3/login/login_udp_11.c"
->>>>>>> 215f4353346507dd61aeefb9a988d9fe5b650f5f
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 

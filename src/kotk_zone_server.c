@@ -1,9 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 
-<<<<<<< HEAD
-=======
-#if defined(YOTE_INTERNAL)
->>>>>>> 215f4353346507dd61aeefb9a988d9fe5b650f5f
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -75,11 +71,7 @@ struct App_State
 	i32 sessions_capacity;
 	Session_State sessions[MAX_SESSIONS_COUNT];
 };
-
-<<<<<<< HEAD
-=======
 // void sendSelf(App_State *app_state, Session_State *session_state);
->>>>>>> 215f4353346507dd61aeefb9a988d9fe5b650f5f
 internal void gateway_on_login(App_State *app_state, Session_State *session_state);
 internal void gateway_on_tunnel_data_from_client(App_State *app_state, Session_State *session_state, u8 *data, u32 data_length);
 internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
@@ -95,32 +87,22 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #include "core/core_server.h"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE "Gateway"
-<<<<<<< HEAD
 #include "zone/external_gateway_api_3.c"
-=======
-#include "kotk_ps3/zone/external_gateway_api_3.c"
->>>>>>> 215f4353346507dd61aeefb9a988d9fe5b650f5f
 #undef MESSAGE_NAMESPACE
 // TODO(rhett): Client or Zone? Client is the word used by the game, but zone is more clear?
 #define MESSAGE_NAMESPACE "Zone"
 #define printf(...)
 #include "../schema/output/client_protocol_1087.c"
 #undef printf
-<<<<<<< HEAD
 #include "zone/client_protocol_1087.c"
 #include "zone/data/send_self.c"
 #include "zone/character/zone_character.c"
 #include "zone/character/zone_login.c"
-=======
-#include "kotk_ps3/zone/client_protocol_1087.c"
-#include "kotk_ps3/zone/data/send_self.c"
-#include "kotk_ps3/zone/character/zone_character.c"
-#include "kotk_ps3/zone/character/zone_login.c"
->>>>>>> 215f4353346507dd61aeefb9a988d9fe5b650f5f
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 
-internal void gateway_on_login(App_State *app_state, Session_State *session_state)
+internal void
+gateway_on_login(App_State *app_state, Session_State *session_state)
 {
 	printf("[!] Character %llxh trying to login to zone server\n", 0x1234567890u); // (doggo)temp characterId until I implement a decent enough solution!
 
