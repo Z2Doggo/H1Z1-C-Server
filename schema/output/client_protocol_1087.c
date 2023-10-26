@@ -354,13 +354,12 @@
 #define ZONE_SENDSECURITYPACKETANDSELFDESTRUCT_ID 0x99
 #define ZONE_GETCONTINENTBATTLEINFO_ID 0x98
 #define ZONE_GETRESPAWNLOCATIONS_ID 0x9a
-#define ZONE_WALLOFDATABASE_ID 0x9b
-#define ZONE_WALLOFDATA_UIEVENT_ID 0x9b0005
-#define ZONE_WALLOFDATA_CLIENTSYSTEMINFO_ID 0x9b0006
-#define ZONE_WALLOFDATA_VOICECHATEVENT_ID 0x9b0007
-#define ZONE_WALLOFDATA_NUDGEEVENT_ID 0x9b0009
-#define ZONE_WALLOFDATA_LAUNCHPADFINGERPRINT_ID 0x9b000a
-#define ZONE_WALLOFDATA_VIDEOCAPTURE_ID 0x9b000b
+#define ZONE_WALLOFDATA_UIEVENT_ID 0x9b05
+#define ZONE_WALLOFDATA_CLIENTSYSTEMINFO_ID 0x9b60
+#define ZONE_WALLOFDATA_VOICECHATEVENT_ID 0x9b07
+#define ZONE_WALLOFDATA_NUDGEEVENT_ID 0x9b09
+#define ZONE_WALLOFDATA_LAUNCHPADFINGERPRINT_ID 0x9b0a
+#define ZONE_WALLOFDATA_VIDEOCAPTURE_ID 0x9b0b
 #define ZONE_WALLOFDATA_CLIENTTRANSITION_ID 0x9b000c
 #define ZONE_IMPLANTSBASE_ID 0x9c0000
 #define ZONE_INGAMEPURCHASE_ID 0x9d
@@ -440,8 +439,8 @@
 #define ZONE_ONLINEIDBASE_ID 0xe7
 #define ZONE_PS4PLAYGOBASE_ID 0xe8
 #define ZONE_SYNCHRONIZEDTELEPORTBASE_ID 0xe9
-#define ZONE_STATICVIEWREQUEST_ID 0xea0100
-#define ZONE_STATICVIEWREPLY_ID 0xea0200
+#define ZONE_STATICVIEWREQUEST_ID 0xea01
+#define ZONE_STATICVIEWREPLY_ID 0xea02
 #define ZONE_REPLICATIONBASE_ID 0xeb
 #define ZONE_DATASHEETSBASE_ID 0xec
 #define ZONE_PLAYERWORLDTRANSFERREQUEST_ID 0xed
@@ -815,7 +814,6 @@ ZONE_PACKET_KIND(Zone_Packet_Kind_ContinentBattleInfo, "ContinentBattleInfo"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_SendSecurityPacketAndSelfDestruct, "SendSecurityPacketAndSelfDestruct"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_GetContinentBattleInfo, "GetContinentBattleInfo"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_GetRespawnLocations, "GetRespawnLocations"), \
-ZONE_PACKET_KIND(Zone_Packet_Kind_WallOfDataBase, "WallOfDataBase"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_WallOfData_UIEvent, "WallOfData_UIEvent"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_WallOfData_ClientSystemInfo, "WallOfData_ClientSystemInfo"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_WallOfData_VoiceChatEvent, "WallOfData_VoiceChatEvent"), \
@@ -1292,13 +1290,12 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_SendSecurityPacketAndSelfDestruct] = 0x99,
 [Zone_Packet_Kind_GetContinentBattleInfo] = 0x98,
 [Zone_Packet_Kind_GetRespawnLocations] = 0x9a,
-[Zone_Packet_Kind_WallOfDataBase] = 0x9b,
-[Zone_Packet_Kind_WallOfData_UIEvent] = 0x9b0005,
-[Zone_Packet_Kind_WallOfData_ClientSystemInfo] = 0x9b0006,
-[Zone_Packet_Kind_WallOfData_VoiceChatEvent] = 0x9b0007,
-[Zone_Packet_Kind_WallOfData_NudgeEvent] = 0x9b0009,
-[Zone_Packet_Kind_WallOfData_LaunchPadFingerprint] = 0x9b000a,
-[Zone_Packet_Kind_WallOfData_VideoCapture] = 0x9b000b,
+[Zone_Packet_Kind_WallOfData_UIEvent] = 0x9b05,
+[Zone_Packet_Kind_WallOfData_ClientSystemInfo] = 0x9b60,
+[Zone_Packet_Kind_WallOfData_VoiceChatEvent] = 0x9b07,
+[Zone_Packet_Kind_WallOfData_NudgeEvent] = 0x9b09,
+[Zone_Packet_Kind_WallOfData_LaunchPadFingerprint] = 0x9b0a,
+[Zone_Packet_Kind_WallOfData_VideoCapture] = 0x9b0b,
 [Zone_Packet_Kind_WallOfData_ClientTransition] = 0x9b000c,
 [Zone_Packet_Kind_ImplantsBase] = 0x9c0000,
 [Zone_Packet_Kind_InGamePurchase] = 0x9d,
@@ -1378,8 +1375,8 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_OnlineIdBase] = 0xe7,
 [Zone_Packet_Kind_Ps4PlayGoBase] = 0xe8,
 [Zone_Packet_Kind_SynchronizedTeleportBase] = 0xe9,
-[Zone_Packet_Kind_StaticViewRequest] = 0xea0100,
-[Zone_Packet_Kind_StaticViewReply] = 0xea0200,
+[Zone_Packet_Kind_StaticViewRequest] = 0xea01,
+[Zone_Packet_Kind_StaticViewReply] = 0xea02,
 [Zone_Packet_Kind_ReplicationBase] = 0xeb,
 [Zone_Packet_Kind_DatasheetsBase] = 0xec,
 [Zone_Packet_Kind_PlayerWorldTransferRequest] = 0xed,
@@ -4090,9 +4087,7 @@ u64 id_unknownQword1;
 u8 unknownByte1;
 u32 actorModelId;
 u32 unknownDword1;
-f32 position_x;
-f32 position_y;
-f32 position_z;
+vec3 position;
 vec4 rotation;
 f32 unknownFloat1;
 u64 mountGuid;
@@ -17511,14 +17506,6 @@ offset += sizeof(u8);
 
 } break;
 
-case Zone_Packet_Kind_WallOfDataBase:
-{
-printf(MESSAGE_CONCAT_INFO("Packing WallOfDataBase...\n"));
-endian_write_u8_little(buffer + offset, 0x9b);
-offset += sizeof(u8);
-
-} break;
-
 case Zone_Packet_Kind_WallOfData_UIEvent:
 {
 printf(MESSAGE_CONCAT_INFO("Packing WallOfData_UIEvent...\n"));
@@ -17527,8 +17514,8 @@ Zone_Packet_WallOfData_UIEvent* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0x9b);
 offset += sizeof(u8);
 
-endian_write_u16_little(buffer + offset, 0x5);
-offset += sizeof(u16);
+endian_write_u8_little(buffer + offset, 0x5);
+offset += sizeof(u8);
 
 // string object
 endian_write_u32_little(buffer + offset, packet->object_length);
@@ -17570,8 +17557,8 @@ Zone_Packet_WallOfData_ClientSystemInfo* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0x9b);
 offset += sizeof(u8);
 
-endian_write_u16_little(buffer + offset, 0x6);
-offset += sizeof(u16);
+endian_write_u8_little(buffer + offset, 0x60);
+offset += sizeof(u8);
 
 // string info
 endian_write_u32_little(buffer + offset, packet->info_length);
@@ -17591,8 +17578,8 @@ printf(MESSAGE_CONCAT_INFO("Packing WallOfData_VoiceChatEvent...\n"));
 endian_write_u8_little(buffer + offset, 0x9b);
 offset += sizeof(u8);
 
-endian_write_u16_little(buffer + offset, 0x7);
-offset += sizeof(u16);
+endian_write_u8_little(buffer + offset, 0x7);
+offset += sizeof(u8);
 
 } break;
 
@@ -17602,8 +17589,8 @@ printf(MESSAGE_CONCAT_INFO("Packing WallOfData_NudgeEvent...\n"));
 endian_write_u8_little(buffer + offset, 0x9b);
 offset += sizeof(u8);
 
-endian_write_u16_little(buffer + offset, 0x9);
-offset += sizeof(u16);
+endian_write_u8_little(buffer + offset, 0x9);
+offset += sizeof(u8);
 
 } break;
 
@@ -17613,8 +17600,8 @@ printf(MESSAGE_CONCAT_INFO("Packing WallOfData_LaunchPadFingerprint...\n"));
 endian_write_u8_little(buffer + offset, 0x9b);
 offset += sizeof(u8);
 
-endian_write_u16_little(buffer + offset, 0xa);
-offset += sizeof(u16);
+endian_write_u8_little(buffer + offset, 0xa);
+offset += sizeof(u8);
 
 } break;
 
@@ -17624,8 +17611,8 @@ printf(MESSAGE_CONCAT_INFO("Packing WallOfData_VideoCapture...\n"));
 endian_write_u8_little(buffer + offset, 0x9b);
 offset += sizeof(u8);
 
-endian_write_u16_little(buffer + offset, 0xb);
-offset += sizeof(u16);
+endian_write_u8_little(buffer + offset, 0xb);
+offset += sizeof(u8);
 
 } break;
 
@@ -18647,20 +18634,10 @@ endian_write_u32_little(buffer + offset, packet->unknownDword1);
 offset += sizeof(u32);
 printf("-- unknownDword1           \t%lld\t%llxh\t%f\n", (i64)packet->unknownDword1, (u64)packet->unknownDword1, (f64)packet->unknownDword1);
 
-// f32 position_x
-endian_write_f32_little(buffer + offset, packet->position_x);
-offset += sizeof(f32);
-printf("-- position_x              \t%lld\t%llxh\t%f\n", (i64)packet->position_x, (u64)packet->position_x, (f64)packet->position_x);
-
-// f32 position_y
-endian_write_f32_little(buffer + offset, packet->position_y);
-offset += sizeof(f32);
-printf("-- position_y              \t%lld\t%llxh\t%f\n", (i64)packet->position_y, (u64)packet->position_y, (f64)packet->position_y);
-
-// f32 position_z
-endian_write_f32_little(buffer + offset, packet->position_z);
-offset += sizeof(f32);
-printf("-- position_z              \t%lld\t%llxh\t%f\n", (i64)packet->position_z, (u64)packet->position_z, (f64)packet->position_z);
+// vec3 position
+endian_write_vec3_little(buffer + offset, packet->position);
+offset += sizeof(f32) * 3;
+printf("-- position                \t%f\t%f\t%f\n", (f64)packet->position.x, (f64)packet->position.y, (f64)packet->position.x);
 
 // vec4 rotation
 endian_write_vec4_little(buffer + offset, packet->rotation);
@@ -19387,8 +19364,8 @@ Zone_Packet_StaticViewRequest* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0xea);
 offset += sizeof(u8);
 
-endian_write_u16_little(buffer + offset, 0x100);
-offset += sizeof(u16);
+endian_write_u8_little(buffer + offset, 0x1);
+offset += sizeof(u8);
 
 // string viewpoint
 endian_write_u32_little(buffer + offset, packet->viewpoint_length);
@@ -19410,8 +19387,8 @@ Zone_Packet_StaticViewReply* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0xea);
 offset += sizeof(u8);
 
-endian_write_u16_little(buffer + offset, 0x200);
-offset += sizeof(u16);
+endian_write_u8_little(buffer + offset, 0x2);
+offset += sizeof(u8);
 
 // u32 state
 endian_write_u32_little(buffer + offset, packet->state);
@@ -30202,20 +30179,10 @@ packet->unknownDword1 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
 printf("-- unknownDword1           \t%lld\t%llxh\t%f\n", (i64)packet->unknownDword1, (u64)packet->unknownDword1, (f64)packet->unknownDword1);
 
-// f32 position_x
-packet->position_x = endian_read_f32_little(data + offset);
-offset += sizeof(f32);
-printf("-- position_x              \t%lld\t%llxh\t%f\n", (i64)packet->position_x, (u64)packet->position_x, (f64)packet->position_x);
-
-// f32 position_y
-packet->position_y = endian_read_f32_little(data + offset);
-offset += sizeof(f32);
-printf("-- position_y              \t%lld\t%llxh\t%f\n", (i64)packet->position_y, (u64)packet->position_y, (f64)packet->position_y);
-
-// f32 position_z
-packet->position_z = endian_read_f32_little(data + offset);
-offset += sizeof(f32);
-printf("-- position_z              \t%lld\t%llxh\t%f\n", (i64)packet->position_z, (u64)packet->position_z, (f64)packet->position_z);
+// vec3 position
+packet->position = endian_read_vec3_little(data + offset);
+offset += sizeof(f32) * 3;
+printf("-- position                \t%f\t%f\t%f\n", (f64)packet->position.x, (f64)packet->position.y, (f64)packet->position.z);
 
 // vec4 rotation
 packet->rotation = endian_read_vec4_little(data + offset);

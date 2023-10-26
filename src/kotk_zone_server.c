@@ -71,7 +71,7 @@ struct App_State
 	i32 sessions_capacity;
 	Session_State sessions[MAX_SESSIONS_COUNT];
 };
-// void sendSelf(App_State *app_state, Session_State *session_state);
+
 internal void gateway_on_login(App_State *app_state, Session_State *session_state);
 internal void gateway_on_tunnel_data_from_client(App_State *app_state, Session_State *session_state, u8 *data, u32 data_length);
 internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
@@ -94,7 +94,9 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #define printf(...)
 #include "../schema/output/client_protocol_1087.c"
 #undef printf
+void staticViewReply(App_State *app, Session_State *session, Zone_Packet_StaticViewRequest *packetPtr);
 #include "zone/client_protocol_1087.c"
+#include "zone/data/loginZoneData.c"
 #include "zone/data/send_self.c"
 #include "zone/character/zone_character.c"
 #include "zone/character/zone_login.c"

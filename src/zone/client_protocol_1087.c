@@ -318,26 +318,11 @@ packet_id_switch:
         packet_kind = Zone_Packet_Kind_StaticViewRequest;
         printf("[Zone] Handling StaticViewRequest\n");
 
-        // Zone_Packet_StaticViewRequest staticViewRequest = {0};
-        // zone_packet_unpack(data, data_length, packet_kind, &staticViewRequest, &server_state->arena_per_tick);
+        Zone_Packet_StaticViewRequest *viewReq = malloc(sizeof(Zone_Packet_StaticViewRequest));
+        // zone_packet_unpack(data, data_length, packet_kind, &viewReq, &server_state->arena_per_tick);
 
-        Zone_Packet_StaticViewReply staticview_reply = {
-            .state = 0,
-            .position = {0, 0, 0, 1},
-            .rotation = {0, 0, 0, 1},
-            .lookAt = {0, 0, 0, 1},
-            .unk_byte_1 = 0,
-            .unk_bool_1 = true,
-        };
-
-        Zone_Packet_ClientUpdate_UpdateLocation updt_loc = {
-            .trigger_loading_screen = false,
-            .unk_u8_1 = 0,
-            .unk_bool = false,
-        };
-
-        zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_UpdateLocation, &updt_loc);
-        zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_StaticViewReply, &staticview_reply);
+        staticViewReply(server_state, session_state, viewReq);
+        free(viewReq);
 
         break;
     }
@@ -644,7 +629,7 @@ packet_id_switch:
         printf("[Zone] Handling WallOfData.UIEvent\n");
 
         Zone_Packet_WallOfData_UIEvent result = {0};
-        zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
+        // zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
 
         break;
     }
@@ -706,7 +691,7 @@ packet_id_switch:
         printf("[Zone] Handling WallOfData.ClientSystemInfo\n");
 
         Zone_Packet_WallOfData_ClientSystemInfo result = {0};
-        zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
+        // zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
 
         break;
     }
@@ -716,7 +701,7 @@ packet_id_switch:
         printf("[Zone] Handling WallOfData.ClientTransition\n");
 
         Zone_Packet_WallOfData_ClientTransition result = {0};
-        zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
+        // zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
 
         break;
     }
@@ -833,21 +818,32 @@ packet_id_switch:
 
         break;
     }
-    /*
     case ZONE_KEEPALIVE_ID:
     {
         packet_kind = Zone_Packet_Kind_KeepAlive;
         printf("[Zone] Handling KeepAlive\n");
 
-        Zone_Packet_KeepAlive keep_alive =
-            {
-                .game_time = timer,
-            };
+        Zone_Packet_KeepAlive keep_alive = {0};
+        zone_packet_unpack(data, data_length, packet_kind, &keep_alive, &server_state->arena_per_tick);
 
-        zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_KeepAlive, &keep_alive);
+        Zone_Packet_AddLightweightPc *lightPC = malloc(sizeof(Zone_Packet_AddLightweightPc));
+        lightPC->character_id = 0x1ull,
+        lightPC->actorModelId = 9240 || 9474,
+        lightPC->rotation.x = 0.0f,
+        lightPC->rotation.y = 0.0f,
+        lightPC->rotation.z = 0.0f,
+        lightPC->rotation.w = 1.0f,
+        zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_KeepAlive, &lightPC);
+
+        Zone_Packet_ClientUpdate_UpdateLocation *updateLocation = malloc(sizeof(Zone_Packet_ClientUpdate_UpdateLocation));
+        updateLocation->trigger_loading_screen = false,
+
+        free(updateLocation);
+        free(lightPC);
 
         break;
     }
+    /*
     case ZONE_PLAYERUPDATEPOSITION_ID:
     {
         packet_kind = Zone_Packet_Kind_PlayerUpdatePosition;

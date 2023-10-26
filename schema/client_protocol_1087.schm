@@ -2793,17 +2793,16 @@ packet 0x99 SendSecurityPacketAndSelfDestruct
 packet 0x98 GetContinentBattleInfo
 packet 0x9a GetRespawnLocations
 
-packet 0x9b WallOfDataBase
-packet 0x9b 0x5:u16 WallOfData_UIEvent
+packet 0x9b 0x05:u8 WallOfData_UIEvent
 string:u32 object
 string:u32 function
 string:u32 argument
-packet 0x9b 0x6:u16 WallOfData_ClientSystemInfo
+packet 0x9b 0x60:u8 WallOfData_ClientSystemInfo
 string:u32 info
-packet 0x9b 0x7:u16 WallOfData_VoiceChatEvent
-packet 0x9b 0x9:u16 WallOfData_NudgeEvent
-packet 0x9b 0xa:u16 WallOfData_LaunchPadFingerprint
-packet 0x9b 0xb:u16 WallOfData_VideoCapture
+packet 0x9b 0x07:u8 WallOfData_VoiceChatEvent
+packet 0x9b 0x09:u8 WallOfData_NudgeEvent
+packet 0x9b 0x0a:u8 WallOfData_LaunchPadFingerprint
+packet 0x9b 0x0b:u8 WallOfData_VideoCapture
 
 packet 0x9b 0xc:u16 WallOfData_ClientTransition
 u32 old_state
@@ -2979,9 +2978,7 @@ u64 id_unknownQword1
 u8 unknownByte1
 u32 actorModelId
 u32 unknownDword1
-f32 position_x
-f32 position_y
-f32 position_z
+vec3 position
 vec4 rotation
 f32 unknownFloat1
 u64 mountGuid
@@ -3109,10 +3106,10 @@ packet 0xe6 BattlEyeData
 packet 0xe7 OnlineIdBase
 packet 0xe8 Ps4PlayGoBase
 packet 0xe9 SynchronizedTeleportBase
-packet 0xea 0x0100:u16 StaticViewRequest
+packet 0xea 0x01:u8 StaticViewRequest
 string:u32 viewpoint
 
-packet 0xea 0x0200:u16 StaticViewReply
+packet 0xea 0x02:u8 StaticViewReply
 u32 state
 vec4 position
 vec4 rotation
