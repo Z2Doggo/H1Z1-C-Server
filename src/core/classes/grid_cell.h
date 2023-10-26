@@ -6,6 +6,7 @@ typedef struct GridCell
     i32 height;
 } GridCell;
 
+<<<<<<< HEAD
 void gridConstruct(f32 x, f32 y, i32 width, i32 height)
 {
     GridCell *gridcell = (GridCell *)malloc(sizeof(GridCell)); // new obj because yeah
@@ -17,4 +18,19 @@ void gridConstruct(f32 x, f32 y, i32 width, i32 height)
 
     gridcell->width = width;
     gridcell->height = height;
+=======
+GridCell gridConstruct(f32 x, f32 y, i32 width, i32 height)
+{
+    GridCell gridcell; // new obj because yeah
+
+    gridcell.position[0] = x;
+    gridcell.position[1] = 0.0f;
+    gridcell.position[2] = y;
+    gridcell.position[3] = 1.0f;
+
+    gridcell.width = width;
+    gridcell.height = height;
+
+    return gridcell;
+>>>>>>> 215f4353346507dd61aeefb9a988d9fe5b650f5f
 }

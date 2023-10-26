@@ -33,7 +33,11 @@ void baseItemConstructor(u32 itemDefinitionId,
 
     if (stackCount < 0)
     {
+<<<<<<< HEAD
         printf("Negative stackCount: %d, detected for item: %u, debugFlag: %s", stackCount, itemDefinitionId, baseItem->debugFlag);
+=======
+        printf("Negative stackCount: %u, detected for item: %u, debugFlag: %s", stackCount, itemDefinitionId, baseItem->debugFlag);
+>>>>>>> 215f4353346507dd61aeefb9a988d9fe5b650f5f
         baseItem->stackCount = 0;
     }
     else
