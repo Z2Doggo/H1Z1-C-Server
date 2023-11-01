@@ -169,6 +169,10 @@ struct Session_State
     // zoneClient client;
     pGetPlayerActorData pGetPlayerActor;
 
+    // gateway channel stuff & testing related
+    struct Gateway_Packet_TunnelPacket *tunnelPacket;
+    u8 gateway_channel;
+
     u64 character_id;
     u64 guid;
     u64 item_guid;
@@ -177,7 +181,6 @@ struct Session_State
     u32 selected_server_id;
     b8 finished_loading;
     b8 first_login;
-    b8 gateway_channel;
     b8 is_synced;
 
     Session_Kind kind;
@@ -220,22 +223,22 @@ struct Session_State
     u64 creation_date;
     u64 last_login_date;
 
-    u32 stance;
+    i32 stance;
     vec4 position;
     vec3 positionLW; // for lightweight packets
-    u32 unknown12_f32[3];
+    vec4 unknown12_f32;
     vec4 rotation;
     euler_angle rotationRaw;
     vec4 lookAt;
     f32 orientation;
-    u32 direction;
-    u32 front_tilt;
-    u32 side_tilt;
-    u32 angle_change;
-    u32 vertical_speed;
-    u32 horizontal_speed;
-    u32 engine_rpm;
-    u32 sequence_time;
+    i32 direction;
+    i32 front_tilt;
+    i32 side_tilt;
+    i32 angle_change;
+    i32 vertical_speed;
+    i32 horizontal_speed;
+    i32 engine_rpm;
+    i32 sequence_time;
     u8 unk_byte;
     // end world_character struct
 };

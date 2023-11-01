@@ -2469,11 +2469,12 @@ packet 0x75 0:u16 RatingBase
 packet 0x76 0:u16 ClientActivityLaunchBase
 packet 0x77 0:u16 ServerActivityLaunchBase
 packet 0x78 ClientFlashTimer
+
 packet 0x79 PlayerUpdatePosition
 uint2b transient_id
 u16 flag
 u32 sequence
-bytes:u32 unk_byte
+u8 ubyte
 
 packet 0x7a InviteAndStartMiniGame
 packet 0x7b QuizBase

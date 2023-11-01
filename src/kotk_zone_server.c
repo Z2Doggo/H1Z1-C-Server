@@ -100,6 +100,7 @@ void staticViewReply(App_State *app, Session_State *session, Zone_Packet_StaticV
 #include "zone/data/send_self.c"
 #include "zone/character/zone_character.c"
 #include "zone/character/zone_login.c"
+#include "zone/data/shared.c"
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 

@@ -668,31 +668,38 @@ struct vecf64
     f64 w;
 };
 
-typedef struct euler_angle euler_angle;
-struct euler_angle
+typedef struct euler_angle
 {
-    i32 pitch;
-    i32 yaw;
-    i32 roll;
-};
+    f32 qx;
+    f32 qy;
+    f32 qz;
+    f32 qw;
+} euler_angle;
 
-internal vec4
-euler_to_quaternion(euler_angle euler)
+internal vec4 eul2quat(euler_angle *angles)
 {
-    f32 cos_pitch = cos(euler.pitch / 2);
-    f32 sin_pitch = sin(euler.pitch / 2);
-    f32 cos_yaw = cos(euler.yaw / 2);
-    f32 sin_yaw = sin(euler.yaw / 2);
-    f32 cos_roll = cos(euler.roll / 2);
-    f32 sin_roll = sin(euler.roll / 2);
+    vec4 result;
 
-    vec4 q;
-    q.x = cos_pitch * cos_yaw * cos_roll + sin_pitch * sin_yaw * sin_roll;
-    q.y = sin_pitch * cos_yaw * cos_roll - cos_pitch * sin_yaw * sin_roll;
-    q.z = cos_pitch * sin_yaw * cos_roll + sin_pitch * cos_yaw * sin_roll;
-    q.w = cos_pitch * cos_yaw * sin_roll - sin_pitch * sin_yaw * cos_roll;
+    f32 heading = angles->qx;
+    f32 attitude = angles->qy;
+    f32 bank = -angles->qz;
 
-    return q;
+    f32 c1 = cos(heading / 2);
+    f32 s1 = sin(heading / 2);
+    f32 c2 = cos(attitude / 2);
+    f32 s2 = sin(attitude / 2);
+    f32 c3 = cos(bank / 2);
+    f32 s3 = sin(bank / 2);
+
+    f32 c1c2 = c1 * c2;
+    f32 s1s2 = s1 * s2;
+
+    result.w = c1c2 * c3 - s1s2 * s3;
+    result.y = s1 * c2 * c3 + c1 * s2 * s3;
+    result.z = c1c2 * s3 + s1s2 * c3;
+    result.x = c1 * s2 * c3 - s1 * c2 * s3;
+
+    return result;
 }
 
 internal vec3

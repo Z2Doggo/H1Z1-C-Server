@@ -3659,8 +3659,7 @@ struct Zone_Packet_PlayerUpdatePosition
 uint2b transient_id;
 u16 flag;
 u32 sequence;
-u32 unk_byte_length;
-u8* unk_byte;
+u8 ubyte;
 };
 
 
@@ -15528,15 +15527,10 @@ endian_write_u32_little(buffer + offset, packet->sequence);
 offset += sizeof(u32);
 printf("-- sequence                \t%lld\t%llxh\t%f\n", (i64)packet->sequence, (u64)packet->sequence, (f64)packet->sequence);
 
-// bytes unk_byte
-endian_write_u32_little(buffer + offset, packet->unk_byte_length);
-offset += sizeof(u32);
-printf("-- BYTES_LENGTH            \t%lld\t%llxh\t%f\n", (i64)packet->unk_byte_length, (u64)packet->unk_byte_length, (f64)packet->unk_byte_length);
-for (u32 unk_byte_iter = 0; unk_byte_iter < packet->unk_byte_length; unk_byte_iter++)
-{
-endian_write_u8_little(buffer + offset, packet->unk_byte[unk_byte_iter]);
-offset++;
-}
+// u8 ubyte
+endian_write_u8_little(buffer + offset, packet->ubyte);
+offset += sizeof(u8);
+printf("-- ubyte                   \t%lld\t%llxh\t%f\n", (i64)packet->ubyte, (u64)packet->ubyte, (f64)packet->ubyte);
 
 } break;
 
@@ -28639,16 +28633,10 @@ packet->sequence = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
 printf("-- sequence                \t%lld\t%llxh\t%f\n", (i64)packet->sequence, (u64)packet->sequence, (f64)packet->sequence);
 
-// bytes unk_byte
-packet->unk_byte_length = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-packet->unk_byte = arena_push_size(arena, packet->unk_byte_length);
-printf("-- BYTES_LENGTH            \t%d\n", packet->unk_byte_length);
-for (u32 unk_byte_iter = 0; unk_byte_iter < packet->unk_byte_length; unk_byte_iter++)
-{
-packet->unk_byte[unk_byte_iter] = *(u8*)((uptr)data + offset);
-offset++;
-}
+// u8 ubyte
+packet->ubyte = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- ubyte                   \t%lld\t%llxh\t%f\n", (i64)packet->ubyte, (u64)packet->ubyte, (f64)packet->ubyte);
 
 } break;
 

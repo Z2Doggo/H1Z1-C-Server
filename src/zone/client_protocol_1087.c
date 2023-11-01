@@ -119,6 +119,7 @@ internal void zone_packet_handle(App_State *server_state,
     u32 packet_id = *data;
     u8 *sub_packet_id = &data[1];
     u32 packet_iter;
+
     if (data_length > 0)
     {
         for (packet_iter = Zone_Packet_Kind_Unhandled + 1; packet_iter < Zone_Packet_Kind__End; packet_iter++)
@@ -843,129 +844,6 @@ packet_id_switch:
 
         break;
     }
-    /*
-    case ZONE_PLAYERUPDATEPOSITION_ID:
-    {
-        packet_kind = Zone_Packet_Kind_PlayerUpdatePosition;
-        printf("[Server] Handling PlayerUpdatePosition\n");
-
-        Zone_Packet_PlayerUpdatePosition obj = {0};
-
-        u32 offset = 0;
-        u32 startOffset;
-        startOffset = offset;
-        uint2b uv;
-        int2b v;
-
-        if (obj.flag & 1) {
-            uv = endian_read_uint2b_little(data);
-            session_state->stance = uv.value;
-            offset += uv.length;
-        }
-
-        if (obj.flag & 2) {
-            v = endian_read_int2b_little(data, offset);
-            session_state->position[0] = v.value / 100;
-            offset += v.length;
-
-            v = endian_read_int2b_little(data, offset);
-            session_state->position[1] = v.value / 100;
-            offset += v.length;
-
-            v = endian_read_int2b_little(data, offset);
-            session_state->position[2] = v.value / 100;
-            offset += v.length;
-        }
-
-        if (obj.flag & 0x20) {
-            session_state->orientation = endian_read_f32_little(data + offset);
-            offset += 4;
-        }
-
-        if(obj.flag & 0x40) {
-            v = endian_read_int2b_little(data, offset);
-            session_state->front_tilt = v.value / 100;
-            offset += v.length;
-        }
-
-        if (obj.flag & 0x80) {
-            v = endian_read_int2b_little(data, offset);
-            session_state->side_tilt = v.value / 100;
-            offset += v.length;
-        }
-
-        if (obj.flag & 4) {
-            v = endian_read_int2b_little(data, offset);
-            session_state->angle_change = v.value / 100;
-            offset += v.length;
-        }
-
-        if (obj.flag & 0x8) {
-            v = endian_read_int2b_little(data, offset);
-            session_state->vertical_speed = v.value / 100;
-            offset += v.length;
-        }
-
-        if (obj.flag & 0x10) {
-            v = endian_read_int2b_little(data, offset);
-            session_state->horizontal_speed = v.value / 10;
-            offset += v.length;
-        }
-
-        if (obj.flag & 0x100) {
-            v = endian_read_int2b_little(data, offset);
-            session_state->unknown12_f32[0] = v.value / 100;
-            offset += v.length;
-
-            v = endian_read_int2b_little(data, offset);
-            session_state->unknown12_f32[1] = v.value / 100;
-            offset += v.length;
-
-            v = endian_read_int2b_little(data, offset);
-            session_state->unknown12_f32[2] = v.value / 100;
-            offset += v.length;
-        }
-
-        if(obj.flag & 0x200) {
-            euler_angle rotation_euler;
-
-            v = endian_read_int2b_little(data, offset);
-            rotation_euler.pitch = v.value / 100;
-            offset += v.length;
-
-            v = endian_read_int2b_little(data, offset);
-            rotation_euler.yaw = v.value / 100;
-            offset += v.length;
-
-            v = endian_read_int2b_little(data, offset);
-            rotation_euler.roll = v.value / 100;
-            offset += v.length;
-
-            session_state->rotation = euler_to_quaternion(rotation_euler);
-            session_state->rotationRaw = rotation_euler;
-            session_state->lookAt = euler_to_quaternion(rotation_euler);
-            offset += v.length;
-        }
-
-        if (obj.flag & 0x400) {
-            v = endian_read_int2b_little(data, offset);
-            session_state->direction = v.value / 10;
-            offset += v.length;
-        }
-
-        if (obj.flag & 0x800) {
-            v = endian_read_int2b_little(data, offset);
-            session_state->engine_rpm = v.value / 10;
-            offset += v.length;
-        }
-
-        Gateway_Packet_TunnelPacket* tunnel_packet = {0};
-        obj.unk_byte = malloc(tunnel_packet->data_length);
-        memcpy(obj.unk_byte, tunnel_packet->data + 7, tunnel_packet->data_length - 7);
-
-        zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(50), Zone_Packet_Kind_PlayerUpdatePosition, &obj);
-    }
-    */
     default:
     {
     packet_id_fail:

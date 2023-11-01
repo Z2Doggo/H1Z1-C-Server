@@ -60,6 +60,7 @@ void CharacterSelectInfoRequest(App_State *app, Session_State *session)
 		.name_length = 0, // name length hardcoded
 		.model_id = 9240, // probably should make the struct in session state a pointer?
 		.gender = 1,	  // this too?
+		.head_id = 9587,
 	};
 
 	login_packet_send(app, session, &app->arena_per_tick, KB(10), false, Login_Packet_Kind_CharacterSelectInfoReply, &selectInfoReply);
