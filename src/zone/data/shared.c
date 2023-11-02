@@ -7,13 +7,13 @@ readPositionUpdateData(App_State *app,
     Zone_Packet_PlayerUpdatePosition obj = {0}; // init
     u32 start_offset = offset;                  // offset is u32 for 2bit values, other than that, will need to typecast to a (u8 *) - doggo
 
-    obj.flag = endian_read_u16_little((u8 *)&offset);
+    obj.flag = endian_read_u16_little(data + offset);
     offset += 2;
 
-    obj.sequence = endian_read_u32_little((u8 *)&offset);
+    obj.sequence = endian_read_u32_little(data + offset);
     offset += 4;
 
-    obj.ubyte = endian_read_u8_little((u8 *)&offset);
+    obj.ubyte = endian_read_u8_little(data + offset);
     offset += 1;
 
     int2b v;           // signed, also maybe init this aswell?
@@ -41,7 +41,7 @@ readPositionUpdateData(App_State *app,
 
     if (obj.flag & 0x20)
     {
-        session->orientation = endian_read_f32_little((u8 *)&offset);
+        session->orientation = endian_read_f32_little(data + offset);
         offset += 4;
     }
 

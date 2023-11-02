@@ -120,7 +120,7 @@
 #define ZONE_CLIENTUPDATE_REMOVENOTIFICATIONS_ID 0x110041
 #define ZONE_CLIENTUPDATE_NPCRELEVANCE_ID 0x110042
 #define ZONE_CLIENTUPDATE_INITIATENAMECHANGE_ID 0x110043
-#define ZONE_CLIENTUPDATE_MONITORTIMEDRIFT_ID 0x114400
+#define ZONE_CLIENTUPDATE_MONITORTIMEDRIFT_ID 0x1144
 #define ZONE_CLIENTUPDATE_NAMECHANGERESULT_ID 0x110045
 #define ZONE_CLIENTUPDATE_NOTIFYSERVEROFSTALLEDEVENT_ID 0x110046
 #define ZONE_CLIENTUPDATE_UPDATESIGHTS_ID 0x110047
@@ -180,8 +180,8 @@
 #define ZONE_CLIENTMEMBERSHIPACTIVATION_ID 0x40
 #define ZONE_LOBBYBASE_ID 0x41
 #define ZONE_LOBBYGAMEDEFINITIONBASE_ID 0x42
-#define ZONE_LOBBYGAMEDEFINITION_DEFINITIONSREQUEST_ID 0x420001
-#define ZONE_LOBBYGAMEDEFINITION_DEFINITIONSRESPONSE_ID 0x420002
+#define ZONE_LOBBYGAMEDEFINITION_DEFINITIONSREQUEST_ID 0x4201
+#define ZONE_LOBBYGAMEDEFINITION_DEFINITIONSRESPONSE_ID 0x4202
 #define ZONE_SHOWSYSTEMMESSAGE_ID 0x43
 #define ZONE_POICHANGEMESSAGE_ID 0x44
 #define ZONE_CLIENTMETRICS_ID 0x45
@@ -1056,7 +1056,7 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_ClientUpdate_RemoveNotifications] = 0x110041,
 [Zone_Packet_Kind_ClientUpdate_NpcRelevance] = 0x110042,
 [Zone_Packet_Kind_ClientUpdate_InitiateNameChange] = 0x110043,
-[Zone_Packet_Kind_ClientUpdate_MonitorTimeDrift] = 0x114400,
+[Zone_Packet_Kind_ClientUpdate_MonitorTimeDrift] = 0x1144,
 [Zone_Packet_Kind_ClientUpdate_NameChangeResult] = 0x110045,
 [Zone_Packet_Kind_ClientUpdate_NotifyServerOfStalledEvent] = 0x110046,
 [Zone_Packet_Kind_ClientUpdate_UpdateSights] = 0x110047,
@@ -1116,8 +1116,8 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_ClientMembershipActivation] = 0x40,
 [Zone_Packet_Kind_LobbyBase] = 0x41,
 [Zone_Packet_Kind_LobbyGameDefinitionBase] = 0x42,
-[Zone_Packet_Kind_LobbyGameDefinition_DefinitionsRequest] = 0x420001,
-[Zone_Packet_Kind_LobbyGameDefinition_DefinitionsResponse] = 0x420002,
+[Zone_Packet_Kind_LobbyGameDefinition_DefinitionsRequest] = 0x4201,
+[Zone_Packet_Kind_LobbyGameDefinition_DefinitionsResponse] = 0x4202,
 [Zone_Packet_Kind_ShowSystemMessage] = 0x43,
 [Zone_Packet_Kind_POIChangeMessage] = 0x44,
 [Zone_Packet_Kind_ClientMetrics] = 0x45,
@@ -12406,8 +12406,8 @@ Zone_Packet_ClientUpdate_MonitorTimeDrift* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0x11);
 offset += sizeof(u8);
 
-endian_write_u16_little(buffer + offset, 0x4400);
-offset += sizeof(u16);
+endian_write_u8_little(buffer + offset, 0x44);
+offset += sizeof(u8);
 
 // u32 time_drift
 endian_write_u32_little(buffer + offset, packet->time_drift);
@@ -14686,8 +14686,8 @@ printf(MESSAGE_CONCAT_INFO("Packing LobbyGameDefinition_DefinitionsRequest...\n"
 endian_write_u8_little(buffer + offset, 0x42);
 offset += sizeof(u8);
 
-endian_write_u16_little(buffer + offset, 0x1);
-offset += sizeof(u16);
+endian_write_u8_little(buffer + offset, 0x1);
+offset += sizeof(u8);
 
 } break;
 
@@ -14699,8 +14699,8 @@ Zone_Packet_LobbyGameDefinition_DefinitionsResponse* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0x42);
 offset += sizeof(u8);
 
-endian_write_u16_little(buffer + offset, 0x2);
-offset += sizeof(u16);
+endian_write_u8_little(buffer + offset, 0x2);
+offset += sizeof(u8);
 
 // stream definitions_data
 void* definitions_data_length_ptr = buffer + offset;

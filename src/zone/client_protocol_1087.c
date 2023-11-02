@@ -124,7 +124,7 @@ internal void zone_packet_handle(App_State *server_state,
 
     if (data_length == 0)
     {
-        printf(MESSAGE_CONCAT_WARN("Empty zone packet????\n\n"));
+        printf(MESSAGE_CONCAT_WARN("Empty zone packet?\n\n"));
         return;
     }
 
@@ -172,6 +172,23 @@ internal void zone_packet_handle(App_State *server_state,
     }
 
     goto packet_id_fail;
+
+    switch (session_state->gateway_channel)
+    {
+    case 0:
+        break;
+    case 1:
+        break;
+    case 2:
+        readPositionUpdateData(server_state, session_state, data, data_length);
+        break;
+    case 3:
+        break;
+    case 4:
+        break;
+    case 5:
+        break;
+    }
 
 packet_id_switch:
     switch (packet_id)
@@ -517,7 +534,8 @@ packet_id_switch:
         printf("[Zone] Handling Weapon Definitions!\n");
 
         Zone_Packet_ReferenceDataWeaponDefinitions weaponDefs = {0};
-        zone_packet_unpack(data, data_length, packet_kind, &weaponDefs, &server_state->arena_per_tick);
+        // zone_packet_unpack(data, data_length, packet_kind, &weaponDefs, &server_state->arena_per_tick);
+
         break;
     }
     case ZONE_CHARACTER_RESPAWN_ID:
@@ -526,7 +544,7 @@ packet_id_switch:
         printf("[Zone] Handling Character.Respawn\n");
 
         Zone_Packet_Character_Respawn result = {0};
-        zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
+        // zone_packet_unpack(data, data_length, packet_kind, &result, &server_state->arena_per_tick);
 
         session_state->is_loading = true;
         session_state->character_released = false;
@@ -839,21 +857,6 @@ packet_id_switch:
 
         Zone_Packet_KeepAlive keep_alive = {0};
         zone_packet_unpack(data, data_length, packet_kind, &keep_alive, &server_state->arena_per_tick);
-
-        Zone_Packet_AddLightweightPc *lightPC = malloc(sizeof(Zone_Packet_AddLightweightPc));
-        lightPC->character_id = 0x1ull,
-        lightPC->actorModelId = 9240 || 9474,
-        lightPC->rotation.x = 0.0f,
-        lightPC->rotation.y = 0.0f,
-        lightPC->rotation.z = 0.0f,
-        lightPC->rotation.w = 1.0f,
-        zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_KeepAlive, &lightPC);
-
-        Zone_Packet_ClientUpdate_UpdateLocation *updateLocation = malloc(sizeof(Zone_Packet_ClientUpdate_UpdateLocation));
-        updateLocation->trigger_loading_screen = false,
-
-        free(updateLocation);
-        free(lightPC);
 
         break;
     }

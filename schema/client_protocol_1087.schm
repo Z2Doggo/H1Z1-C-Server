@@ -1906,7 +1906,7 @@ packet 0x11 0x40:u16 ClientUpdate_AddNotifications
 packet 0x11 0x41:u16 ClientUpdate_RemoveNotifications
 packet 0x11 0x42:u16 ClientUpdate_NpcRelevance
 packet 0x11 0x43:u16 ClientUpdate_InitiateNameChange
-packet 0x11 0x4400:u16 ClientUpdate_MonitorTimeDrift
+packet 0x11 0x44:u8 ClientUpdate_MonitorTimeDrift
 u32 time_drift
 
 packet 0x11 0x45:u16 ClientUpdate_NameChangeResult
@@ -2356,8 +2356,8 @@ packet 0x3f ClientPendingKickFromServer
 packet 0x40 ClientMembershipActivation
 packet 0x41 LobbyBase
 packet 0x42 LobbyGameDefinitionBase
-packet 0x42 0x1:u16 LobbyGameDefinition_DefinitionsRequest
-packet 0x42 0x2:u16 LobbyGameDefinition_DefinitionsResponse
+packet 0x42 0x01:u8 LobbyGameDefinition_DefinitionsRequest
+packet 0x42 0x02:u8 LobbyGameDefinition_DefinitionsResponse
 stream:u32 definitions_data
 {
 	string:u32 data

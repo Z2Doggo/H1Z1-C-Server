@@ -405,25 +405,30 @@ internal void gateway_packet_handle(App_State *server_state,
     case GATEWAY_TUNNELPACKETFROMEXTERNALCONNECTION_ID:
     {
         packet_kind = Gateway_Packet_Kind_TunnelPacketFromExternalConnection;
-        printf(MESSAGE_CONCAT_INFO("(%u) Handling %s...\n"), channel, gateway_packet_names[packet_kind]);
+        // printf(MESSAGE_CONCAT_INFO("(%u) Handling %s...\n"), channel, gateway_packet_names[packet_kind]);
 
+        /*
         if (session_state->connection_args.should_dump_gateway)
         {
             char dump_path[256] = {0};
             stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_C_gateway_%u_%s.bin", global_tick_count, global_dump_count++, channel, gateway_packet_names[packet_kind]);
             server_state->platform_api->buffer_write_to_file(dump_path, data, data_length);
         }
+        */
 
         Gateway_Packet_TunnelPacket tunnel_data = {0};
         gateway_packet_unpack(data, data_length, Gateway_Packet_Kind_TunnelPacketFromExternalConnection, &tunnel_data, &server_state->arena_per_tick);
 
+        /*
         if (session_state->connection_args.should_dump_tunnel)
         {
             char dump_path[256] = {0};
             stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_C_tunneldata_%u.bin", global_tick_count, global_dump_count++, tunnel_data.channel);
             server_state->platform_api->buffer_write_to_file(dump_path, data, data_length);
         }
+        */
 
+        session_state->gateway_channel = channel;
         gateway_on_tunnel_data_from_client(server_state, session_state, tunnel_data.data, tunnel_data.data_length);
     }
     break;
