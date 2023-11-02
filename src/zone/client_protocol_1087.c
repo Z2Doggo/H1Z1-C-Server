@@ -59,7 +59,7 @@ internal void zone_packet_send(App_State *server_state, Session_State *session_s
     params.packet_ptr = packet_ptr;
 
     // array to hold thread handles
-    HANDLE threadHandles[3]; // increase if you dare!
+    HANDLE threadHandles[4]; // increase if you dare!
     threadHandles[0] = CreateThread(NULL, 0, zone_packet_send_thread, &params, 0, NULL);
 
     if (threadHandles[0] == NULL)
@@ -771,7 +771,9 @@ packet_id_switch:
                                 .zone_name = "LoginZone",
                                 .hex_size = 100,
                                 .is_production_zone = 1,
-                            }}};
+                            },
+                    },
+            };
 
         zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ContinentBattleInfo, &battle_info);
 
