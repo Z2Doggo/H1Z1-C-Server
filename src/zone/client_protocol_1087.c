@@ -47,7 +47,6 @@ DWORD WINAPI zone_packet_send_thread(LPVOID lpParam)
 
 internal void zone_packet_send(App_State *server_state, Session_State *session_state, Arena *arena, u32 max_length, Zone_Packet_Kind packet_kind, void *packet_ptr)
 {
-    // Create thread parameters
     ThreadParams params;
     params.server_state = server_state;
     params.session_state = session_state;
@@ -56,21 +55,31 @@ internal void zone_packet_send(App_State *server_state, Session_State *session_s
     params.packet_kind = packet_kind;
     params.packet_ptr = packet_ptr;
 
-    // Create thread handle
-    HANDLE threadHandle = CreateThread(NULL, 0, zone_packet_send_thread, &params, 0, NULL);
-    if (threadHandle == NULL)
+    // array to hold thread handles
+    HANDLE threadHandles[3]; // increase if you dare!
+    threadHandles[0] = CreateThread(NULL, 0, zone_packet_send_thread, &params, 0, NULL);
+
+    if (threadHandles[0] == NULL)
     {
         printf("Thread failed to create!");
-        TRY_AGAIN;
+        ABORT;
     }
 
-    // Optionally, you can wait for the thread to finish using WaitForSingleObject or WaitForMultipleObjects
-    WaitForSingleObject(threadHandle, INFINITE);
+    // wait for multiple threads to finish
+    DWORD result = WaitForMultipleObjects(1, threadHandles, TRUE, INFINITE);
 
-    // Close the thread handle (when you no longer need it)
-    CloseHandle(threadHandle);
+    if (result == WAIT_FAILED)
+    {
+        printf("Wait for threads failed!");
+        ABORT;
+    }
+
+    // close thread handles when done
+    for (u32 i = 0; i < 1; i++)
+    {
+        CloseHandle(threadHandles[i]);
+    }
 }
-// (doggo) thanks chatgpt!
 
 internal void zone_packet_raw_file_send(App_State *server_state,
                                         Session_State *session_state,
@@ -288,7 +297,7 @@ packet_id_switch:
                 };
 
             Zone_Packet_Character_StartMultiStateDeath multi_state_dth = {
-                .character_id = 0x0000000000000000,
+                .character_id = 0x0000000000000000ull,
                 .unk_byte_1 = 0,
                 .unk_byte_2 = 1,
                 .unk_byte_3 = 0,
@@ -319,7 +328,7 @@ packet_id_switch:
         packet_kind = Zone_Packet_Kind_StaticViewRequest;
         printf("[Zone] Handling StaticViewRequest\n");
 
-        Zone_Packet_StaticViewRequest *viewReq = malloc(sizeof(Zone_Packet_StaticViewRequest));
+        Zone_Packet_StaticViewRequest *viewReq = (Zone_Packet_StaticViewRequest *)malloc(sizeof(Zone_Packet_StaticViewRequest));
         // zone_packet_unpack(data, data_length, packet_kind, &viewReq, &server_state->arena_per_tick);
 
         staticViewReply(server_state, session_state, viewReq);
@@ -330,7 +339,7 @@ packet_id_switch:
     case ZONE_PLAYERWORLDTRANSFERREQUEST_ID:
     {
         packet_kind = Zone_Packet_Kind_PlayerWorldTransferRequest;
-        printf("[Zone] Zoning into Z2!");
+        printf("[Zone] Zoning into Z2!\n");
 
         Zone_Packet_PlayerWorldTransferReply reply = {
             .world_id_reply = 1,

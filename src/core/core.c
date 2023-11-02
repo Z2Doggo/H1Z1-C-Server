@@ -57,3 +57,12 @@ u32 createSessionId()
 {
     return (u32)(rand() % 0xffffffff);
 }
+
+i64 getServerTime()
+{
+    i64 _startTime = 0;
+    i64 _serverTime = 0;
+
+    i64 delta = (i64)(time(0) * 1000) - _startTime;
+    return _serverTime + delta;
+}

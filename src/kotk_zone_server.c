@@ -14,10 +14,11 @@
 #include "yote_platform.h"
 #include "game_server.h"
 
-#define LOCAL_PORT 60000
-#define MAX_FRAGMENTS 12000
-#define MAX_PACKET_LENGTH 512
-#define DATA_HEADER_LENGTH 4
+#define MAX_THREADS 4		  // tweak as necessary
+#define LOCAL_PORT 60000	  // zone server port
+#define MAX_FRAGMENTS 12000	  // possibly add rhett's fragment accumilation for this
+#define MAX_PACKET_LENGTH 512 // ALWAYS keep this at 512 since all H1Z1 JS & KOTK packets are 512 in length
+#define DATA_HEADER_LENGTH 4  // also keep this the same
 #define MAX_SESSIONS_COUNT 16 // will increase as time goes on but good enough for testing right now
 
 #include "util/endian.c"
@@ -100,7 +101,7 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #define printf(...)
 #include "../schema/output/client_protocol_1087.c"
 #undef printf
-void staticViewReply(App_State *app, Session_State *session, Zone_Packet_StaticViewRequest *packetPtr);
+internal void staticViewReply(App_State *app, Session_State *session, Zone_Packet_StaticViewRequest *packetPtr);
 #include "zone/client_protocol_1087.c"
 #include "zone/data/loginZoneData.c"
 #include "zone/data/send_self.c"
