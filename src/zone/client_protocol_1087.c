@@ -6,7 +6,8 @@
     }                                                                                    \
     break;
 
-typedef struct
+// typedef struct for the zone packet send func below
+typedef struct ThreadParams
 {
     App_State *server_state;
     Session_State *session_state;
@@ -16,6 +17,7 @@ typedef struct
     void *packet_ptr;
 } ThreadParams;
 
+// thread to go with the zone packet send func below
 DWORD WINAPI zone_packet_send_thread(LPVOID lpParam)
 {
     ThreadParams *params = (ThreadParams *)lpParam;
@@ -45,6 +47,7 @@ DWORD WINAPI zone_packet_send_thread(LPVOID lpParam)
     return 0;
 }
 
+// multi-thread the zone packet send func because we need that speeeeeeeeed
 internal void zone_packet_send(App_State *server_state, Session_State *session_state, Arena *arena, u32 max_length, Zone_Packet_Kind packet_kind, void *packet_ptr)
 {
     ThreadParams params;
@@ -81,6 +84,7 @@ internal void zone_packet_send(App_State *server_state, Session_State *session_s
     }
 }
 
+// only for sending raw packets, testing purposes only
 internal void zone_packet_raw_file_send(App_State *server_state,
                                         Session_State *session_state,
                                         Arena *arena,
