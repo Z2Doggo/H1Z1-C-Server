@@ -61,7 +61,7 @@ internal void zone_packet_send(App_State *server_state, Session_State *session_s
 
     if (threadHandles[0] == NULL)
     {
-        printf("Thread failed to create!");
+        printf("Thread failed to create!\n");
         ABORT;
     }
 
@@ -70,7 +70,7 @@ internal void zone_packet_send(App_State *server_state, Session_State *session_s
 
     if (result == WAIT_FAILED)
     {
-        printf("Wait for threads failed!");
+        printf("Wait for threads failed!\n");
         ABORT;
     }
 
