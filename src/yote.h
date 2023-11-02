@@ -59,7 +59,7 @@ typedef double f64;
 
 // TODO(rhett): windows.h will probably override this. think about it
 
-#define KB(n) ((n)*1024)
+#define KB(n) ((n) * 1024)
 #define MB(n) (KB(n) * 1024)
 // TODO(rhett): integral promotion may become an issue
 #define GB(n) (MB(n) * (u64)1024)
@@ -191,6 +191,13 @@ struct Buffer
 {
 	isize size;
 	u8 *data;
+};
+
+typedef struct Stream Stream;
+struct Stream
+{
+	Buffer buffer;
+	uptr cursor;
 };
 
 internal void base_memory_fill(void *destination, u8 value, isize size)

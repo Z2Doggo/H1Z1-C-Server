@@ -307,7 +307,7 @@ internal void gateway_tunnel_data_send(App_State *server_state,
     if (session_state->connection_args.should_dump_tunnel)
     {
         char dump_path[256] = {0};
-        stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_S_tunneldata_%u.bin", global_tick_count, global_packet_dump_count++, tunnel_packet.channel);
+        stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_S_tunneldata_%u.bin", global_tick_count, global_dump_count++, tunnel_packet.channel);
         server_state->platform_api->buffer_write_to_file(dump_path, base_buffer, packed_length);
     }
 
@@ -337,7 +337,7 @@ internal void gateway_packet_send(App_State *server_state,
     if (session_state->connection_args.should_dump_gateway)
     {
         char dump_path[256] = {0};
-        stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_S_gateway_%s.bin", global_tick_count, global_packet_dump_count++, gateway_packet_names[packet_kind]);
+        stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_S_gateway_%s.bin", global_tick_count, global_dump_count++, gateway_packet_names[packet_kind]);
         server_state->platform_api->buffer_write_to_file(dump_path, packed_buffer, packed_length);
     }
 
@@ -370,7 +370,7 @@ internal void gateway_packet_handle(App_State *server_state,
         if (session_state->connection_args.should_dump_gateway)
         {
             char dump_path[256] = {0};
-            stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_C_gateway_%u_%s.bin", global_tick_count, global_packet_dump_count++, channel, gateway_packet_names[packet_kind]);
+            stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_C_gateway_%u_%s.bin", global_tick_count, global_dump_count++, channel, gateway_packet_names[packet_kind]);
             server_state->platform_api->buffer_write_to_file(dump_path, data, data_length);
         }
 
@@ -410,7 +410,7 @@ internal void gateway_packet_handle(App_State *server_state,
         if (session_state->connection_args.should_dump_gateway)
         {
             char dump_path[256] = {0};
-            stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_C_gateway_%u_%s.bin", global_tick_count, global_packet_dump_count++, channel, gateway_packet_names[packet_kind]);
+            stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_C_gateway_%u_%s.bin", global_tick_count, global_dump_count++, channel, gateway_packet_names[packet_kind]);
             server_state->platform_api->buffer_write_to_file(dump_path, data, data_length);
         }
 
@@ -420,7 +420,7 @@ internal void gateway_packet_handle(App_State *server_state,
         if (session_state->connection_args.should_dump_tunnel)
         {
             char dump_path[256] = {0};
-            stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_C_tunneldata_%u.bin", global_tick_count, global_packet_dump_count++, tunnel_data.channel);
+            stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_C_tunneldata_%u.bin", global_tick_count, global_dump_count++, tunnel_data.channel);
             server_state->platform_api->buffer_write_to_file(dump_path, data, data_length);
         }
 
@@ -436,7 +436,7 @@ internal void gateway_packet_handle(App_State *server_state,
         if (session_state->connection_args.should_dump_gateway)
         {
             char dump_path[256] = {0};
-            stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_C_gateway_%u_%s.bin", global_tick_count, global_packet_dump_count++, channel, gateway_packet_names[packet_kind]);
+            stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_C_gateway_%u_%s.bin", global_tick_count, global_dump_count++, channel, gateway_packet_names[packet_kind]);
             server_state->platform_api->buffer_write_to_file(dump_path, data, data_length);
         }
     }

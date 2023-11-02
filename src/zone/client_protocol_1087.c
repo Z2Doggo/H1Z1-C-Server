@@ -36,7 +36,7 @@ DWORD WINAPI zone_packet_send_thread(LPVOID lpParam)
     if (session_state->connection_args.should_dump_zone)
     {
         char dump_path[256] = {0};
-        stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_S_zone_%s.bin", global_tick_count, global_packet_dump_count++, zone_packet_names[packet_kind]);
+        stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_S_zone_%s.bin", global_tick_count, global_dump_count++, zone_packet_names[packet_kind]);
         server_state->platform_api->buffer_write_to_file(dump_path, packed_buffer, packed_length);
     }
 
@@ -89,7 +89,7 @@ internal void zone_packet_raw_file_send(App_State *server_state,
     if (session_state->connection_args.should_dump_zone)
     {
         char dump_path[256] = {0};
-        stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_S_zone_RAW.bin", global_tick_count, global_packet_dump_count++);
+        stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_S_zone_RAW.bin", global_tick_count, global_dump_count++);
         server_state->platform_api->buffer_write_to_file(dump_path, packed_buffer, packed_length);
     }
 
@@ -844,6 +844,14 @@ packet_id_switch:
 
         break;
     }
+    case ZONE_PLAYERUPDATEPOSITION_ID:
+    {
+        packet_kind = Zone_Packet_Kind_PlayerUpdatePosition;
+        printf("[Zone] Updating the player's position!\n");
+
+        readPositionUpdateData(server_state, session_state, data, data_length);
+        break;
+    }
     default:
     {
     packet_id_fail:
@@ -853,7 +861,7 @@ packet_id_switch:
         if (session_state->connection_args.should_dump_zone)
         {
             char dump_path[256] = {0};
-            stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_C_zone_%s.bin", global_tick_count, global_packet_dump_count++, zone_packet_names[packet_kind]);
+            stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_C_zone_%s.bin", global_tick_count, global_dump_count++, zone_packet_names[packet_kind]);
             server_state->platform_api->buffer_write_to_file(dump_path, data, data_length);
         }
     }

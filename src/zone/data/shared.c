@@ -1,4 +1,4 @@
-internal Zone_Packet_PlayerUpdatePosition
+internal void
 readPositionUpdateData(App_State *app,
                        Session_State *session,
                        u8 *data,
@@ -127,5 +127,10 @@ readPositionUpdateData(App_State *app,
         offset += v.length;
     }
 
-    return obj;
+    zone_packet_send(app,
+                     session,
+                     &app->arena_per_tick,
+                     KB(10),
+                     Zone_Packet_Kind_PlayerUpdatePosition,
+                     &obj);
 }
