@@ -16,11 +16,6 @@
 - GhostsKappa (On Break - H1Emu)
 - Doggo (Me - Working on the server currently - H1Emu)
 
-## Donations
-<a href="https://www.buymeacoffee.com/doggoizkool"><img src="https://img.buymeacoffee.com/button-api/?text=Donate to my coffee page!&emoji=💲&slug=doggoizkool&button_colour=16c60c&font_colour=000000&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00" /></a>
-
-- Donate to my BuyMeACoffee page, only if you want to and can afford to, I do not require donations but all donations to me and/or the project in general are very much appreciated!
-
 ## Contributions
 - Thank you to Jacob Seidelin and QuentinGruber without whom none of this would have been possible.
 - Also Thank you to EVERYONE over at [H1Emu Project](https://github.com/QuentinGruber/h1z1-server) for helping us learn many great things.
