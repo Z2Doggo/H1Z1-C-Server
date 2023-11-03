@@ -54,8 +54,8 @@ At the beginning of this file.
 ## Building the Server
 Make sure you have the GNU C Compiler (GCC) installed on your system, if it isn't installed on your system, here is a great tutorial on how to [install it!](https://www.youtube.com/watch?v=8CNRX1Bk5sY) 
 
-- Double click the `build_login_server_win_x64.bat` file to build the Login Server
-- Double click the `build_game_server_win_x64.bat` file to build the Game Server
+- Double click the `build_kotk_login.bat` file to build the Login Server
+- Double click the `build_kotk_zone.bat` file to build the Game Server
 
 ## Launching the Server
 Double click the `run_all.bat` file in the `H1Z1-C-Server` folder to run the login-server and zone-server.
