@@ -28,7 +28,7 @@ VC 2015 Redist [Download from Microsoft](https://www.microsoft.com/en-gb/downloa
 DirectX June 2010 Redist [Download from Guru3D](https://www.guru3d.com/files-get/directx-end-user-runtimes-(june-2010),8.html)
 
 ## How to Download
-WARNING: This will only work if you have `Z1: Battle Royale` formerly known as `H1Z1: King of the Kill` from steam!
+WARNING: This will only work if you have `Z1: Battle Royale` formerly known as `H1Z1: King of the Kill` in your steam library!
 
 Use the latest version of [DepotDownloader](https://github.com/SteamRE/DepotDownloader)
 
