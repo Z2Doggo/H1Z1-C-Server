@@ -145,8 +145,8 @@ typedef struct zoneClient
 typedef struct characterName characterName;
 struct characterName
 {
-    u32 nameLength;
     char *nameContent;
+    u32 nameLength;
 };
 
 typedef struct pGetPlayerActorData pGetPlayerActorData;
@@ -172,6 +172,7 @@ struct Session_State
     // gateway channel stuff & testing related
     struct Gateway_Packet_TunnelPacket *tunnelPacket;
     u8 gateway_channel;
+    characterName name;
 
     u64 character_id;
     u64 guid;
