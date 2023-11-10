@@ -17,6 +17,16 @@ internal void login_packet_send(App_State *server_state,
 						session_state);
 }
 
+internal void
+addDummyDataToCharacters(struct characters_s *character)
+{
+	character->payload->loadoutSlots_count = 1;
+	character->payload->loadoutSlots = calloc(character->payload->loadoutSlots_count, sizeof(struct loadoutSlots_s));
+	character->payload->loadoutSlots->unkByte1 = 1;
+	character->payload->loadoutSlots->loadoutId = 3;
+	character->payload->loadoutSlots->unkDword1 = 22;
+}
+
 internal void tunnelAppPacket(App_State *server, Session_State *session, u8 *data, u32 data_length)
 {
 	Login_Packet_Kind packet_kind = Login_Packet_Kind_TunnelAppPacketClientToServer;
@@ -80,52 +90,17 @@ internal void tunnelAppPacket(App_State *server, Session_State *session, u8 *dat
 	free(tunnelReply);
 }
 
-internal char *lightweight_get_head_actor(u32 model_id)
+internal Login_Packet_CharacterCreateReply
+CharacterCreateRequest(App_State *app, Session_State *session)
 {
-	switch (model_id)
-	{
-	case 9240:
-		return "SurvivorMale_Head_01.adr";
-	case 9474:
-		return "SurvivorFemale_Head_01.adr";
-	case 9510:
-	{
-		i32 r = rand() % 2 + 1;
-		char *result = (char *)malloc(sizeof(char) * 25);
-		sprintf(result, "ZombieFemale_Head_0%d.adr", r);
-		return result;
-	}
-	case 9634:
-	{
-		i32 r = rand() % 3 + 1;
-		char *result = (char *)malloc(sizeof(char) * 25);
-		sprintf(result, "ZombieMale_Head_0%d.adr", r);
-		return result;
-	}
-	default:
-		return "";
-	}
-}
-
-internal void CharacterCreateRequest(App_State *app, Session_State *session)
-{
-	session->character_id = generateRandomGuid(); // store random guid in the session's characterId
-
+	session->character_id = generateRandomGuid();
 	Login_Packet_CharacterCreateReply *createReply = calloc(1, sizeof(Login_Packet_CharacterCreateReply));
+
 	createReply->character_id = session->character_id;
 	createReply->status = 1;
 
-	login_packet_send(app, session, &app->arena_per_tick, KB(10), false, Login_Packet_Kind_CharacterCreateReply, createReply); // catjam
-}
-
-internal void
-addDummyDataToCharacters(struct characters_s *character)
-{
-	character->payload->loadoutSlots_count = 1;
-	character->payload->loadoutSlots = calloc(character->payload->loadoutSlots_count, sizeof(struct loadoutSlots_s));
-	character->payload->loadoutSlots->unkByte1 = 1;
-	character->payload->loadoutSlots->loadoutId = 3;
-	character->payload->loadoutSlots->unkDword1 = 22;
+	login_packet_send(app, session, &app->arena_per_tick, KB(10), false, Login_Packet_Kind_CharacterCreateReply, createReply);
+	return *createReply;
 }
 
 internal void
@@ -135,38 +110,28 @@ CharacterSelectInfo(App_State *app, Session_State *session)
 
 	reply->character_status = 1;
 	reply->can_bypass_server_lock = true;
-
-	Login_Packet_CharacterCreateReply *createReply;
-	reply->characters_count = 0;
+	reply->characters_count = 1;
 
 	// Allocate memory for characters
 	reply->characters = calloc(reply->characters_count, reply->characters_count * sizeof(struct characters_s));
-	for (u32 i = 0; i < reply->characters_count; i++)
-	{
-		reply->characters[i].charId = session->character_id;
-		reply->characters[i].serverId = session->selected_server_id;
+	reply->characters->charId = session->character_id;
+	reply->characters->serverId = session->selected_server_id;
+	reply->characters->lastLoginDate = 0x0ull;
+	reply->characters->status = 1;
 
-		// Allocate memory for character payload
-		reply->characters[i].payload = calloc(1, sizeof(struct payload_s));
-		reply->characters[i].payload->name = session->name.nameContent;
-		reply->characters[i].payload->name_length = session->name.nameLength;
-		reply->characters[i].payload->actorModelId = session->pGetPlayerActor.actorModelId;
-		reply->characters[i].payload->gender = session->pGetPlayerActor.gender;
+	reply->characters->payload = calloc(1, sizeof(struct payload_s));
+	reply->characters->payload->name = session->name.nameContent;
+	reply->characters->payload->name_length = session->name.nameLength;
+	reply->characters->payload->actorModelId = session->pGetPlayerActor.actorModelId;
+	reply->characters->payload->gender = session->pGetPlayerActor.gender;
+	addDummyDataToCharacters(reply->characters);
 
-		// Add dummy data to the character payload
-		addDummyDataToCharacters(&reply->characters[i]);
-	}
-
-	// Send the reply
 	login_packet_send(app, session, &app->arena_per_tick, KB(10), false, Login_Packet_Kind_CharacterSelectInfoReply, reply);
 
-	// Free the allocated memory
-	for (u32 i = 0; i < reply->characters_count; i++)
-	{
-		free(reply->characters[i].payload->loadoutSlots);
-		free(reply->characters[i].payload);
-	}
+	free(reply->characters->payload->loadoutSlots);
+	free(reply->characters->payload);
 	free(reply->characters);
+	free(reply);
 }
 
 internal void login_packet_handle(App_State *server, Session_State *session, u8 *data, u32 data_length)
