@@ -1,7 +1,3 @@
-#ifndef HEAD_TYPES
-#define HEAD_TYPES 8
-#endif
-
 internal void login_packet_send(App_State *server_state,
 								Session_State *session_state,
 								Arena *arena,
@@ -21,52 +17,156 @@ internal void login_packet_send(App_State *server_state,
 						session_state);
 }
 
-void CharacterCreateRequest(App_State *app, Session_State *session)
+internal void tunnelAppPacket(App_State *server, Session_State *session, u8 *data, u32 data_length)
 {
-	session->character_id = generateRandomGuid(); // store random guid in session characterId
-	u32 creation_status = 1;					  // defualt
+	Login_Packet_Kind packet_kind = Login_Packet_Kind_TunnelAppPacketClientToServer;
+	i32 offset = sizeof(u8);
 
-	Login_Packet_CharacterCreateReply createReply =
-		{
-			.character_id = session->character_id,
-			.status = creation_status,
-		};
+	Login_Packet_TunnelAppPacketClientToServer packet = {0};
+	login_packet_unpack(data + offset, data_length - offset, packet_kind, &packet, &server->arena_per_tick);
 
-	login_packet_send(app, session, &app->arena_per_tick, KB(10), false, Login_Packet_Kind_CharacterCreateReply, &createReply);
-}
+	u32 name_status = 1; // default value is 1
+	u32 char_name_length = packet.data_client->character_name_length;
+	char *char_name_content = packet.data_client->character_name;
 
-void CharacterSelectInfoRequest(App_State *app, Session_State *session)
-{
-	Login_Packet_CharacterSelectInfoReply selectInfoReply = {0};
-	selectInfoReply.characters = malloc(sizeof(struct characters_s));
-
-	// CharacterModelData data;
-	for (u32 headType = 0; headType < HEAD_TYPES; headType++)
+	if (char_name_length < 3 || char_name_length > 20)
 	{
-		// getCharacterModelData(headType, &data);
+		name_status = 3; // invalid length
+	}
+	else
+	{
+		// check if character name contains only alphabets
+		if (!isalpha((uchar)char_name_content[0]))
+		{
+			name_status = 3; // first character is not alphabetic
+		}
+		else
+		{
+			for (u32 i = 1; i < char_name_length; i++)
+			{
+				if (!isalpha((uchar)char_name_content[i]))
+				{
+					name_status = 3; // contains non-alphabetic character
+					break;
+				}
+			}
+		}
 	}
 
-	selectInfoReply.character_status = 1;
-	selectInfoReply.can_bypass_server_lock = true;
+	Login_Packet_TunnelAppPacketServerToClient *tunnelReply = calloc(1, sizeof(Login_Packet_TunnelAppPacketServerToClient));
+	tunnelReply->server_id = 1;
+	tunnelReply->data_server_length = 14;
 
-	selectInfoReply.characters[0] = (struct characters_s){
-		.character_id = session->character_id,
-		.server_id = 1,
-	};
+	tunnelReply->data_server = calloc(1, sizeof(struct data_server_s) * tunnelReply->data_server_length);
+	tunnelReply->data_server->tunnel_op_code = 0xa7;
+	tunnelReply->data_server->sub_op_code = 0x02;
+	tunnelReply->data_server->character_name = char_name_content;
+	tunnelReply->data_server->character_name_length = char_name_length;
+	tunnelReply->data_server->status = name_status;
 
-	selectInfoReply.characters[0].payload4 = malloc(sizeof(struct payload4_s));
-	*selectInfoReply.characters[0].payload4 = (struct payload4_s){
-		.name = NULL,	  // name hardcoded
-		.name_length = 0, // name length hardcoded
-		.model_id = 9240, // probably should make the struct in session state a pointer?
-		.gender = 1,	  // this too?
-		.head_id = 9587,
-	};
+	session->name.nameContent = char_name_content;
+	session->name.nameLength = char_name_length;
+	printf("Character name: %s, validation status: %u", session->name.nameContent, name_status);
 
-	login_packet_send(app, session, &app->arena_per_tick, KB(10), false, Login_Packet_Kind_CharacterSelectInfoReply, &selectInfoReply);
+	login_packet_send(server,
+					  session,
+					  &server->arena_per_tick,
+					  KB(100),
+					  false,
+					  Login_Packet_Kind_TunnelAppPacketServerToClient,
+					  tunnelReply);
 
-	free(selectInfoReply.characters[0].payload4);
-	free(selectInfoReply.characters);
+	free(tunnelReply->data_server);
+	free(tunnelReply);
+}
+
+internal char *lightweight_get_head_actor(u32 model_id)
+{
+	switch (model_id)
+	{
+	case 9240:
+		return "SurvivorMale_Head_01.adr";
+	case 9474:
+		return "SurvivorFemale_Head_01.adr";
+	case 9510:
+	{
+		i32 r = rand() % 2 + 1;
+		char *result = (char *)malloc(sizeof(char) * 25);
+		sprintf(result, "ZombieFemale_Head_0%d.adr", r);
+		return result;
+	}
+	case 9634:
+	{
+		i32 r = rand() % 3 + 1;
+		char *result = (char *)malloc(sizeof(char) * 25);
+		sprintf(result, "ZombieMale_Head_0%d.adr", r);
+		return result;
+	}
+	default:
+		return "";
+	}
+}
+
+internal void CharacterCreateRequest(App_State *app, Session_State *session)
+{
+	session->character_id = generateRandomGuid(); // store random guid in the session's characterId
+
+	Login_Packet_CharacterCreateReply *createReply = calloc(1, sizeof(Login_Packet_CharacterCreateReply));
+	createReply->character_id = session->character_id;
+	createReply->status = 1;
+
+	login_packet_send(app, session, &app->arena_per_tick, KB(10), false, Login_Packet_Kind_CharacterCreateReply, createReply); // catjam
+}
+
+internal void
+addDummyDataToCharacters(struct characters_s *character)
+{
+	character->payload->loadoutSlots_count = 1;
+	character->payload->loadoutSlots = calloc(character->payload->loadoutSlots_count, sizeof(struct loadoutSlots_s));
+	character->payload->loadoutSlots->unkByte1 = 1;
+	character->payload->loadoutSlots->loadoutId = 3;
+	character->payload->loadoutSlots->unkDword1 = 22;
+}
+
+internal void
+CharacterSelectInfo(App_State *app, Session_State *session)
+{
+	Login_Packet_CharacterSelectInfoReply *reply = calloc(1, sizeof(Login_Packet_CharacterSelectInfoReply));
+
+	reply->character_status = 1;
+	reply->can_bypass_server_lock = true;
+
+	Login_Packet_CharacterCreateReply *createReply;
+	reply->characters_count = 0;
+
+	// Allocate memory for characters
+	reply->characters = calloc(reply->characters_count, reply->characters_count * sizeof(struct characters_s));
+	for (u32 i = 0; i < reply->characters_count; i++)
+	{
+		reply->characters[i].charId = session->character_id;
+		reply->characters[i].serverId = session->selected_server_id;
+
+		// Allocate memory for character payload
+		reply->characters[i].payload = calloc(1, sizeof(struct payload_s));
+		reply->characters[i].payload->name = session->name.nameContent;
+		reply->characters[i].payload->name_length = session->name.nameLength;
+		reply->characters[i].payload->actorModelId = session->pGetPlayerActor.actorModelId;
+		reply->characters[i].payload->gender = session->pGetPlayerActor.gender;
+
+		// Add dummy data to the character payload
+		addDummyDataToCharacters(&reply->characters[i]);
+	}
+
+	// Send the reply
+	login_packet_send(app, session, &app->arena_per_tick, KB(10), false, Login_Packet_Kind_CharacterSelectInfoReply, reply);
+
+	// Free the allocated memory
+	for (u32 i = 0; i < reply->characters_count; i++)
+	{
+		free(reply->characters[i].payload->loadoutSlots);
+		free(reply->characters[i].payload);
+	}
+	free(reply->characters);
 }
 
 internal void login_packet_handle(App_State *server, Session_State *session, u8 *data, u32 data_length)
@@ -221,63 +321,9 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 	}
 	case LOGIN_TUNNELAPPPACKETCLIENTTOSERVER_ID:
 	{
-		packet_kind = Login_Packet_Kind_TunnelAppPacketClientToServer;
-		printf(MESSAGE_CONCAT_INFO("Received %s\n"), login_packet_names[packet_kind]);
+		printf("Received %s\n", login_packet_names[packet_kind]);
+		tunnelAppPacket(server, session, data, data_length);
 
-		Login_Packet_TunnelAppPacketClientToServer packet = {0};
-		login_packet_unpack(data + offset, data_length - offset, packet_kind, &packet, &server->arena_per_tick);
-
-		u32 packet_status = 1; // default status is 1
-
-		u32 char_name_length = packet.data_client->character_name_length;
-		char *char_name_content = packet.data_client->character_name;
-
-		characterName charName;
-		charName.nameLength = char_name_length;
-		charName.nameContent = char_name_content;
-
-		if (charName.nameLength < 3 || charName.nameLength > 20)
-		{
-			packet_status = 3; // invalid length
-		}
-		else
-		{
-			// check if character name contains only alphabets
-			if (!isalpha(charName.nameContent[0]))
-			{
-				packet_status = 3; // first character is not alphabetic
-			}
-			else
-			{
-				for (u32 i = 1; i < charName.nameLength; i++)
-				{
-					if (!isalpha(charName.nameContent[i]))
-					{
-						packet_status = 3; // contains non-alphabetic character
-						break;
-					}
-				}
-			}
-		}
-
-		Login_Packet_TunnelAppPacketServerToClient tunnel_app_packet_server_to_client =
-			{
-				.server_id = session->selected_server_id,
-				.data_server =
-					(struct data_server_s[1]){
-						[0] =
-							{
-								.tunnel_op_code = 0xa7,
-								.sub_op_code = 0x02,
-								.character_name_length = charName.nameLength,
-								.character_name = charName.nameContent,
-								.status = packet_status,
-							},
-					},
-				.data_server_length = 14,
-			};
-
-		login_packet_send(server, session, &server->arena_per_tick, KB(100), false, Login_Packet_Kind_TunnelAppPacketServerToClient, &tunnel_app_packet_server_to_client);
 		break;
 	}
 	case LOGIN_CHARACTERCREATEREQUEST_ID:
@@ -310,7 +356,7 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 			server->platform_api->buffer_write_to_file(dump_path, data, data_length);
 		}
 
-		CharacterSelectInfoRequest(server, session);
+		CharacterSelectInfo(server, session);
 		break;
 	}
 	break;
@@ -331,8 +377,8 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 
 		Login_Packet_CharacterLoginReply character_login_reply =
 			{
-				.character_id = 0x0ull,
-				.server_id = 0,
+				.character_id = session->character_id,
+				.server_id = 1,
 				.last_login = 0,
 				.status = 1,
 				.login_payload =
@@ -350,8 +396,8 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 								.soe_protocol_version = 3,
 								.character_id = session->character_id,
 								.unk_u64 = 0x0ull,
-								.character_name_length = 4,
-								.character_name = "test",
+								.character_name_length = session->name.nameLength,
+								.character_name = session->name.nameContent,
 							},
 					},
 			};

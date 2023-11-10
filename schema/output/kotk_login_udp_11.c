@@ -265,132 +265,146 @@ b8 can_bypass_server_lock;
 u32 characters_count;
 struct characters_s
 {
-u64 character_id;
-u32 server_id;
-u64 last_login_date;
-u32 null_field;
+u64 charId;
+u32 serverId;
+u64 lastLoginDate;
+u32 nullField;
 u32 status;
-u32 payload4_length;
-struct payload4_s
+u32 payload_length;
+struct payload_s
 {
 u32 name_length;
 char* name;
-u8 empire_id;
-u32 battle_rank;
-u32 next_battle_rank_percent;
-u32 head_id;
-u32 model_id;
+u8 empireId;
+u32 battleRank;
+u32 nextBattleRankPercent;
+u32 headId;
+u32 actorModelId;
 u32 gender;
-u32 profile_id;
-u32 unknown_dword;
-u32 loadout_id;
-u32 unknown_dword_1;
-u8 unknown_byte_1;
-u32 unknown_dword_2;
-u32 unknown_dword_3;
-u32 loadout_name_length;
-char* loadout_name;
-u32 tint_item_id;
-u32 unknown_dword_4;
-u32 decal_item_id;
-u32 loadout_slots_count;
-struct loadout_slots_s
+u32 profileId;
+u32 unkDword1;
+u32 unkDword2;
+u32 loadoutSlots_count;
+struct loadoutSlots_s
 {
-u32 slot_id;
-u32 index;
-u32 item_line_id;
-u8 flags;
-u32 attachments_count;
-struct attachments_s
+u32 hotbarSlotId;
+u32 loadoutId;
+u32 slotId;
+u32 itemDefId;
+u64 loadoutItemGuid;
+u8 unkByte1;
+u32 unkDword1;
+}* loadoutSlots;
+u32 itemDefinitions_count;
+struct itemDefinitions_s
 {
-u32 attachment_id;
-}* attachments;
-u32 attachment_classes_count;
-struct attachment_classes_s
+u32 ID;
+u32 item_defs_count;
+struct item_defs_s
 {
-u32 class_id;
-u32 attachment_id;
-}* attachment_classes;
-u32 tint_item_id;
-u32 item_slot;
-}* loadout_slots;
-u32 item_definitions_count;
-struct item_definitions_s
-{
-u32 item_id;
-u32 item_id_2;
-u16 flags_1;
+u32 defs_id;
+u8 bitflags1;
+u8 bitflags2;
 u32 name_id;
 u32 description_id;
-u32 unknown_dword_1;
-u32 icon_id;
-u32 unknown_dword_2;
-u32 hudImageSetId;
+u32 content_id;
+u32 image_set_id;
+u32 tint_id;
 u32 hud_image_set_id;
-u32 unknown_dword_4;
+u32 unk_dword_1;
+u32 unk_dword_2;
 u32 cost;
 u32 item_class;
-u32 unknown_dword_5;
-u32 item_slot;
-u32 slot_override_key;
-u8 unknown_dword6;
+u32 profile_override;
 u32 model_name_length;
 char* model_name;
-u32 unknown_string_length;
-char* unknown_string;
-u8 unknown_byte_1;
+u32 texture_alias_length;
+char* texture_alias;
+u32 gender_usage;
 u32 item_type;
 u32 category_id;
-u32 unknown_dword_7;
-u32 unknown_dword_8;
-u32 unknown_dword_9;
-u32 unknown_dword_10;
-u32 unknown_dword_11;
+u32 weapon_trail_effect_id;
+u32 composite_effect_id;
+u32 power_rating;
+u32 min_profile_rank;
+u32 rarity;
 u32 activatable_ability_id;
+u32 activatable_ability_set_id;
 u32 passive_ability_id;
-u32 unknown_dword_12;
+u32 passive_ability_set_id;
 u32 max_stack_size;
-u32 tint_name_length;
-char* tint_name;
-u32 unknown_dword_13;
-u32 unknown_dword_14;
-u32 unknown_dword_15;
-u32 unknown_dword_16;
-u32 ui_model_camera;
+u32 min_stack_size;
+u32 tint_alias_length;
+char* tint_alias;
+u32 tint_group_id;
+u32 member_discount;
+u32 vip_rank_required;
+u32 race_set_id;
+u32 ui_model_camera_id_1;
 u32 equip_count_max;
-u32 currency_type;
-u32 unknown_dword_17;
-u32 client_item_type;
+i32 curreny_type;
+u32 datasheet_id;
+u32 item_type_1;
 u32 skill_set_id;
 u32 overlay_texture_length;
 char* overlay_texture;
 u32 decal_slot_length;
 char* decal_slot;
-u32 unknown_dword_18;
+u32 overlay_adjustment;
 u32 trial_duration_sec;
-u32 trial_exclusion_sec;
-u32 client_use_requirement_id;
+u32 next_trial_delay_sec;
+u32 client_use_requirement;
 u32 override_appearance_length;
 char* override_appearance;
-u32 unknown_dword_19;
-u32 client_use_requirement_id_2;
-}* item_definitions;
-u32 attachment_definitions_count;
-struct attachment_definitions_s
+u32 override_camera_id;
+u32 unk_dword_3;
+u32 unk_dword_4;
+u32 unk_dword_5;
+u32 bulk;
+u32 active_equip_slot_id;
+u32 passive_equip_slot_id;
+u32 passive_equip_slot_group_id;
+u32 unk_dword_6;
+u32 grinder_reward_set_id;
+u32 build_bar_group_id;
+u32 unk_string_1_length;
+char* unk_string_1;
+b8 unk_bool_1;
+b8 is_armor;
+u32 unk_dword_7;
+u32 param1;
+u32 param2;
+u32 param3;
+u32 string_param1_length;
+char* string_param1;
+u32 ui_model_camera_id_2;
+u32 unk_dword_8;
+i32 scrap_value_override;
+u32 stats_item_def_2_count;
+struct stats_item_def_2_s
 {
-u32 attachment_id;
-u32 attachment_id_2;
-u32 group_id;
-u32 item_line_id;
-u8 flags;
-u32 classes_count;
-struct classes_s
+u32 unk_dword_9;
+u32 stat_id;
+u8 variabletype8_case;
+union
 {
-u32 element_type;
-}* classes;
-}* attachment_definitions;
-u64 last_use_date;
-}* payload4;
+struct statValue0_s
+{
+u32 base;
+u32 modifier;
+} statValue0;
+struct statValue1_s
+{
+f32 base;
+f32 modifier;
+} statValue1;
+} variabletype8;
+u32 unk_dword_10;
+}* stats_item_def_2;
+}* item_defs;
+}* itemDefinitions;
+u64 lastUseDate;
+}* payload;
 }* characters;
 };
 
@@ -1114,560 +1128,615 @@ printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->characters
 
 for (u32 characters_iter = 0; characters_iter < packet->characters_count; characters_iter++)
 {
-// u64 character_id
-endian_write_u64_little(buffer + offset, packet->characters[characters_iter].character_id);
+// u64 charId
+endian_write_u64_little(buffer + offset, packet->characters[characters_iter].charId);
 offset += sizeof(u64);
-printf("-- character_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].character_id, (u64)packet->characters[characters_iter].character_id, (f64)packet->characters[characters_iter].character_id);
+printf("-- charId                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].charId, (u64)packet->characters[characters_iter].charId, (f64)packet->characters[characters_iter].charId);
 
-// u32 server_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].server_id);
+// u32 serverId
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].serverId);
 offset += sizeof(u32);
-printf("-- server_id               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].server_id, (u64)packet->characters[characters_iter].server_id, (f64)packet->characters[characters_iter].server_id);
+printf("-- serverId                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].serverId, (u64)packet->characters[characters_iter].serverId, (f64)packet->characters[characters_iter].serverId);
 
-// u64 last_login_date
-endian_write_u64_little(buffer + offset, packet->characters[characters_iter].last_login_date);
+// u64 lastLoginDate
+endian_write_u64_little(buffer + offset, packet->characters[characters_iter].lastLoginDate);
 offset += sizeof(u64);
-printf("-- last_login_date         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].last_login_date, (u64)packet->characters[characters_iter].last_login_date, (f64)packet->characters[characters_iter].last_login_date);
+printf("-- lastLoginDate           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].lastLoginDate, (u64)packet->characters[characters_iter].lastLoginDate, (f64)packet->characters[characters_iter].lastLoginDate);
 
-// u32 null_field
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].null_field);
+// u32 nullField
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].nullField);
 offset += sizeof(u32);
-printf("-- null_field              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].null_field, (u64)packet->characters[characters_iter].null_field, (f64)packet->characters[characters_iter].null_field);
+printf("-- nullField               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].nullField, (u64)packet->characters[characters_iter].nullField, (f64)packet->characters[characters_iter].nullField);
 
 // u32 status
 endian_write_u32_little(buffer + offset, packet->characters[characters_iter].status);
 offset += sizeof(u32);
 printf("-- status                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].status, (u64)packet->characters[characters_iter].status, (f64)packet->characters[characters_iter].status);
 
-// stream payload4
-void* payload4_length_ptr = buffer + offset;
+// stream payload
+void* payload_length_ptr = buffer + offset;
 offset += sizeof(u32);
-printf("-- STREAM_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4_length, (u64)packet->characters[characters_iter].payload4_length, (f64)packet->characters[characters_iter].payload4_length);
+printf("-- STREAM_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload_length, (u64)packet->characters[characters_iter].payload_length, (f64)packet->characters[characters_iter].payload_length);
 
-u32 will_pack_payload4 = packet->characters[characters_iter].payload4_length == ~(u32)0 ? 0 : 1;
-for (u32 payload4_iter = 0; payload4_iter < will_pack_payload4; payload4_iter++)
+u32 will_pack_payload = packet->characters[characters_iter].payload_length == ~(u32)0 ? 0 : 1;
+for (u32 payload_iter = 0; payload_iter < will_pack_payload; payload_iter++)
 {
 // string name
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].name_length);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].name_length);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].name_length, (u64)packet->characters[characters_iter].payload4[payload4_iter].name_length, (f64)packet->characters[characters_iter].payload4[payload4_iter].name_length);
-for (u32 name_iter = 0; name_iter < packet->characters[characters_iter].payload4[payload4_iter].name_length; name_iter++)
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].name_length, (u64)packet->characters[characters_iter].payload[payload_iter].name_length, (f64)packet->characters[characters_iter].payload[payload_iter].name_length);
+for (u32 name_iter = 0; name_iter < packet->characters[characters_iter].payload[payload_iter].name_length; name_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].name[name_iter]);
+endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].name[name_iter]);
 offset++;
 }
 
-// u8 empire_id
-endian_write_u8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].empire_id);
+// u8 empireId
+endian_write_u8_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].empireId);
 offset += sizeof(u8);
-printf("-- empire_id               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].empire_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].empire_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].empire_id);
+printf("-- empireId                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].empireId, (u64)packet->characters[characters_iter].payload[payload_iter].empireId, (f64)packet->characters[characters_iter].payload[payload_iter].empireId);
 
-// u32 battle_rank
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].battle_rank);
+// u32 battleRank
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].battleRank);
 offset += sizeof(u32);
-printf("-- battle_rank             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].battle_rank, (u64)packet->characters[characters_iter].payload4[payload4_iter].battle_rank, (f64)packet->characters[characters_iter].payload4[payload4_iter].battle_rank);
+printf("-- battleRank              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].battleRank, (u64)packet->characters[characters_iter].payload[payload_iter].battleRank, (f64)packet->characters[characters_iter].payload[payload_iter].battleRank);
 
-// u32 next_battle_rank_percent
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].next_battle_rank_percent);
+// u32 nextBattleRankPercent
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].nextBattleRankPercent);
 offset += sizeof(u32);
-printf("-- next_battle_rank_percent\t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].next_battle_rank_percent, (u64)packet->characters[characters_iter].payload4[payload4_iter].next_battle_rank_percent, (f64)packet->characters[characters_iter].payload4[payload4_iter].next_battle_rank_percent);
+printf("-- nextBattleRankPercent   \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].nextBattleRankPercent, (u64)packet->characters[characters_iter].payload[payload_iter].nextBattleRankPercent, (f64)packet->characters[characters_iter].payload[payload_iter].nextBattleRankPercent);
 
-// u32 head_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].head_id);
+// u32 headId
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].headId);
 offset += sizeof(u32);
-printf("-- head_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].head_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].head_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].head_id);
+printf("-- headId                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].headId, (u64)packet->characters[characters_iter].payload[payload_iter].headId, (f64)packet->characters[characters_iter].payload[payload_iter].headId);
 
-// u32 model_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].model_id);
+// u32 actorModelId
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].actorModelId);
 offset += sizeof(u32);
-printf("-- model_id                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].model_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].model_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].model_id);
+printf("-- actorModelId            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].actorModelId, (u64)packet->characters[characters_iter].payload[payload_iter].actorModelId, (f64)packet->characters[characters_iter].payload[payload_iter].actorModelId);
 
 // u32 gender
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].gender);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].gender);
 offset += sizeof(u32);
-printf("-- gender                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].gender, (u64)packet->characters[characters_iter].payload4[payload4_iter].gender, (f64)packet->characters[characters_iter].payload4[payload4_iter].gender);
+printf("-- gender                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].gender, (u64)packet->characters[characters_iter].payload[payload_iter].gender, (f64)packet->characters[characters_iter].payload[payload_iter].gender);
 
-// u32 profile_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].profile_id);
+// u32 profileId
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].profileId);
 offset += sizeof(u32);
-printf("-- profile_id              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].profile_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].profile_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].profile_id);
+printf("-- profileId               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].profileId, (u64)packet->characters[characters_iter].payload[payload_iter].profileId, (f64)packet->characters[characters_iter].payload[payload_iter].profileId);
 
-// u32 unknown_dword
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].unknown_dword);
+// u32 unkDword1
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].unkDword1);
 offset += sizeof(u32);
-printf("-- unknown_dword           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword, (u64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword, (f64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword);
+printf("-- unkDword1               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].unkDword1, (u64)packet->characters[characters_iter].payload[payload_iter].unkDword1, (f64)packet->characters[characters_iter].payload[payload_iter].unkDword1);
 
-// u32 loadout_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].loadout_id);
+// u32 unkDword2
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].unkDword2);
 offset += sizeof(u32);
-printf("-- loadout_id              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_id);
+printf("-- unkDword2               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].unkDword2, (u64)packet->characters[characters_iter].payload[payload_iter].unkDword2, (f64)packet->characters[characters_iter].payload[payload_iter].unkDword2);
 
-// u32 unknown_dword_1
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_1);
+// list loadoutSlots
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].loadoutSlots_count);
 offset += sizeof(u32);
-printf("-- unknown_dword_1         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_1, (u64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_1, (f64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_1);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots_count, (u64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots_count, (f64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots_count);
 
-// u8 unknown_byte_1
-endian_write_u8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].unknown_byte_1);
+for (u32 loadoutSlots_iter = 0; loadoutSlots_iter < packet->characters[characters_iter].payload[payload_iter].loadoutSlots_count; loadoutSlots_iter++)
+{
+// u32 hotbarSlotId
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].hotbarSlotId);
+offset += sizeof(u32);
+printf("-- hotbarSlotId            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].hotbarSlotId, (u64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].hotbarSlotId, (f64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].hotbarSlotId);
+
+// u32 loadoutId
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].loadoutId);
+offset += sizeof(u32);
+printf("-- loadoutId               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].loadoutId, (u64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].loadoutId, (f64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].loadoutId);
+
+// u32 slotId
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].slotId);
+offset += sizeof(u32);
+printf("-- slotId                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].slotId, (u64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].slotId, (f64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].slotId);
+
+// u32 itemDefId
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].itemDefId);
+offset += sizeof(u32);
+printf("-- itemDefId               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].itemDefId, (u64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].itemDefId, (f64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].itemDefId);
+
+// u64 loadoutItemGuid
+endian_write_u64_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].loadoutItemGuid);
+offset += sizeof(u64);
+printf("-- loadoutItemGuid         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].loadoutItemGuid, (u64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].loadoutItemGuid, (f64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].loadoutItemGuid);
+
+// u8 unkByte1
+endian_write_u8_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].unkByte1);
 offset += sizeof(u8);
-printf("-- unknown_byte_1          \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].unknown_byte_1, (u64)packet->characters[characters_iter].payload4[payload4_iter].unknown_byte_1, (f64)packet->characters[characters_iter].payload4[payload4_iter].unknown_byte_1);
+printf("-- unkByte1                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].unkByte1, (u64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].unkByte1, (f64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].unkByte1);
 
-// u32 unknown_dword_2
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_2);
+// u32 unkDword1
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].unkDword1);
 offset += sizeof(u32);
-printf("-- unknown_dword_2         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_2, (u64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_2, (f64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_2);
+printf("-- unkDword1               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].unkDword1, (u64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].unkDword1, (f64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].unkDword1);
 
-// u32 unknown_dword_3
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_3);
-offset += sizeof(u32);
-printf("-- unknown_dword_3         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_3, (u64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_3, (f64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_3);
+} // loadoutSlots
 
-// string loadout_name
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].loadout_name_length);
+// list itemDefinitions
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions_count);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_name_length, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_name_length, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_name_length);
-for (u32 loadout_name_iter = 0; loadout_name_iter < packet->characters[characters_iter].payload4[payload4_iter].loadout_name_length; loadout_name_iter++)
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions_count, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions_count, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions_count);
+
+for (u32 itemDefinitions_iter = 0; itemDefinitions_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions_count; itemDefinitions_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].loadout_name[loadout_name_iter]);
-offset++;
-}
-
-// u32 tint_item_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].tint_item_id);
+// u32 ID
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].ID);
 offset += sizeof(u32);
-printf("-- tint_item_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].tint_item_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].tint_item_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].tint_item_id);
+printf("-- ID                      \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].ID, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].ID, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].ID);
 
-// u32 unknown_dword_4
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_4);
+// list item_defs
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs_count);
 offset += sizeof(u32);
-printf("-- unknown_dword_4         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_4, (u64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_4, (f64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_4);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs_count, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs_count, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs_count);
 
-// u32 decal_item_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].decal_item_id);
-offset += sizeof(u32);
-printf("-- decal_item_id           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].decal_item_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].decal_item_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].decal_item_id);
-
-// list loadout_slots
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots_count);
-offset += sizeof(u32);
-printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots_count, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots_count, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots_count);
-
-for (u32 loadout_slots_iter = 0; loadout_slots_iter < packet->characters[characters_iter].payload4[payload4_iter].loadout_slots_count; loadout_slots_iter++)
+for (u32 item_defs_iter = 0; item_defs_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs_count; item_defs_iter++)
 {
-// u32 slot_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].slot_id);
+// u32 defs_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].defs_id);
 offset += sizeof(u32);
-printf("-- slot_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].slot_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].slot_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].slot_id);
+printf("-- defs_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].defs_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].defs_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].defs_id);
 
-// u32 index
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].index);
-offset += sizeof(u32);
-printf("-- index                   \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].index, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].index, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].index);
-
-// u32 item_line_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].item_line_id);
-offset += sizeof(u32);
-printf("-- item_line_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].item_line_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].item_line_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].item_line_id);
-
-// u8 flags
-endian_write_u8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].flags);
+// u8 bitflags1
+endian_write_u8_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bitflags1);
 offset += sizeof(u8);
-printf("-- flags                   \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].flags, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].flags, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].flags);
+printf("-- bitflags1               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bitflags1, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bitflags1, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bitflags1);
 
-// list attachments
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments_count);
-offset += sizeof(u32);
-printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments_count, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments_count, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments_count);
-
-for (u32 attachments_iter = 0; attachments_iter < packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments_count; attachments_iter++)
-{
-// u32 attachment_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments[attachments_iter].attachment_id);
-offset += sizeof(u32);
-printf("-- attachment_id           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments[attachments_iter].attachment_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments[attachments_iter].attachment_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments[attachments_iter].attachment_id);
-
-} // attachments
-
-// list attachment_classes
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes_count);
-offset += sizeof(u32);
-printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes_count, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes_count, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes_count);
-
-for (u32 attachment_classes_iter = 0; attachment_classes_iter < packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes_count; attachment_classes_iter++)
-{
-// u32 class_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[attachment_classes_iter].class_id);
-offset += sizeof(u32);
-printf("-- class_id                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[attachment_classes_iter].class_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[attachment_classes_iter].class_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[attachment_classes_iter].class_id);
-
-// u32 attachment_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[attachment_classes_iter].attachment_id);
-offset += sizeof(u32);
-printf("-- attachment_id           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[attachment_classes_iter].attachment_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[attachment_classes_iter].attachment_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[attachment_classes_iter].attachment_id);
-
-} // attachment_classes
-
-// u32 tint_item_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].tint_item_id);
-offset += sizeof(u32);
-printf("-- tint_item_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].tint_item_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].tint_item_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].tint_item_id);
-
-// u32 item_slot
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].item_slot);
-offset += sizeof(u32);
-printf("-- item_slot               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].item_slot, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].item_slot, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].item_slot);
-
-} // loadout_slots
-
-// list item_definitions
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions_count);
-offset += sizeof(u32);
-printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions_count, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions_count, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions_count);
-
-for (u32 item_definitions_iter = 0; item_definitions_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions_count; item_definitions_iter++)
-{
-// u32 item_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id);
-offset += sizeof(u32);
-printf("-- item_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id);
-
-// u32 item_id_2
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id_2);
-offset += sizeof(u32);
-printf("-- item_id_2               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id_2, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id_2, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id_2);
-
-// u16 flags_1
-endian_write_u16_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1);
-offset += sizeof(u16);
-printf("-- flags_1                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1);
+// u8 bitflags2
+endian_write_u8_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bitflags2);
+offset += sizeof(u8);
+printf("-- bitflags2               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bitflags2, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bitflags2, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bitflags2);
 
 // u32 name_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].name_id);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].name_id);
 offset += sizeof(u32);
-printf("-- name_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].name_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].name_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].name_id);
+printf("-- name_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].name_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].name_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].name_id);
 
 // u32 description_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].description_id);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].description_id);
 offset += sizeof(u32);
-printf("-- description_id          \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].description_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].description_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].description_id);
+printf("-- description_id          \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].description_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].description_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].description_id);
 
-// u32 unknown_dword_1
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_1);
+// u32 content_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].content_id);
 offset += sizeof(u32);
-printf("-- unknown_dword_1         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_1, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_1, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_1);
+printf("-- content_id              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].content_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].content_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].content_id);
 
-// u32 icon_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].icon_id);
+// u32 image_set_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].image_set_id);
 offset += sizeof(u32);
-printf("-- icon_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].icon_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].icon_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].icon_id);
+printf("-- image_set_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].image_set_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].image_set_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].image_set_id);
 
-// u32 unknown_dword_2
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_2);
+// u32 tint_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_id);
 offset += sizeof(u32);
-printf("-- unknown_dword_2         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_2, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_2, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_2);
-
-// u32 hudImageSetId
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].hudImageSetId);
-offset += sizeof(u32);
-printf("-- hudImageSetId           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].hudImageSetId, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].hudImageSetId, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].hudImageSetId);
+printf("-- tint_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_id);
 
 // u32 hud_image_set_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].hud_image_set_id);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].hud_image_set_id);
 offset += sizeof(u32);
-printf("-- hud_image_set_id        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].hud_image_set_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].hud_image_set_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].hud_image_set_id);
+printf("-- hud_image_set_id        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].hud_image_set_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].hud_image_set_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].hud_image_set_id);
 
-// u32 unknown_dword_4
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_4);
+// u32 unk_dword_1
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_1);
 offset += sizeof(u32);
-printf("-- unknown_dword_4         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_4, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_4, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_4);
+printf("-- unk_dword_1             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_1, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_1, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_1);
+
+// u32 unk_dword_2
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_2);
+offset += sizeof(u32);
+printf("-- unk_dword_2             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_2, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_2, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_2);
 
 // u32 cost
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].cost);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].cost);
 offset += sizeof(u32);
-printf("-- cost                    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].cost, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].cost, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].cost);
+printf("-- cost                    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].cost, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].cost, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].cost);
 
 // u32 item_class
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_class);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_class);
 offset += sizeof(u32);
-printf("-- item_class              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_class, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_class, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_class);
+printf("-- item_class              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_class, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_class, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_class);
 
-// u32 unknown_dword_5
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_5);
+// u32 profile_override
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].profile_override);
 offset += sizeof(u32);
-printf("-- unknown_dword_5         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_5, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_5, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_5);
-
-// u32 item_slot
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_slot);
-offset += sizeof(u32);
-printf("-- item_slot               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_slot, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_slot, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_slot);
-
-// u32 slot_override_key
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].slot_override_key);
-offset += sizeof(u32);
-printf("-- slot_override_key       \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].slot_override_key, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].slot_override_key, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].slot_override_key);
-
-// u8 unknown_dword6
-endian_write_u8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword6);
-offset += sizeof(u8);
-printf("-- unknown_dword6          \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword6, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword6, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword6);
+printf("-- profile_override        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].profile_override, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].profile_override, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].profile_override);
 
 // string model_name
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name_length);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].model_name_length);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name_length, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name_length, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name_length);
-for (u32 model_name_iter = 0; model_name_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name_length; model_name_iter++)
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].model_name_length, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].model_name_length, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].model_name_length);
+for (u32 model_name_iter = 0; model_name_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].model_name_length; model_name_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name[model_name_iter]);
+endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].model_name[model_name_iter]);
 offset++;
 }
 
-// string unknown_string
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string_length);
+// string texture_alias
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].texture_alias_length);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string_length, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string_length, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string_length);
-for (u32 unknown_string_iter = 0; unknown_string_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string_length; unknown_string_iter++)
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].texture_alias_length, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].texture_alias_length, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].texture_alias_length);
+for (u32 texture_alias_iter = 0; texture_alias_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].texture_alias_length; texture_alias_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string[unknown_string_iter]);
+endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].texture_alias[texture_alias_iter]);
 offset++;
 }
 
-// u8 unknown_byte_1
-endian_write_u8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_byte_1);
-offset += sizeof(u8);
-printf("-- unknown_byte_1          \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_byte_1, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_byte_1, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_byte_1);
+// u32 gender_usage
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].gender_usage);
+offset += sizeof(u32);
+printf("-- gender_usage            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].gender_usage, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].gender_usage, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].gender_usage);
 
 // u32 item_type
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_type);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_type);
 offset += sizeof(u32);
-printf("-- item_type               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_type, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_type, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_type);
+printf("-- item_type               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_type, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_type, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_type);
 
 // u32 category_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].category_id);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].category_id);
 offset += sizeof(u32);
-printf("-- category_id             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].category_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].category_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].category_id);
+printf("-- category_id             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].category_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].category_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].category_id);
 
-// u32 unknown_dword_7
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_7);
+// u32 weapon_trail_effect_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].weapon_trail_effect_id);
 offset += sizeof(u32);
-printf("-- unknown_dword_7         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_7, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_7, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_7);
+printf("-- weapon_trail_effect_id  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].weapon_trail_effect_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].weapon_trail_effect_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].weapon_trail_effect_id);
 
-// u32 unknown_dword_8
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_8);
+// u32 composite_effect_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].composite_effect_id);
 offset += sizeof(u32);
-printf("-- unknown_dword_8         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_8, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_8, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_8);
+printf("-- composite_effect_id     \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].composite_effect_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].composite_effect_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].composite_effect_id);
 
-// u32 unknown_dword_9
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_9);
+// u32 power_rating
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].power_rating);
 offset += sizeof(u32);
-printf("-- unknown_dword_9         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_9, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_9, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_9);
+printf("-- power_rating            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].power_rating, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].power_rating, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].power_rating);
 
-// u32 unknown_dword_10
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_10);
+// u32 min_profile_rank
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].min_profile_rank);
 offset += sizeof(u32);
-printf("-- unknown_dword_10        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_10, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_10, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_10);
+printf("-- min_profile_rank        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].min_profile_rank, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].min_profile_rank, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].min_profile_rank);
 
-// u32 unknown_dword_11
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_11);
+// u32 rarity
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].rarity);
 offset += sizeof(u32);
-printf("-- unknown_dword_11        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_11, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_11, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_11);
+printf("-- rarity                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].rarity, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].rarity, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].rarity);
 
 // u32 activatable_ability_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].activatable_ability_id);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].activatable_ability_id);
 offset += sizeof(u32);
-printf("-- activatable_ability_id  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].activatable_ability_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].activatable_ability_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].activatable_ability_id);
+printf("-- activatable_ability_id  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].activatable_ability_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].activatable_ability_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].activatable_ability_id);
+
+// u32 activatable_ability_set_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].activatable_ability_set_id);
+offset += sizeof(u32);
+printf("-- activatable_ability_set_id\t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].activatable_ability_set_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].activatable_ability_set_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].activatable_ability_set_id);
 
 // u32 passive_ability_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].passive_ability_id);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_ability_id);
 offset += sizeof(u32);
-printf("-- passive_ability_id      \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].passive_ability_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].passive_ability_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].passive_ability_id);
+printf("-- passive_ability_id      \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_ability_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_ability_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_ability_id);
 
-// u32 unknown_dword_12
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_12);
+// u32 passive_ability_set_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_ability_set_id);
 offset += sizeof(u32);
-printf("-- unknown_dword_12        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_12, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_12, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_12);
+printf("-- passive_ability_set_id  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_ability_set_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_ability_set_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_ability_set_id);
 
 // u32 max_stack_size
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].max_stack_size);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].max_stack_size);
 offset += sizeof(u32);
-printf("-- max_stack_size          \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].max_stack_size, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].max_stack_size, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].max_stack_size);
+printf("-- max_stack_size          \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].max_stack_size, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].max_stack_size, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].max_stack_size);
 
-// string tint_name
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name_length);
+// u32 min_stack_size
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].min_stack_size);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name_length, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name_length, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name_length);
-for (u32 tint_name_iter = 0; tint_name_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name_length; tint_name_iter++)
+printf("-- min_stack_size          \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].min_stack_size, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].min_stack_size, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].min_stack_size);
+
+// string tint_alias
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_alias_length);
+offset += sizeof(u32);
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_alias_length, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_alias_length, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_alias_length);
+for (u32 tint_alias_iter = 0; tint_alias_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_alias_length; tint_alias_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name[tint_name_iter]);
+endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_alias[tint_alias_iter]);
 offset++;
 }
 
-// u32 unknown_dword_13
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_13);
+// u32 tint_group_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_group_id);
 offset += sizeof(u32);
-printf("-- unknown_dword_13        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_13, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_13, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_13);
+printf("-- tint_group_id           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_group_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_group_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_group_id);
 
-// u32 unknown_dword_14
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_14);
+// u32 member_discount
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].member_discount);
 offset += sizeof(u32);
-printf("-- unknown_dword_14        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_14, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_14, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_14);
+printf("-- member_discount         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].member_discount, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].member_discount, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].member_discount);
 
-// u32 unknown_dword_15
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_15);
+// u32 vip_rank_required
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].vip_rank_required);
 offset += sizeof(u32);
-printf("-- unknown_dword_15        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_15, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_15, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_15);
+printf("-- vip_rank_required       \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].vip_rank_required, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].vip_rank_required, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].vip_rank_required);
 
-// u32 unknown_dword_16
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_16);
+// u32 race_set_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].race_set_id);
 offset += sizeof(u32);
-printf("-- unknown_dword_16        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_16, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_16, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_16);
+printf("-- race_set_id             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].race_set_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].race_set_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].race_set_id);
 
-// u32 ui_model_camera
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].ui_model_camera);
+// u32 ui_model_camera_id_1
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].ui_model_camera_id_1);
 offset += sizeof(u32);
-printf("-- ui_model_camera         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].ui_model_camera, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].ui_model_camera, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].ui_model_camera);
+printf("-- ui_model_camera_id_1    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].ui_model_camera_id_1, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].ui_model_camera_id_1, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].ui_model_camera_id_1);
 
 // u32 equip_count_max
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].equip_count_max);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].equip_count_max);
 offset += sizeof(u32);
-printf("-- equip_count_max         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].equip_count_max, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].equip_count_max, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].equip_count_max);
+printf("-- equip_count_max         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].equip_count_max, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].equip_count_max, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].equip_count_max);
 
-// u32 currency_type
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].currency_type);
-offset += sizeof(u32);
-printf("-- currency_type           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].currency_type, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].currency_type, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].currency_type);
+// i32 curreny_type
+endian_write_i32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].curreny_type);
+offset += sizeof(i32);
+printf("-- curreny_type            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].curreny_type, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].curreny_type, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].curreny_type);
 
-// u32 unknown_dword_17
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_17);
+// u32 datasheet_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].datasheet_id);
 offset += sizeof(u32);
-printf("-- unknown_dword_17        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_17, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_17, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_17);
+printf("-- datasheet_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].datasheet_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].datasheet_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].datasheet_id);
 
-// u32 client_item_type
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_item_type);
+// u32 item_type_1
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_type_1);
 offset += sizeof(u32);
-printf("-- client_item_type        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_item_type, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_item_type, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_item_type);
+printf("-- item_type_1             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_type_1, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_type_1, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_type_1);
 
 // u32 skill_set_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].skill_set_id);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].skill_set_id);
 offset += sizeof(u32);
-printf("-- skill_set_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].skill_set_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].skill_set_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].skill_set_id);
+printf("-- skill_set_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].skill_set_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].skill_set_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].skill_set_id);
 
 // string overlay_texture
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture_length);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_texture_length);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture_length, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture_length, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture_length);
-for (u32 overlay_texture_iter = 0; overlay_texture_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture_length; overlay_texture_iter++)
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_texture_length, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_texture_length, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_texture_length);
+for (u32 overlay_texture_iter = 0; overlay_texture_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_texture_length; overlay_texture_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture[overlay_texture_iter]);
+endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_texture[overlay_texture_iter]);
 offset++;
 }
 
 // string decal_slot
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot_length);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].decal_slot_length);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot_length, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot_length, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot_length);
-for (u32 decal_slot_iter = 0; decal_slot_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot_length; decal_slot_iter++)
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].decal_slot_length, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].decal_slot_length, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].decal_slot_length);
+for (u32 decal_slot_iter = 0; decal_slot_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].decal_slot_length; decal_slot_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot[decal_slot_iter]);
+endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].decal_slot[decal_slot_iter]);
 offset++;
 }
 
-// u32 unknown_dword_18
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_18);
+// u32 overlay_adjustment
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_adjustment);
 offset += sizeof(u32);
-printf("-- unknown_dword_18        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_18, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_18, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_18);
+printf("-- overlay_adjustment      \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_adjustment, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_adjustment, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_adjustment);
 
 // u32 trial_duration_sec
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].trial_duration_sec);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].trial_duration_sec);
 offset += sizeof(u32);
-printf("-- trial_duration_sec      \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].trial_duration_sec, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].trial_duration_sec, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].trial_duration_sec);
+printf("-- trial_duration_sec      \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].trial_duration_sec, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].trial_duration_sec, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].trial_duration_sec);
 
-// u32 trial_exclusion_sec
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].trial_exclusion_sec);
+// u32 next_trial_delay_sec
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].next_trial_delay_sec);
 offset += sizeof(u32);
-printf("-- trial_exclusion_sec     \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].trial_exclusion_sec, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].trial_exclusion_sec, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].trial_exclusion_sec);
+printf("-- next_trial_delay_sec    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].next_trial_delay_sec, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].next_trial_delay_sec, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].next_trial_delay_sec);
 
-// u32 client_use_requirement_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_use_requirement_id);
+// u32 client_use_requirement
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].client_use_requirement);
 offset += sizeof(u32);
-printf("-- client_use_requirement_id\t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_use_requirement_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_use_requirement_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_use_requirement_id);
+printf("-- client_use_requirement  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].client_use_requirement, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].client_use_requirement, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].client_use_requirement);
 
 // string override_appearance
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance_length);
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_appearance_length);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance_length, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance_length, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance_length);
-for (u32 override_appearance_iter = 0; override_appearance_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance_length; override_appearance_iter++)
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_appearance_length, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_appearance_length, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_appearance_length);
+for (u32 override_appearance_iter = 0; override_appearance_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_appearance_length; override_appearance_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance[override_appearance_iter]);
+endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_appearance[override_appearance_iter]);
 offset++;
 }
 
-// u32 unknown_dword_19
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_19);
+// u32 override_camera_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_camera_id);
 offset += sizeof(u32);
-printf("-- unknown_dword_19        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_19, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_19, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_19);
+printf("-- override_camera_id      \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_camera_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_camera_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_camera_id);
 
-// u32 client_use_requirement_id_2
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_use_requirement_id_2);
+// u32 unk_dword_3
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_3);
 offset += sizeof(u32);
-printf("-- client_use_requirement_id_2\t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_use_requirement_id_2, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_use_requirement_id_2, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_use_requirement_id_2);
+printf("-- unk_dword_3             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_3, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_3, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_3);
 
-} // item_definitions
-
-// list attachment_definitions
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions_count);
+// u32 unk_dword_4
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_4);
 offset += sizeof(u32);
-printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions_count, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions_count, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions_count);
+printf("-- unk_dword_4             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_4, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_4, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_4);
 
-for (u32 attachment_definitions_iter = 0; attachment_definitions_iter < packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions_count; attachment_definitions_iter++)
+// u32 unk_dword_5
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_5);
+offset += sizeof(u32);
+printf("-- unk_dword_5             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_5, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_5, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_5);
+
+// u32 bulk
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bulk);
+offset += sizeof(u32);
+printf("-- bulk                    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bulk, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bulk, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bulk);
+
+// u32 active_equip_slot_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].active_equip_slot_id);
+offset += sizeof(u32);
+printf("-- active_equip_slot_id    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].active_equip_slot_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].active_equip_slot_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].active_equip_slot_id);
+
+// u32 passive_equip_slot_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_equip_slot_id);
+offset += sizeof(u32);
+printf("-- passive_equip_slot_id   \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_equip_slot_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_equip_slot_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_equip_slot_id);
+
+// u32 passive_equip_slot_group_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_equip_slot_group_id);
+offset += sizeof(u32);
+printf("-- passive_equip_slot_group_id\t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_equip_slot_group_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_equip_slot_group_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_equip_slot_group_id);
+
+// u32 unk_dword_6
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_6);
+offset += sizeof(u32);
+printf("-- unk_dword_6             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_6, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_6, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_6);
+
+// u32 grinder_reward_set_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].grinder_reward_set_id);
+offset += sizeof(u32);
+printf("-- grinder_reward_set_id   \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].grinder_reward_set_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].grinder_reward_set_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].grinder_reward_set_id);
+
+// u32 build_bar_group_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].build_bar_group_id);
+offset += sizeof(u32);
+printf("-- build_bar_group_id      \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].build_bar_group_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].build_bar_group_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].build_bar_group_id);
+
+// string unk_string_1
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_string_1_length);
+offset += sizeof(u32);
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_string_1_length, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_string_1_length, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_string_1_length);
+for (u32 unk_string_1_iter = 0; unk_string_1_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_string_1_length; unk_string_1_iter++)
 {
-// u32 attachment_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].attachment_id);
-offset += sizeof(u32);
-printf("-- attachment_id           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].attachment_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].attachment_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].attachment_id);
+endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_string_1[unk_string_1_iter]);
+offset++;
+}
 
-// u32 attachment_id_2
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].attachment_id_2);
-offset += sizeof(u32);
-printf("-- attachment_id_2         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].attachment_id_2, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].attachment_id_2, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].attachment_id_2);
+// b8 unk_bool_1
+endian_write_b8_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_bool_1);
+offset += sizeof(b8);
+printf("-- unk_bool_1              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_bool_1, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_bool_1, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_bool_1);
 
-// u32 group_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].group_id);
-offset += sizeof(u32);
-printf("-- group_id                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].group_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].group_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].group_id);
+// b8 is_armor
+endian_write_b8_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].is_armor);
+offset += sizeof(b8);
+printf("-- is_armor                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].is_armor, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].is_armor, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].is_armor);
 
-// u32 item_line_id
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].item_line_id);
+// u32 unk_dword_7
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_7);
 offset += sizeof(u32);
-printf("-- item_line_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].item_line_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].item_line_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].item_line_id);
+printf("-- unk_dword_7             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_7, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_7, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_7);
 
-// u8 flags
-endian_write_u8_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags);
+// u32 param1
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param1);
+offset += sizeof(u32);
+printf("-- param1                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param1, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param1, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param1);
+
+// u32 param2
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param2);
+offset += sizeof(u32);
+printf("-- param2                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param2, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param2, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param2);
+
+// u32 param3
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param3);
+offset += sizeof(u32);
+printf("-- param3                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param3, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param3, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param3);
+
+// string string_param1
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].string_param1_length);
+offset += sizeof(u32);
+printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].string_param1_length, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].string_param1_length, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].string_param1_length);
+for (u32 string_param1_iter = 0; string_param1_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].string_param1_length; string_param1_iter++)
+{
+endian_write_i8_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].string_param1[string_param1_iter]);
+offset++;
+}
+
+// u32 ui_model_camera_id_2
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].ui_model_camera_id_2);
+offset += sizeof(u32);
+printf("-- ui_model_camera_id_2    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].ui_model_camera_id_2, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].ui_model_camera_id_2, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].ui_model_camera_id_2);
+
+// u32 unk_dword_8
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_8);
+offset += sizeof(u32);
+printf("-- unk_dword_8             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_8, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_8, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_8);
+
+// i32 scrap_value_override
+endian_write_i32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].scrap_value_override);
+offset += sizeof(i32);
+printf("-- scrap_value_override    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].scrap_value_override, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].scrap_value_override, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].scrap_value_override);
+
+// list stats_item_def_2
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2_count);
+offset += sizeof(u32);
+printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2_count, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2_count, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2_count);
+
+for (u32 stats_item_def_2_iter = 0; stats_item_def_2_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2_count; stats_item_def_2_iter++)
+{
+// u32 unk_dword_9
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9);
+offset += sizeof(u32);
+printf("-- unk_dword_9             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9);
+
+// u32 stat_id
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].stat_id);
+offset += sizeof(u32);
+printf("-- stat_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].stat_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].stat_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].stat_id);
+
+endian_write_u8_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8_case);
 offset += sizeof(u8);
-printf("-- flags                   \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags);
+printf("-- SWITCH_CASE             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8_case, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8_case, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8_case);
 
-// list classes
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes_count);
-offset += sizeof(u32);
-printf("-- LIST_COUNT              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes_count, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes_count, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes_count);
-
-for (u32 classes_iter = 0; classes_iter < packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes_count; classes_iter++)
+switch(packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8_case)
 {
-// u32 element_type
-endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes[classes_iter].element_type);
+case 0:
+{
+// u32 base
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue0.base);
 offset += sizeof(u32);
-printf("-- element_type            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes[classes_iter].element_type, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes[classes_iter].element_type, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes[classes_iter].element_type);
+printf("-- base                    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue0.base, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue0.base, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue0.base);
 
-} // classes
+// u32 modifier
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue0.modifier);
+offset += sizeof(u32);
+printf("-- modifier                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue0.modifier, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue0.modifier, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue0.modifier);
 
-} // attachment_definitions
+} break;
+case 1:
+{
+// f32 base
+endian_write_f32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue1.base);
+offset += sizeof(f32);
+printf("-- base                    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue1.base, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue1.base, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue1.base);
 
-// u64 last_use_date
-endian_write_u64_little(buffer + offset, packet->characters[characters_iter].payload4[payload4_iter].last_use_date);
+// f32 modifier
+endian_write_f32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue1.modifier);
+offset += sizeof(f32);
+printf("-- modifier                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue1.modifier, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue1.modifier, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue1.modifier);
+
+} break;
+};
+// u32 unk_dword_10
+endian_write_u32_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10);
+offset += sizeof(u32);
+printf("-- unk_dword_10            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10);
+
+} // stats_item_def_2
+
+} // item_defs
+
+} // itemDefinitions
+
+// u64 lastUseDate
+endian_write_u64_little(buffer + offset, packet->characters[characters_iter].payload[payload_iter].lastUseDate);
 offset += sizeof(u64);
-printf("-- last_use_date           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].last_use_date, (u64)packet->characters[characters_iter].payload4[payload4_iter].last_use_date, (f64)packet->characters[characters_iter].payload4[payload4_iter].last_use_date);
+printf("-- lastUseDate             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].lastUseDate, (u64)packet->characters[characters_iter].payload[payload_iter].lastUseDate, (f64)packet->characters[characters_iter].payload[payload_iter].lastUseDate);
 
-} // payload4
-endian_write_u32_little((u8*)payload4_length_ptr, (u32)((uptr)buffer + (uptr)offset - (uptr)payload4_length_ptr - sizeof(u32)));
+} // payload
+endian_write_u32_little((u8*)payload_length_ptr, (u32)((uptr)buffer + (uptr)offset - (uptr)payload_length_ptr - sizeof(u32)));
 
 } // characters
 
@@ -2435,566 +2504,620 @@ packet->characters = arena_push_size(arena, packet->characters_count * sizeof(pa
 printf("-- LIST_COUNT              \t%d\n", packet->characters_count);
 for (u32 characters_iter = 0; characters_iter < packet->characters_count; characters_iter++)
 {
-// u64 character_id
-packet->characters[characters_iter].character_id = endian_read_u64_little(data + offset);
+// u64 charId
+packet->characters[characters_iter].charId = endian_read_u64_little(data + offset);
 offset += sizeof(u64);
-printf("-- character_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].character_id, (u64)packet->characters[characters_iter].character_id, (f64)packet->characters[characters_iter].character_id);
+printf("-- charId                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].charId, (u64)packet->characters[characters_iter].charId, (f64)packet->characters[characters_iter].charId);
 
-// u32 server_id
-packet->characters[characters_iter].server_id = endian_read_u32_little(data + offset);
+// u32 serverId
+packet->characters[characters_iter].serverId = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- server_id               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].server_id, (u64)packet->characters[characters_iter].server_id, (f64)packet->characters[characters_iter].server_id);
+printf("-- serverId                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].serverId, (u64)packet->characters[characters_iter].serverId, (f64)packet->characters[characters_iter].serverId);
 
-// u64 last_login_date
-packet->characters[characters_iter].last_login_date = endian_read_u64_little(data + offset);
+// u64 lastLoginDate
+packet->characters[characters_iter].lastLoginDate = endian_read_u64_little(data + offset);
 offset += sizeof(u64);
-printf("-- last_login_date         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].last_login_date, (u64)packet->characters[characters_iter].last_login_date, (f64)packet->characters[characters_iter].last_login_date);
+printf("-- lastLoginDate           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].lastLoginDate, (u64)packet->characters[characters_iter].lastLoginDate, (f64)packet->characters[characters_iter].lastLoginDate);
 
-// u32 null_field
-packet->characters[characters_iter].null_field = endian_read_u32_little(data + offset);
+// u32 nullField
+packet->characters[characters_iter].nullField = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- null_field              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].null_field, (u64)packet->characters[characters_iter].null_field, (f64)packet->characters[characters_iter].null_field);
+printf("-- nullField               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].nullField, (u64)packet->characters[characters_iter].nullField, (f64)packet->characters[characters_iter].nullField);
 
 // u32 status
 packet->characters[characters_iter].status = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
 printf("-- status                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].status, (u64)packet->characters[characters_iter].status, (f64)packet->characters[characters_iter].status);
 
-// stream payload4
-packet->characters[characters_iter].payload4_length = endian_read_u32_little(data + offset);
+// stream payload
+packet->characters[characters_iter].payload_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4 = arena_push_size(arena, packet->characters[characters_iter].payload4_length * sizeof(packet->characters[characters_iter].payload4[0]));
-printf("-- STREAM_LENGTH           \t%d\n", packet->characters[characters_iter].payload4_length);
-for (u32 payload4_iter = 0; payload4_iter < (packet->characters[characters_iter].payload4_length > (u32)0 ? (u32)1 : (u32)0); payload4_iter++)
+packet->characters[characters_iter].payload = arena_push_size(arena, packet->characters[characters_iter].payload_length * sizeof(packet->characters[characters_iter].payload[0]));
+printf("-- STREAM_LENGTH           \t%d\n", packet->characters[characters_iter].payload_length);
+for (u32 payload_iter = 0; payload_iter < (packet->characters[characters_iter].payload_length > (u32)0 ? (u32)1 : (u32)0); payload_iter++)
 {
 // string name
-packet->characters[characters_iter].payload4[payload4_iter].name_length = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].name_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].name = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].name_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].name_length);
-for (u32 name_iter = 0; name_iter < packet->characters[characters_iter].payload4[payload4_iter].name_length; name_iter++)
+packet->characters[characters_iter].payload[payload_iter].name = arena_push_size(arena, packet->characters[characters_iter].payload[payload_iter].name_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload[payload_iter].name_length);
+for (u32 name_iter = 0; name_iter < packet->characters[characters_iter].payload[payload_iter].name_length; name_iter++)
 {
-packet->characters[characters_iter].payload4[payload4_iter].name[name_iter] = *(i8*)((uptr)data + offset);
+packet->characters[characters_iter].payload[payload_iter].name[name_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
-// u8 empire_id
-packet->characters[characters_iter].payload4[payload4_iter].empire_id = endian_read_u8_little(data + offset);
+// u8 empireId
+packet->characters[characters_iter].payload[payload_iter].empireId = endian_read_u8_little(data + offset);
 offset += sizeof(u8);
-printf("-- empire_id               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].empire_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].empire_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].empire_id);
+printf("-- empireId                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].empireId, (u64)packet->characters[characters_iter].payload[payload_iter].empireId, (f64)packet->characters[characters_iter].payload[payload_iter].empireId);
 
-// u32 battle_rank
-packet->characters[characters_iter].payload4[payload4_iter].battle_rank = endian_read_u32_little(data + offset);
+// u32 battleRank
+packet->characters[characters_iter].payload[payload_iter].battleRank = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- battle_rank             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].battle_rank, (u64)packet->characters[characters_iter].payload4[payload4_iter].battle_rank, (f64)packet->characters[characters_iter].payload4[payload4_iter].battle_rank);
+printf("-- battleRank              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].battleRank, (u64)packet->characters[characters_iter].payload[payload_iter].battleRank, (f64)packet->characters[characters_iter].payload[payload_iter].battleRank);
 
-// u32 next_battle_rank_percent
-packet->characters[characters_iter].payload4[payload4_iter].next_battle_rank_percent = endian_read_u32_little(data + offset);
+// u32 nextBattleRankPercent
+packet->characters[characters_iter].payload[payload_iter].nextBattleRankPercent = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- next_battle_rank_percent\t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].next_battle_rank_percent, (u64)packet->characters[characters_iter].payload4[payload4_iter].next_battle_rank_percent, (f64)packet->characters[characters_iter].payload4[payload4_iter].next_battle_rank_percent);
+printf("-- nextBattleRankPercent   \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].nextBattleRankPercent, (u64)packet->characters[characters_iter].payload[payload_iter].nextBattleRankPercent, (f64)packet->characters[characters_iter].payload[payload_iter].nextBattleRankPercent);
 
-// u32 head_id
-packet->characters[characters_iter].payload4[payload4_iter].head_id = endian_read_u32_little(data + offset);
+// u32 headId
+packet->characters[characters_iter].payload[payload_iter].headId = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- head_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].head_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].head_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].head_id);
+printf("-- headId                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].headId, (u64)packet->characters[characters_iter].payload[payload_iter].headId, (f64)packet->characters[characters_iter].payload[payload_iter].headId);
 
-// u32 model_id
-packet->characters[characters_iter].payload4[payload4_iter].model_id = endian_read_u32_little(data + offset);
+// u32 actorModelId
+packet->characters[characters_iter].payload[payload_iter].actorModelId = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- model_id                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].model_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].model_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].model_id);
+printf("-- actorModelId            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].actorModelId, (u64)packet->characters[characters_iter].payload[payload_iter].actorModelId, (f64)packet->characters[characters_iter].payload[payload_iter].actorModelId);
 
 // u32 gender
-packet->characters[characters_iter].payload4[payload4_iter].gender = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].gender = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- gender                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].gender, (u64)packet->characters[characters_iter].payload4[payload4_iter].gender, (f64)packet->characters[characters_iter].payload4[payload4_iter].gender);
+printf("-- gender                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].gender, (u64)packet->characters[characters_iter].payload[payload_iter].gender, (f64)packet->characters[characters_iter].payload[payload_iter].gender);
 
-// u32 profile_id
-packet->characters[characters_iter].payload4[payload4_iter].profile_id = endian_read_u32_little(data + offset);
+// u32 profileId
+packet->characters[characters_iter].payload[payload_iter].profileId = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- profile_id              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].profile_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].profile_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].profile_id);
+printf("-- profileId               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].profileId, (u64)packet->characters[characters_iter].payload[payload_iter].profileId, (f64)packet->characters[characters_iter].payload[payload_iter].profileId);
 
-// u32 unknown_dword
-packet->characters[characters_iter].payload4[payload4_iter].unknown_dword = endian_read_u32_little(data + offset);
+// u32 unkDword1
+packet->characters[characters_iter].payload[payload_iter].unkDword1 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword, (u64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword, (f64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword);
+printf("-- unkDword1               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].unkDword1, (u64)packet->characters[characters_iter].payload[payload_iter].unkDword1, (f64)packet->characters[characters_iter].payload[payload_iter].unkDword1);
 
-// u32 loadout_id
-packet->characters[characters_iter].payload4[payload4_iter].loadout_id = endian_read_u32_little(data + offset);
+// u32 unkDword2
+packet->characters[characters_iter].payload[payload_iter].unkDword2 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- loadout_id              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_id);
+printf("-- unkDword2               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].unkDword2, (u64)packet->characters[characters_iter].payload[payload_iter].unkDword2, (f64)packet->characters[characters_iter].payload[payload_iter].unkDword2);
 
-// u32 unknown_dword_1
-packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_1 = endian_read_u32_little(data + offset);
+// list loadoutSlots
+packet->characters[characters_iter].payload[payload_iter].loadoutSlots_count = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_1         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_1, (u64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_1, (f64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_1);
+packet->characters[characters_iter].payload[payload_iter].loadoutSlots = arena_push_size(arena, packet->characters[characters_iter].payload[payload_iter].loadoutSlots_count * sizeof(packet->characters[characters_iter].payload[payload_iter].loadoutSlots[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->characters[characters_iter].payload[payload_iter].loadoutSlots_count);
+for (u32 loadoutSlots_iter = 0; loadoutSlots_iter < packet->characters[characters_iter].payload[payload_iter].loadoutSlots_count; loadoutSlots_iter++)
+{
+// u32 hotbarSlotId
+packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].hotbarSlotId = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- hotbarSlotId            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].hotbarSlotId, (u64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].hotbarSlotId, (f64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].hotbarSlotId);
 
-// u8 unknown_byte_1
-packet->characters[characters_iter].payload4[payload4_iter].unknown_byte_1 = endian_read_u8_little(data + offset);
+// u32 loadoutId
+packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].loadoutId = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- loadoutId               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].loadoutId, (u64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].loadoutId, (f64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].loadoutId);
+
+// u32 slotId
+packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].slotId = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- slotId                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].slotId, (u64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].slotId, (f64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].slotId);
+
+// u32 itemDefId
+packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].itemDefId = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- itemDefId               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].itemDefId, (u64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].itemDefId, (f64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].itemDefId);
+
+// u64 loadoutItemGuid
+packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].loadoutItemGuid = endian_read_u64_little(data + offset);
+offset += sizeof(u64);
+printf("-- loadoutItemGuid         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].loadoutItemGuid, (u64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].loadoutItemGuid, (f64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].loadoutItemGuid);
+
+// u8 unkByte1
+packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].unkByte1 = endian_read_u8_little(data + offset);
 offset += sizeof(u8);
-printf("-- unknown_byte_1          \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].unknown_byte_1, (u64)packet->characters[characters_iter].payload4[payload4_iter].unknown_byte_1, (f64)packet->characters[characters_iter].payload4[payload4_iter].unknown_byte_1);
+printf("-- unkByte1                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].unkByte1, (u64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].unkByte1, (f64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].unkByte1);
 
-// u32 unknown_dword_2
-packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_2 = endian_read_u32_little(data + offset);
+// u32 unkDword1
+packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].unkDword1 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_2         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_2, (u64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_2, (f64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_2);
+printf("-- unkDword1               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].unkDword1, (u64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].unkDword1, (f64)packet->characters[characters_iter].payload[payload_iter].loadoutSlots[loadoutSlots_iter].unkDword1);
 
-// u32 unknown_dword_3
-packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_3 = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- unknown_dword_3         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_3, (u64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_3, (f64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_3);
+} // loadoutSlots
 
-// string loadout_name
-packet->characters[characters_iter].payload4[payload4_iter].loadout_name_length = endian_read_u32_little(data + offset);
+// list itemDefinitions
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions_count = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].loadout_name = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].loadout_name_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].loadout_name_length);
-for (u32 loadout_name_iter = 0; loadout_name_iter < packet->characters[characters_iter].payload4[payload4_iter].loadout_name_length; loadout_name_iter++)
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions = arena_push_size(arena, packet->characters[characters_iter].payload[payload_iter].itemDefinitions_count * sizeof(packet->characters[characters_iter].payload[payload_iter].itemDefinitions[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->characters[characters_iter].payload[payload_iter].itemDefinitions_count);
+for (u32 itemDefinitions_iter = 0; itemDefinitions_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions_count; itemDefinitions_iter++)
 {
-packet->characters[characters_iter].payload4[payload4_iter].loadout_name[loadout_name_iter] = *(i8*)((uptr)data + offset);
-offset++;
-}
-
-// u32 tint_item_id
-packet->characters[characters_iter].payload4[payload4_iter].tint_item_id = endian_read_u32_little(data + offset);
+// u32 ID
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].ID = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- tint_item_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].tint_item_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].tint_item_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].tint_item_id);
+printf("-- ID                      \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].ID, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].ID, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].ID);
 
-// u32 unknown_dword_4
-packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_4 = endian_read_u32_little(data + offset);
+// list item_defs
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs_count = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_4         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_4, (u64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_4, (f64)packet->characters[characters_iter].payload4[payload4_iter].unknown_dword_4);
-
-// u32 decal_item_id
-packet->characters[characters_iter].payload4[payload4_iter].decal_item_id = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- decal_item_id           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].decal_item_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].decal_item_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].decal_item_id);
-
-// list loadout_slots
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots_count = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[0]));
-printf("-- LIST_COUNT              \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].loadout_slots_count);
-for (u32 loadout_slots_iter = 0; loadout_slots_iter < packet->characters[characters_iter].payload4[payload4_iter].loadout_slots_count; loadout_slots_iter++)
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs = arena_push_size(arena, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs_count * sizeof(packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs_count);
+for (u32 item_defs_iter = 0; item_defs_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs_count; item_defs_iter++)
 {
-// u32 slot_id
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].slot_id = endian_read_u32_little(data + offset);
+// u32 defs_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].defs_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- slot_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].slot_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].slot_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].slot_id);
+printf("-- defs_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].defs_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].defs_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].defs_id);
 
-// u32 index
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].index = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- index                   \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].index, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].index, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].index);
-
-// u32 item_line_id
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].item_line_id = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- item_line_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].item_line_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].item_line_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].item_line_id);
-
-// u8 flags
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].flags = endian_read_u8_little(data + offset);
+// u8 bitflags1
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bitflags1 = endian_read_u8_little(data + offset);
 offset += sizeof(u8);
-printf("-- flags                   \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].flags, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].flags, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].flags);
+printf("-- bitflags1               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bitflags1, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bitflags1, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bitflags1);
 
-// list attachments
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments_count = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments[0]));
-printf("-- LIST_COUNT              \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments_count);
-for (u32 attachments_iter = 0; attachments_iter < packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments_count; attachments_iter++)
-{
-// u32 attachment_id
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments[attachments_iter].attachment_id = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- attachment_id           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments[attachments_iter].attachment_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments[attachments_iter].attachment_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachments[attachments_iter].attachment_id);
-
-} // attachments
-
-// list attachment_classes
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes_count = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[0]));
-printf("-- LIST_COUNT              \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes_count);
-for (u32 attachment_classes_iter = 0; attachment_classes_iter < packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes_count; attachment_classes_iter++)
-{
-// u32 class_id
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[attachment_classes_iter].class_id = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- class_id                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[attachment_classes_iter].class_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[attachment_classes_iter].class_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[attachment_classes_iter].class_id);
-
-// u32 attachment_id
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[attachment_classes_iter].attachment_id = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- attachment_id           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[attachment_classes_iter].attachment_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[attachment_classes_iter].attachment_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].attachment_classes[attachment_classes_iter].attachment_id);
-
-} // attachment_classes
-
-// u32 tint_item_id
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].tint_item_id = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- tint_item_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].tint_item_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].tint_item_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].tint_item_id);
-
-// u32 item_slot
-packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].item_slot = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- item_slot               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].item_slot, (u64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].item_slot, (f64)packet->characters[characters_iter].payload4[payload4_iter].loadout_slots[loadout_slots_iter].item_slot);
-
-} // loadout_slots
-
-// list item_definitions
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions_count = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].item_definitions[0]));
-printf("-- LIST_COUNT              \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions_count);
-for (u32 item_definitions_iter = 0; item_definitions_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions_count; item_definitions_iter++)
-{
-// u32 item_id
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- item_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id);
-
-// u32 item_id_2
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id_2 = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- item_id_2               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id_2, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id_2, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_id_2);
-
-// u16 flags_1
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1 = endian_read_u16_little(data + offset);
-offset += sizeof(u16);
-printf("-- flags_1                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].flags_1);
+// u8 bitflags2
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bitflags2 = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
+printf("-- bitflags2               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bitflags2, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bitflags2, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bitflags2);
 
 // u32 name_id
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].name_id = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].name_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- name_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].name_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].name_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].name_id);
+printf("-- name_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].name_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].name_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].name_id);
 
 // u32 description_id
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].description_id = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].description_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- description_id          \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].description_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].description_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].description_id);
+printf("-- description_id          \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].description_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].description_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].description_id);
 
-// u32 unknown_dword_1
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_1 = endian_read_u32_little(data + offset);
+// u32 content_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].content_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_1         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_1, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_1, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_1);
+printf("-- content_id              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].content_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].content_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].content_id);
 
-// u32 icon_id
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].icon_id = endian_read_u32_little(data + offset);
+// u32 image_set_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].image_set_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- icon_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].icon_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].icon_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].icon_id);
+printf("-- image_set_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].image_set_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].image_set_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].image_set_id);
 
-// u32 unknown_dword_2
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_2 = endian_read_u32_little(data + offset);
+// u32 tint_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_2         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_2, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_2, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_2);
-
-// u32 hudImageSetId
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].hudImageSetId = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- hudImageSetId           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].hudImageSetId, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].hudImageSetId, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].hudImageSetId);
+printf("-- tint_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_id);
 
 // u32 hud_image_set_id
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].hud_image_set_id = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].hud_image_set_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- hud_image_set_id        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].hud_image_set_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].hud_image_set_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].hud_image_set_id);
+printf("-- hud_image_set_id        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].hud_image_set_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].hud_image_set_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].hud_image_set_id);
 
-// u32 unknown_dword_4
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_4 = endian_read_u32_little(data + offset);
+// u32 unk_dword_1
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_1 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_4         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_4, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_4, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_4);
+printf("-- unk_dword_1             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_1, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_1, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_1);
+
+// u32 unk_dword_2
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_2 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- unk_dword_2             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_2, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_2, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_2);
 
 // u32 cost
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].cost = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].cost = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- cost                    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].cost, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].cost, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].cost);
+printf("-- cost                    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].cost, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].cost, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].cost);
 
 // u32 item_class
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_class = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_class = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- item_class              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_class, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_class, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_class);
+printf("-- item_class              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_class, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_class, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_class);
 
-// u32 unknown_dword_5
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_5 = endian_read_u32_little(data + offset);
+// u32 profile_override
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].profile_override = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_5         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_5, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_5, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_5);
-
-// u32 item_slot
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_slot = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- item_slot               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_slot, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_slot, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_slot);
-
-// u32 slot_override_key
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].slot_override_key = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- slot_override_key       \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].slot_override_key, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].slot_override_key, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].slot_override_key);
-
-// u8 unknown_dword6
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword6 = endian_read_u8_little(data + offset);
-offset += sizeof(u8);
-printf("-- unknown_dword6          \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword6, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword6, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword6);
+printf("-- profile_override        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].profile_override, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].profile_override, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].profile_override);
 
 // string model_name
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name_length = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].model_name_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name_length);
-for (u32 model_name_iter = 0; model_name_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name_length; model_name_iter++)
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].model_name = arena_push_size(arena, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].model_name_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].model_name_length);
+for (u32 model_name_iter = 0; model_name_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].model_name_length; model_name_iter++)
 {
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].model_name[model_name_iter] = *(i8*)((uptr)data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].model_name[model_name_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
-// string unknown_string
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string_length = endian_read_u32_little(data + offset);
+// string texture_alias
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].texture_alias_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string_length);
-for (u32 unknown_string_iter = 0; unknown_string_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string_length; unknown_string_iter++)
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].texture_alias = arena_push_size(arena, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].texture_alias_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].texture_alias_length);
+for (u32 texture_alias_iter = 0; texture_alias_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].texture_alias_length; texture_alias_iter++)
 {
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_string[unknown_string_iter] = *(i8*)((uptr)data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].texture_alias[texture_alias_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
-// u8 unknown_byte_1
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_byte_1 = endian_read_u8_little(data + offset);
-offset += sizeof(u8);
-printf("-- unknown_byte_1          \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_byte_1, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_byte_1, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_byte_1);
+// u32 gender_usage
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].gender_usage = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- gender_usage            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].gender_usage, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].gender_usage, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].gender_usage);
 
 // u32 item_type
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_type = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_type = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- item_type               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_type, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_type, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].item_type);
+printf("-- item_type               \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_type, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_type, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_type);
 
 // u32 category_id
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].category_id = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].category_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- category_id             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].category_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].category_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].category_id);
+printf("-- category_id             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].category_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].category_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].category_id);
 
-// u32 unknown_dword_7
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_7 = endian_read_u32_little(data + offset);
+// u32 weapon_trail_effect_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].weapon_trail_effect_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_7         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_7, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_7, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_7);
+printf("-- weapon_trail_effect_id  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].weapon_trail_effect_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].weapon_trail_effect_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].weapon_trail_effect_id);
 
-// u32 unknown_dword_8
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_8 = endian_read_u32_little(data + offset);
+// u32 composite_effect_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].composite_effect_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_8         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_8, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_8, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_8);
+printf("-- composite_effect_id     \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].composite_effect_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].composite_effect_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].composite_effect_id);
 
-// u32 unknown_dword_9
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_9 = endian_read_u32_little(data + offset);
+// u32 power_rating
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].power_rating = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_9         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_9, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_9, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_9);
+printf("-- power_rating            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].power_rating, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].power_rating, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].power_rating);
 
-// u32 unknown_dword_10
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_10 = endian_read_u32_little(data + offset);
+// u32 min_profile_rank
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].min_profile_rank = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_10        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_10, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_10, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_10);
+printf("-- min_profile_rank        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].min_profile_rank, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].min_profile_rank, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].min_profile_rank);
 
-// u32 unknown_dword_11
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_11 = endian_read_u32_little(data + offset);
+// u32 rarity
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].rarity = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_11        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_11, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_11, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_11);
+printf("-- rarity                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].rarity, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].rarity, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].rarity);
 
 // u32 activatable_ability_id
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].activatable_ability_id = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].activatable_ability_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- activatable_ability_id  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].activatable_ability_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].activatable_ability_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].activatable_ability_id);
+printf("-- activatable_ability_id  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].activatable_ability_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].activatable_ability_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].activatable_ability_id);
+
+// u32 activatable_ability_set_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].activatable_ability_set_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- activatable_ability_set_id\t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].activatable_ability_set_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].activatable_ability_set_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].activatable_ability_set_id);
 
 // u32 passive_ability_id
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].passive_ability_id = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_ability_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- passive_ability_id      \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].passive_ability_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].passive_ability_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].passive_ability_id);
+printf("-- passive_ability_id      \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_ability_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_ability_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_ability_id);
 
-// u32 unknown_dword_12
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_12 = endian_read_u32_little(data + offset);
+// u32 passive_ability_set_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_ability_set_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_12        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_12, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_12, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_12);
+printf("-- passive_ability_set_id  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_ability_set_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_ability_set_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_ability_set_id);
 
 // u32 max_stack_size
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].max_stack_size = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].max_stack_size = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- max_stack_size          \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].max_stack_size, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].max_stack_size, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].max_stack_size);
+printf("-- max_stack_size          \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].max_stack_size, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].max_stack_size, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].max_stack_size);
 
-// string tint_name
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name_length = endian_read_u32_little(data + offset);
+// u32 min_stack_size
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].min_stack_size = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name_length);
-for (u32 tint_name_iter = 0; tint_name_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name_length; tint_name_iter++)
+printf("-- min_stack_size          \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].min_stack_size, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].min_stack_size, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].min_stack_size);
+
+// string tint_alias
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_alias_length = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_alias = arena_push_size(arena, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_alias_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_alias_length);
+for (u32 tint_alias_iter = 0; tint_alias_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_alias_length; tint_alias_iter++)
 {
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].tint_name[tint_name_iter] = *(i8*)((uptr)data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_alias[tint_alias_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
-// u32 unknown_dword_13
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_13 = endian_read_u32_little(data + offset);
+// u32 tint_group_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_group_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_13        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_13, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_13, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_13);
+printf("-- tint_group_id           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_group_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_group_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].tint_group_id);
 
-// u32 unknown_dword_14
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_14 = endian_read_u32_little(data + offset);
+// u32 member_discount
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].member_discount = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_14        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_14, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_14, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_14);
+printf("-- member_discount         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].member_discount, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].member_discount, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].member_discount);
 
-// u32 unknown_dword_15
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_15 = endian_read_u32_little(data + offset);
+// u32 vip_rank_required
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].vip_rank_required = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_15        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_15, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_15, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_15);
+printf("-- vip_rank_required       \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].vip_rank_required, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].vip_rank_required, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].vip_rank_required);
 
-// u32 unknown_dword_16
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_16 = endian_read_u32_little(data + offset);
+// u32 race_set_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].race_set_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_16        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_16, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_16, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_16);
+printf("-- race_set_id             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].race_set_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].race_set_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].race_set_id);
 
-// u32 ui_model_camera
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].ui_model_camera = endian_read_u32_little(data + offset);
+// u32 ui_model_camera_id_1
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].ui_model_camera_id_1 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- ui_model_camera         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].ui_model_camera, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].ui_model_camera, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].ui_model_camera);
+printf("-- ui_model_camera_id_1    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].ui_model_camera_id_1, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].ui_model_camera_id_1, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].ui_model_camera_id_1);
 
 // u32 equip_count_max
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].equip_count_max = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].equip_count_max = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- equip_count_max         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].equip_count_max, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].equip_count_max, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].equip_count_max);
+printf("-- equip_count_max         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].equip_count_max, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].equip_count_max, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].equip_count_max);
 
-// u32 currency_type
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].currency_type = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- currency_type           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].currency_type, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].currency_type, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].currency_type);
+// i32 curreny_type
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].curreny_type = endian_read_i32_little(data + offset);
+offset += sizeof(i32);
+printf("-- curreny_type            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].curreny_type, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].curreny_type, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].curreny_type);
 
-// u32 unknown_dword_17
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_17 = endian_read_u32_little(data + offset);
+// u32 datasheet_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].datasheet_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_17        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_17, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_17, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_17);
+printf("-- datasheet_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].datasheet_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].datasheet_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].datasheet_id);
 
-// u32 client_item_type
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_item_type = endian_read_u32_little(data + offset);
+// u32 item_type_1
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_type_1 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- client_item_type        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_item_type, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_item_type, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_item_type);
+printf("-- item_type_1             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_type_1, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_type_1, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].item_type_1);
 
 // u32 skill_set_id
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].skill_set_id = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].skill_set_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- skill_set_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].skill_set_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].skill_set_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].skill_set_id);
+printf("-- skill_set_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].skill_set_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].skill_set_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].skill_set_id);
 
 // string overlay_texture
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture_length = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_texture_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture_length);
-for (u32 overlay_texture_iter = 0; overlay_texture_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture_length; overlay_texture_iter++)
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_texture = arena_push_size(arena, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_texture_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_texture_length);
+for (u32 overlay_texture_iter = 0; overlay_texture_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_texture_length; overlay_texture_iter++)
 {
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].overlay_texture[overlay_texture_iter] = *(i8*)((uptr)data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_texture[overlay_texture_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
 // string decal_slot
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot_length = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].decal_slot_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot_length);
-for (u32 decal_slot_iter = 0; decal_slot_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot_length; decal_slot_iter++)
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].decal_slot = arena_push_size(arena, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].decal_slot_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].decal_slot_length);
+for (u32 decal_slot_iter = 0; decal_slot_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].decal_slot_length; decal_slot_iter++)
 {
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].decal_slot[decal_slot_iter] = *(i8*)((uptr)data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].decal_slot[decal_slot_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
-// u32 unknown_dword_18
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_18 = endian_read_u32_little(data + offset);
+// u32 overlay_adjustment
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_adjustment = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_18        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_18, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_18, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_18);
+printf("-- overlay_adjustment      \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_adjustment, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_adjustment, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].overlay_adjustment);
 
 // u32 trial_duration_sec
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].trial_duration_sec = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].trial_duration_sec = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- trial_duration_sec      \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].trial_duration_sec, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].trial_duration_sec, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].trial_duration_sec);
+printf("-- trial_duration_sec      \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].trial_duration_sec, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].trial_duration_sec, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].trial_duration_sec);
 
-// u32 trial_exclusion_sec
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].trial_exclusion_sec = endian_read_u32_little(data + offset);
+// u32 next_trial_delay_sec
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].next_trial_delay_sec = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- trial_exclusion_sec     \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].trial_exclusion_sec, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].trial_exclusion_sec, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].trial_exclusion_sec);
+printf("-- next_trial_delay_sec    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].next_trial_delay_sec, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].next_trial_delay_sec, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].next_trial_delay_sec);
 
-// u32 client_use_requirement_id
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_use_requirement_id = endian_read_u32_little(data + offset);
+// u32 client_use_requirement
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].client_use_requirement = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- client_use_requirement_id\t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_use_requirement_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_use_requirement_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_use_requirement_id);
+printf("-- client_use_requirement  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].client_use_requirement, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].client_use_requirement, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].client_use_requirement);
 
 // string override_appearance
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance_length = endian_read_u32_little(data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_appearance_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance_length);
-for (u32 override_appearance_iter = 0; override_appearance_iter < packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance_length; override_appearance_iter++)
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_appearance = arena_push_size(arena, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_appearance_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_appearance_length);
+for (u32 override_appearance_iter = 0; override_appearance_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_appearance_length; override_appearance_iter++)
 {
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].override_appearance[override_appearance_iter] = *(i8*)((uptr)data + offset);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_appearance[override_appearance_iter] = *(i8*)((uptr)data + offset);
 offset++;
 }
 
-// u32 unknown_dword_19
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_19 = endian_read_u32_little(data + offset);
+// u32 override_camera_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_camera_id = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- unknown_dword_19        \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_19, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_19, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].unknown_dword_19);
+printf("-- override_camera_id      \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_camera_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_camera_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].override_camera_id);
 
-// u32 client_use_requirement_id_2
-packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_use_requirement_id_2 = endian_read_u32_little(data + offset);
+// u32 unk_dword_3
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_3 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- client_use_requirement_id_2\t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_use_requirement_id_2, (u64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_use_requirement_id_2, (f64)packet->characters[characters_iter].payload4[payload4_iter].item_definitions[item_definitions_iter].client_use_requirement_id_2);
+printf("-- unk_dword_3             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_3, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_3, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_3);
 
-} // item_definitions
-
-// list attachment_definitions
-packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions_count = endian_read_u32_little(data + offset);
+// u32 unk_dword_4
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_4 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[0]));
-printf("-- LIST_COUNT              \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions_count);
-for (u32 attachment_definitions_iter = 0; attachment_definitions_iter < packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions_count; attachment_definitions_iter++)
+printf("-- unk_dword_4             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_4, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_4, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_4);
+
+// u32 unk_dword_5
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_5 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- unk_dword_5             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_5, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_5, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_5);
+
+// u32 bulk
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bulk = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- bulk                    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bulk, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bulk, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].bulk);
+
+// u32 active_equip_slot_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].active_equip_slot_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- active_equip_slot_id    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].active_equip_slot_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].active_equip_slot_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].active_equip_slot_id);
+
+// u32 passive_equip_slot_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_equip_slot_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- passive_equip_slot_id   \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_equip_slot_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_equip_slot_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_equip_slot_id);
+
+// u32 passive_equip_slot_group_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_equip_slot_group_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- passive_equip_slot_group_id\t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_equip_slot_group_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_equip_slot_group_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].passive_equip_slot_group_id);
+
+// u32 unk_dword_6
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_6 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- unk_dword_6             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_6, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_6, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_6);
+
+// u32 grinder_reward_set_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].grinder_reward_set_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- grinder_reward_set_id   \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].grinder_reward_set_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].grinder_reward_set_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].grinder_reward_set_id);
+
+// u32 build_bar_group_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].build_bar_group_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- build_bar_group_id      \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].build_bar_group_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].build_bar_group_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].build_bar_group_id);
+
+// string unk_string_1
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_string_1_length = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_string_1 = arena_push_size(arena, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_string_1_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_string_1_length);
+for (u32 unk_string_1_iter = 0; unk_string_1_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_string_1_length; unk_string_1_iter++)
 {
-// u32 attachment_id
-packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].attachment_id = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- attachment_id           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].attachment_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].attachment_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].attachment_id);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_string_1[unk_string_1_iter] = *(i8*)((uptr)data + offset);
+offset++;
+}
 
-// u32 attachment_id_2
-packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].attachment_id_2 = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- attachment_id_2         \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].attachment_id_2, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].attachment_id_2, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].attachment_id_2);
+// b8 unk_bool_1
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_bool_1 = endian_read_b8_little(data + offset);
+offset += sizeof(b8);
+printf("-- unk_bool_1              \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_bool_1, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_bool_1, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_bool_1);
 
-// u32 group_id
-packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].group_id = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-printf("-- group_id                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].group_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].group_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].group_id);
+// b8 is_armor
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].is_armor = endian_read_b8_little(data + offset);
+offset += sizeof(b8);
+printf("-- is_armor                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].is_armor, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].is_armor, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].is_armor);
 
-// u32 item_line_id
-packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].item_line_id = endian_read_u32_little(data + offset);
+// u32 unk_dword_7
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_7 = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- item_line_id            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].item_line_id, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].item_line_id, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].item_line_id);
+printf("-- unk_dword_7             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_7, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_7, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_7);
 
-// u8 flags
-packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags = endian_read_u8_little(data + offset);
+// u32 param1
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param1 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- param1                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param1, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param1, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param1);
+
+// u32 param2
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param2 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- param2                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param2, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param2, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param2);
+
+// u32 param3
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param3 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- param3                  \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param3, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param3, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].param3);
+
+// string string_param1
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].string_param1_length = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].string_param1 = arena_push_size(arena, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].string_param1_length);
+printf("-- STRING_LENGTH           \t%d\n", packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].string_param1_length);
+for (u32 string_param1_iter = 0; string_param1_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].string_param1_length; string_param1_iter++)
+{
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].string_param1[string_param1_iter] = *(i8*)((uptr)data + offset);
+offset++;
+}
+
+// u32 ui_model_camera_id_2
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].ui_model_camera_id_2 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- ui_model_camera_id_2    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].ui_model_camera_id_2, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].ui_model_camera_id_2, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].ui_model_camera_id_2);
+
+// u32 unk_dword_8
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_8 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- unk_dword_8             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_8, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_8, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].unk_dword_8);
+
+// i32 scrap_value_override
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].scrap_value_override = endian_read_i32_little(data + offset);
+offset += sizeof(i32);
+printf("-- scrap_value_override    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].scrap_value_override, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].scrap_value_override, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].scrap_value_override);
+
+// list stats_item_def_2
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2_count = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2 = arena_push_size(arena, packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2_count * sizeof(packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[0]));
+printf("-- LIST_COUNT              \t%d\n", packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2_count);
+for (u32 stats_item_def_2_iter = 0; stats_item_def_2_iter < packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2_count; stats_item_def_2_iter++)
+{
+// u32 unk_dword_9
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- unk_dword_9             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_9);
+
+// u32 stat_id
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].stat_id = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- stat_id                 \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].stat_id, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].stat_id, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].stat_id);
+
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8_case = endian_read_u8_little(data + offset);
 offset += sizeof(u8);
-printf("-- flags                   \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].flags);
-
-// list classes
-packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes_count = endian_read_u32_little(data + offset);
-offset += sizeof(u32);
-packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes = arena_push_size(arena, packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes_count * sizeof(packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes[0]));
-printf("-- LIST_COUNT              \t%d\n", packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes_count);
-for (u32 classes_iter = 0; classes_iter < packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes_count; classes_iter++)
+switch(packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8_case)
 {
-// u32 element_type
-packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes[classes_iter].element_type = endian_read_u32_little(data + offset);
+case 0:
+{
+// u32 base
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue0.base = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
-printf("-- element_type            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes[classes_iter].element_type, (u64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes[classes_iter].element_type, (f64)packet->characters[characters_iter].payload4[payload4_iter].attachment_definitions[attachment_definitions_iter].classes[classes_iter].element_type);
+printf("-- base                    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue0.base, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue0.base, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue0.base);
 
-} // classes
+// u32 modifier
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue0.modifier = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- modifier                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue0.modifier, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue0.modifier, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue0.modifier);
 
-} // attachment_definitions
+} break;
+case 1:
+{
+// f32 base
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue1.base = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- base                    \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue1.base, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue1.base, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue1.base);
 
-// u64 last_use_date
-packet->characters[characters_iter].payload4[payload4_iter].last_use_date = endian_read_u64_little(data + offset);
+// f32 modifier
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue1.modifier = endian_read_f32_little(data + offset);
+offset += sizeof(f32);
+printf("-- modifier                \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue1.modifier, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue1.modifier, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].variabletype8.statValue1.modifier);
+
+} break;
+};
+// u32 unk_dword_10
+packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10 = endian_read_u32_little(data + offset);
+offset += sizeof(u32);
+printf("-- unk_dword_10            \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10, (u64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10, (f64)packet->characters[characters_iter].payload[payload_iter].itemDefinitions[itemDefinitions_iter].item_defs[item_defs_iter].stats_item_def_2[stats_item_def_2_iter].unk_dword_10);
+
+} // stats_item_def_2
+
+} // item_defs
+
+} // itemDefinitions
+
+// u64 lastUseDate
+packet->characters[characters_iter].payload[payload_iter].lastUseDate = endian_read_u64_little(data + offset);
 offset += sizeof(u64);
-printf("-- last_use_date           \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload4[payload4_iter].last_use_date, (u64)packet->characters[characters_iter].payload4[payload4_iter].last_use_date, (f64)packet->characters[characters_iter].payload4[payload4_iter].last_use_date);
+printf("-- lastUseDate             \t%lld\t%llxh\t%f\n", (i64)packet->characters[characters_iter].payload[payload_iter].lastUseDate, (u64)packet->characters[characters_iter].payload[payload_iter].lastUseDate, (f64)packet->characters[characters_iter].payload[payload_iter].lastUseDate);
 
-} // payload4
+} // payload
 
 } // characters
 

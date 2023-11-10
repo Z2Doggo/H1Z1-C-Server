@@ -1,8 +1,5 @@
 group Login
-// TODO(rhett): maybe we'll specify stuff like opcode type like this for the whole group?
-//endian little
-// TODO(rhett): opcode can be variable length. think about this
-//opcode u8
+
 packet 0x1 LoginRequest
 string:u32		session_id
 string:u32		system_fingerprint
@@ -136,137 +133,154 @@ b8 				can_bypass_server_lock
 
 list:u32 characters
 {
-    u64 character_id
-    u32 server_id
-    u64 last_login_date
-    u32 null_field
+    u64 charId
+    u32 serverId 
+    u64 lastLoginDate 
+    u32 nullField 
     u32 status
-	stream:u32 payload4
-	{
-		string:u32 name
-		u8 empire_id
-		u32 battle_rank
-		u32	next_battle_rank_percent
-		u32	head_id
-		u32	model_id
-		u32	gender
-		u32	profile_id
-		u32	unknown_dword
 
-        // loadout_data
-        u32 loadout_id
-		
-        // unknown_data_1
-        u32 unknown_dword_1
-        u8 unknown_byte_1
-        u32 unknown_dword_2
-		
-        // unknown_data_2
-		u32 unknown_dword_3
-        string:u32 loadout_name
-        u32 tint_item_id
-        u32 unknown_dword_4
-        u32 decal_item_id
+    stream:u32 payload
+    {
+        string:u32 name
+        u8 empireId
+        u32 battleRank
+        u32 nextBattleRankPercent
+        u32 headId
+        u32 actorModelId 
+        u32 gender
+        u32 profileId 
+        u32 unkDword1
+        u32 unkDword2
 
-		list:u32 loadout_slots
-		{
-            u32 slot_id
-			
-            // loadout_slot_data
-            u32 index
-			
-            // unknown_data_1
-            u32 item_line_id
-            u8 flags
-
-			list:u32 attachments
-            {
-                u32 attachment_id
-            }
-
-			list:u32 attachment_classes
-            {
-                u32 class_id
-                u32 attachment_id
-            }
-			
-			u32 tint_item_id
-            u32 item_slot
-		}
-		
-		list:u32 item_definitions
+        list:u32 loadoutSlots 
         {
-            u32 item_id
-			
-			// item_definition_data
-            u32 item_id_2
-            u16 flags_1
-            u32 name_id
-            u32 description_id
-            u32 unknown_dword_1
-            u32 icon_id
-            u32 unknown_dword_2
-            u32 hudImageSetId
-            u32 hud_image_set_id
-            u32 unknown_dword_4
-            u32 cost
-            u32 item_class
-            u32 unknown_dword_5
-            u32 item_slot
-            u32 slot_override_key
-            u8 unknown_dword6
-            string:u32 model_name
-            string:u32 unknown_string
-            u8 unknown_byte_1
-            u32 item_type
-            u32 category_id
-            u32 unknown_dword_7
-            u32 unknown_dword_8
-            u32 unknown_dword_9
-            u32 unknown_dword_10
-            u32 unknown_dword_11
-            u32 activatable_ability_id
-            u32 passive_ability_id
-            u32 unknown_dword_12
-            u32 max_stack_size
-            string:u32 tint_name
-            u32 unknown_dword_13
-            u32 unknown_dword_14
-            u32 unknown_dword_15
-            u32 unknown_dword_16
-            u32 ui_model_camera
-            u32 equip_count_max
-            u32 currency_type
-            u32 unknown_dword_17
-            u32 client_item_type
-            u32 skill_set_id
-            string:u32 overlay_texture
-            string:u32 decal_slot
-            u32 unknown_dword_18
-            u32 trial_duration_sec
-            u32 trial_exclusion_sec
-            u32 client_use_requirement_id
-            string:u32 override_appearance
-            u32 unknown_dword_19
-            u32 client_use_requirement_id_2
+            u32 hotbarSlotId 
+            u32 loadoutId
+            u32 slotId 
+            u32 itemDefId
+            u64 loadoutItemGuid
+            u8 unkByte1
+            u32 unkDword1
         }
 
-			list:u32 attachment_definitions
-			{
-				u32 attachment_id
-				// attachmentData
-				u32 attachment_id_2
-				u32 group_id
-				u32 item_line_id
-				u8 flags
-				
-				list:u32 classes
-				{
-					u32 element_type
-				}
-			}
-		u64 last_use_date
-	}
+        list:u32 itemDefinitions 
+        {
+                u32 ID
+
+            	list:u32 item_defs
+                {
+                u32 defs_id
+
+                u8 bitflags1
+                ////  X------- NO_TRADE
+                ////  -X------ COMBAT_ONLY
+                ////  --X----- NO_LIVE_GAMER
+                ////  ---X---- SINGLE_USE
+                ////  ----X--- NON_MINI_GAME
+                ////  -----X-- MEMBERS_ONLY
+                ////  ------X- NO_SALE
+                ////  -------X FORCE_DISABLE_PREVIEW
+                
+                u8 bitflags2
+                ////  X------- PERSIST_PROFILE_SWITCH
+                ////  -X------ FLAG_QUICK_USE
+                ////  --X----- FLAG_NO_DRAG_DROP
+                ////  ---X---- FLAG_ACCOUNT_SCOPE
+                ////  ----X--- FLAG_CAN_EQUIP
+                ////  -----X-- bit5
+                ////  ------X- bit6
+                ////  -------X bit7
+                
+                u32 name_id
+                u32 description_id
+                u32 content_id
+                u32 image_set_id
+                u32 tint_id
+                u32 hud_image_set_id
+                u32 unk_dword_1
+                u32 unk_dword_2
+                u32 cost
+                u32 item_class
+                u32 profile_override
+                string:u32 model_name
+                string:u32 texture_alias
+                u32 gender_usage
+                u32 item_type
+                u32 category_id
+                u32 weapon_trail_effect_id
+                u32 composite_effect_id
+                u32 power_rating
+                u32 min_profile_rank
+                u32 rarity
+                u32 activatable_ability_id
+                u32 activatable_ability_set_id
+                u32 passive_ability_id
+                u32 passive_ability_set_id
+                u32 max_stack_size
+                u32 min_stack_size
+                string:u32 tint_alias
+                u32 tint_group_id
+                u32 member_discount
+                u32 vip_rank_required
+                u32 race_set_id
+                u32 ui_model_camera_id_1
+                u32 equip_count_max
+                i32 curreny_type
+                u32 datasheet_id
+                u32 item_type_1
+                u32 skill_set_id
+                string:u32 overlay_texture
+                string:u32 decal_slot
+                u32 overlay_adjustment
+                u32 trial_duration_sec
+                u32 next_trial_delay_sec
+                u32 client_use_requirement
+                string:u32 override_appearance
+                u32 override_camera_id
+                u32 unk_dword_3
+                u32 unk_dword_4
+                u32 unk_dword_5
+                u32 bulk
+                u32 active_equip_slot_id
+                u32 passive_equip_slot_id
+                u32 passive_equip_slot_group_id
+                u32 unk_dword_6
+                u32 grinder_reward_set_id
+                u32 build_bar_group_id
+                string:u32 unk_string_1
+                b8 unk_bool_1
+                b8 is_armor
+                u32 unk_dword_7
+                u32 param1
+                u32 param2
+                u32 param3
+                string:u32 string_param1
+                u32 ui_model_camera_id_2
+                u32 unk_dword_8
+                i32 scrap_value_override
+
+                list:u32 stats_item_def_2
+                {
+                    u32 unk_dword_9
+                    u32 stat_id
+                    
+                    switch:u8 variabletype8
+                    {
+                        case 0 statValue0
+                        u32 base
+                        u32 modifier 
+
+                        case 1 statValue1
+                        f32 base
+                        f32 modifier
+                    }
+
+                    u32 unk_dword_10
+                }	
+            }
+        }
+        u64 lastUseDate
+    }
 }
 
 packet 0xd ServerListRequest

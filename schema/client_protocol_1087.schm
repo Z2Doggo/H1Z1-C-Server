@@ -2356,8 +2356,8 @@ packet 0x3f ClientPendingKickFromServer
 packet 0x40 ClientMembershipActivation
 packet 0x41 LobbyBase
 packet 0x42 LobbyGameDefinitionBase
-packet 0x42 0x01:u8 LobbyGameDefinition_DefinitionsRequest
-packet 0x42 0x02:u8 LobbyGameDefinition_DefinitionsResponse
+packet 0x42 0x0100:u16 LobbyGameDefinition_DefinitionsRequest
+packet 0x42 0x0200:u16 LobbyGameDefinition_DefinitionsResponse
 stream:u32 definitions_data
 {
 	string:u32 data

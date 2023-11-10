@@ -114,7 +114,7 @@ internal void staticViewReply(App_State *app, Session_State *session, Zone_Packe
 internal void
 gateway_on_login(App_State *app_state, Session_State *session_state)
 {
-	printf("[!] Character %llxh trying to login to zone server\n", 0x1234567890u); // (doggo)temp characterId until I implement a decent enough solution!
+	printf("[!] Character %llxh trying to login to zone server\n", session_state->character_id); // (doggo)temp characterId until I implement a decent enough solution!
 
 	onZoneLogin(app_state, session_state);
 }

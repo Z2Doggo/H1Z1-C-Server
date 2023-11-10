@@ -180,8 +180,8 @@
 #define ZONE_CLIENTMEMBERSHIPACTIVATION_ID 0x40
 #define ZONE_LOBBYBASE_ID 0x41
 #define ZONE_LOBBYGAMEDEFINITIONBASE_ID 0x42
-#define ZONE_LOBBYGAMEDEFINITION_DEFINITIONSREQUEST_ID 0x4201
-#define ZONE_LOBBYGAMEDEFINITION_DEFINITIONSRESPONSE_ID 0x4202
+#define ZONE_LOBBYGAMEDEFINITION_DEFINITIONSREQUEST_ID 0x420100
+#define ZONE_LOBBYGAMEDEFINITION_DEFINITIONSRESPONSE_ID 0x420200
 #define ZONE_SHOWSYSTEMMESSAGE_ID 0x43
 #define ZONE_POICHANGEMESSAGE_ID 0x44
 #define ZONE_CLIENTMETRICS_ID 0x45
@@ -1116,8 +1116,8 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_ClientMembershipActivation] = 0x40,
 [Zone_Packet_Kind_LobbyBase] = 0x41,
 [Zone_Packet_Kind_LobbyGameDefinitionBase] = 0x42,
-[Zone_Packet_Kind_LobbyGameDefinition_DefinitionsRequest] = 0x4201,
-[Zone_Packet_Kind_LobbyGameDefinition_DefinitionsResponse] = 0x4202,
+[Zone_Packet_Kind_LobbyGameDefinition_DefinitionsRequest] = 0x420100,
+[Zone_Packet_Kind_LobbyGameDefinition_DefinitionsResponse] = 0x420200,
 [Zone_Packet_Kind_ShowSystemMessage] = 0x43,
 [Zone_Packet_Kind_POIChangeMessage] = 0x44,
 [Zone_Packet_Kind_ClientMetrics] = 0x45,
@@ -14686,8 +14686,8 @@ printf(MESSAGE_CONCAT_INFO("Packing LobbyGameDefinition_DefinitionsRequest...\n"
 endian_write_u8_little(buffer + offset, 0x42);
 offset += sizeof(u8);
 
-endian_write_u8_little(buffer + offset, 0x1);
-offset += sizeof(u8);
+endian_write_u16_little(buffer + offset, 0x100);
+offset += sizeof(u16);
 
 } break;
 
@@ -14699,8 +14699,8 @@ Zone_Packet_LobbyGameDefinition_DefinitionsResponse* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0x42);
 offset += sizeof(u8);
 
-endian_write_u8_little(buffer + offset, 0x2);
-offset += sizeof(u8);
+endian_write_u16_little(buffer + offset, 0x200);
+offset += sizeof(u16);
 
 // stream definitions_data
 void* definitions_data_length_ptr = buffer + offset;
