@@ -28,7 +28,7 @@ VC 2015 Redist [Download from Microsoft](https://www.microsoft.com/en-gb/downloa
 DirectX June 2010 Redist [Download from Guru3D](https://www.guru3d.com/files-get/directx-end-user-runtimes-(june-2010),8.html)
 
 ## How to Download
-WARNING: This will only work if you have `Z1: Battle Royale` formerly known as `H1Z1: King of the Kill` from steam!
+WARNING: This will only work if you have `Z1: Battle Royale` formerly known as `H1Z1: King of the Kill` in your steam library!
 
 Use the latest version of [DepotDownloader](https://github.com/SteamRE/DepotDownloader)
 
@@ -54,8 +54,8 @@ At the beginning of this file.
 ## Building the Server
 Make sure you have the GNU C Compiler (GCC) installed on your system, if it isn't installed on your system, here is a great tutorial on how to [install it!](https://www.youtube.com/watch?v=8CNRX1Bk5sY) 
 
-- Double click the `build_login_server_win_x64.bat` file to build the Login Server
-- Double click the `build_game_server_win_x64.bat` file to build the Game Server
+- Double click the `build_kotk_login.bat` file to build the Login Server
+- Double click the `build_kotk_zone.bat` file to build the Game Server
 
 ## Launching the Server
 Double click the `run_all.bat` file in the `H1Z1-C-Server` folder to run the login-server and zone-server.
