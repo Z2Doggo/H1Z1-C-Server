@@ -61,10 +61,13 @@ internal void sendSelfTest(App_State *app, Session_State *session)
     Zone_Packet_SendSelfToClient *sendSelf = calloc(1, sizeof(Zone_Packet_SendSelfToClient));
     sendSelf->payload_self = calloc(1, sizeof(struct payload_self_s));
 
-    if (sendSelf->payload_self == NULL)
+    if (sendSelf && sendSelf->payload_self == NULL)
     {
         printf("Failed to allocate memory to SendSelfToClient!\n");
+
         free(sendSelf->payload_self);
+        free(sendSelf);
+
         return;
     }
 
