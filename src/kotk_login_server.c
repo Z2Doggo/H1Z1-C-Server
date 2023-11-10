@@ -86,7 +86,6 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #define printf(...)
 #include "../schema/output/kotk_login_udp_11.c"
 #include "login/login_udp_11.c"
-#include "login/data/shared.c"
 #undef printf
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
