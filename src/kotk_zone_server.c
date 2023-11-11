@@ -98,9 +98,7 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #undef MESSAGE_NAMESPACE
 // TODO(rhett): Client or Zone? Client is the word used by the game, but zone is more clear?
 #define MESSAGE_NAMESPACE "Zone"
-#define printf(...)
 #include "../schema/output/client_protocol_1087.c"
-#undef printf
 internal void staticViewReply(App_State *app, Session_State *session, Zone_Packet_StaticViewRequest *packetPtr);
 #include "zone/client_protocol_1087.c"
 #include "zone/data/loginZoneData.c"
