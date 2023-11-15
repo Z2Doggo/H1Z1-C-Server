@@ -368,7 +368,7 @@ packet_id_switch:
         zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_PlayerWorldTransferReply, &reply);
 
         Zone_Packet_ClientUpdate_UpdateLocation update_loc = {
-            .position = {-32.26f, 506.41f, 280.21f, 1.0f},
+            .position = {100.0f, 100.0f, 100.0f, 1.0f},
             .rotation = {-0.11f, -0.58f, -0.08f, 1.0f},
             .trigger_loading_screen = true,
             .unk_u8_1 = 0,
@@ -380,7 +380,7 @@ packet_id_switch:
             .zone_name_length = 2,
             .zone_name = "Z2",
             .zone_type = 4,
-            .pos = {-229.88f, 506.44f, -4885.03f, 1.0f},
+            .pos = {100.0f, 100.0f, 100.0f, 1.0f},
             .rot = {0.10f, -0.50f, 0.00f, 1.0f},
 
             // set skydata

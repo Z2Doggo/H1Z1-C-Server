@@ -74,7 +74,7 @@ internal void sendSelfTest(App_State *app, Session_State *session)
     sendSelf->payload_self->character_id = 0x1ull;
     sendSelf->payload_self->guid = 0x1ull;
     sendSelf->payload_self->transient_id.value = 52; // temp value
-    sendSelf->payload_self->actor_model_id = 9474;
+    sendSelf->payload_self->actor_model_id = 9240;
     sendSelf->payload_self->gender1 = getGender(sendSelf->payload_self->actor_model_id); // idk
     sendSelf->payload_self->head_actor = getHeadActor(sendSelf->payload_self->actor_model_id);
     sendSelf->payload_self->head_actor_length = (u32)strlen(sendSelf->payload_self->head_actor);

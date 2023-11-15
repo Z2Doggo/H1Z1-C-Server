@@ -125,9 +125,9 @@ u64 			character_id
 u32 			status
 bytes:u32  		payload3
 
-packet 0xb CharacterSelectInfoRequest
+packet 0x0b CharacterSelectInfoRequest
 
-packet 0xc CharacterSelectInfoReply
+packet 0x0c CharacterSelectInfoReply
 u32 			character_status
 b8 				can_bypass_server_lock
 

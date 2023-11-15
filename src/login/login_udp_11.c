@@ -90,6 +90,52 @@ internal void tunnelAppPacket(App_State *server, Session_State *session, u8 *dat
 	free(tunnelReply);
 }
 
+internal void
+pGetHeadTypeData(Session_State *session, u32 head_type)
+{
+	switch (head_type)
+	{
+	// white male
+	case 1:
+		session->pGetPlayerActor.headType = 1;
+		session->pGetPlayerActor.gender = 1;
+		session->pGetPlayerActor.actorModelId = 9240;
+		session->pGetPlayerActor.hairModel = "SurvivorMale_Hair_MediumMessy.adr";
+		session->pGetPlayerActor.hairModelLength = (u32)strlen(session->pGetPlayerActor.hairModel);
+		session->pGetPlayerActor.headActor = "SurvivorMale_Head_01.adr";
+		session->pGetPlayerActor.headActorLength = (u32)strlen(session->pGetPlayerActor.headActor);
+	// hispanic male
+	case 2:
+		session->pGetPlayerActor.headType = 2;
+		session->pGetPlayerActor.gender = 1;
+		session->pGetPlayerActor.actorModelId = 9240;
+		session->pGetPlayerActor.hairModel = "SurvivorMale_Hair_MediumMessy.adr";
+		session->pGetPlayerActor.hairModelLength = (u32)strlen(session->pGetPlayerActor.hairModel);
+		session->pGetPlayerActor.headActor = "SurvivorMale_Head_02.adr";
+		session->pGetPlayerActor.headActorLength = (u32)strlen(session->pGetPlayerActor.headActor);
+	// black male
+	case 5:
+		session->pGetPlayerActor.headType = 5;
+		session->pGetPlayerActor.gender = 1;
+		session->pGetPlayerActor.actorModelId = 9240;
+		session->pGetPlayerActor.hairModel = "SurvivorMale_Hair_MediumMessy.adr";
+		session->pGetPlayerActor.hairModelLength = (u32)strlen(session->pGetPlayerActor.hairModel);
+		session->pGetPlayerActor.headActor = "SurvivorMale_Head_03.adr";
+		session->pGetPlayerActor.headActorLength = (u32)strlen(session->pGetPlayerActor.headActor);
+	// asian male
+	case 7:
+		session->pGetPlayerActor.headType = 7;
+		session->pGetPlayerActor.gender = 1;
+		session->pGetPlayerActor.actorModelId = 9240;
+		session->pGetPlayerActor.hairModel = "SurvivorMale_Hair_MediumMessy.adr";
+		session->pGetPlayerActor.hairModelLength = (u32)strlen(session->pGetPlayerActor.hairModel);
+		session->pGetPlayerActor.headActor = "SurvivorMale_Head_04.adr";
+		session->pGetPlayerActor.headActorLength = (u32)strlen(session->pGetPlayerActor.headActor);
+	default:
+		NULL;
+	}
+}
+
 internal Login_Packet_CharacterCreateReply
 CharacterCreateRequest(App_State *app, Session_State *session)
 {
@@ -98,6 +144,8 @@ CharacterCreateRequest(App_State *app, Session_State *session)
 
 	createReply->character_id = session->character_id;
 	createReply->status = 1;
+
+	session->createReply.status = createReply->status;
 
 	login_packet_send(app, session, &app->arena_per_tick, KB(10), false, Login_Packet_Kind_CharacterCreateReply, createReply);
 	return *createReply;
@@ -112,18 +160,21 @@ CharacterSelectInfo(App_State *app, Session_State *session)
 	reply->can_bypass_server_lock = true;
 	reply->characters_count = 1;
 
-	// Allocate memory for characters
 	reply->characters = calloc(reply->characters_count, reply->characters_count * sizeof(struct characters_s));
 	reply->characters->charId = session->character_id;
 	reply->characters->serverId = session->selected_server_id;
 	reply->characters->lastLoginDate = 0x0ull;
-	reply->characters->status = 1;
+	if (session->createReply.status == 1)
+	{
+		reply->characters->status = 1;
+	}
 
 	reply->characters->payload = calloc(1, sizeof(struct payload_s));
 	reply->characters->payload->name = session->name.nameContent;
 	reply->characters->payload->name_length = session->name.nameLength;
 	reply->characters->payload->actorModelId = session->pGetPlayerActor.actorModelId;
 	reply->characters->payload->gender = session->pGetPlayerActor.gender;
+	reply->characters->payload->headId = session->pGetPlayerActor.headType;
 	addDummyDataToCharacters(reply->characters);
 
 	login_packet_send(app, session, &app->arena_per_tick, KB(10), false, Login_Packet_Kind_CharacterSelectInfoReply, reply);
@@ -244,7 +295,7 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 							.server_info = "<ServerInfo Region=\"CharacterCreate.RegionUs\" Subregion=\"UI.SubregionUS\" IsRecommended=\"1\" IsRecommendedVS=\"0\" IsRecommendedNC=\"0\" IsRecommendedTR=\"0\" />",
 							.population_level = 0,
 							.population_data_length = 207,
-							.population_data = "<Population PctCap=\"0\" PingAdr=\"127.0.0.1:60000\" Rulesets=\"\" Mode=\"13\" IsLogin=\"1\" IsWL=\"0\" IsEvt=\"0\" PL=\"0\" DC=\"LVS\" PopLock=\"0\" GP=\"100\" BP=\"175\" MaxPop=\"4000\" Subregion=\"US\"><Fac IsList=\"1\"/></Population>",
+							.population_data = "<Population PctCap=\"0\" PingAdr=\"127.0.0.1:20043\" Rulesets=\"\" Mode=\"13\" IsLogin=\"1\" IsWL=\"0\" IsEvt=\"0\" PL=\"0\" DC=\"LVS\" PopLock=\"0\" GP=\"100\" BP=\"175\" MaxPop=\"4000\" Subregion=\"US\"><Fac IsList=\"1\"/></Population>",
 							.is_access_allowed = true,
 						},
 				},
@@ -306,6 +357,7 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 		Login_Packet_CharacterCreateRequest character_create_request = {0};
 		login_packet_unpack(data + offset, data_length - offset, packet_kind, &character_create_request, &server->arena_per_tick);
 
+		pGetHeadTypeData(session, character_create_request.char_payload->head_type);
 		CharacterCreateRequest(server, session);
 		break;
 	}
@@ -353,7 +405,7 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 								.unk_byte_1 = 0,
 								.unk_byte_2 = 0,
 								.server_address_length = 15,
-								.server_address = "127.0.0.1:60000",
+								.server_address = "127.0.0.1:20043",
 								.server_ticket_length = 15,
 								.server_ticket = "7y3Bh44sKWZCYZH",
 								.encryption_key_length = 16,

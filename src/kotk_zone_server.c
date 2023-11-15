@@ -15,7 +15,7 @@
 #include "game_server.h"
 
 #define MAX_THREADS 4		  // tweak as necessary
-#define LOCAL_PORT 60000	  // zone server port
+#define LOCAL_PORT 20043	  // zone server port
 #define MAX_FRAGMENTS 12000	  // possibly add rhett's fragment accumilation for this
 #define MAX_PACKET_LENGTH 512 // ALWAYS keep this at 512 since all H1Z1 JS & KOTK packets are 512 in length
 #define DATA_HEADER_LENGTH 4  // also keep this the same

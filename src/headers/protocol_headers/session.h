@@ -152,6 +152,7 @@ struct characterName
 typedef struct pGetPlayerActorData pGetPlayerActorData;
 struct pGetPlayerActorData
 {
+    u32 headType;
     u32 actorModelId;
     u32 hairModelLength;
     char *hairModel;
@@ -160,11 +161,22 @@ struct pGetPlayerActorData
     u32 gender;
 };
 
+typedef struct CharacterCreateReply CharacterCreateReply;
+struct CharacterCreateReply
+{
+    u32 status;
+    u64 character_id;
+    u32 count;
+};
+
 typedef struct Session_State Session_State;
 struct Session_State
 {
     Session_Address address;
     u32 id;
+
+    // login related structs
+    CharacterCreateReply createReply;
 
     // zoneClient client;
     pGetPlayerActorData pGetPlayerActor;
