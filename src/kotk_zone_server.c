@@ -15,7 +15,7 @@
 
 #define MAX_THREADS 4	// Change as is necessary
 #define LOCAL_PORT 1117 // Zone server port
-#define MAX_FRAGMENTS 12000
+#define MAX_FRAGMENTS 0xffff
 #define MAX_PACKET_LENGTH 512
 #define DATA_HEADER_LENGTH 4
 #define MAX_SESSIONS_COUNT 16 // Will increase as time goes on, but, good enough for testing right now

@@ -157,7 +157,7 @@ void CharacterSelectInfo(App_State *app, Session_State *session)
 	reply->can_bypass_server_lock = true;
 	reply->characters_count = 1;
 
-	reply->characters = calloc(reply->characters_count, reply->characters_count * sizeof(struct characters_s));
+	reply->characters = calloc(reply->characters_count, sizeof(struct characters_s));
 	reply->characters->charId = session->character_id;
 	reply->characters->serverId = session->selected_server_id;
 	reply->characters->lastLoginDate = 0x0ull;
@@ -174,7 +174,7 @@ void CharacterSelectInfo(App_State *app, Session_State *session)
 	reply->characters->payload->headId = session->pGetPlayerActor.headType;
 	addDummyDataToCharacters(reply->characters);
 
-	login_packet_send(app, session, &app->arena_per_tick, KB(10), false, Login_Packet_Kind_CharacterSelectInfoReply, reply);
+	login_packet_send(app, session, &app->arena_per_tick, KB(100), false, Login_Packet_Kind_CharacterSelectInfoReply, reply);
 
 	free(reply->characters->payload->loadoutSlots);
 	free(reply->characters->payload);

@@ -1,11 +1,3 @@
-#define REGISTER_PACKET_BASIC(id, kind)                                                  \
-    case id:                                                                             \
-    {                                                                                    \
-        packet_kind = kind;                                                              \
-        printf(MESSAGE_CONCAT_INFO("Handling %s...\n"), zone_packet_names[packet_kind]); \
-    }                                                                                    \
-    break;
-
 // typedef struct for the zone packet send func below
 typedef struct ThreadParams
 {
@@ -28,7 +20,7 @@ DWORD WINAPI zone_packet_send_thread(LPVOID lpParam)
     Zone_Packet_Kind packet_kind = params->packet_kind;
     void *packet_ptr = params->packet_ptr;
 
-    // Your existing code for zone_packet_send goes here
+    // existing code for zone_packet_send goes here
     u8 *base_buffer = arena_push_size(arena, max_length);
     u8 *packed_buffer = base_buffer + TUNNEL_DATA_HEADER_LENGTH;
     u32 packed_length = zone_packet_pack(packet_kind, packet_ptr, packed_buffer);
@@ -52,13 +44,13 @@ void zone_packet_send(App_State *server_state, Session_State *session_state, Are
     params.packet_ptr = packet_ptr;
 
     // array to hold thread handles
-    HANDLE threadHandles[4]; // increase if you dare!
+    HANDLE threadHandles[MAX_THREADS];
     threadHandles[0] = CreateThread(NULL, 0, zone_packet_send_thread, &params, 0, NULL);
 
     if (threadHandles[0] == NULL)
     {
         printf("Thread failed to create!\n");
-        ABORT;
+        abort();
     }
 
     // wait for multiple threads to finish
@@ -67,7 +59,7 @@ void zone_packet_send(App_State *server_state, Session_State *session_state, Are
     if (result == WAIT_FAILED)
     {
         printf("Wait for threads failed!\n");
-        ABORT;
+        abort();
     }
 
     // close thread handles when done
@@ -196,9 +188,9 @@ packet_id_switch:
         Zone_Packet_Character_CharacterStateDelta character_state_delta =
             {
                 .guid_1 = session_state->character_id,
-                .guid_2 = 0,
+                .guid_2 = 0ull,
                 .guid_3 = 0x40000000,
-                .guid_4 = 0,
+                .guid_4 = 0ull,
                 .game_time = timer & 0x7fffffff,
             };
 
@@ -338,7 +330,7 @@ packet_id_switch:
         Zone_Packet_StaticViewRequest *viewReq = (Zone_Packet_StaticViewRequest *)malloc(sizeof(Zone_Packet_StaticViewRequest));
         // zone_packet_unpack(data, data_length, packet_kind, &viewReq, &server_state->arena_per_tick);
 
-        staticViewReply(server_state, session_state, viewReq);
+        // staticViewReply(server_state, session_state, viewReq);
         free(viewReq);
 
         break;

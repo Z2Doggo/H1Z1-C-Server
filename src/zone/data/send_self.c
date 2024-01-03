@@ -83,8 +83,8 @@ void sendSelfTest(App_State *app, Session_State *session)
     sendSelf->payload_self->is_respawning = false;
     sendSelf->payload_self->creation_date = 0x0ull;
     sendSelf->payload_self->last_login_date = 0x0ull;
-    sendSelf->payload_self->character_name = session->name.nameContent;
-    sendSelf->payload_self->character_name_length = session->name.nameLength;
+    sendSelf->payload_self->character_name = "doggo";
+    sendSelf->payload_self->character_name_length = 5;
     sendSelf->payload_self->is_admin = true;
 
     zone_packet_send(app, session, &app->arena_per_tick, KB(500), Zone_Packet_Kind_SendSelfToClient, sendSelf);

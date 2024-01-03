@@ -15,7 +15,7 @@
 #include "game_server.h"
 
 #define LOCAL_PORT 1115
-#define MAX_FRAGMENTS 12000
+#define MAX_FRAGMENTS 0xffff
 #define MAX_PACKET_LENGTH 512
 #define DATA_HEADER_LENGTH 4
 #define MAX_SESSIONS_COUNT 16
