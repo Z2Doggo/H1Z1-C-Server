@@ -35,20 +35,13 @@ DWORD WINAPI zone_packet_send_thread(LPVOID lpParam)
     u32 total_length = packed_length + TUNNEL_DATA_HEADER_LENGTH;
     arena_rewind(arena, max_length - total_length);
 
-    if (session_state->connection_args.should_dump_zone)
-    {
-        char dump_path[256] = {0};
-        stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_S_zone_%s.bin", global_tick_count, global_dump_count++, zone_packet_names[packet_kind]);
-        server_state->platform_api->buffer_write_to_file(dump_path, packed_buffer, packed_length);
-    }
-
     gateway_tunnel_data_send(server_state, session_state, base_buffer, total_length);
 
     return 0;
 }
 
 // multi-thread the zone packet send func because we need that speeeeeeeeed
-internal void zone_packet_send(App_State *server_state, Session_State *session_state, Arena *arena, u32 max_length, Zone_Packet_Kind packet_kind, void *packet_ptr)
+void zone_packet_send(App_State *server_state, Session_State *session_state, Arena *arena, u32 max_length, Zone_Packet_Kind packet_kind, void *packet_ptr)
 {
     ThreadParams params;
     params.server_state = server_state;
@@ -85,11 +78,11 @@ internal void zone_packet_send(App_State *server_state, Session_State *session_s
 }
 
 // only for sending raw packets, testing purposes only
-internal void zone_packet_raw_file_send(App_State *server_state,
-                                        Session_State *session_state,
-                                        Arena *arena,
-                                        u32 max_length,
-                                        char *path)
+void zone_packet_raw_file_send(App_State *server_state,
+                               Session_State *session_state,
+                               Arena *arena,
+                               u32 max_length,
+                               char *path)
 {
     u8 *base_buffer = arena_push_size(arena, max_length);
     u8 *packed_buffer = base_buffer + TUNNEL_DATA_HEADER_LENGTH;
@@ -99,21 +92,14 @@ internal void zone_packet_raw_file_send(App_State *server_state,
     u32 total_length = packed_length + TUNNEL_DATA_HEADER_LENGTH;
     arena_rewind(arena, max_length - total_length);
 
-    if (session_state->connection_args.should_dump_zone)
-    {
-        char dump_path[256] = {0};
-        stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_S_zone_RAW.bin", global_tick_count, global_dump_count++);
-        server_state->platform_api->buffer_write_to_file(dump_path, packed_buffer, packed_length);
-    }
-
     // TODO(rhett): still only one client for now
     gateway_tunnel_data_send(server_state, session_state, base_buffer, total_length);
 }
 
-internal void zone_packet_handle(App_State *server_state,
-                                 Session_State *session_state,
-                                 u8 *data,
-                                 u32 data_length)
+void zone_packet_handle(App_State *server_state,
+                        Session_State *session_state,
+                        u8 *data,
+                        u32 data_length)
 {
     Zone_Packet_Kind packet_kind;
 
@@ -875,13 +861,6 @@ packet_id_switch:
     packet_id_fail:
         packet_kind = Zone_Packet_Kind_Unhandled;
         printf(MESSAGE_CONCAT_WARN("Unhandled zone packet %#x %#x\n"), packet_id, *sub_packet_id);
-
-        if (session_state->connection_args.should_dump_zone)
-        {
-            char dump_path[256] = {0};
-            stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_C_zone_%s.bin", global_tick_count, global_dump_count++, zone_packet_names[packet_kind]);
-            server_state->platform_api->buffer_write_to_file(dump_path, data, data_length);
-        }
     }
     }
 }

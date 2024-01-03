@@ -1,6 +1,6 @@
 #define printf(...)
 
-internal u32 core_packet_pack(Core_Packet_Kind packet_kind, void *packet_ptr, u8 *buffer, b32 is_sub_packet, Connection_Args *connection_args)
+u32 core_packet_pack(Core_Packet_Kind packet_kind, void *packet_ptr, u8 *buffer, b32 is_sub_packet, Connection_Args *connection_args)
 {
 	u32 offset = 0;
 
@@ -106,7 +106,7 @@ internal u32 core_packet_pack(Core_Packet_Kind packet_kind, void *packet_ptr, u8
 	return offset;
 }
 
-internal void core_packet_unpack(u8 *data, i32 data_length, Core_Packet_Kind packet_kind, void *packet_ptr, b32 is_sub_packet, Connection_Args *connection_args)
+void core_packet_unpack(u8 *data, i32 data_length, Core_Packet_Kind packet_kind, void *packet_ptr, b32 is_sub_packet, Connection_Args *connection_args)
 {
 	u32 offset = 2;
 
@@ -278,7 +278,7 @@ internal void core_packet_unpack(u8 *data, i32 data_length, Core_Packet_Kind pac
 }
 
 #if !defined(FL_PROXY)
-internal void core_packet_send(Platform_Socket socket, Platform_Api *platform, u32 ip, u16 port, Connection_Args *connection_args, Core_Packet_Kind packet_kind, void *packet_ptr)
+void core_packet_send(Platform_Socket socket, Platform_Api *platform, u32 ip, u16 port, Connection_Args *connection_args, Core_Packet_Kind packet_kind, void *packet_ptr)
 {
 	u8 buffer[MAX_PACKET_LENGTH] = {0};
 	u32 packed_length;
@@ -314,13 +314,6 @@ internal void core_packet_send(Platform_Socket socket, Platform_Api *platform, u
 	}
 	}
 
-	if (connection_args->should_dump_core)
-	{
-		char dump_path[256] = {0};
-		stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_S_core_%s.bin", global_tick_count, global_packet_dump_count++, core_packet_names[packet_kind]);
-		platform->buffer_write_to_file(dump_path, buffer, packed_length);
-	}
-
 	u32 sent_length = platform->send_to(socket, buffer, packed_length, ip, port);
 	if (!sent_length)
 	{
@@ -337,7 +330,7 @@ internal void core_packet_send(Platform_Socket socket, Platform_Api *platform, u
 		   port);
 }
 
-internal Core_Packet_Kind core_packet_get_kind(u8 *data, u32 data_length)
+Core_Packet_Kind core_packet_get_kind(u8 *data, u32 data_length)
 {
 	UNUSED(data_length);
 
@@ -352,7 +345,7 @@ internal Core_Packet_Kind core_packet_get_kind(u8 *data, u32 data_length)
 	return Core_Packet_Kind_Unhandled;
 }
 
-internal void core_packet_handle(App_State *app_state, Platform_Api *platform, Session_State *session, u8 *data, u32 data_length, b32 is_sub_packet)
+void core_packet_handle(App_State *app_state, Platform_Api *platform, Session_State *session, u8 *data, u32 data_length, b32 is_sub_packet)
 {
 	Core_Packet_Kind packet_kind;
 	u32 offset;
@@ -369,13 +362,6 @@ internal void core_packet_handle(App_State *app_state, Platform_Api *platform, S
 	{
 		packet_kind = Core_Packet_Kind_Session_Request;
 		printf(MESSAGE_CONCAT_INFO("Handling %s...\n"), core_packet_names[packet_kind]);
-
-		if (session->connection_args.should_dump_core)
-		{
-			char dump_path[256] = {0};
-			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_core_%s.bin", global_tick_count, global_packet_dump_count++, core_packet_names[packet_kind]);
-			platform->buffer_write_to_file(dump_path, data, data_length);
-		}
 
 		Session_Request packet = {0};
 		core_packet_unpack(data, data_length, packet_kind, &packet, is_sub_packet, &app_state->connection_args);
@@ -436,13 +422,6 @@ internal void core_packet_handle(App_State *app_state, Platform_Api *platform, S
 		packet_kind = Core_Packet_Kind_Multi_Packet;
 		printf(MESSAGE_CONCAT_INFO("Handling %s...\n"), core_packet_names[packet_kind]);
 
-		if (session->connection_args.should_dump_core)
-		{
-			char dump_path[256] = {0};
-			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_core_%s.bin", global_tick_count, global_packet_dump_count++, core_packet_names[packet_kind]);
-			platform->buffer_write_to_file(dump_path, data, data_length);
-		}
-
 		offset = CORE_PACKET_ID_LENGTH;
 
 		// TODO(rhett): Some parsing happens here, might not be worth making a case for it though
@@ -467,13 +446,6 @@ internal void core_packet_handle(App_State *app_state, Platform_Api *platform, S
 		packet_kind = Core_Packet_Kind_Data;
 		printf(MESSAGE_CONCAT_INFO("Handling %s...\n"), core_packet_names[packet_kind]);
 
-		if (session->connection_args.should_dump_core)
-		{
-			char dump_path[256] = {0};
-			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_core_%s.bin", global_tick_count, global_packet_dump_count++, core_packet_names[packet_kind]);
-			platform->buffer_write_to_file(dump_path, data, data_length);
-		}
-
 		Data packet = {0};
 		core_packet_unpack(data, data_length, packet_kind, &packet, is_sub_packet, &session->connection_args);
 
@@ -485,13 +457,6 @@ internal void core_packet_handle(App_State *app_state, Platform_Api *platform, S
 	{
 		packet_kind = Core_Packet_Kind_Data_Fragment;
 		printf(MESSAGE_CONCAT_INFO("Handling %s...\n"), core_packet_names[packet_kind]);
-
-		if (session->connection_args.should_dump_core)
-		{
-			char dump_path[256] = {0};
-			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_core_%s.bin", global_tick_count, global_packet_dump_count++, core_packet_names[packet_kind]);
-			platform->buffer_write_to_file(dump_path, data, data_length);
-		}
 
 		// TODO(rhett): using a Data struct
 		Data packet = {0};
@@ -506,13 +471,6 @@ internal void core_packet_handle(App_State *app_state, Platform_Api *platform, S
 		packet_kind = Core_Packet_Kind_Ack;
 		printf(MESSAGE_CONCAT_INFO("Handling %s...\n"), core_packet_names[packet_kind]);
 
-		if (session->connection_args.should_dump_core)
-		{
-			char dump_path[256] = {0};
-			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_core_%s.bin", global_tick_count, global_packet_dump_count++, core_packet_names[packet_kind]);
-			platform->buffer_write_to_file(dump_path, data, data_length);
-		}
-
 		Ack packet = {0};
 		core_packet_unpack(data, data_length, packet_kind, &packet, is_sub_packet, &session->connection_args);
 
@@ -525,13 +483,6 @@ internal void core_packet_handle(App_State *app_state, Platform_Api *platform, S
 	{
 		packet_kind = Core_Packet_Kind_Unhandled;
 		printf(MESSAGE_CONCAT_WARN("Unhandled core packet 0x%02x\n"), packet_id);
-
-		if (session->connection_args.should_dump_core)
-		{
-			char dump_path[256] = {0};
-			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_core_%s.bin", global_tick_count, global_packet_dump_count++, core_packet_names[packet_kind]);
-			platform->buffer_write_to_file(dump_path, data, data_length);
-		}
 	}
 	}
 }

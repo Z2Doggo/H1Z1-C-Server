@@ -1,6 +1,6 @@
 // TODO(rhett): Handle out-of-order packets
 
-internal u32 input_stream_read_chunk_length(u8 *data, u32 *chunk_length_ptr)
+u32 input_stream_read_chunk_length(u8 *data, u32 *chunk_length_ptr)
 {
     u32 offset = 0;
     u32 chunk_length = data[offset];
@@ -26,7 +26,7 @@ internal u32 input_stream_read_chunk_length(u8 *data, u32 *chunk_length_ptr)
     return offset;
 }
 
-internal void input_stream_channel_packet_data_parse(Input_Stream *stream, u8 *data, u32 data_length, void *server, void *session)
+void input_stream_channel_packet_data_parse(Input_Stream *stream, u8 *data, u32 data_length, void *server, void *session)
 {
     u32 offset = 0;
     if (data[0] == 0x0 && data[1] == 0x19)
@@ -77,7 +77,7 @@ internal void input_stream_channel_packet_data_parse(Input_Stream *stream, u8 *d
     }
 }
 
-internal void input_stream_fragments_process(Input_Stream *stream, void *server, void *session)
+void input_stream_fragments_process(Input_Stream *stream, void *server, void *session)
 {
     i32 fragment_next = (stream->processed_fragment_previous + 1) & 0xffff;
     Fragment_Entry head = stream->fragment_pool->fragments[0];
@@ -104,7 +104,7 @@ internal void input_stream_fragments_process(Input_Stream *stream, void *server,
 }
 
 // TODO(rhett): Ack callback might want to use a session id or index instead of a pointer later on
-internal void input_stream_write(Input_Stream *stream, u8 *data, u32 data_length, i32 sequence, b32 is_fragment, void *server, void *session)
+void input_stream_write(Input_Stream *stream, u8 *data, u32 data_length, i32 sequence, b32 is_fragment, void *server, void *session)
 {
     if (stream->sequence_next == -1)
     {
@@ -151,7 +151,7 @@ internal void input_stream_write(Input_Stream *stream, u8 *data, u32 data_length
     input_stream_fragments_process(stream, server, session);
 }
 
-internal Input_Stream input_stream_init(Fragment_Pool *fragment_pool, u8 *rc4_key_decoded, u32 rc4_key_decoded_length, b32 use_encryption)
+Input_Stream input_stream_init(Fragment_Pool *fragment_pool, u8 *rc4_key_decoded, u32 rc4_key_decoded_length, b32 use_encryption)
 {
     Input_Stream result = {0};
 

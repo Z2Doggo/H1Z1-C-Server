@@ -13,7 +13,7 @@ u32 getGender(u32 actorModelId)
     }
 }
 
-internal char *
+char *
 getHeadActor(u32 model_id)
 {
     switch (model_id)
@@ -27,7 +27,7 @@ getHeadActor(u32 model_id)
     }
 }
 
-internal char *
+char *
 getHairModel(u32 actorModelId)
 {
     switch (actorModelId)
@@ -56,7 +56,7 @@ u32 getHairModelLength(char *hairModel)
     }
 }
 
-internal void sendSelfTest(App_State *app, Session_State *session)
+void sendSelfTest(App_State *app, Session_State *session)
 {
     Zone_Packet_SendSelfToClient *sendSelf = calloc(1, sizeof(Zone_Packet_SendSelfToClient));
     sendSelf->payload_self = calloc(1, sizeof(struct payload_self_s));

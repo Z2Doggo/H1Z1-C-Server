@@ -1,4 +1,4 @@
-// internal uptr util_align_forward(uptr ptr, usize align)
+// uptr util_align_forward(uptr ptr, usize align)
 //{
 //	assert(IS_POWER_OF_TWO(align));
 //
@@ -10,7 +10,7 @@
 //	return ptr;
 // }
 //
-// internal void util_memory_set(void* destination, u8 value, usize length)
+// void util_memory_set(void* destination, u8 value, usize length)
 //{
 //	for (usize i = 0; i < length; i++)
 //	{
@@ -18,7 +18,7 @@
 //	}
 // }
 //
-// internal void util_memory_copy(void* destination, void* source, usize length)
+// void util_memory_copy(void* destination, void* source, usize length)
 //{
 //	for (usize i = 0; i < length; i++)
 //	{
@@ -26,7 +26,7 @@
 //	}
 // }
 //
-internal u32 util_string_length(i8 *data)
+u32 util_string_length(i8 *data)
 {
     u32 tail = 0;
     i8 c;
@@ -38,7 +38,7 @@ internal u32 util_string_length(i8 *data)
     return tail;
 }
 //
-// internal void util_string_concat(i8* destination, u32 length, i8* source)
+// void util_string_concat(i8* destination, u32 length, i8* source)
 //{
 //	u32 destination_tail;
 //	for (destination_tail = 0; destination_tail < length; )
@@ -59,7 +59,7 @@ internal u32 util_string_length(i8 *data)
 //	while (c != 0);
 //}
 //
-// internal b32 util_string_compare(i8* string_1, i8* string_2)
+// b32 util_string_compare(i8* string_1, i8* string_2)
 //{
 //	u32 length_1 = util_string_length(string_1);
 //	u32 length_2 = util_string_length(string_2);
@@ -81,7 +81,7 @@ internal u32 util_string_length(i8 *data)
 //}
 
 // NOTE(rhett): Sloppy but does what I want
-// internal void
+// void
 // util_byte_dump(void* data, u32 data_length)
 //     {
 //     u32 bytes_per_line = 8;
@@ -142,7 +142,7 @@ internal u32 util_string_length(i8 *data)
 //     }
 
 #if 0
-internal void
+void
 util_base64_generate_encoding_table()
     {
     u8 table[64] = {0};
@@ -178,7 +178,7 @@ util_base64_generate_encoding_table()
     win32_write_buffer_to_file("encoding_table.c", buffer, offset);
     }
 
-internal void
+void
 util_base64_generate_decoding_table()
     {
     u8 encoding_table[64] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 
@@ -230,8 +230,7 @@ util_base64_generate_decoding_table()
     }
 #endif
 
-internal u32
-util_base64_calculate_decoded_length(u8 *data, u32 data_length)
+u32 util_base64_calculate_decoded_length(u8 *data, u32 data_length)
 {
     // TODO(rhett): correct this automatically
     ASSERT_MSG(!(data_length % 4), "data_length is not divisible by 4");
@@ -254,8 +253,7 @@ util_base64_calculate_decoded_length(u8 *data, u32 data_length)
     return result;
 }
 
-internal u32
-util_base64_decode(u8 *data, u32 data_length, u8 *buffer)
+u32 util_base64_decode(u8 *data, u32 data_length, u8 *buffer)
 {
     // TODO(rhett): correct this automatically
     ASSERT_MSG(!(data_length % 4), "data_length is not divisible by 4");

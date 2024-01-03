@@ -1,4 +1,4 @@
-internal Fragment_Pool fragment_pool_create(u32 capacity, u32 packet_length, Arena *arena)
+Fragment_Pool fragment_pool_create(u32 capacity, u32 packet_length, Arena *arena)
 {
     Fragment_Pool result = {
         .capacity = capacity,
@@ -13,7 +13,7 @@ internal Fragment_Pool fragment_pool_create(u32 capacity, u32 packet_length, Are
 }
 
 // TODO(rhett): make sure we're taking crc length into account in the fragment pool and we snip it off
-internal void fragment_pool_insert(Fragment_Pool *pool, i32 sequence, u8 *data, u32 data_length, b32 is_fragment)
+void fragment_pool_insert(Fragment_Pool *pool, i32 sequence, u8 *data, u32 data_length, b32 is_fragment)
 {
     if (sequence < pool->sequence_base)
     {
@@ -77,7 +77,7 @@ internal void fragment_pool_insert(Fragment_Pool *pool, i32 sequence, u8 *data, 
     pool->fragments_count++;
 }
 
-internal void fragment_pool_advance(Fragment_Pool *pool)
+void fragment_pool_advance(Fragment_Pool *pool)
 {
     pool->sequence_base += pool->fragments_count;
     printf("[***] Advancing Fragment_Pool; New base: %d\n", pool->sequence_base);

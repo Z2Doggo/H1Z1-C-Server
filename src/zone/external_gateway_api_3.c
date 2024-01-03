@@ -64,9 +64,9 @@ struct Gateway_Packet_ChannelIsRoutable
     b8 unk_bool;
 };
 
-internal u32 gateway_packet_pack(Gateway_Packet_Kind packet_kind,
-                                 void *packet_ptr,
-                                 u8 *buffer)
+u32 gateway_packet_pack(Gateway_Packet_Kind packet_kind,
+                        void *packet_ptr,
+                        u8 *buffer)
 {
     u32 offset = 0;
 
@@ -196,11 +196,11 @@ internal u32 gateway_packet_pack(Gateway_Packet_Kind packet_kind,
     return offset;
 }
 
-internal void gateway_packet_unpack(u8 *data,
-                                    u32 data_length,
-                                    Gateway_Packet_Kind packet_kind,
-                                    void *packet_ptr,
-                                    Arena *arena)
+void gateway_packet_unpack(u8 *data,
+                           u32 data_length,
+                           Gateway_Packet_Kind packet_kind,
+                           void *packet_ptr,
+                           Arena *arena)
 {
     u32 offset = 1;
 
@@ -282,10 +282,10 @@ internal void gateway_packet_unpack(u8 *data,
     }
 }
 
-internal void gateway_tunnel_data_send(App_State *server_state,
-                                       Session_State *session_state,
-                                       u8 *base_buffer,
-                                       u32 total_length)
+void gateway_tunnel_data_send(App_State *server_state,
+                              Session_State *session_state,
+                              u8 *base_buffer,
+                              u32 total_length)
 {
     // NOTE(rhett): Assumes the passed buffer is prefixed with
     //              enough space for the tunnel data header
@@ -300,17 +300,6 @@ internal void gateway_tunnel_data_send(App_State *server_state,
                                             &tunnel_packet,
                                             base_buffer);
 
-    // NOTE(rhett): leave room for an extra zero at the beginning
-    // TODO(rhett): or not?
-    // packed_buffer++;
-
-    if (session_state->connection_args.should_dump_tunnel)
-    {
-        char dump_path[256] = {0};
-        stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_S_tunneldata_%u.bin", global_tick_count, global_dump_count++, tunnel_packet.channel);
-        server_state->platform_api->buffer_write_to_file(dump_path, base_buffer, packed_length);
-    }
-
     output_stream_write(&session_state->output_stream,
                         base_buffer,
                         packed_length,
@@ -319,27 +308,17 @@ internal void gateway_tunnel_data_send(App_State *server_state,
                         session_state);
 }
 
-internal void gateway_packet_send(App_State *server_state,
-                                  Session_State *session_state,
-                                  Arena *arena,
-                                  u32 max_length,
-                                  Gateway_Packet_Kind packet_kind,
-                                  void *packet_ptr)
+void gateway_packet_send(App_State *server_state,
+                         Session_State *session_state,
+                         Arena *arena,
+                         u32 max_length,
+                         Gateway_Packet_Kind packet_kind,
+                         void *packet_ptr)
 {
     u8 *packed_buffer = arena_push_size(arena, max_length);
     u32 packed_length = gateway_packet_pack(packet_kind,
                                             packet_ptr,
                                             packed_buffer);
-
-    // NOTE(rhett): Leave room for an extra zero at the beginning
-    // packed_buffer++;
-
-    if (session_state->connection_args.should_dump_gateway)
-    {
-        char dump_path[256] = {0};
-        stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_S_gateway_%s.bin", global_tick_count, global_dump_count++, gateway_packet_names[packet_kind]);
-        server_state->platform_api->buffer_write_to_file(dump_path, packed_buffer, packed_length);
-    }
 
     output_stream_write(&session_state->output_stream,
                         packed_buffer,
@@ -349,10 +328,10 @@ internal void gateway_packet_send(App_State *server_state,
                         session_state);
 }
 
-internal void gateway_packet_handle(App_State *server_state,
-                                    Session_State *session_state,
-                                    u8 *data,
-                                    u32 data_length)
+void gateway_packet_handle(App_State *server_state,
+                           Session_State *session_state,
+                           u8 *data,
+                           u32 data_length)
 {
     Gateway_Packet_Kind packet_kind;
 
@@ -366,13 +345,6 @@ internal void gateway_packet_handle(App_State *server_state,
     {
         packet_kind = Gateway_Packet_Kind_LoginRequest;
         printf(MESSAGE_CONCAT_INFO("(%u) Handling %s...\n"), channel, gateway_packet_names[packet_kind]);
-
-        if (session_state->connection_args.should_dump_gateway)
-        {
-            char dump_path[256] = {0};
-            stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_C_gateway_%u_%s.bin", global_tick_count, global_dump_count++, channel, gateway_packet_names[packet_kind]);
-            server_state->platform_api->buffer_write_to_file(dump_path, data, data_length);
-        }
 
         Gateway_Packet_LoginRequest packet = {0};
         gateway_packet_unpack(data, data_length, packet_kind, &packet, &server_state->arena_per_tick);
@@ -437,13 +409,6 @@ internal void gateway_packet_handle(App_State *server_state,
     {
         packet_kind = Gateway_Packet_Kind_Unhandled;
         printf(MESSAGE_CONCAT_WARN("(%u) Unhandled gateway packet 0x%02x\n"), channel, packet_id);
-
-        if (session_state->connection_args.should_dump_gateway)
-        {
-            char dump_path[256] = {0};
-            stbsp_snprintf(dump_path, 256, "packets\\%llu_%llu_C_gateway_%u_%s.bin", global_tick_count, global_dump_count++, channel, gateway_packet_names[packet_kind]);
-            server_state->platform_api->buffer_write_to_file(dump_path, data, data_length);
-        }
     }
     }
 }

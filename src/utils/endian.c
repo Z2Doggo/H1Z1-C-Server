@@ -326,16 +326,14 @@ u16 o_table[64] = {
 #define endian_write_b64_little(p, v) endian_write_u64_little(p, (b64)v)
 #define endian_write_b64_big(p, v) endian_write_u64_big(p, (b64)v)
 
-internal u8
-endian_read_u8(u8 *data)
+u8 endian_read_u8(u8 *data)
 {
     return *data;
 }
 
 //================================================================
 //// Little endian
-internal u16
-endian_read_u16_little(u8 *data)
+u16 endian_read_u16_little(u8 *data)
 {
     u16 result = 0;
     for (u32 i = 2; i > 0; --i)
@@ -347,8 +345,7 @@ endian_read_u16_little(u8 *data)
     return result;
 }
 
-internal u32
-endian_read_u32_little(u8 *data)
+u32 endian_read_u32_little(u8 *data)
 {
     u32 result = 0;
     for (u32 i = 4; i > 0; --i)
@@ -360,8 +357,7 @@ endian_read_u32_little(u8 *data)
     return result;
 }
 
-internal u64
-endian_read_u64_little(u8 *data)
+u64 endian_read_u64_little(u8 *data)
 {
     u64 result = 0;
     for (u64 i = 8; i > 0; --i)
@@ -373,8 +369,7 @@ endian_read_u64_little(u8 *data)
     return result;
 }
 
-internal f64
-endian_read_f64_little(u8 *data)
+f64 endian_read_f64_little(u8 *data)
 {
     u32 raw = 0;
     for (u32 i = 8; i > 0; --i)
@@ -388,8 +383,7 @@ endian_read_f64_little(u8 *data)
     return result;
 }
 
-internal f32
-endian_read_f32_little(u8 *data)
+f32 endian_read_f32_little(u8 *data)
 {
     u32 raw = 0;
     for (u32 i = 4; i > 0; --i)
@@ -403,8 +397,7 @@ endian_read_f32_little(u8 *data)
     return result;
 }
 
-internal f32
-endian_read_f16_little(u8 *data)
+f32 endian_read_f16_little(u8 *data)
 {
     u16 result = 0;
     for (u32 i = 2; i > 0; --i)
@@ -419,8 +412,7 @@ endian_read_f16_little(u8 *data)
 }
 
 //// Big endian
-internal u16
-endian_read_u16_big(u8 *data)
+u16 endian_read_u16_big(u8 *data)
 {
     u16 result = 0;
     for (u32 i = 0; i < 2; ++i)
@@ -432,8 +424,7 @@ endian_read_u16_big(u8 *data)
     return result;
 }
 
-internal u32
-endian_read_u32_big(u8 *data)
+u32 endian_read_u32_big(u8 *data)
 {
     u32 result = 0;
     for (u32 i = 0; i < 4; ++i)
@@ -445,8 +436,7 @@ endian_read_u32_big(u8 *data)
     return result;
 }
 
-internal u64
-endian_read_u64_big(u8 *data)
+u64 endian_read_u64_big(u8 *data)
 {
     u64 result = 0;
     for (u32 i = 0; i < 8; ++i)
@@ -458,8 +448,7 @@ endian_read_u64_big(u8 *data)
     return result;
 }
 
-internal f64
-endian_read_f64_big(u8 *data)
+f64 endian_read_f64_big(u8 *data)
 {
     u32 raw = 0;
     for (u32 i = 0; i < 8; ++i)
@@ -473,8 +462,7 @@ endian_read_f64_big(u8 *data)
     return result;
 }
 
-internal f32
-endian_read_f32_big(u8 *data)
+f32 endian_read_f32_big(u8 *data)
 {
     u32 raw = 0;
     for (u32 i = 0; i < 4; ++i)
@@ -488,8 +476,7 @@ endian_read_f32_big(u8 *data)
     return result;
 }
 
-internal f32
-endian_read_f16_big(u8 *data)
+f32 endian_read_f16_big(u8 *data)
 {
     u16 result = 0;
     for (u32 i = 0; i < 2; ++i)
@@ -504,8 +491,7 @@ endian_read_f16_big(u8 *data)
 }
 
 ////  Writing
-internal void
-endian_write_f64_little(u8 *buffer, f64 value)
+void endian_write_f64_little(u8 *buffer, f64 value)
 {
     u32 result = 0;
     for (u32 i = 8; i > 0; --i)
@@ -517,8 +503,7 @@ endian_write_f64_little(u8 *buffer, f64 value)
     *(f64 *)buffer = *(f64 *)&result;
 }
 
-internal void
-endian_write_f32_little(u8 *buffer, f32 value)
+void endian_write_f32_little(u8 *buffer, f32 value)
 {
     u32 result = 0;
     for (u32 i = 4; i > 0; --i)
@@ -530,15 +515,13 @@ endian_write_f32_little(u8 *buffer, f32 value)
     *(f32 *)buffer = *(f32 *)&result;
 }
 
-internal void
-endian_write_u8(u8 *buffer, u8 value)
+void endian_write_u8(u8 *buffer, u8 value)
 {
     *buffer = value;
 }
 
 //// Little endian
-internal void
-endian_write_u16_little(u8 *buffer, u16 value)
+void endian_write_u16_little(u8 *buffer, u16 value)
 {
     u16 result = 0;
     for (u32 i = 2; i > 0; --i)
@@ -550,8 +533,7 @@ endian_write_u16_little(u8 *buffer, u16 value)
     *(u16 *)buffer = result;
 }
 
-internal void
-endian_write_u32_little(u8 *buffer, u32 value)
+void endian_write_u32_little(u8 *buffer, u32 value)
 {
     u32 result = 0;
     for (u32 i = 4; i > 0; --i)
@@ -563,8 +545,7 @@ endian_write_u32_little(u8 *buffer, u32 value)
     *(u32 *)buffer = result;
 }
 
-internal void
-endian_write_u64_little(u8 *buffer, u64 value)
+void endian_write_u64_little(u8 *buffer, u64 value)
 {
     u64 result = 0;
     for (u32 i = 8; i > 0; --i)
@@ -577,8 +558,7 @@ endian_write_u64_little(u8 *buffer, u64 value)
 }
 
 //// Big endian
-internal void
-endian_write_u16_big(u8 *buffer, u16 value)
+void endian_write_u16_big(u8 *buffer, u16 value)
 {
     u16 result = 0;
     for (u32 i = 0; i < 2; ++i)
@@ -590,8 +570,7 @@ endian_write_u16_big(u8 *buffer, u16 value)
     *(u16 *)buffer = result;
 }
 
-internal void
-endian_write_u32_big(u8 *buffer, u32 value)
+void endian_write_u32_big(u8 *buffer, u32 value)
 {
     u32 result = 0;
     for (u32 i = 0; i < 4; ++i)
@@ -603,8 +582,7 @@ endian_write_u32_big(u8 *buffer, u32 value)
     *(u32 *)buffer = result;
 }
 
-internal void
-endian_write_u64_big(u8 *buffer, u32 value)
+void endian_write_u64_big(u8 *buffer, u32 value)
 {
     u64 result = 0;
     for (u32 i = 0; i < 8; ++i)
@@ -616,8 +594,7 @@ endian_write_u64_big(u8 *buffer, u32 value)
     *(u64 *)buffer = result;
 }
 
-internal void
-endian_write_f32_big(u8 *buffer, f32 value)
+void endian_write_f32_big(u8 *buffer, f32 value)
 {
     u32 result = 0;
     for (u32 i = 0; i < 4; ++i)
@@ -629,8 +606,7 @@ endian_write_f32_big(u8 *buffer, f32 value)
     *(f32 *)buffer = *(f32 *)&result;
 }
 
-internal void
-endian_write_f64_big(u8 *buffer, f64 value)
+void endian_write_f64_big(u8 *buffer, f64 value)
 {
     u64 result = 0;
     for (u32 i = 0; i < 8; ++i)
@@ -676,7 +652,7 @@ typedef struct euler_angle
     f32 qw;
 } euler_angle;
 
-internal vec4 eul2quat(euler_angle *angles)
+vec4 eul2quat(euler_angle *angles)
 {
     vec4 result;
 
@@ -702,8 +678,7 @@ internal vec4 eul2quat(euler_angle *angles)
     return result;
 }
 
-internal vec3
-endian_read_vec3_little(u8 *data)
+vec3 endian_read_vec3_little(u8 *data)
 {
     vec3 result = {0};
 
@@ -717,8 +692,7 @@ endian_read_vec3_little(u8 *data)
     return result;
 }
 
-internal vec4
-endian_read_vec4_little(u8 *data)
+vec4 endian_read_vec4_little(u8 *data)
 {
     vec4 result = {0};
 
@@ -734,8 +708,7 @@ endian_read_vec4_little(u8 *data)
     return result;
 }
 
-internal void
-endian_write_vec3_little(u8 *buffer, vec3 value)
+void endian_write_vec3_little(u8 *buffer, vec3 value)
 {
     endian_write_f32_little(buffer, value.x);
     buffer += sizeof(f32);
@@ -745,8 +718,7 @@ endian_write_vec3_little(u8 *buffer, vec3 value)
     buffer += sizeof(f32);
 }
 
-internal void
-endian_write_vec4_little(u8 *buffer, vec4 value)
+void endian_write_vec4_little(u8 *buffer, vec4 value)
 {
     endian_write_f32_little(buffer, value.x);
     buffer += sizeof(f32);
@@ -766,7 +738,7 @@ struct uint2b
     u32 length;
 };
 
-internal uint2b
+uint2b
 endian_read_uint2b_little(u8 *data)
 {
     uint2b result = {0};
@@ -783,8 +755,7 @@ endian_read_uint2b_little(u8 *data)
     return result;
 }
 
-internal u32
-endian_write_uint2b_little(u8 *buffer, u32 value)
+u32 endian_write_uint2b_little(u8 *buffer, u32 value)
 {
     value <<= 2;
     u32 length = 0;
@@ -814,8 +785,7 @@ struct int2b
     i32 length;
 };
 
-internal int2b
-endian_read_int2b_little(u8 *data, i32 offset)
+int2b endian_read_int2b_little(u8 *data, i32 offset)
 {
     i32 value = data[offset];
     const i32 sign = value & 1;
@@ -837,8 +807,7 @@ endian_read_int2b_little(u8 *data, i32 offset)
     return result;
 }
 
-internal i32
-endian_write_int2b_little(u8 *buffer, i32 value)
+i32 endian_write_int2b_little(u8 *buffer, i32 value)
 {
     i32 sign = value < 0 ? 1 : 0;
     value = sign ? -value : value;

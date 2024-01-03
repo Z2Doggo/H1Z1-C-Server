@@ -65,13 +65,13 @@ void output_stream_write(Output_Stream *stream,
     }
 }
 
-internal void output_stream_ack_update(Output_Stream *stream, i32 sequence)
+void output_stream_ack_update(Output_Stream *stream, i32 sequence)
 {
     printf("[*] output_stream_ack_update; ack_previous=%d, sequence=%d\n", stream->ack_previous, sequence);
     stream->ack_previous = sequence;
 }
 
-internal Output_Stream output_stream_init(Fragment_Pool *fragment_pool, u8 *rc4_key_decoded, u32 rc4_key_decoded_length, b32 use_encryption)
+Output_Stream output_stream_init(Fragment_Pool *fragment_pool, u8 *rc4_key_decoded, u32 rc4_key_decoded_length, b32 use_encryption)
 {
     Output_Stream result = {0};
 

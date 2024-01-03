@@ -1,5 +1,6 @@
-#define _CRT_SECURE_NO_WARNINGS 1
+#define _CRT_SECURE_NO_WARNINGS
 
+// C headers
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -7,48 +8,46 @@
 #include <string.h>
 #include <time.h>
 
-#define YOTE_USE_ARENA 1
-#define YOTE_USE_STRING 1
+#define YOTE_USE_ARENA
+#define YOTE_USE_STRING
 #include "yote.h"
-#define YOTE_PLATFORM_USE_SOCKETS 1
+#define YOTE_PLATFORM_USE_SOCKETS
 #include "yote_platform.h"
 #include "game_server.h"
 
-#define MAX_THREADS 4		  // tweak as necessary
-#define LOCAL_PORT 20043	  // zone server port
-#define MAX_FRAGMENTS 12000	  // possibly add rhett's fragment accumilation for this
-#define MAX_PACKET_LENGTH 512 // ALWAYS keep this at 512 since all H1Z1 JS & KOTK packets are 512 in length
-#define DATA_HEADER_LENGTH 4  // also keep this the same
-#define MAX_SESSIONS_COUNT 16 // will increase as time goes on but good enough for testing right now
+#define MAX_THREADS 4	// Change as is necessary
+#define LOCAL_PORT 1117 // Zone server port
+#define MAX_FRAGMENTS 0xffff
+#define MAX_PACKET_LENGTH 512
+#define DATA_HEADER_LENGTH 4
+#define MAX_SESSIONS_COUNT 16 // Will increase as time goes on, but, good enough for testing right now
 
-#include "util/endian.c"
-#include "util/util.c"
-#include "util/crypt_rc4.c"
-#include "headers/protocol_headers/stream.h"
-#include "shared/protocol/fragment_pool.c"
-#include "shared/protocol/input_stream.c"
-#include "shared/protocol/output_stream.c"
-#include "headers/protocol_headers/core_protocol.h"
-#include "headers/protocol_headers/connection.h"
-#include "headers/protocol_headers/session.h"
-#include "headers/protocol_headers/packet_queue.h"
-#include "shared/packet_queue.c"
+// Utilities
+#include "utils/endian.c"
+#include "utils/util.c"
+#include "utils/crypt_rc4.c"
+
+// SoE and SoE protocol related
+#include "soe/stream.h"
+#include "soe/fragment_pool.c"
+#include "soe/input_stream.c"
+#include "soe/output_stream.c"
+#include "soe/core_protocol.h"
+#include "soe/connection.h"
+#include "soe/session.h"
+#include "soe/packet_queue.h"
+#include "soe/packet_queue.c"
 
 #define PACKET_FOLDER "..\\GAME_PACKETS"
-global u64 global_packet_dump_count;
-global u64 global_tick_count;
-global u64 global_dump_count;
-global b32 global_should_dump_core = true;
-global b32 ignore_packets;
+u64 global_tick_count = 0;
 
-typedef struct Stream_Function_Table Stream_Function_Table;
-struct Stream_Function_Table
+typedef struct Stream_Function_Table
 {
 	input_stream_callback_ack *game_input_ack;
 	input_stream_callback_data *game_input_data;
 	output_stream_callback_data *game_output_data;
 	input_stream_callback_data *ping_input_data;
-};
+} Stream_Function_Table;
 
 struct App_State
 {
@@ -57,35 +56,26 @@ struct App_State
 	f32 *work_ms;
 	u64 *tick_count;
 	Key_States *key_states;
-
-#if defined(TERMINAL_UI)
-	Buffer screen;
-#endif // TERMINAL_UI
-
 	Arena arena_total;
 	Platform_Api *platform_api;
 	Arena arena_per_tick;
-
 	Platform_Socket socket;
-
 	u8 rc4_key_decoded[256];
 	i32 rc4_key_decoded_length;
 	Connection_Args connection_args;
-
 	i32 sessions_capacity;
 	Session_State sessions[MAX_SESSIONS_COUNT];
 };
-internal void readPositionUpdateData(App_State *app,
-									 Session_State *session,
-									 u8 *data,
-									 u32 offset);
-internal void gateway_on_login(App_State *app_state, Session_State *session_state);
-internal void gateway_on_tunnel_data_from_client(App_State *app_state, Session_State *session_state, u8 *data, u32 data_length);
-internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
+
+void readPositionUpdateData(App_State *app, Session_State *session, u8 *data, u32 offset);
+void gateway_on_login(App_State *app_state, Session_State *session_state);
+void gateway_on_tunnel_data_from_client(App_State *app_state, Session_State *session_state, u8 *data, u32 data_length);
+
+INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE "Core"
-#include "shared/protocol/core_protocol.c"
+#include "soe/core_protocol.c"
 #include "core/core.c"
 #include "core/classes/base.h"
 #include "core/entities/core_base_full_character.h"
@@ -93,13 +83,14 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #include "core/classes/grid_cell.h"
 #include "core/core_server.h"
 #undef MESSAGE_NAMESPACE
+
 #define MESSAGE_NAMESPACE "Gateway"
 #include "zone/external_gateway_api_3.c"
 #undef MESSAGE_NAMESPACE
-// TODO(rhett): Client or Zone? Client is the word used by the game, but zone is more clear?
+
 #define MESSAGE_NAMESPACE "Zone"
 #include "../schema/output/client_protocol_1087.c"
-internal void staticViewReply(App_State *app, Session_State *session, Zone_Packet_StaticViewRequest *packetPtr);
+void staticViewReply(App_State *app, Session_State *session, Zone_Packet_StaticViewRequest *packetPtr);
 #include "zone/client_protocol_1087.c"
 #include "zone/data/loginZoneData.c"
 #include "zone/data/send_self.c"
@@ -107,42 +98,40 @@ internal void staticViewReply(App_State *app, Session_State *session, Zone_Packe
 #include "zone/character/zone_login.c"
 #include "zone/data/shared.c"
 #undef MESSAGE_NAMESPACE
+
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 
-internal void
-gateway_on_login(App_State *app_state, Session_State *session_state)
+void gateway_on_login(App_State *app_state, Session_State *session_state)
 {
 	printf("[!] Character %llxh trying to login to zone server\n", session_state->character_id); // (doggo)temp characterId until I implement a decent enough solution!
-
 	onZoneLogin(app_state, session_state);
 }
 
-internal void gateway_on_tunnel_data_from_client(App_State *app_state, Session_State *session_state, u8 *data, u32 data_length)
+void gateway_on_tunnel_data_from_client(App_State *app_state, Session_State *session_state, u8 *data, u32 data_length)
 {
 	zone_packet_handle(app_state, session_state, data, data_length);
 }
 
-internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data)
+INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data)
 {
 	UNUSED(server);
 	UNUSED(session);
 	UNUSED(data);
 	UNUSED(data_length);
-	// ping_packet_handle(server, session, data, data_length);
 }
 
-internal INPUT_STREAM_CALLBACK_ACK(on_input_stream_ack)
+INPUT_STREAM_CALLBACK_ACK(on_input_stream_ack)
 {
 	Session_State *session_state = session;
 	session_state->ack_next = ack;
 }
 
-internal INPUT_STREAM_CALLBACK_DATA(on_input_stream_data)
+INPUT_STREAM_CALLBACK_DATA(on_input_stream_data)
 {
 	gateway_packet_handle(server, session, data, data_length);
 }
 
-internal OUTPUT_STREAM_CALLBACK_DATA(on_output_stream_data)
+OUTPUT_STREAM_CALLBACK_DATA(on_output_stream_data)
 {
 	App_State *app_state = server;
 	Session_State *session_state = session;

@@ -1,3 +1,4 @@
+// C Headers
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -5,44 +6,46 @@
 #include <string.h>
 #include <time.h>
 
-#define YOTE_USE_ARENA 1
-#define YOTE_USE_STRING 1
+#define YOTE_USE_ARENA	// Use memory arena
+#define YOTE_USE_STRING // Use strings
 #include "yote.h"
-#define YOTE_PLATFORM_USE_SOCKETS 1
+
+#define YOTE_PLATFORM_USE_SOCKETS // Use sockets for server
 #include "yote_platform.h"
 #include "game_server.h"
 
-#define LOCAL_PORT 20042
-#define MAX_FRAGMENTS 12000
+#define LOCAL_PORT 1115
+#define MAX_FRAGMENTS 0xffff
 #define MAX_PACKET_LENGTH 512
 #define DATA_HEADER_LENGTH 4
 #define MAX_SESSIONS_COUNT 16
 
-#include "util/endian.c"
-#include "util/util.c"
-#include "util/crypt_rc4.c"
-#include "headers/protocol_headers/stream.h"
-#include "shared/protocol/fragment_pool.c"
-#include "shared/protocol/input_stream.c"
-#include "shared/protocol/output_stream.c"
-#include "headers/protocol_headers/core_protocol.h"
-#include "headers/protocol_headers/connection.h"
-#include "headers/protocol_headers/session.h"
-#include "headers/protocol_headers/packet_queue.h"
-#include "shared/packet_queue.c"
+// Utilities
+#include "utils/endian.c"
+#include "utils/util.c"
+#include "utils/crypt_rc4.c"
 
-global u64 global_packet_dump_count;
+// SoE and SoE protocol related
+#include "soe/stream.h"
+#include "soe/fragment_pool.c"
+#include "soe/input_stream.c"
+#include "soe/output_stream.c"
+#include "soe/core_protocol.h"
+#include "soe/connection.h"
+#include "soe/session.h"
+#include "soe/packet_queue.h"
+#include "soe/packet_queue.c"
+
 // HACK(rhett):
-global u64 global_tick_count;
+u64 global_tick_count = 0;
 
-typedef struct Stream_Function_Table Stream_Function_Table;
-struct Stream_Function_Table
+typedef struct Stream_Function_Table
 {
 	input_stream_callback_ack *login_input_ack;
 	input_stream_callback_data *login_input_data;
 	output_stream_callback_data *login_output_data;
 	input_stream_callback_data *ping_input_data;
-};
+} Stream_Function_Table;
 
 struct App_State
 {
@@ -51,30 +54,22 @@ struct App_State
 	f32 *work_ms;
 	u64 *tick_count;
 	Key_States *key_states;
-
-#if defined(TERMINAL_UI)
-	Buffer screen;
-#endif // TERMINAL_UI
-
 	Arena arena_total;
 	Platform_Api *platform_api;
 	Arena arena_per_tick;
-
 	Platform_Socket socket;
-
 	u8 rc4_key_decoded[256];
 	i32 rc4_key_decoded_length;
 	Connection_Args connection_args;
-
 	i32 sessions_capacity;
 	Session_State sessions[MAX_SESSIONS_COUNT];
 };
 
-internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
+INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE "Core"
-#include "shared/protocol/core_protocol.c"
+#include "soe/core_protocol.c"
 #include "core/core.c"
 #include "core/classes/base.h"
 #include "core/entities/core_base_full_character.h"
@@ -82,25 +77,27 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 #include "core/classes/grid_cell.h"
 #include "core/core_server.h"
 #undef MESSAGE_NAMESPACE
-#define MESSAGE_NAMESPACE "Login"
-#include "../schema/output/kotk_login_udp_11.c"
-#include "login/login_udp_11.c"
-#undef MESSAGE_NAMESPACE
-#define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 
-internal INPUT_STREAM_CALLBACK_ACK(on_input_stream_ack)
+#define MESSAGE_NAMESPACE "Login"
+#include "../schema/output/kotk_login_udp_11.c" // Packet structures
+#include "login/login_udp_11.c"					// Sending login packets structures' data
+#undef MESSAGE_NAMESPACE
+
+#define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT // Default
+
+INPUT_STREAM_CALLBACK_ACK(on_input_stream_ack)
 {
 	Session_State *session_state = session;
 	session_state->ack_next = ack;
 }
 
-internal INPUT_STREAM_CALLBACK_DATA(on_input_stream_data)
+INPUT_STREAM_CALLBACK_DATA(on_input_stream_data)
 {
 	login_packet_handle(server, session, data, data_length);
 }
 
 // TODO(rhett): remove this later
-internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data)
+INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data)
 {
 	UNUSED(server);
 	UNUSED(session);
@@ -108,7 +105,7 @@ internal INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data)
 	UNUSED(data_length);
 };
 
-internal OUTPUT_STREAM_CALLBACK_DATA(on_output_stream_data)
+OUTPUT_STREAM_CALLBACK_DATA(on_output_stream_data)
 {
 	App_State *app_state = server;
 	Session_State *session_state = session;
@@ -130,73 +127,6 @@ internal OUTPUT_STREAM_CALLBACK_DATA(on_output_stream_data)
 	}
 }
 
-#if 0
-__declspec(dllexport) APP_INITIALIZE(server_initialize)
-{
-	App_State* app_state = app_memory->app_state;
-	if (!app_state)
-	{
-		app_state = app_memory->app_state = arena_bootstrap_push_struct(app_memory->backing_memory.data,
-		                                                                       app_memory->backing_memory.size,
-		                                                                       "Total",
-		                                                                       App_State,
-		                                                                       arena_total);
-		app_state->platform_api = &app_memory->platform_api;
-		app_state->platform_state = &app_memory->platform_state;
-
-		app_state->tick_ms = &app_memory->tick_ms;
-		app_state->work_ms = &app_memory->work_ms;
-		app_state->tick_count = &app_memory->tick_count;
-		app_state->key_states = &app_memory->key_states;
-
-#if defined(TERMINAL_UI)
-		Buffer screen =
-		{
-			.size = sizeof(char) * SCREEN_RESOLUTION,
-			.data = arena_push_size(&app_state->arena_total,
-			                               screen.size),
-		};
-		app_state->screen = app_memory->screen = screen;
-		//core_memory_fill(app_state->screen.data, ' ', app_state->screen.size);
-#endif // TERMINAL_UI
-
-		Buffer per_tick_backing_memory =
-		{
-			.size = MB(10),
-			.data = arena_push_size(&app_state->arena_total,
-			                               per_tick_backing_memory.size),
-		};
-
-		app_state->arena_per_tick =
-			(Arena) {
-			.buffer = per_tick_backing_memory.data,
-			.capacity = per_tick_backing_memory.size,
-			.name = "Tick",
-		};
-
-		u8 rc4_key_encoded[] = "F70IaxuU8C/w7FPXY1ibXw==";
-		app_state->rc4_key_decoded_length = util_base64_decode((u8*)rc4_key_encoded,
-		                                                       sizeof(rc4_key_encoded) - 1,
-		                                                       app_state->rc4_key_decoded);
-
-		app_state->connection_args.udp_length = MAX_PACKET_LENGTH;
-		// TODO(rhett): encryption should probably be kept disabled initially and toggled on in higher layers
-		//app_state->connection_args.use_encryption = FALSE;
-		app_state->connection_args.should_dump_core = TRUE;
-		app_state->connection_args.should_dump_login = TRUE;
-		app_state->connection_args.should_dump_tunnel = TRUE;
-		app_state->connection_args.should_dump_gateway = TRUE;
-		app_state->connection_args.should_dump_zone = TRUE;
-		
-		app_state->sessions_capacity = MAX_SESSIONS_COUNT;
-		app_state->socket = app_state->platform_api->socket_udp_create_and_bind(app_state->platform_state,
-		                                                                        LOCAL_PORT);
-		printf(MESSAGE_CONCAT_INFO("Login server socket bound to port " STRINGIFY(LOCAL_PORT) "\n\n"));
-		app_state->platform_api->folder_create("packets");
-	}
-}
-#endif
-
 __declspec(dllexport) APP_TICK(server_tick)
 {
 	App_State *app_state = app_memory->app_state;
@@ -212,17 +142,6 @@ __declspec(dllexport) APP_TICK(server_tick)
 		app_state->work_ms = &app_memory->work_ms;
 		app_state->tick_count = &app_memory->tick_count;
 		app_state->key_states = &app_memory->key_states;
-
-#if defined(TERMINAL_UI)
-		Buffer screen =
-			{
-				.size = sizeof(char) * SCREEN_RESOLUTION,
-				.data = arena_push_size(&app_state->arena_total,
-										screen.size),
-			};
-		app_state->screen = app_memory->screen = screen;
-		// core_memory_fill(app_state->screen.data, ' ', app_state->screen.size);
-#endif // TERMINAL_UI
 
 		Buffer per_tick_backing_memory =
 			{
@@ -250,8 +169,6 @@ __declspec(dllexport) APP_TICK(server_tick)
 															   app_state->rc4_key_decoded);
 
 		app_state->connection_args.udp_length = MAX_PACKET_LENGTH;
-		// TODO(rhett): encryption should probably be kept disabled initially and toggled on in higher layers
-		// app_state->connection_args.use_encryption = FALSE;
 		app_state->connection_args.should_dump_core = TRUE;
 		app_state->connection_args.should_dump_login = TRUE;
 		app_state->connection_args.should_dump_tunnel = TRUE;
@@ -264,43 +181,11 @@ __declspec(dllexport) APP_TICK(server_tick)
 		app_state->platform_api->folder_create("packets");
 	}
 
-	/*
-	(doggo)not needed right now, since I don't compile when the server is up and the game is running /shrug!
-
-	if (should_reload)
-	{
-		printf(MESSAGE_CONCAT_INFO("Reloading function table...\n"));
-		app_state->stream_function_table->login_input_ack = on_input_stream_ack;
-		app_state->stream_function_table->login_input_data = on_input_stream_data;
-		app_state->stream_function_table->login_output_data = on_output_stream_data;
-		app_state->stream_function_table->ping_input_data = on_ping_input_stream_data;
-	}
-	*/
-
 	global_tick_count = *app_state->tick_count;
-
-#if defined(TERMINAL_UI)
-	core_memory_fill(app_state->screen.data, ' ', app_state->screen.size);
-	stbsp_sprintf((char *)app_state->screen.data,
-				  "Tick: %llu    %fms/w | %fms/f", *app_state->tick_count, *app_state->work_ms, *app_state->tick_ms);
-
-	i32 pos = 0;
-	for (i32 key = 0; key < 0xff; key++)
-	{
-		pos += stbsp_sprintf((char *)(app_state->screen.data + (SCREEN_WIDTH * 2) + pos),
-							 "K%02x %s  ",
-							 key,
-							 toggle_state_text[(*app_state->key_states)[key]]);
-	}
-
-	// pos = SCREEN_WIDTH * 29;
-	// pos += stbsp_sprintf((char*)(app_state->screen.data + pos),
-	//"cool :)");
-#endif // TERMINAL_UI
-
 	u8 incoming_buffer[MAX_PACKET_LENGTH] = {0};
 	u32 from_ip;
 	u16 from_port;
+
 	i32 receive_result = app_state->platform_api->receive_from(app_state->socket,
 															   incoming_buffer,
 															   MAX_PACKET_LENGTH,

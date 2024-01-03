@@ -10,7 +10,7 @@ vec3 updatePosition(vec3 position)
     return position;
 }
 
-internal void staticViewReply(App_State *app, Session_State *session, Zone_Packet_StaticViewRequest *viewReq)
+void staticViewReply(App_State *app, Session_State *session, Zone_Packet_StaticViewRequest *viewReq)
 {
     viewReq->viewpoint_length = (u32)strlen(viewReq->viewpoint);
 

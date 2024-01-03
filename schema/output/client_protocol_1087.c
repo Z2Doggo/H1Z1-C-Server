@@ -4254,7 +4254,7 @@ u32 world_id_reply;
 };
 
 
-internal u32
+u32
 zone_packet_pack(Zone_Packet_Kind packet_kind, void* packet_ptr, u8* buffer)
 {
 u32 offset = 0;
@@ -19550,7 +19550,7 @@ printf(MESSAGE_CONCAT_WARN("Packing %s not implemented\n"), zone_packet_names[pa
 return offset;
 }
 
-internal void
+void
 zone_packet_unpack(u8* data, u32 data_length, Zone_Packet_Kind packet_kind, void* packet_ptr, Arena* arena)
 {
 UNUSED(data_length);

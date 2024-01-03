@@ -1,8 +1,7 @@
-internal void
-readPositionUpdateData(App_State *app,
-                       Session_State *session,
-                       u8 *data,
-                       u32 offset)
+void readPositionUpdateData(App_State *app,
+                            Session_State *session,
+                            u8 *data,
+                            u32 offset)
 {
     Zone_Packet_PlayerUpdatePosition obj = {0}; // init
     u32 start_offset = offset;                  // offset is u32 for 2bit values, other than that, will need to typecast to a (u8 *) - doggo

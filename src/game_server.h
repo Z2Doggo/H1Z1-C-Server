@@ -6,7 +6,7 @@
 #include <Windows.h>
 
 #if !defined(YOTE_INTERNAL)
-internal void platform_win_console_write(char *format, ...)
+void platform_win_console_write(char *format, ...)
 {
     va_list args;
     va_start(args, format);

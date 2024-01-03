@@ -437,7 +437,7 @@ b8 is_access_allowed;
 };
 
 
-internal u32
+u32
 login_packet_pack(Login_Packet_Kind packet_kind, void* packet_ptr, u8* buffer)
 {
 u32 offset = 0;
@@ -1875,7 +1875,7 @@ printf(MESSAGE_CONCAT_WARN("Packing %s not implemented\n"), login_packet_names[p
 return offset;
 }
 
-internal void
+void
 login_packet_unpack(u8* data, u32 data_length, Login_Packet_Kind packet_kind, void* packet_ptr, Arena* arena)
 {
 UNUSED(data_length);

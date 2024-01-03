@@ -1,7 +1,7 @@
-internal Packet_Queue packet_queue_create(Arena *arena,
-                                          i32 entries_capacity,
-                                          i32 buffer_capacity,
-                                          packet_queue_send_t *packet_queue_send_func)
+Packet_Queue packet_queue_create(Arena *arena,
+                                 i32 entries_capacity,
+                                 i32 buffer_capacity,
+                                 packet_queue_send_t *packet_queue_send_func)
 {
     Packet_Queue result = {0};
 
@@ -18,12 +18,12 @@ internal Packet_Queue packet_queue_create(Arena *arena,
     return result;
 }
 
-internal void packet_queue_push(Packet_Queue *queue,
-                                void *session_state,
-                                // i32 max_packed_length,
-                                // i32 packet_kind,
-                                u8 *data,
-                                i32 data_length)
+void packet_queue_push(Packet_Queue *queue,
+                       void *session_state,
+                       // i32 max_packed_length,
+                       // i32 packet_kind,
+                       u8 *data,
+                       i32 data_length)
 {
     // if (queue->entries_tail == queue->entries_capacity)
     //{
@@ -54,8 +54,8 @@ internal void packet_queue_push(Packet_Queue *queue,
 }
 
 // TODO(rhett): don't think I'm happy with how this works yet
-internal void packet_queue_pop_and_send(Packet_Queue *queue,
-                                        void *server_state)
+void packet_queue_pop_and_send(Packet_Queue *queue,
+                               void *server_state)
 {
     // if (!queue->entries_tail)
     //{

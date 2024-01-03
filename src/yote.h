@@ -200,7 +200,7 @@ struct Stream
 	uptr cursor;
 };
 
-internal void base_memory_fill(void *destination, u8 value, isize size)
+void base_memory_fill(void *destination, u8 value, isize size)
 {
 	for (isize i = 0; i < size; i++)
 	{
@@ -208,7 +208,7 @@ internal void base_memory_fill(void *destination, u8 value, isize size)
 	}
 }
 
-internal void base_memory_copy(void *destination, void *source, isize size)
+void base_memory_copy(void *destination, void *source, isize size)
 {
 	for (isize i = 0; i < size; i++)
 	{
@@ -217,7 +217,7 @@ internal void base_memory_copy(void *destination, void *source, isize size)
 }
 
 // TODO(rhett): Use length instead here? Or will that be more confusing since they're equal in this context?
-internal isize base_ztstring_size(u8 *data)
+isize base_ztstring_size(u8 *data)
 {
 	isize count = 0;
 	for (; data[count] != 0; count++)
@@ -226,7 +226,7 @@ internal isize base_ztstring_size(u8 *data)
 	return count;
 }
 
-internal uptr base_align_forward(uptr ptr, isize align)
+uptr base_align_forward(uptr ptr, isize align)
 {
 	ASSERT(IS_POWER_OF_TWO(align));
 
@@ -245,7 +245,7 @@ internal uptr base_align_forward(uptr ptr, isize align)
 
 #if defined(YOTE_USE_ARENA)
 
-// TODO(rhett): Re-write debug/internal code
+// TODO(rhett): Re-write debug/code
 // TODO(rhett): is this a fine default?
 #define ARENA_ALIGN_DEFAULT (sizeof(void *) * 2)
 #define ARENA_DEFAULT_PARAMS PASS_PARAMS((.should_clear = true, .alignment = ARENA_ALIGN_DEFAULT))
@@ -353,7 +353,7 @@ PARAMS_DECLARE(Buffer, arena_push_copy_ztstring_as_string, Arena *arena; void *s
 	return result;
 }
 
-// TODO(rhett): how should we handle names? only in internal mode?
+// TODO(rhett): how should we handle names? only in mode?
 #define arena_bootstrap_push_size(...) PARAMS_BIND(arena_bootstrap_push_size, ARENA_DEFAULT_PARAMS, __VA_ARGS__)
 PARAMS_DECLARE(void *, arena_bootstrap_push_size, void *buffer; isize capacity; char *name; isize struct_size; isize offset_to_arena; b32 should_clear; isize alignment)
 {
@@ -375,12 +375,12 @@ PARAMS_DECLARE(void *, arena_bootstrap_push_size, void *buffer; isize capacity; 
 	return bootstrap_struct;
 }
 
-internal void arena_rewind(Arena *arena, u32 rewind_size)
+void arena_rewind(Arena *arena, u32 rewind_size)
 {
 	arena->tail_offset -= rewind_size;
 }
 
-internal void arena_reset(Arena *arena)
+void arena_reset(Arena *arena)
 {
 	arena->peak_used = MAX(arena->tail_offset, arena->peak_used);
 	arena->peak_padding = MAX(arena->padding, arena->peak_padding);
@@ -389,12 +389,12 @@ internal void arena_reset(Arena *arena)
 	arena->padding = 0;
 }
 
-internal Arena_Temp arena_temp_begin(Arena *arena)
+Arena_Temp arena_temp_begin(Arena *arena)
 {
 	return (Arena_Temp){.arena = arena, .tail_offset = arena->tail_offset};
 }
 
-internal void arena_temp_end(Arena_Temp temp)
+void arena_temp_end(Arena_Temp temp)
 {
 	temp.arena->tail_offset = temp.tail_offset;
 }

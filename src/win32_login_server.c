@@ -30,7 +30,7 @@ APP_TICK(app_tick_stub)
 	UNUSED(app_memory);
 }
 
-internal FILETIME win32_get_last_write_time(char *filename)
+FILETIME win32_get_last_write_time(char *filename)
 {
 	FILETIME result = {0};
 
@@ -43,7 +43,7 @@ internal FILETIME win32_get_last_write_time(char *filename)
 	return result;
 }
 
-internal App_Code win32_app_code_load()
+App_Code win32_app_code_load()
 {
 	App_Code result = {0};
 
@@ -65,7 +65,7 @@ internal App_Code win32_app_code_load()
 	return result;
 }
 
-internal void win32_app_code_unload(App_Code *app_code)
+void win32_app_code_unload(App_Code *app_code)
 {
 	if (app_code->module)
 	{

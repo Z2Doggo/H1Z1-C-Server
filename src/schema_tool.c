@@ -9,10 +9,9 @@
 #include <stdint.h>
 
 #include "yote.h"
-#include "util/util.c"
+#include "utils/util.c"
 
-internal u32
-win32_buffer_load_from_file(char *file_path, u8 *buffer, u32 buffer_length)
+u32 win32_buffer_load_from_file(char *file_path, u8 *buffer, u32 buffer_length)
 {
 	HANDLE file_handle = CreateFile(file_path,
 									GENERIC_READ,
@@ -47,8 +46,7 @@ win32_buffer_load_from_file(char *file_path, u8 *buffer, u32 buffer_length)
 	return bytes_read;
 }
 
-internal u32
-win32_buffer_write_to_file(char *file_path, u8 *buffer, u32 buffer_length)
+u32 win32_buffer_write_to_file(char *file_path, u8 *buffer, u32 buffer_length)
 {
 	HANDLE file_handle = CreateFile(file_path,
 									GENERIC_WRITE,
@@ -181,8 +179,7 @@ struct ST_Buffer
 	u8 *data;
 };
 
-internal void
-print_string(char *data, u32 data_length)
+void print_string(char *data, u32 data_length)
 {
 	for (u32 i = 0; i < data_length; i++)
 	{
@@ -208,8 +205,7 @@ struct Keyword_Hash_Map
 };
 
 // NOTE(rhett): Must be no more than 8 bytes
-internal void
-keyword_hash_map_key_insert(Keyword_Hash_Map *map, char *key, u32 key_length, Token_Kind value)
+void keyword_hash_map_key_insert(Keyword_Hash_Map *map, char *key, u32 key_length, Token_Kind value)
 {
 	u64 hash = *(u64 *)key;
 
@@ -258,7 +254,7 @@ keyword_hash_map_key_insert(Keyword_Hash_Map *map, char *key, u32 key_length, To
 #endif
 }
 
-internal Token_Kind
+Token_Kind
 keyword_hash_map_value_get(Keyword_Hash_Map *map, char *key, u32 key_length)
 {
 	u64 hash = *(u64 *)key;
@@ -307,20 +303,17 @@ keyword_hash_map_value_get(Keyword_Hash_Map *map, char *key, u32 key_length)
 	return result;
 }
 
-internal b32
-is_hex_digit(char c)
+b32 is_hex_digit(char c)
 {
 	return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
 }
 
-internal b32
-is_digit(char c)
+b32 is_digit(char c)
 {
 	return (c >= '0' && c <= '9');
 }
 
-internal b32
-is_alpha(char c)
+b32 is_alpha(char c)
 {
 	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
 }
@@ -334,8 +327,7 @@ struct Token
 	u32 line;
 };
 
-internal u32
-scan_tokens(u8 *data, u32 data_length, Token *token_buffer, Keyword_Hash_Map *keyword_map)
+u32 scan_tokens(u8 *data, u32 data_length, Token *token_buffer, Keyword_Hash_Map *keyword_map)
 {
 	u32 token_buffer_count = 0;
 
@@ -486,8 +478,7 @@ scan_tokens(u8 *data, u32 data_length, Token *token_buffer, Keyword_Hash_Map *ke
 	return token_buffer_count;
 }
 
-internal b32
-copy_char_array_to_cstring(char *data, u32 data_length, char *target, u32 target_length)
+b32 copy_char_array_to_cstring(char *data, u32 data_length, char *target, u32 target_length)
 {
 	if (data_length + 1 > target_length)
 	{
@@ -504,8 +495,7 @@ copy_char_array_to_cstring(char *data, u32 data_length, char *target, u32 target
 }
 
 // TODO(rhett): think about the type of return value
-internal u32
-char_to_number(char number_char)
+u32 char_to_number(char number_char)
 {
 	switch (number_char)
 	{
@@ -552,8 +542,7 @@ char_to_number(char number_char)
 	abort();
 }
 
-internal u32
-number_token_to_u32(Token token)
+u32 number_token_to_u32(Token token)
 {
 	u32 base;
 	u32 result = 0;
@@ -695,11 +684,9 @@ struct Parser
 };
 
 // NOTE(rhett): prototype
-internal void
-state_field_enter(Parser *parser);
+void state_field_enter(Parser *parser);
 
-internal void
-state_case_enter(Parser *parser)
+void state_case_enter(Parser *parser)
 {
 	parser->state_stack[parser->state_stack_tail].kind = State_Case;
 	parser->tokens_tail++;
@@ -758,7 +745,7 @@ state_case_enter(Parser *parser)
 	}
 }
 
-internal void state_switch_enter(Parser *parser)
+void state_switch_enter(Parser *parser)
 {
 	parser->state_stack[parser->state_stack_tail].kind = State_Switch;
 	parser->tokens_tail++;
@@ -856,8 +843,7 @@ internal void state_switch_enter(Parser *parser)
 	}
 }
 
-internal void
-state_stream_enter(Parser *parser)
+void state_stream_enter(Parser *parser)
 {
 	parser->state_stack[parser->state_stack_tail].kind = State_Stream;
 	parser->tokens_tail++;
@@ -941,8 +927,7 @@ state_stream_enter(Parser *parser)
 	}
 }
 
-internal void
-state_list_enter(Parser *parser)
+void state_list_enter(Parser *parser)
 {
 	parser->state_stack[parser->state_stack_tail].kind = State_List;
 	parser->tokens_tail++;
@@ -1034,8 +1019,7 @@ state_list_enter(Parser *parser)
 	}
 }
 
-internal void
-state_string_enter(Parser *parser)
+void state_string_enter(Parser *parser)
 {
 	// parser->state_stack[parser->state_stack_tail].kind = State_String;
 	parser->state_stack[parser->state_stack_tail].data_type = parser->tokens[parser->tokens_tail];
@@ -1081,8 +1065,7 @@ state_string_enter(Parser *parser)
 	}
 }
 
-internal void
-state_uint2b_enter(Parser *parser)
+void state_uint2b_enter(Parser *parser)
 {
 	// parser->state_stack[parser->state_stack_tail].kind = State_String;
 	parser->state_stack[parser->state_stack_tail].data_type = parser->tokens[parser->tokens_tail];
@@ -1111,8 +1094,7 @@ state_uint2b_enter(Parser *parser)
 	}
 }
 
-internal void
-state_bytes_enter(Parser *parser)
+void state_bytes_enter(Parser *parser)
 {
 	// parser->state_stack[parser->state_stack_tail].kind = State_Bytes;
 	parser->state_stack[parser->state_stack_tail].data_type = parser->tokens[parser->tokens_tail];
@@ -1158,8 +1140,7 @@ state_bytes_enter(Parser *parser)
 	}
 }
 
-internal void
-state_field_enter(Parser *parser)
+void state_field_enter(Parser *parser)
 {
 	switch (parser->tokens[parser->tokens_tail].kind)
 	{
@@ -1426,8 +1407,7 @@ state_field_enter(Parser *parser)
 	}
 }
 
-internal void
-state_packet_enter(Parser *parser)
+void state_packet_enter(Parser *parser)
 {
 	parser->state_stack[parser->state_stack_tail].kind = State_Packet;
 	parser->tokens_tail++;
@@ -1532,8 +1512,7 @@ state_packet_enter(Parser *parser)
 	parser->state_stack_tail--;
 }
 
-internal void
-state_group_enter(Parser *parser)
+void state_group_enter(Parser *parser)
 {
 	parser->state_stack[parser->state_stack_tail].kind = State_Group;
 	parser->tokens_tail++;
@@ -1582,8 +1561,7 @@ state_group_enter(Parser *parser)
 	parser->state_stack_tail--;
 }
 
-internal void
-state_root_enter(Parser *parser)
+void state_root_enter(Parser *parser)
 {
 	parser->state_stack[parser->state_stack_tail].kind = State_Root;
 	parser->state_stack[parser->state_stack_tail].endian = T_Endian_Little;
@@ -1597,12 +1575,11 @@ state_root_enter(Parser *parser)
 	}
 }
 
-internal u32
-write_field_parents(u8 *buffer,
-					u32 buffer_tail,
-					Parser_State state_stack[MAX_STATE_STACK],
-					u32 state_stack_tail,
-					u32 depth)
+u32 write_field_parents(u8 *buffer,
+						u32 buffer_tail,
+						Parser_State state_stack[MAX_STATE_STACK],
+						u32 state_stack_tail,
+						u32 depth)
 {
 	u8 parent_buffer[MAX_IDENTIFIER_LENGTH] = {0};
 
@@ -1635,13 +1612,12 @@ write_field_parents(u8 *buffer,
 	return result;
 }
 
-internal void
-emit_c_source(Parser_Object_Kind kind,
-			  Parser_State state_stack[MAX_STATE_STACK],
-			  u32 state_stack_tail,
-			  Output_Buffers *output_buffers,
-			  b32 will_generate_struct,
-			  u32 depth)
+void emit_c_source(Parser_Object_Kind kind,
+				   Parser_State state_stack[MAX_STATE_STACK],
+				   u32 state_stack_tail,
+				   Output_Buffers *output_buffers,
+				   b32 will_generate_struct,
+				   u32 depth)
 {
 	u8 identifier_buffer[MAX_IDENTIFIER_LENGTH] = {0};
 	memcpy(identifier_buffer, state_stack[state_stack_tail].identifier.lexeme, state_stack[state_stack_tail].identifier.lexeme_length);
@@ -1737,7 +1713,7 @@ emit_c_source(Parser_Object_Kind kind,
 															  group_buffer_lower);
 
 		output_buffers->packer_buffer_tail += sprintf(output_buffers->packer_buffer + output_buffers->packer_buffer_tail,
-													  "\ninternal u32\n%s_packet_pack(%s_Packet_Kind packet_kind, void* packet_ptr, u8* buffer)\n{\n",
+													  "\nu32\n%s_packet_pack(%s_Packet_Kind packet_kind, void* packet_ptr, u8* buffer)\n{\n",
 													  group_buffer_lower,
 													  group_buffer);
 
@@ -1746,7 +1722,7 @@ emit_c_source(Parser_Object_Kind kind,
 
 		// TODO(rhett): specify opcode length
 		output_buffers->unpacker_buffer_tail += sprintf(output_buffers->unpacker_buffer + output_buffers->unpacker_buffer_tail,
-														"\ninternal void\n%s_packet_unpack(u8* data, u32 data_length, %s_Packet_Kind packet_kind, void* packet_ptr, Arena* arena)\n{\n",
+														"\nvoid\n%s_packet_unpack(u8* data, u32 data_length, %s_Packet_Kind packet_kind, void* packet_ptr, Arena* arena)\n{\n",
 														group_buffer_lower,
 														group_buffer);
 
@@ -2923,8 +2899,7 @@ emit_c_source(Parser_Object_Kind kind,
 	}
 };
 
-internal void
-parse_tokens(Token *tokens, Output_Buffers *output_buffers)
+void parse_tokens(Token *tokens, Output_Buffers *output_buffers)
 {
 	Parser parser =
 		{

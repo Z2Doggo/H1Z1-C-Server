@@ -1,10 +1,10 @@
-internal void login_packet_send(App_State *server_state,
-								Session_State *session_state,
-								Arena *arena,
-								u32 max_length,
-								b32 should_override_encryption,
-								Login_Packet_Kind packet_kind,
-								void *packet_ptr)
+void login_packet_send(App_State *server_state,
+					   Session_State *session_state,
+					   Arena *arena,
+					   u32 max_length,
+					   b32 should_override_encryption,
+					   Login_Packet_Kind packet_kind,
+					   void *packet_ptr)
 {
 	u8 *appdata_buffer = arena_push_size(arena, max_length);
 	u32 appdata_length = login_packet_pack(packet_kind, packet_ptr, appdata_buffer);
@@ -17,8 +17,7 @@ internal void login_packet_send(App_State *server_state,
 						session_state);
 }
 
-internal void
-addDummyDataToCharacters(struct characters_s *character)
+void addDummyDataToCharacters(struct characters_s *character)
 {
 	character->payload->loadoutSlots_count = 1;
 	character->payload->loadoutSlots = calloc(character->payload->loadoutSlots_count, sizeof(struct loadoutSlots_s));
@@ -27,7 +26,7 @@ addDummyDataToCharacters(struct characters_s *character)
 	character->payload->loadoutSlots->unkDword1 = 22;
 }
 
-internal void tunnelAppPacket(App_State *server, Session_State *session, u8 *data, u32 data_length)
+void tunnelAppPacket(App_State *server, Session_State *session, u8 *data, u32 data_length)
 {
 	Login_Packet_Kind packet_kind = Login_Packet_Kind_TunnelAppPacketClientToServer;
 	i32 offset = sizeof(u8);
@@ -90,8 +89,7 @@ internal void tunnelAppPacket(App_State *server, Session_State *session, u8 *dat
 	free(tunnelReply);
 }
 
-internal void
-pGetHeadTypeData(Session_State *session, u32 head_type)
+void pGetHeadTypeData(Session_State *session, u32 head_type)
 {
 	switch (head_type)
 	{
@@ -136,7 +134,7 @@ pGetHeadTypeData(Session_State *session, u32 head_type)
 	}
 }
 
-internal Login_Packet_CharacterCreateReply
+Login_Packet_CharacterCreateReply
 CharacterCreateRequest(App_State *app, Session_State *session)
 {
 	session->character_id = generateRandomGuid();
@@ -151,8 +149,7 @@ CharacterCreateRequest(App_State *app, Session_State *session)
 	return *createReply;
 }
 
-internal void
-CharacterSelectInfo(App_State *app, Session_State *session)
+void CharacterSelectInfo(App_State *app, Session_State *session)
 {
 	Login_Packet_CharacterSelectInfoReply *reply = calloc(1, sizeof(Login_Packet_CharacterSelectInfoReply));
 
@@ -185,7 +182,7 @@ CharacterSelectInfo(App_State *app, Session_State *session)
 	free(reply);
 }
 
-internal void login_packet_handle(App_State *server, Session_State *session, u8 *data, u32 data_length)
+void login_packet_handle(App_State *server, Session_State *session, u8 *data, u32 data_length)
 {
 	Login_Packet_Kind packet_kind;
 
@@ -211,7 +208,7 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 				.status = 1,
 				.result_code = 1,
 				.is_member = 1,
-				.is_internal = 1,
+				.is_logged_in = 1,
 				.namespace_name_length = 3,
 				.namespace_name = "soe",
 				.account_features_count = 1,
@@ -268,13 +265,6 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 		packet_kind = Login_Packet_Kind_ServerListRequest;
 		printf(MESSAGE_CONCAT_INFO("Recieved %s\n"), login_packet_names[packet_kind]);
 
-		if (session->connection_args.should_dump_login)
-		{
-			char dump_path[256] = {0};
-			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_login_%s.bin", global_tick_count, global_packet_dump_count++, login_packet_names[packet_kind]);
-			server->platform_api->buffer_write_to_file(dump_path, data, data_length);
-		}
-
 		Login_Packet_ServerListReply server_info_reply =
 			{
 				.servers_count = 1,
@@ -315,13 +305,6 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 		packet_kind = Login_Packet_Kind_CharacterDeleteRequest;
 		printf(MESSAGE_CONCAT_INFO("Recieved %s\n"), login_packet_names[packet_kind]);
 
-		if (session->connection_args.should_dump_login)
-		{
-			char dump_path[256] = {0};
-			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_login_%s.bin", global_tick_count, global_packet_dump_count++, login_packet_names[packet_kind]);
-			server->platform_api->buffer_write_to_file(dump_path, data, data_length);
-		}
-
 		Login_Packet_CharacterDeleteRequest character_delete_request = {0};
 		login_packet_unpack(data + offset, data_length - offset, packet_kind, &character_delete_request, &server->arena_per_tick);
 
@@ -347,31 +330,18 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 		packet_kind = Login_Packet_Kind_CharacterCreateRequest;
 		printf(MESSAGE_CONCAT_INFO("Received %s\n"), login_packet_names[packet_kind]);
 
-		if (session->connection_args.should_dump_login)
-		{
-			char dump_path[256] = {0};
-			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_login_%s.bin", global_tick_count, global_packet_dump_count++, login_packet_names[packet_kind]);
-			server->platform_api->buffer_write_to_file(dump_path, data, data_length);
-		}
-
 		Login_Packet_CharacterCreateRequest character_create_request = {0};
 		login_packet_unpack(data + offset, data_length - offset, packet_kind, &character_create_request, &server->arena_per_tick);
 
 		pGetHeadTypeData(session, character_create_request.char_payload->head_type);
 		CharacterCreateRequest(server, session);
+
 		break;
 	}
 	case LOGIN_CHARACTERSELECTINFOREQUEST_ID:
 	{
 		packet_kind = Login_Packet_Kind_CharacterSelectInfoRequest;
 		printf(MESSAGE_CONCAT_INFO("Recieved %s\n"), login_packet_names[packet_kind]);
-
-		if (session->connection_args.should_dump_login)
-		{
-			char dump_path[256] = {0};
-			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_login_%s.bin", global_tick_count, global_packet_dump_count++, login_packet_names[packet_kind]);
-			server->platform_api->buffer_write_to_file(dump_path, data, data_length);
-		}
 
 		CharacterSelectInfo(server, session);
 		break;
@@ -381,13 +351,6 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 	{
 		packet_kind = Login_Packet_Kind_CharacterLoginRequest;
 		printf(MESSAGE_CONCAT_INFO("Recieved %s\n"), login_packet_names[packet_kind]);
-
-		if (session->connection_args.should_dump_login)
-		{
-			char dump_path[256] = {0};
-			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_login_%s.bin", global_tick_count, global_packet_dump_count++, login_packet_names[packet_kind]);
-			server->platform_api->buffer_write_to_file(dump_path, data, data_length);
-		}
 
 		Login_Packet_CharacterLoginRequest character_login_request = {0};
 		login_packet_unpack(data + offset, data_length - offset, packet_kind, &character_login_request, &server->arena_per_tick);
@@ -432,13 +395,6 @@ internal void login_packet_handle(App_State *server, Session_State *session, u8 
 	{
 		packet_kind = Login_Packet_Kind_Unhandled;
 		printf(MESSAGE_CONCAT_WARN("Unhandled login packet 0x%02x\n"), packet_id);
-
-		if (session->connection_args.should_dump_login)
-		{
-			char dump_path[256] = {0};
-			stbsp_snprintf(dump_path, sizeof(dump_path), "packets\\%llu_%llu_C_login_%s.bin", global_tick_count, global_packet_dump_count++, login_packet_names[packet_kind]);
-			server->platform_api->buffer_write_to_file(dump_path, data, data_length);
-		}
 	}
 	}
 }

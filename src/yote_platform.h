@@ -67,7 +67,7 @@ global u64 global_performance_frequency;
 STATIC_ASSERT(SIZE_OF(SOCKET) == SIZE_OF(uptr));
 #endif // YOTE_PLATFORM_USE_SOCKETS
 
-internal PLATFORM_FOLDER_CREATE(platform_win_folder_create)
+PLATFORM_FOLDER_CREATE(platform_win_folder_create)
 {
 	if (!CreateDirectory(folder_path, NULL))
 	{
@@ -84,7 +84,7 @@ internal PLATFORM_FOLDER_CREATE(platform_win_folder_create)
 	return true;
 }
 
-internal PLATFORM_BUFFER_WRITE_TO_FILE(platform_win_buffer_write_to_file)
+PLATFORM_BUFFER_WRITE_TO_FILE(platform_win_buffer_write_to_file)
 {
 	HANDLE file_handle = CreateFileA(file_path,
 									 FILE_APPEND_DATA,
@@ -131,7 +131,7 @@ internal PLATFORM_BUFFER_WRITE_TO_FILE(platform_win_buffer_write_to_file)
 	return bytes_written;
 }
 
-internal PLATFORM_BUFFER_LOAD_FROM_FILE(platform_win_buffer_load_from_file)
+PLATFORM_BUFFER_LOAD_FROM_FILE(platform_win_buffer_load_from_file)
 {
 	HANDLE file_handle = CreateFileA(file_path,
 									 GENERIC_READ,
@@ -200,21 +200,21 @@ internal PLATFORM_BUFFER_LOAD_FROM_FILE(platform_win_buffer_load_from_file)
 	return bytes_read;
 }
 
-internal PLATFORM_WALL_CLOCK(platform_win_wall_clock)
+PLATFORM_WALL_CLOCK(platform_win_wall_clock)
 {
 	LARGE_INTEGER result;
 	QueryPerformanceCounter(&result);
 	return result.QuadPart;
 }
 
-internal PLATFORM_ELAPSED_SECONDS(platform_win_elapsed_seconds)
+PLATFORM_ELAPSED_SECONDS(platform_win_elapsed_seconds)
 {
 	f32 result = (f32)(end - begin) / (f32)global_performance_frequency;
 	return result;
 }
 
 #if defined(YOTE_PLATFORM_USE_SOCKETS)
-internal b32 platform_win_wsa_initialize()
+b32 platform_win_wsa_initialize()
 {
 	// if (global_is_wsa_initialized)
 	//{
@@ -233,7 +233,7 @@ internal b32 platform_win_wsa_initialize()
 	return true;
 }
 
-internal PLATFORM_SOCKET_UDP_CREATE_AND_BIND(platform_win_socket_udp_create_and_bind)
+PLATFORM_SOCKET_UDP_CREATE_AND_BIND(platform_win_socket_udp_create_and_bind)
 {
 	local_persist b32 is_wsa_initialized;
 	if (!is_wsa_initialized)
@@ -285,7 +285,7 @@ socket_close:
 	return result;
 }
 
-internal PLATFORM_RECEIVE_FROM(platform_win_receive_from)
+PLATFORM_RECEIVE_FROM(platform_win_receive_from)
 {
 	SOCKADDR_IN from_address = {0};
 	int from_address_size = sizeof(from_address);
@@ -317,7 +317,7 @@ internal PLATFORM_RECEIVE_FROM(platform_win_receive_from)
 	return result;
 }
 
-internal PLATFORM_SEND_TO(platform_win_send_to)
+PLATFORM_SEND_TO(platform_win_send_to)
 {
 	SOCKADDR_IN to_address =
 		{
