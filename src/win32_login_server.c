@@ -16,14 +16,13 @@ static void platform_win_console_write(char *format, ...);
 #define MODULE_FILE_TEMP "login_server_module_temp.dll"
 #define MODULE_LOCK_FILE ".reload-lock"
 
-typedef struct App_Code App_Code;
-struct App_Code
+typedef struct App_Code
 {
 	HMODULE module;
 	FILETIME module_last_write_time;
 	app_tick_t *tick_func;
 	b32 is_valid;
-};
+} App_Code;
 
 APP_TICK(app_tick_stub)
 {
