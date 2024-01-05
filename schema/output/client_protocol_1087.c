@@ -4,7 +4,7 @@
 #define ZONE_CLIENTISREADY_ID 0x4
 #define ZONE_ZONEDONESENDINGINITIALDATA_ID 0x5
 #define ZONE_CHATBASE_ID 0x6
-#define ZONE_CHAT_CHAT_ID 0x601
+#define ZONE_CHAT_CHAT_ID 0x60100
 #define ZONE_CHAT_CHATTEXT_ID 0x60005
 #define ZONE_CLIENTLOGOUT_ID 0x7
 #define ZONE_TARGETCLIENTNOTONLINE_ID 0x8
@@ -26,7 +26,7 @@
 #define ZONE_COMMAND_STARTFLASHGAME_ID 0x9000e
 #define ZONE_COMMAND_SETPROFILE_ID 0x9000f
 #define ZONE_COMMAND_ADDWORLDCOMMAND_ID 0x93f
-#define ZONE_COMMAND_ITEMDEFINITIONREQUEST_ID 0x945
+#define ZONE_COMMAND_ITEMDEFINITIONREQUEST_ID 0x94500
 #define ZONE_COMMAND_ITEMDEFINITIONREPLY_ID 0x946
 #define ZONE_COMMANDITEMDEFINITIONS_ID 0x94700
 #define ZONE_ADMINBASE_ID 0xa
@@ -48,7 +48,7 @@
 #define ZONE_CHARACTER_RENAMEPLAYER_ID 0xf0009
 #define ZONE_CHARACTER_UPDATECHARACTERSTATE_ID 0xf000a
 #define ZONE_CHARACTER_WEAPONSTANCE_ID 0xf0020
-#define ZONE_CHARACTER_RESPAWN_ID 0xf002e
+#define ZONE_CHARACTER_RESPAWN_ID 0xf2e
 #define ZONE_CHARACTER_RESPAWNREPLY_ID 0xf002f
 #define ZONE_CHARACTER_CHARACTERSTATEDELTA_ID 0xf003f
 #define ZONE_CHARACTER_KILLEDBY_ID 0xf0048
@@ -120,7 +120,7 @@
 #define ZONE_CLIENTUPDATE_REMOVENOTIFICATIONS_ID 0x110041
 #define ZONE_CLIENTUPDATE_NPCRELEVANCE_ID 0x110042
 #define ZONE_CLIENTUPDATE_INITIATENAMECHANGE_ID 0x110043
-#define ZONE_CLIENTUPDATE_MONITORTIMEDRIFT_ID 0x1144
+#define ZONE_CLIENTUPDATE_MONITORTIMEDRIFT_ID 0x114400
 #define ZONE_CLIENTUPDATE_NAMECHANGERESULT_ID 0x110045
 #define ZONE_CLIENTUPDATE_NOTIFYSERVEROFSTALLEDEVENT_ID 0x110046
 #define ZONE_CLIENTUPDATE_UPDATESIGHTS_ID 0x110047
@@ -131,13 +131,13 @@
 #define ZONE_CLIENTUPDATE_UPDATELOCKOUTTIMES_ID 0x11004e
 #define ZONE_CLIENTUPDATE_ZONESTATUS_ID 0x11004f
 #define ZONE_CLIENTUPDATE_SETDATACENTER_ID 0x110050
-#define ZONE_CLIENTUPDATE_UPDATEBATTLEYEREGISTRATION_ID 0x110051
+#define ZONE_CLIENTUPDATE_UPDATEBATTLEYEREGISTRATION_ID 0x115100
 #define ZONE_GROUPSBASE_ID 0x13
 #define ZONE_ENCOUNTERBASE_ID 0x14
 #define ZONE_INVENTORYBASE_ID 0x15
 #define ZONE_SENDZONEDETAILS_ID 0x16
 #define ZONE_REFERENCEDATABASE_ID 0x17
-#define ZONE_REFERENCEDATAWEAPONDEFINITIONS_ID 0x1704
+#define ZONE_REFERENCEDATAWEAPONDEFINITIONS_ID 0x170400
 #define ZONE_OBJECTIVEBASE_ID 0x18
 #define ZONE_DEBUGBASE_ID 0x19
 #define ZONE_UIBASE_ID 0x1a
@@ -180,8 +180,8 @@
 #define ZONE_CLIENTMEMBERSHIPACTIVATION_ID 0x40
 #define ZONE_LOBBYBASE_ID 0x41
 #define ZONE_LOBBYGAMEDEFINITIONBASE_ID 0x42
-#define ZONE_LOBBYGAMEDEFINITION_DEFINITIONSREQUEST_ID 0x420100
-#define ZONE_LOBBYGAMEDEFINITION_DEFINITIONSRESPONSE_ID 0x420200
+#define ZONE_LOBBYGAMEDEFINITION_DEFINITIONSREQUEST_ID 0x4201
+#define ZONE_LOBBYGAMEDEFINITION_DEFINITIONSRESPONSE_ID 0x4202
 #define ZONE_SHOWSYSTEMMESSAGE_ID 0x43
 #define ZONE_POICHANGEMESSAGE_ID 0x44
 #define ZONE_CLIENTMETRICS_ID 0x45
@@ -354,13 +354,13 @@
 #define ZONE_SENDSECURITYPACKETANDSELFDESTRUCT_ID 0x99
 #define ZONE_GETCONTINENTBATTLEINFO_ID 0x98
 #define ZONE_GETRESPAWNLOCATIONS_ID 0x9a
-#define ZONE_WALLOFDATA_UIEVENT_ID 0x9b05
-#define ZONE_WALLOFDATA_CLIENTSYSTEMINFO_ID 0x9b60
+#define ZONE_WALLOFDATA_UIEVENT_ID 0x9b0500
+#define ZONE_WALLOFDATA_CLIENTSYSTEMINFO_ID 0x9b6000
 #define ZONE_WALLOFDATA_VOICECHATEVENT_ID 0x9b07
 #define ZONE_WALLOFDATA_NUDGEEVENT_ID 0x9b09
 #define ZONE_WALLOFDATA_LAUNCHPADFINGERPRINT_ID 0x9b0a
 #define ZONE_WALLOFDATA_VIDEOCAPTURE_ID 0x9b0b
-#define ZONE_WALLOFDATA_CLIENTTRANSITION_ID 0x9b000c
+#define ZONE_WALLOFDATA_CLIENTTRANSITION_ID 0x9b0c
 #define ZONE_IMPLANTSBASE_ID 0x9c0000
 #define ZONE_INGAMEPURCHASE_ID 0x9d
 #define ZONE_MISSIONSBASE_ID 0x9e0000
@@ -439,8 +439,8 @@
 #define ZONE_ONLINEIDBASE_ID 0xe7
 #define ZONE_PS4PLAYGOBASE_ID 0xe8
 #define ZONE_SYNCHRONIZEDTELEPORTBASE_ID 0xe9
-#define ZONE_STATICVIEWREQUEST_ID 0xea01
-#define ZONE_STATICVIEWREPLY_ID 0xea02
+#define ZONE_STATICVIEWREQUEST_ID 0xea0100
+#define ZONE_STATICVIEWREPLY_ID 0xea0200
 #define ZONE_REPLICATIONBASE_ID 0xeb
 #define ZONE_DATASHEETSBASE_ID 0xec
 #define ZONE_PLAYERWORLDTRANSFERREQUEST_ID 0xed
@@ -940,7 +940,7 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_ClientIsReady] = 0x4,
 [Zone_Packet_Kind_ZoneDoneSendingInitialData] = 0x5,
 [Zone_Packet_Kind_ChatBase] = 0x6,
-[Zone_Packet_Kind_Chat_Chat] = 0x601,
+[Zone_Packet_Kind_Chat_Chat] = 0x60100,
 [Zone_Packet_Kind_Chat_ChatText] = 0x60005,
 [Zone_Packet_Kind_ClientLogout] = 0x7,
 [Zone_Packet_Kind_TargetClientNotOnline] = 0x8,
@@ -962,7 +962,7 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_Command_StartFlashGame] = 0x9000e,
 [Zone_Packet_Kind_Command_SetProfile] = 0x9000f,
 [Zone_Packet_Kind_Command_AddWorldCommand] = 0x93f,
-[Zone_Packet_Kind_Command_ItemDefinitionRequest] = 0x945,
+[Zone_Packet_Kind_Command_ItemDefinitionRequest] = 0x94500,
 [Zone_Packet_Kind_Command_ItemDefinitionReply] = 0x946,
 [Zone_Packet_Kind_CommandItemDefinitions] = 0x94700,
 [Zone_Packet_Kind_AdminBase] = 0xa,
@@ -984,7 +984,7 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_Character_RenamePlayer] = 0xf0009,
 [Zone_Packet_Kind_Character_UpdateCharacterState] = 0xf000a,
 [Zone_Packet_Kind_Character_WeaponStance] = 0xf0020,
-[Zone_Packet_Kind_Character_Respawn] = 0xf002e,
+[Zone_Packet_Kind_Character_Respawn] = 0xf2e,
 [Zone_Packet_Kind_Character_RespawnReply] = 0xf002f,
 [Zone_Packet_Kind_Character_CharacterStateDelta] = 0xf003f,
 [Zone_Packet_Kind_Character_KilledBy] = 0xf0048,
@@ -1056,7 +1056,7 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_ClientUpdate_RemoveNotifications] = 0x110041,
 [Zone_Packet_Kind_ClientUpdate_NpcRelevance] = 0x110042,
 [Zone_Packet_Kind_ClientUpdate_InitiateNameChange] = 0x110043,
-[Zone_Packet_Kind_ClientUpdate_MonitorTimeDrift] = 0x1144,
+[Zone_Packet_Kind_ClientUpdate_MonitorTimeDrift] = 0x114400,
 [Zone_Packet_Kind_ClientUpdate_NameChangeResult] = 0x110045,
 [Zone_Packet_Kind_ClientUpdate_NotifyServerOfStalledEvent] = 0x110046,
 [Zone_Packet_Kind_ClientUpdate_UpdateSights] = 0x110047,
@@ -1067,13 +1067,13 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_ClientUpdate_UpdateLockoutTimes] = 0x11004e,
 [Zone_Packet_Kind_ClientUpdate_ZoneStatus] = 0x11004f,
 [Zone_Packet_Kind_ClientUpdate_SetDataCenter] = 0x110050,
-[Zone_Packet_Kind_ClientUpdate_UpdateBattlEyeRegistration] = 0x110051,
+[Zone_Packet_Kind_ClientUpdate_UpdateBattlEyeRegistration] = 0x115100,
 [Zone_Packet_Kind_GroupsBase] = 0x13,
 [Zone_Packet_Kind_EncounterBase] = 0x14,
 [Zone_Packet_Kind_InventoryBase] = 0x15,
 [Zone_Packet_Kind_SendZoneDetails] = 0x16,
 [Zone_Packet_Kind_ReferenceDataBase] = 0x17,
-[Zone_Packet_Kind_ReferenceDataWeaponDefinitions] = 0x1704,
+[Zone_Packet_Kind_ReferenceDataWeaponDefinitions] = 0x170400,
 [Zone_Packet_Kind_ObjectiveBase] = 0x18,
 [Zone_Packet_Kind_DebugBase] = 0x19,
 [Zone_Packet_Kind_UiBase] = 0x1a,
@@ -1116,8 +1116,8 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_ClientMembershipActivation] = 0x40,
 [Zone_Packet_Kind_LobbyBase] = 0x41,
 [Zone_Packet_Kind_LobbyGameDefinitionBase] = 0x42,
-[Zone_Packet_Kind_LobbyGameDefinition_DefinitionsRequest] = 0x420100,
-[Zone_Packet_Kind_LobbyGameDefinition_DefinitionsResponse] = 0x420200,
+[Zone_Packet_Kind_LobbyGameDefinition_DefinitionsRequest] = 0x4201,
+[Zone_Packet_Kind_LobbyGameDefinition_DefinitionsResponse] = 0x4202,
 [Zone_Packet_Kind_ShowSystemMessage] = 0x43,
 [Zone_Packet_Kind_POIChangeMessage] = 0x44,
 [Zone_Packet_Kind_ClientMetrics] = 0x45,
@@ -1290,13 +1290,13 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_SendSecurityPacketAndSelfDestruct] = 0x99,
 [Zone_Packet_Kind_GetContinentBattleInfo] = 0x98,
 [Zone_Packet_Kind_GetRespawnLocations] = 0x9a,
-[Zone_Packet_Kind_WallOfData_UIEvent] = 0x9b05,
-[Zone_Packet_Kind_WallOfData_ClientSystemInfo] = 0x9b60,
+[Zone_Packet_Kind_WallOfData_UIEvent] = 0x9b0500,
+[Zone_Packet_Kind_WallOfData_ClientSystemInfo] = 0x9b6000,
 [Zone_Packet_Kind_WallOfData_VoiceChatEvent] = 0x9b07,
 [Zone_Packet_Kind_WallOfData_NudgeEvent] = 0x9b09,
 [Zone_Packet_Kind_WallOfData_LaunchPadFingerprint] = 0x9b0a,
 [Zone_Packet_Kind_WallOfData_VideoCapture] = 0x9b0b,
-[Zone_Packet_Kind_WallOfData_ClientTransition] = 0x9b000c,
+[Zone_Packet_Kind_WallOfData_ClientTransition] = 0x9b0c,
 [Zone_Packet_Kind_ImplantsBase] = 0x9c0000,
 [Zone_Packet_Kind_InGamePurchase] = 0x9d,
 [Zone_Packet_Kind_MissionsBase] = 0x9e0000,
@@ -1375,8 +1375,8 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_OnlineIdBase] = 0xe7,
 [Zone_Packet_Kind_Ps4PlayGoBase] = 0xe8,
 [Zone_Packet_Kind_SynchronizedTeleportBase] = 0xe9,
-[Zone_Packet_Kind_StaticViewRequest] = 0xea01,
-[Zone_Packet_Kind_StaticViewReply] = 0xea02,
+[Zone_Packet_Kind_StaticViewRequest] = 0xea0100,
+[Zone_Packet_Kind_StaticViewReply] = 0xea0200,
 [Zone_Packet_Kind_ReplicationBase] = 0xeb,
 [Zone_Packet_Kind_DatasheetsBase] = 0xec,
 [Zone_Packet_Kind_PlayerWorldTransferRequest] = 0xed,
@@ -8884,8 +8884,8 @@ Zone_Packet_Chat_Chat* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0x6);
 offset += sizeof(u8);
 
-endian_write_u8_little(buffer + offset, 0x1);
-offset += sizeof(u8);
+endian_write_u16_little(buffer + offset, 0x100);
+offset += sizeof(u16);
 
 // u16 unk_u16
 endian_write_u16_little(buffer + offset, packet->unk_u16);
@@ -9428,8 +9428,8 @@ Zone_Packet_Command_ItemDefinitionRequest* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0x9);
 offset += sizeof(u8);
 
-endian_write_u8_little(buffer + offset, 0x45);
-offset += sizeof(u8);
+endian_write_u16_little(buffer + offset, 0x4500);
+offset += sizeof(u16);
 
 // u32 id
 endian_write_u32_little(buffer + offset, packet->id);
@@ -10934,8 +10934,8 @@ Zone_Packet_Character_Respawn* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0xf);
 offset += sizeof(u8);
 
-endian_write_u16_little(buffer + offset, 0x2e);
-offset += sizeof(u16);
+endian_write_u8_little(buffer + offset, 0x2e);
+offset += sizeof(u8);
 
 // u8 respawn_type_1
 endian_write_u8_little(buffer + offset, packet->respawn_type_1);
@@ -12406,8 +12406,8 @@ Zone_Packet_ClientUpdate_MonitorTimeDrift* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0x11);
 offset += sizeof(u8);
 
-endian_write_u8_little(buffer + offset, 0x44);
-offset += sizeof(u8);
+endian_write_u16_little(buffer + offset, 0x4400);
+offset += sizeof(u16);
 
 // u32 time_drift
 endian_write_u32_little(buffer + offset, packet->time_drift);
@@ -12532,7 +12532,7 @@ printf(MESSAGE_CONCAT_INFO("Packing ClientUpdate_UpdateBattlEyeRegistration...\n
 endian_write_u8_little(buffer + offset, 0x11);
 offset += sizeof(u8);
 
-endian_write_u16_little(buffer + offset, 0x51);
+endian_write_u16_little(buffer + offset, 0x5100);
 offset += sizeof(u16);
 
 } break;
@@ -12822,8 +12822,8 @@ Zone_Packet_ReferenceDataWeaponDefinitions* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0x17);
 offset += sizeof(u8);
 
-endian_write_u8_little(buffer + offset, 0x4);
-offset += sizeof(u8);
+endian_write_u16_little(buffer + offset, 0x400);
+offset += sizeof(u16);
 
 // stream weapon_byteswithlength
 void* weapon_byteswithlength_length_ptr = buffer + offset;
@@ -14686,8 +14686,8 @@ printf(MESSAGE_CONCAT_INFO("Packing LobbyGameDefinition_DefinitionsRequest...\n"
 endian_write_u8_little(buffer + offset, 0x42);
 offset += sizeof(u8);
 
-endian_write_u16_little(buffer + offset, 0x100);
-offset += sizeof(u16);
+endian_write_u8_little(buffer + offset, 0x1);
+offset += sizeof(u8);
 
 } break;
 
@@ -14699,8 +14699,8 @@ Zone_Packet_LobbyGameDefinition_DefinitionsResponse* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0x42);
 offset += sizeof(u8);
 
-endian_write_u16_little(buffer + offset, 0x200);
-offset += sizeof(u16);
+endian_write_u8_little(buffer + offset, 0x2);
+offset += sizeof(u8);
 
 // stream definitions_data
 void* definitions_data_length_ptr = buffer + offset;
@@ -17508,8 +17508,8 @@ Zone_Packet_WallOfData_UIEvent* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0x9b);
 offset += sizeof(u8);
 
-endian_write_u8_little(buffer + offset, 0x5);
-offset += sizeof(u8);
+endian_write_u16_little(buffer + offset, 0x500);
+offset += sizeof(u16);
 
 // string object
 endian_write_u32_little(buffer + offset, packet->object_length);
@@ -17551,8 +17551,8 @@ Zone_Packet_WallOfData_ClientSystemInfo* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0x9b);
 offset += sizeof(u8);
 
-endian_write_u8_little(buffer + offset, 0x60);
-offset += sizeof(u8);
+endian_write_u16_little(buffer + offset, 0x6000);
+offset += sizeof(u16);
 
 // string info
 endian_write_u32_little(buffer + offset, packet->info_length);
@@ -17618,8 +17618,8 @@ Zone_Packet_WallOfData_ClientTransition* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0x9b);
 offset += sizeof(u8);
 
-endian_write_u16_little(buffer + offset, 0xc);
-offset += sizeof(u16);
+endian_write_u8_little(buffer + offset, 0xc);
+offset += sizeof(u8);
 
 // u32 old_state
 endian_write_u32_little(buffer + offset, packet->old_state);
@@ -19358,8 +19358,8 @@ Zone_Packet_StaticViewRequest* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0xea);
 offset += sizeof(u8);
 
-endian_write_u8_little(buffer + offset, 0x1);
-offset += sizeof(u8);
+endian_write_u16_little(buffer + offset, 0x100);
+offset += sizeof(u16);
 
 // string viewpoint
 endian_write_u32_little(buffer + offset, packet->viewpoint_length);
@@ -19381,8 +19381,8 @@ Zone_Packet_StaticViewReply* packet = packet_ptr;
 endian_write_u8_little(buffer + offset, 0xea);
 offset += sizeof(u8);
 
-endian_write_u8_little(buffer + offset, 0x2);
-offset += sizeof(u8);
+endian_write_u16_little(buffer + offset, 0x200);
+offset += sizeof(u16);
 
 // u32 state
 endian_write_u32_little(buffer + offset, packet->state);

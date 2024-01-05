@@ -75,11 +75,11 @@ void sendSelfTest(App_State *app, Session_State *session)
     sendSelf->payload_self->guid = 0x1ull;
     sendSelf->payload_self->transient_id.value = 52; // temp value
     sendSelf->payload_self->actor_model_id = 9240;
-    sendSelf->payload_self->gender1 = getGender(sendSelf->payload_self->actor_model_id); // idk
-    sendSelf->payload_self->head_actor = getHeadActor(sendSelf->payload_self->actor_model_id);
-    sendSelf->payload_self->head_actor_length = (u32)strlen(sendSelf->payload_self->head_actor);
-    sendSelf->payload_self->hair_model = getHairModel(sendSelf->payload_self->actor_model_id);
-    sendSelf->payload_self->hair_model_length = (u32)strlen(sendSelf->payload_self->hair_model);
+    sendSelf->payload_self->gender1 = 1; // idk
+    sendSelf->payload_self->head_actor = "SurvivorMale_Head_01.adr";
+    sendSelf->payload_self->head_actor_length = 24;
+    sendSelf->payload_self->hair_model = "SurvivorMale_Hair_MediumMessy.adr";
+    sendSelf->payload_self->hair_model_length = 33;
     sendSelf->payload_self->is_respawning = false;
     sendSelf->payload_self->creation_date = 0x0ull;
     sendSelf->payload_self->last_login_date = 0x0ull;

@@ -1,5 +1,4 @@
-typedef enum Items
-{
+typedef enum Items {
     // #region WEAPONS
     WEAPON_AR15 = 10,
     WEAPON_AK47 = 2229,
@@ -245,9 +244,9 @@ typedef enum Items
     BACKPACK_MILITARY_TAN = 2124,
     BACKPACK_BLUE_ORANGE = 2038,
     HELMET_MOTORCYCLE = 2170, // TODO = expand with other default helmet colors
-    HAT_CAP = 12,             // TODO = expand with other cap colors
-    SHIRT_DEFAULT = 2088,     // TODO = expand with other default shirts
-    PANTS_DEFAULT = 2177,     // TODO = expand with other default pants
+    HAT_CAP = 12, // TODO = expand with other cap colors
+    SHIRT_DEFAULT = 2088, // TODO = expand with other default shirts
+    PANTS_DEFAULT = 2177, // TODO = expand with other default pants
     SHIRT_SCRUBS_BLUE = 2553,
     PANTS_SCRUBS_BLUE = 2557,
     SURGEON_MASK_AQUA = 2569,
@@ -447,15 +446,19 @@ typedef enum Items
     DOOMED_PUFFY_JACKET = 3977
 } Items;
 
-typedef struct LoadoutKitEntry_s
-{
+typedef struct LoadoutKitEntry {
     Items item;
     u32 count;
-} LoadoutKitEntry_s;
+} LoadoutKitEntry;
 
-void InitializeCharacterDefaultLoadout()
+LoadoutKitEntry* InitializeCharacterDefaultLoadout()
 {
-    struct LoadoutKitEntry_s *kitEntry = (struct LoadoutKitEntry_s *)malloc(sizeof(struct LoadoutKitEntry_s));
+    LoadoutKitEntry* kitEntry = malloc(sizeof(LoadoutKitEntry));
+    if (!kitEntry) {
+        fprintf_s(stderr, "Failed to allocate memory to LoadoutKitEntry struct in InitializeCharacterDefaultLoadout function!\n");
+
+        return NULL;
+    }
 
     kitEntry[0].item = WEAPON_FISTS;
     kitEntry[1].item = WEAPON_FLASHLIGHT;
@@ -467,11 +470,18 @@ void InitializeCharacterDefaultLoadout()
     kitEntry[6].item = COMPASS;
     kitEntry[7].item = GAUZE;
     kitEntry[7].count = 5;
+
+    return kitEntry;
 }
 
-void CharacterDefaultLoadout()
+LoadoutKitEntry* CharacterDefaultLoadout()
 {
-    struct LoadoutKitEntry_s *kitEntry = (struct LoadoutKitEntry_s *)malloc(sizeof(struct LoadoutKitEntry_s));
+    LoadoutKitEntry* kitEntry = malloc(sizeof(LoadoutKitEntry));
+    if (!kitEntry) {
+        fprintf_s(stderr, "Failed to allocate memory to LoadoutKitEntry struct in CharacterDefaultLoadout function!\n");
+
+        return NULL;
+    }
 
     kitEntry[0].item = WEAPON_FISTS;
     kitEntry[1].item = WEAPON_FLASHLIGHT;
@@ -483,11 +493,18 @@ void CharacterDefaultLoadout()
     kitEntry[6].item = COMPASS;
     kitEntry[7].item = GAUZE;
     kitEntry[7].count = 5;
+
+    return kitEntry;
 }
 
-void CharacterKitLoadout()
+LoadoutKitEntry* CharacterKitLoadout()
 {
-    struct LoadoutKitEntry_s *kitEntry = (struct LoadoutKitEntry_s *)malloc(sizeof(struct LoadoutKitEntry_s));
+    LoadoutKitEntry* kitEntry = malloc(sizeof(LoadoutKitEntry));
+    if (!kitEntry) {
+        fprintf_s(stderr, "Failed to allocate memory to LoadoutKitEntry struct in CharacterKitLoadout function!\n");
+
+        return NULL;
+    }
 
     kitEntry[0].item = BACKPACK_RASTA;
     kitEntry[1].item = WEAPON_308;
@@ -506,11 +523,18 @@ void CharacterKitLoadout()
     kitEntry[9].item = KEVLAR_DEFAULT;
     kitEntry[10].item = HELMET_MOTORCYCLE;
     kitEntry[11].item = CONVEYS_BLUE;
+
+    return kitEntry;
 }
 
-void CharacterSkinsLoadout()
+LoadoutKitEntry* CharacterSkinsLoadout()
 {
-    struct LoadoutKitEntry_s *kitEntry = (struct LoadoutKitEntry_s *)malloc(sizeof(struct LoadoutKitEntry_s));
+    LoadoutKitEntry* kitEntry = malloc(sizeof(LoadoutKitEntry));
+    if (!kitEntry) {
+        fprintf_s(stderr, "Failed to allocate memory to LoadoutKitEntry struct in CharacterSkinsLoadout function!\n");
+
+        return NULL;
+    }
 
     kitEntry[0].item = CAMO_TAN_FLANNEL_SHIRT;
     kitEntry[1].item = BLUE_FLANNEL_SHIRT;
@@ -571,15 +595,24 @@ void CharacterSkinsLoadout()
     kitEntry[56].item = PINK_SKULLS_SURVIVOR_BACKPACK;
     kitEntry[57].item = SNIPER_MILITARY_BACKPACK;
     kitEntry[58].item = FULLY_GEARED_EXPLORER_BACKPACK;
+
+    return kitEntry;
 }
 
-void CharacterVehicleKit()
+LoadoutKitEntry* CharacterVehicleKit()
 {
-    struct LoadoutKitEntry_s *kitEntry = (struct LoadoutKitEntry_s *)malloc(sizeof(struct LoadoutKitEntry_s));
+    LoadoutKitEntry* kitEntry = malloc(sizeof(LoadoutKitEntry));
+    if (!kitEntry) {
+        fprintf_s(stderr, "Failed to allocate memory to LoadoutKitEntry struct in CharacterVehicleKit function!\n");
+
+        return NULL;
+    }
 
     kitEntry[0].item = SPARKPLUGS;
     kitEntry[1].item = VEHICLE_KEY;
     kitEntry[2].item = BATTERY;
+
+    return kitEntry;
 }
 
 void CharacterBuildKitLoadout()

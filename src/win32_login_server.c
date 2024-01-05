@@ -1,9 +1,4 @@
-#if defined(YOTE_INTERNAL)
 #include <stdio.h>
-#else
-static void platform_win_console_write(char *format, ...);
-#define printf(s, ...) platform_win_console_write(s, __VA_ARGS__)
-#endif // YOTE_INTERNAL
 
 #include <stdbool.h>
 #include "yote.h"

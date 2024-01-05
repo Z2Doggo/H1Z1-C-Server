@@ -20,7 +20,7 @@ DWORD WINAPI zone_packet_send_thread(LPVOID lpParam)
     Zone_Packet_Kind packet_kind = params->packet_kind;
     void *packet_ptr = params->packet_ptr;
 
-    // existing code for zone_packet_send goes here
+    // existing code for zone_packet_send here
     u8 *base_buffer = arena_push_size(arena, max_length);
     u8 *packed_buffer = base_buffer + TUNNEL_DATA_HEADER_LENGTH;
     u32 packed_length = zone_packet_pack(packet_kind, packet_ptr, packed_buffer);
@@ -107,8 +107,8 @@ void zone_packet_handle(App_State *server_state,
     }
 
     u32 packet_temp;
-    u32 packet_id = *data;
-    u8 *sub_packet_id = &data[1];
+    u8 packet_id = *data;
+    u8 sub_packet_id = data[1];
     u32 packet_iter;
 
     if (data_length > 0)
@@ -182,14 +182,14 @@ packet_id_switch:
             };
 
         zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(30), Zone_Packet_Kind_ClientUpdate_DoneSendingPreloadCharacters, &preload_done);
-        zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ZoneDoneSendingInitialData, 0);
-        zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_NetworkProximityUpdatesComplete, 0);
+        zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ZoneDoneSendingInitialData, ((void *)true));
+        zone_packet_send(server_state, session_state, &server_state->arena_per_tick, KB(10), Zone_Packet_Kind_ClientUpdate_NetworkProximityUpdatesComplete, ((void *)true));
 
         Zone_Packet_Character_CharacterStateDelta character_state_delta =
             {
                 .guid_1 = session_state->character_id,
                 .guid_2 = 0ull,
-                .guid_3 = 0x40000000,
+                .guid_3 = 0x40000000ull,
                 .guid_4 = 0ull,
                 .game_time = timer & 0x7fffffff,
             };
@@ -202,7 +202,6 @@ packet_id_switch:
     {
         if (session_state->finished_loading == false)
         {
-
             packet_kind = Zone_Packet_Kind_ClientFinishedLoading;
             printf("[Zone] Handling ClientFinishedLoading\n");
 
@@ -236,7 +235,7 @@ packet_id_switch:
                             .length_2 = (struct length_2_s[1]){
                                 [0] = {
                                     .equipment_slot_id_2 = 0,
-                                    .guid = 0, // keep guid as a 0
+                                    .guid = 0ull, // keep guid as a 0
                                     .tint_alias_length = 7,
                                     .tint_alias = "Default",
                                     .decal_alias_length = 1,
@@ -852,7 +851,7 @@ packet_id_switch:
     {
     packet_id_fail:
         packet_kind = Zone_Packet_Kind_Unhandled;
-        printf(MESSAGE_CONCAT_WARN("Unhandled zone packet %#x %#x\n"), packet_id, *sub_packet_id);
+        printf(MESSAGE_CONCAT_WARN("Unhandled zone packet %#x %#x\n"), packet_id, sub_packet_id);
     }
     }
 }

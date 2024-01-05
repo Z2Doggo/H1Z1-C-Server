@@ -1300,7 +1300,7 @@ packet 0x4 ClientIsReady
 packet 0x5 ZoneDoneSendingInitialData
 
 packet 0x6 ChatBase
-packet 0x6 0x1:u8 Chat_Chat
+packet 0x06 0x0100:u16 Chat_Chat
 u16 unk_u16
 u16 channel
 u64 character_id
@@ -1378,7 +1378,7 @@ u32 profile_id
 u32 interaction_id
 packet 0x09 0x3f:u8 Command_AddWorldCommand
 string:u32 command
-packet 0x09 0x45:u8 Command_ItemDefinitionRequest
+packet 0x09 0x4500:u16 Command_ItemDefinitionRequest
 u32 id
 packet 0x09 0x46:u8 Command_ItemDefinitionReply
 stream:u32 item_def_reply_1
@@ -1673,7 +1673,7 @@ packet 0xf 0x20:u16 Character_WeaponStance
 u64 character_id
 u32 stance
 
-packet 0xf 0x2e:u16 Character_Respawn
+packet 0x0f 0x2e:u8 Character_Respawn
 u8 respawn_type_1
 u64 respawn_guid
 u32 profile_id_1
@@ -1906,7 +1906,7 @@ packet 0x11 0x40:u16 ClientUpdate_AddNotifications
 packet 0x11 0x41:u16 ClientUpdate_RemoveNotifications
 packet 0x11 0x42:u16 ClientUpdate_NpcRelevance
 packet 0x11 0x43:u16 ClientUpdate_InitiateNameChange
-packet 0x11 0x44:u8 ClientUpdate_MonitorTimeDrift
+packet 0x11 0x4400:u16 ClientUpdate_MonitorTimeDrift
 u32 time_drift
 
 packet 0x11 0x45:u16 ClientUpdate_NameChangeResult
@@ -1920,7 +1920,7 @@ packet 0x11 0x4d:u16 ClientUpdate_SetWorldWipeTimer
 packet 0x11 0x4e:u16 ClientUpdate_UpdateLockoutTimes
 packet 0x11 0x4f:u16 ClientUpdate_ZoneStatus
 packet 0x11 0x50:u16 ClientUpdate_SetDataCenter
-packet 0x11 0x51:u16 ClientUpdate_UpdateBattlEyeRegistration
+packet 0x11 0x5100:u16 ClientUpdate_UpdateBattlEyeRegistration
 
 packet 0x13 GroupsBase
 packet 0x14 EncounterBase
@@ -1977,7 +1977,7 @@ u8 unk_bool4
 
 packet 0x17 ReferenceDataBase
 
-packet 0x17 0x04:u8 ReferenceDataWeaponDefinitions
+packet 0x17 0x0400:u16 ReferenceDataWeaponDefinitions
 stream:u32 weapon_byteswithlength
 {
 	list:u32 weapon_defs
@@ -2356,8 +2356,8 @@ packet 0x3f ClientPendingKickFromServer
 packet 0x40 ClientMembershipActivation
 packet 0x41 LobbyBase
 packet 0x42 LobbyGameDefinitionBase
-packet 0x42 0x0100:u16 LobbyGameDefinition_DefinitionsRequest
-packet 0x42 0x0200:u16 LobbyGameDefinition_DefinitionsResponse
+packet 0x42 0x01:u8 LobbyGameDefinition_DefinitionsRequest
+packet 0x42 0x02:u8 LobbyGameDefinition_DefinitionsResponse
 stream:u32 definitions_data
 {
 	string:u32 data
@@ -2794,18 +2794,18 @@ packet 0x99 SendSecurityPacketAndSelfDestruct
 packet 0x98 GetContinentBattleInfo
 packet 0x9a GetRespawnLocations
 
-packet 0x9b 0x05:u8 WallOfData_UIEvent
+packet 0x9b 0x0500:u16 WallOfData_UIEvent
 string:u32 object
 string:u32 function
 string:u32 argument
-packet 0x9b 0x60:u8 WallOfData_ClientSystemInfo
+packet 0x9b 0x6000:u16 WallOfData_ClientSystemInfo
 string:u32 info
 packet 0x9b 0x07:u8 WallOfData_VoiceChatEvent
 packet 0x9b 0x09:u8 WallOfData_NudgeEvent
 packet 0x9b 0x0a:u8 WallOfData_LaunchPadFingerprint
 packet 0x9b 0x0b:u8 WallOfData_VideoCapture
 
-packet 0x9b 0xc:u16 WallOfData_ClientTransition
+packet 0x9b 0x0c:u8 WallOfData_ClientTransition
 u32 old_state
 u32 new_state
 u32 ms_elapsed
@@ -3107,10 +3107,10 @@ packet 0xe6 BattlEyeData
 packet 0xe7 OnlineIdBase
 packet 0xe8 Ps4PlayGoBase
 packet 0xe9 SynchronizedTeleportBase
-packet 0xea 0x01:u8 StaticViewRequest
+packet 0xea 0x0100:u16 StaticViewRequest
 string:u32 viewpoint
 
-packet 0xea 0x02:u8 StaticViewReply
+packet 0xea 0x0200:u16 StaticViewReply
 u32 state
 vec4 position
 vec4 rotation
