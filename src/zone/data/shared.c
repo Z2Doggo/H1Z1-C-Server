@@ -272,17 +272,22 @@ typedef struct ItemDefinition {
     u32 placementModelId;
 } ItemDefinition;
 
-ItemDefinition GetItemDefinition(u32 itemDefId)
+ItemDefinition* GetItemDefinition(u32 itemDefId)
 {
     if (!itemDefId) {
         fprintf_s(stderr, "ItemDefinitionId is invalid! Please check errors!\n");
-        ItemDefinition defaultItemDef = { 0 };
 
-        return defaultItemDef;
+        return NULL;
     }
 
     ItemDefinition* itemDef = malloc(sizeof(ItemDefinition));
-    ItemDefinition result = itemDef[itemDefId];
+    if (!itemDef) {
+        fprintf_s(stderr, "Failed to allocate memory to ItemDefinition struct in GetItemDefinition function!\n");
+
+        return NULL;
+    }
+
+    ItemDefinition* result = &itemDef[itemDefId];
 
     free(itemDef);
 
@@ -309,7 +314,7 @@ bool IsArmor(u32 itemDefId)
     if (itemDefId != 0) {
         ItemDefinition* itemDef = malloc(sizeof(ItemDefinition));
         if (itemDef != NULL) {
-            *itemDef = GetItemDefinition(itemDefId);
+            itemDef = GetItemDefinition(itemDefId);
 
             if (itemDef->descriptionId == 12073 || itemDef->descriptionId == 11151 || itemDef->descriptionId == 11153) {
                 free(itemDef);
@@ -329,7 +334,7 @@ bool IsHelmet(u32 itemDefId)
     if (itemDefId != 0) {
         ItemDefinition* itemDef = malloc(sizeof(ItemDefinition));
         if (itemDef != NULL) {
-            *itemDef = GetItemDefinition(itemDefId);
+            itemDef = GetItemDefinition(itemDefId);
 
             if (itemDef->descriptionId == 9945 || itemDef->descriptionId == 12994 || itemDef->descriptionId == 9114 || itemDef->descriptionId == 9945) {
                 free(itemDef);
@@ -366,15 +371,25 @@ typedef struct ItemData {
     Weapon weaponData;
 } ItemData;
 
-ItemData pGetItemWeaponData(BaseItem* slot)
+ItemData* pGetItemWeaponData(BaseItem* slot)
 {
     if (slot->weapon) {
         // Put something here
     }
+
+    return NULL; // temporary return value
 }
 
-ItemData pGetItemData(BaseItem* baseItem, u32 containerDefId)
+ItemData pGetItemData(u32 containerDefId)
 {
+    BaseItem* baseItem = malloc(sizeof(BaseItem));
+    if (!baseItem) {
+        fprintf_s(stderr, "Failed to allocate memory to BaseItem struct in pGetItemData function!\n");
+        ItemData defaults = { 0 };
+
+        return defaults;
+    }
+
     u32 durability = 0;
 
     while (true) {
