@@ -127,6 +127,7 @@ typedef struct BaseItem {
     u32 slotId;
     u64 itemGuid;
     u64 containerGuid;
+    u32 containerDefId;
     u32 currentDurability;
     u8 debugFlag;
     u32 stackCount;
@@ -134,7 +135,7 @@ typedef struct BaseItem {
     bool hasAirdropCleareance;
 } BaseItem;
 
-BaseItem* BaseItemConstructor(u32 itemDefId, u64 guid, u32 durability, u32 stackCount)
+void* BaseItemConstructor(u32 itemDefId, u64 guid, u32 durability, u32 stackCount)
 {
     BaseItem* baseItem = malloc(sizeof(BaseItem));
     if (!baseItem) {
@@ -272,7 +273,7 @@ typedef struct ItemDefinition {
     u32 placementModelId;
 } ItemDefinition;
 
-ItemDefinition* GetItemDefinition(u32 itemDefId)
+void* GetItemDefinition(u32 itemDefId)
 {
     if (!itemDefId) {
         fprintf_s(stderr, "ItemDefinitionId is invalid! Please check errors!\n");
@@ -371,7 +372,7 @@ typedef struct ItemData {
     Weapon weaponData;
 } ItemData;
 
-ItemData* pGetItemWeaponData(BaseItem* slot)
+void* pGetItemWeaponData(BaseItem* slot)
 {
     if (slot->weapon) {
         // Put something here
@@ -380,14 +381,14 @@ ItemData* pGetItemWeaponData(BaseItem* slot)
     return NULL; // temporary return value
 }
 
-ItemData pGetItemData(u32 containerDefId)
+// Make sure to free ItemData pointer variable after calling this function.
+void* pGetItemData()
 {
     BaseItem* baseItem = malloc(sizeof(BaseItem));
     if (!baseItem) {
         fprintf_s(stderr, "Failed to allocate memory to BaseItem struct in pGetItemData function!\n");
-        ItemData defaults = { 0 };
 
-        return defaults;
+        return NULL;
     }
 
     u32 durability = 0;
@@ -395,30 +396,42 @@ ItemData pGetItemData(u32 containerDefId)
     while (true) {
         if (IsWeapon(baseItem->itemDefId)) {
             durability = 2000;
+            break;
         } else if (IsArmor(baseItem->itemDefId)) {
             durability = 1000;
+            break;
         } else if (IsHelmet(baseItem->itemDefId)) {
             durability = 100;
+            break;
         }
     }
 
-    ItemData result = {
-        .itemDefinitionId = baseItem->itemDefId,
-        .tintId = 0,
-        .guid = baseItem->itemGuid,
-        .count = baseItem->stackCount,
-        .itemSubData = { .hasSubData = false },
-        .containerGuid = baseItem->containerGuid,
-        .containerDefinitionId = containerDefId,
-        .containerSlotId = baseItem->slotId,
-        .baseDurability = durability,
-        .currentDurability = durability ? baseItem->currentDurability : 0,
-        .maxDurabilityFromDefinition = durability,
-        .unknownBoolean1 = true,
-        .ownerCharacterId = 0x0000000000000001ull,
-        .unknownDword9 = 1,
-        // Initialize weaponData here
-    };
+    ItemData* result = malloc(sizeof(ItemData));
+    if (!result) {
+        fprintf_s(stderr, "Failed to allocate memory to ItemData struct in pGetItemData function!\n");
+        free(baseItem); // Free baseItem because ItemData requires it?
+
+        return NULL;
+    }
+
+    result->itemDefinitionId = baseItem->itemDefId;
+    result->tintId = 0;
+    result->guid = baseItem->itemGuid;
+    result->count = baseItem->stackCount;
+
+    ItemSubData subData = { .hasSubData = false };
+    result->itemSubData = subData;
+
+    result->containerGuid = baseItem->containerGuid;
+    result->containerDefinitionId = baseItem->containerDefId;
+    result->containerSlotId = baseItem->slotId;
+    result->baseDurability = durability;
+    result->currentDurability = durability ? baseItem->currentDurability : 0;
+    result->maxDurabilityFromDefinition = durability;
+    result->unknownBoolean1 = true;
+    result->ownerCharacterId = 0x0000000000000001ull;
+    result->unknownDword9 = 1;
+    // Initialize weaponData here
 
     free(baseItem);
 
