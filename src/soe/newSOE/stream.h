@@ -19,6 +19,9 @@ typedef struct AppData
     u8 *data;
     u32 dataLen;
     bool isFragment;
+    u8 *buffer;
+    u32 bufferTail;
+    u32 bufferLen;
 } AppData;
 
 typedef struct SOEInputStream
@@ -28,8 +31,12 @@ typedef struct SOEInputStream
     AppData *_appData;
     Map _map;
     bool _useEncryption;
+    i32 _sequenceBase;
+    i32 _capacity;
+    u32 _packetLen;
     i32 _lastProcessedSequence;
     Rc4_State rc4;
+    u32 fragmentCount;
     bool hasCpf;
     i32 cpfTotalSize;
     i32 cpfDataSize;

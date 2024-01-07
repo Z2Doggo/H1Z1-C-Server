@@ -100,7 +100,7 @@ static AppData *processFragmentedData(SOEInputStream *inputStream, i32 firstPack
             bool isFirstPacket = fragmentSequence == firstPacketSequence;
 
             inputStream->cpfProcessFragmentSequences++;
-            inputStream->cpfProcessFragmentSequences = realloc(inputStream->cpfProcessFragmentSequences, inputStream->cpfProcessFragmentSequencesLength * sizeof(i32));
+            inputStream->cpfProcessFragmentSequences = malloc(inputStream->cpfProcessFragmentSequencesLength * sizeof(i32));
             (inputStream->cpfProcessFragmentSequences)[inputStream->cpfProcessFragmentSequencesLength - 1] = fragmentSequence;
 
             memcpy(inputStream->cpfDataWithoutHeader, &inputStream->cpfDataSize, isFirstPacket ? DATA_HEADER_LENGTH : 0);
@@ -173,7 +173,7 @@ static void _processData(SOEInputStream *inputStream)
             processSingleData(inputStream, nextFragmentSequence);
         }
 
-        if (inputStream->_appData && inputStream->_appData->dataLen)
+        if (inputStream->_appData->data && inputStream->_appData->dataLen)
         {
             _processAppData(inputStream);
 
@@ -183,7 +183,7 @@ static void _processData(SOEInputStream *inputStream)
     }
 }
 
-void writeInputData(SOEInputStream *inputStream, u8 *data, i32 sequence, bool isFragment)
+void writeInputData(SOEInputStream *inputStream, i32 sequence, bool isFragment)
 {
     if (inputStream->_nextSequence = -1)
     {
@@ -195,7 +195,7 @@ void writeInputData(SOEInputStream *inputStream, u8 *data, i32 sequence, bool is
         printf("[!] Sequence out of order; expected %d, got %d. Throwing away\n", inputStream->_nextSequence, sequence);
     }
 
-    addToMap(&inputStream->_map, inputStream->_map.head, *data, &isFragment);
+    fragmentInsert(inputStream, sequence, inputStream->_appData->data, inputStream->_appData->dataLen, isFragment);
     i32 ack = sequence;
 
     for (i32 i = 1; i < 0xffff; i++)

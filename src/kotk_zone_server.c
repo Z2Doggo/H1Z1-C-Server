@@ -39,6 +39,7 @@
 // WiP SOE Related
 #include "soe/newSOE/stream.h"
 #include "soe/newSOE/stream.c"
+#include "soe/newSOE/fragments.c"
 #include "soe/newSOE/inputStream.c"
 
 #define PACKET_FOLDER "..\\GAME_PACKETS"
