@@ -198,7 +198,7 @@ void writeInputData(SOEInputStream *inputStream, u8 *data, i32 sequence, bool is
     addToMap(&inputStream->_map, inputStream->_map.head->next, *data, &isFragment);
     i32 ack = sequence;
 
-    for (i32 i = 1; i < 0x10000; i++)
+    for (i32 i = 1; i < 0xffff; i++)
     {
         i32 j = (inputStream->_lastAck + i) & 0xffff;
         if (inputStream->_appData[j].data)
