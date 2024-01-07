@@ -80,7 +80,7 @@ static AppData *processFragmentedData(SOEInputStream *inputStream, AppData *appD
 {
     if (!inputStream->hasCpf)
     {
-        addToMap(inputStream->_map, inputStream->_map->head, firstPacketSequence, &inputStream->_appData.dataLen);
+        addToMap(&inputStream->_map, inputStream->_map.head->next, firstPacketSequence, &inputStream->_appData.dataLen);
 
         inputStream->cpfTotalSize = endian_read_u32_big(inputStream->_appData.data);
         inputStream->cpfDataSize = 0;
@@ -109,7 +109,7 @@ static AppData *processFragmentedData(SOEInputStream *inputStream, AppData *appD
 
             if (inputStream->cpfDataSize > inputStream->cpfTotalSize)
             {
-                fprintf(stderr, "Error!\n");
+                fprintf_s(stderr, "Error!\n");
                 return NULL;
             }
 
@@ -117,7 +117,7 @@ static AppData *processFragmentedData(SOEInputStream *inputStream, AppData *appD
             {
                 for (i32 k = 0; k < inputStream->cpfProcessFragmentSequencesLength; k++)
                 {
-                    deleteFromMap(inputStream->_map, inputStream->cpfProcessFragmentSequences[k]);
+                    deleteFromMap(&inputStream->_map, inputStream->cpfProcessFragmentSequences[k]);
                 }
             }
 
@@ -153,14 +153,14 @@ static void _processAppData(SOEInputStream *inputStream, AppData *appData)
             }
         }
 
-        printf("%p", data.data);
+        printf_s("%p", data.data);
     }
 }
 
 static void _processData(SOEInputStream *inputStream, AppData *appData)
 {
     i32 nextFragmentSequence = (inputStream->_lastProcessedSequence + 1) & MaxSequence;
-    getFromMap(inputStream->_map, nextFragmentSequence);
+    getFromMap(&inputStream->_map, nextFragmentSequence);
 
     if (nextFragmentSequence)
     {
@@ -183,6 +183,21 @@ static void _processData(SOEInputStream *inputStream, AppData *appData)
             _processData(inputStream, appData);
         }
     }
+}
+
+void writeInputData(SOEInputStream *inputStream, u8 *data, i32 sequence, bool isFragment)
+{
+    if (inputStream->_nextSequence = -1)
+    {
+        inputStream->_nextSequence = sequence;
+    }
+
+    if (sequence >= inputStream->_nextSequence)
+    {
+        printf("[!] Sequence out of order; expected %d, got %d. Throwing away\n", inputStream->_nextSequence, sequence);
+    }
+
+    addToMap(&inputStream->_map, inputStream->_map.head->next, *data, &isFragment);
 }
 
 void inputStreamConstructor(SOEInputStream *inputStream, u8 *cryptoKey)

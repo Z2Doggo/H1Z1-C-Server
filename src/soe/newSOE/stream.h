@@ -4,7 +4,7 @@
 
 typedef struct Node
 {
-    int key;
+    i32 key;
     void *value;
     struct Node *next;
 } Node;
@@ -16,8 +16,8 @@ typedef struct Map
 
 typedef struct AppData
 {
-    unsigned char *data;
-    unsigned int dataLen;
+    u8 *data;
+    u32 dataLen;
     bool isFragment;
 } AppData;
 
@@ -26,7 +26,7 @@ typedef struct SOEInputStream
     u16 _nextSequence;
     u16 _lastAck;
     AppData _appData;
-    Map *_map;
+    Map _map;
     bool _useEncryption;
     i32 _lastProcessedSequence;
     Rc4_State rc4;

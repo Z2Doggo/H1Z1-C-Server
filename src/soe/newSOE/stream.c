@@ -3,7 +3,7 @@ void initMap(Map *map)
     map->head = NULL;
 }
 
-void addToMap(Map *map, Node *newNode, int key, void *value)
+void addToMap(Map *map, Node *newNode, i32 key, void *value)
 {
     newNode->key = key;
     newNode->value = value;
