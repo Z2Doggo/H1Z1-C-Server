@@ -1,15 +1,5 @@
-#include "stream.h"
-
-u32 readDataLength(u8 *data)
+u32 readDataLength(AppData *appData, u8 *data)
 {
-    AppData *appData = malloc(sizeof(AppData));
-    if (!appData)
-    {
-        fprintf(stderr, "Failed to allocate memory to AppData struct in parseChannelData function!\n");
-
-        return 0;
-    }
-
     appData->data = data;
 
     u32 offset = 0;
@@ -35,25 +25,9 @@ u32 readDataLength(u8 *data)
     return offset;
 }
 
-AppData *parseChannelData(u8 *data)
+AppData *parseChannelData(SOEInputStream *inputStream, AppData *appData, u8 *data)
 {
-    AppData *appData = malloc(sizeof(AppData));
-    if (!appData)
-    {
-        fprintf(stderr, "Failed to allocate memory to AppData struct in parseChannelData function!\n");
-
-        return NULL;
-    }
-
     appData->data = data;
-
-    SOEInputStream *inputStream = malloc(sizeof(SOEInputStream));
-    if (!inputStream)
-    {
-        fprintf(stderr, "Failed to allocate memory to SOEInputStream struct in parseChannelData function!\n");
-
-        return NULL;
-    }
 
     u32 offset = 0;
     u32 chunkLength = data[offset];
@@ -64,7 +38,7 @@ AppData *parseChannelData(u8 *data)
 
         while (offset < appData->dataLen)
         {
-            offset = readDataLength(data + offset);
+            offset = readDataLength(appData, data + offset);
 
             if (inputStream->_useEncryption)
             {
@@ -96,31 +70,17 @@ AppData *parseChannelData(u8 *data)
     return appData;
 }
 
-static AppData *processSingleData(i32 sequence)
+static AppData *processSingleData(SOEInputStream *inputStream, AppData *appData, i32 sequence)
 {
-    SOEInputStream *inputStream = malloc(sizeof(SOEInputStream));
-    if (!inputStream)
-    {
-        fprintf(stderr, "Failed to allocate memory to inputStream struct in processSingleData function!\n");
-        return NULL;
-    }
-
     inputStream->_lastProcessedSequence = sequence;
-    return parseChannelData(inputStream->_appData.data);
+    return parseChannelData(inputStream, appData, inputStream->_appData.data);
 }
 
-static AppData *processFragmentedData(i32 firstPacketSequence)
+static AppData *processFragmentedData(SOEInputStream *inputStream, AppData *appData, i32 firstPacketSequence)
 {
-    SOEInputStream *inputStream = malloc(sizeof(SOEInputStream));
-    if (!inputStream)
-    {
-        fprintf(stderr, "Failed to allocate memory to inputStream struct in processFragmentedData function!\n");
-        return NULL;
-    }
-
     if (!inputStream->hasCpf)
     {
-        addToMap(inputStream->_map, firstPacketSequence, &inputStream->_appData.dataLen);
+        addToMap(inputStream->_map, inputStream->_map->head, firstPacketSequence, &inputStream->_appData.dataLen);
 
         inputStream->cpfTotalSize = endian_read_u32_big(inputStream->_appData.data);
         inputStream->cpfDataSize = 0;
@@ -164,7 +124,7 @@ static AppData *processFragmentedData(i32 firstPacketSequence)
             inputStream->_lastProcessedSequence = fragmentSequence;
             inputStream->hasCpf = false;
 
-            return parseChannelData(inputStream->cpfDataWithoutHeader);
+            return parseChannelData(inputStream, appData, inputStream->cpfDataWithoutHeader);
         }
         else
         {
@@ -175,15 +135,8 @@ static AppData *processFragmentedData(i32 firstPacketSequence)
     return NULL;
 }
 
-static void _processAppData(AppData *appData)
+static void _processAppData(SOEInputStream *inputStream, AppData *appData)
 {
-    SOEInputStream *inputStream = malloc(sizeof(SOEInputStream));
-    if (!inputStream)
-    {
-        fprintf(stderr, "Failed to allocate memory to inputStream struct in processFragmentedData function!\n");
-        exit(EXIT_FAILURE);
-    }
-
     for (i32 i = 0; i < appData->dataLen; i++)
     {
         AppData data = appData[i];
@@ -204,15 +157,8 @@ static void _processAppData(AppData *appData)
     }
 }
 
-static void _processData()
+static void _processData(SOEInputStream *inputStream, AppData *appData)
 {
-    SOEInputStream *inputStream = malloc(sizeof(SOEInputStream));
-    if (!inputStream)
-    {
-        fprintf(stderr, "Failed to allocate memory to inputStream struct in processFragmentedData function!\n");
-        exit(EXIT_FAILURE);
-    }
-
     i32 nextFragmentSequence = (inputStream->_lastProcessedSequence + 1) & MaxSequence;
     getFromMap(inputStream->_map, nextFragmentSequence);
 
@@ -222,19 +168,29 @@ static void _processData()
 
         if (inputStream->_appData.isFragment)
         {
-            processFragmentedData(nextFragmentSequence);
+            processFragmentedData(inputStream, appData, nextFragmentSequence);
         }
         else
         {
-            processSingleData(nextFragmentSequence);
+            processSingleData(inputStream, appData, nextFragmentSequence);
         }
 
         if (appData && appData->dataLen)
         {
-            _processAppData(appData);
+            _processAppData(inputStream, appData);
 
             // for packets received out of order
-            _processData();
+            _processData(inputStream, appData);
         }
     }
+}
+
+void inputStreamConstructor(SOEInputStream *inputStream, u8 *cryptoKey)
+{
+    inputStream->_lastProcessedSequence = -1;
+    inputStream->_useEncryption = false;
+    inputStream->cpfTotalSize = -1;
+    inputStream->cpfDataSize = -1;
+
+    crypt_rc4_transform(&inputStream->rc4, cryptoKey, inputStream->_appData.dataLen);
 }

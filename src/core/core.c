@@ -1,4 +1,5 @@
-typedef struct Timer {
+typedef struct Timer
+{
     HANDLE timer;
     i32 timer_seconds;
 } Timer;
@@ -6,34 +7,37 @@ typedef struct Timer {
 void CALLBACK TimerCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired)
 {
     (void)TimerOrWaitFired;
-    Timer* timer = (Timer*)lpParam;
+    Timer *timer = (Timer *)lpParam;
     (void)timer;
 
     printf_s("Timer expired!\n");
 }
 
-Timer* createTimer(int seconds)
+Timer *createTimer(int seconds)
 {
-    Timer* timer = (Timer*)malloc(sizeof(Timer));
-    if (timer) {
+    Timer *timer = (Timer *)malloc(sizeof(Timer));
+    if (timer)
+    {
         timer->timer_seconds = seconds;
         timer->timer = CreateWaitableTimer(NULL, TRUE, NULL);
     }
     return timer;
 }
 
-void startTimer(Timer* timer)
+void startTimer(Timer *timer)
 {
-    if (timer) {
+    if (timer)
+    {
         LARGE_INTEGER dueTime;
         dueTime.QuadPart = -(timer->timer_seconds * 10000000LL);
         SetWaitableTimer(timer->timer, &dueTime, 0, (PTIMERAPCROUTINE)TimerCallback, timer, FALSE);
     }
 }
 
-void stopTimer(Timer* timer)
+void stopTimer(Timer *timer)
 {
-    if (timer) {
+    if (timer)
+    {
         CancelWaitableTimer(timer->timer);
         free(timer);
     }
