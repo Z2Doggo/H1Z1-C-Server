@@ -32,7 +32,7 @@ AppData *parseChannelData(SOEInputStream *inputStream, u8 *data)
     u32 offset = 0;
     u32 chunkLength = data[offset];
 
-    if (data[0] == 0x0 && data[1] == 0x19)
+    if (data[0] == 0x00 && data[1] == 0x19)
     {
         offset = 2;
 
@@ -80,7 +80,7 @@ static AppData *processFragmentedData(SOEInputStream *inputStream, i32 firstPack
 {
     if (!inputStream->hasCpf)
     {
-        addToMap(&inputStream->_map, inputStream->_map.head->next, firstPacketSequence, &inputStream->_appData->dataLen);
+        addToMap(&inputStream->_map, inputStream->_map.head, firstPacketSequence, &inputStream->_appData->dataLen);
 
         inputStream->cpfTotalSize = endian_read_u32_big(inputStream->_appData->data);
         inputStream->cpfDataSize = 0;
@@ -195,7 +195,7 @@ void writeInputData(SOEInputStream *inputStream, u8 *data, i32 sequence, bool is
         printf("[!] Sequence out of order; expected %d, got %d. Throwing away\n", inputStream->_nextSequence, sequence);
     }
 
-    addToMap(&inputStream->_map, inputStream->_map.head->next, *data, &isFragment);
+    addToMap(&inputStream->_map, inputStream->_map.head, *data, &isFragment);
     i32 ack = sequence;
 
     for (i32 i = 1; i < 0xffff; i++)
