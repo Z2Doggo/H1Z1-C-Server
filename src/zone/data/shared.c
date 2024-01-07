@@ -361,7 +361,7 @@ typedef struct ItemData {
     u32 count;
     ItemSubData itemSubData;
     u64 containerGuid;
-    u32 containerDefinitionId;
+    u32 containerDefinitionId; // added by doggo
     u32 containerSlotId;
     u32 baseDurability;
     u32 currentDurability;

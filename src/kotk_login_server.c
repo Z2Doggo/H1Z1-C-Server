@@ -36,6 +36,9 @@
 #include "soe/packet_queue.h"
 #include "soe/packet_queue.c"
 
+// WiP SOE Related
+#include "soe/newSOE/inputStream.c"
+
 // HACK(rhett):
 u64 global_tick_count = 0;
 
