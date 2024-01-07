@@ -25,7 +25,7 @@ typedef struct SOEInputStream
 {
     u16 _nextSequence;
     u16 _lastAck;
-    AppData _appData;
+    AppData *_appData;
     Map _map;
     bool _useEncryption;
     i32 _lastProcessedSequence;
