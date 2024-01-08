@@ -41,6 +41,7 @@
 #include "soe/newSOE/stream.c"
 #include "soe/newSOE/fragments.c"
 #include "soe/newSOE/inputStream.c"
+#include "soe/newSOE/outputStream.c"
 
 #define PACKET_FOLDER "..\\GAME_PACKETS"
 u64 global_tick_count = 0;

@@ -17,7 +17,7 @@ void fragmentInsert(SOEInputStream *inputStream, i32 sequence, u8 *data, u32 dat
     }
 
     i32 index = sequence - inputStream->_sequenceBase;
-    printf("[***] fragmentInsert: sequence=%d,  data=%p, data_length=%d, is_fragment=%d, index=%d\n", sequence, data, dataLen, isFragment, index);
+    printf_s("[***] fragmentInsert: sequence=%d,  data=%p, data_length=%d, is_fragment=%d, index=%d\n", sequence, data, dataLen, isFragment, index);
 
     ASSERT_MSG(index < inputStream->_capacity, "exceeds pool capacity");
     ASSERT_MSG(dataLen < inputStream->_packetLen, "exceeds packet length");

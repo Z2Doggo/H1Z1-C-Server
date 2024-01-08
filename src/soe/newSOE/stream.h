@@ -22,6 +22,8 @@ typedef struct AppData
     u8 *buffer;
     u32 bufferTail;
     u32 bufferLen;
+    i32 sequence;
+    u32 packetLen;
 } AppData;
 
 typedef struct SOEInputStream
@@ -44,3 +46,20 @@ typedef struct SOEInputStream
     i32 *cpfProcessFragmentSequences;
     i32 cpfProcessFragmentSequencesLength;
 } SOEInputStream;
+
+typedef struct SOEOutputStream
+{
+    Rc4_State rc4;
+    bool _useEncryption;
+    i32 fragmentSize;
+    u16 _last_available_reliable_sequence;
+    u16 _order_sequence;
+    u16 _lastAck;
+    u16 reliableSequence;
+    bool hasPendingEmit;
+    u32 maxSequenceAvailable;
+    i32 sequence;
+    i32 ackPrevious;
+    bool useEncryption;
+    AppData *appData;
+} SOEOutputStream;

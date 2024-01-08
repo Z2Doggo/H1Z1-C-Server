@@ -38,7 +38,7 @@ AppData *parseChannelData(SOEInputStream *inputStream, u8 *data)
 
         while (offset < inputStream->_appData->dataLen)
         {
-            offset = readDataLength(inputStream->_appData, data + offset);
+            offset += readDataLength(inputStream->_appData, data + offset);
 
             if (inputStream->_useEncryption)
             {

@@ -41,6 +41,7 @@
 #include "soe/newSOE/stream.c"
 #include "soe/newSOE/fragments.c"
 #include "soe/newSOE/inputStream.c"
+#include "soe/newSOE/outputStream.c"
 
 // HACK(rhett):
 u64 global_tick_count = 0;
