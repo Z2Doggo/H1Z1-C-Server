@@ -1,21 +1,22 @@
-// C Headers
+// C headers
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <math.h>
 #include <ctype.h>
 #include <string.h>
 #include <time.h>
 
-#define YOTE_USE_ARENA	// Use memory arena
-#define YOTE_USE_STRING // Use strings
-#include "yote.h"
-
+#define YOTE_USE_ARENA			  // Use memory arena
+#define YOTE_USE_STRING			  // Use strings
 #define YOTE_PLATFORM_USE_SOCKETS // Use sockets for server
+
+#include "yote.h"
 #include "yote_platform.h"
 #include "game_server.h"
 
 #define LOCAL_PORT 1115
-#define MAX_FRAGMENTS 0xffff
+#define MAX_FRAGMENTS 12000
 #define MAX_PACKET_LENGTH 512
 #define DATA_HEADER_LENGTH 4
 #define MAX_SESSIONS_COUNT 16
@@ -23,60 +24,46 @@
 // Utilities
 #include "utils/endian.c"
 #include "utils/util.c"
-#include "utils/crypt_rc4.c"
+#include "utils/rc4.c"
 
-// SoE and SoE protocol related
+// SOE Related
 #include "soe/stream.h"
-#include "soe/fragment_pool.c"
-#include "soe/input_stream.c"
-#include "soe/output_stream.c"
-#include "soe/core_protocol.h"
-#include "soe/connection.h"
+#include "soe/fragments.c"
+#include "soe/inputStream.c"
+#include "soe/outputStream.c"
+#include "soe/coreProtocol.h"
 #include "soe/session.h"
-#include "soe/packet_queue.h"
-#include "soe/packet_queue.c"
 
-// WiP SOE Related
-#include "soe/newSOE/stream.h"
-#include "soe/newSOE/stream.c"
-#include "soe/newSOE/fragments.c"
-#include "soe/newSOE/inputStream.c"
-#include "soe/newSOE/outputStream.c"
-
-// HACK(rhett):
-u64 global_tick_count = 0;
-
-typedef struct Stream_Function_Table
+typedef struct StreamFunctionTable
 {
-	input_stream_callback_ack *login_input_ack;
-	input_stream_callback_data *login_input_data;
-	output_stream_callback_data *login_output_data;
-	input_stream_callback_data *ping_input_data;
-} Stream_Function_Table;
+	inputStreamCallbackAck *gameInputAck;
+	inputStreamCallbackData *gameInputData;
+	outputStreamCallbackData *gameOutputData;
+	inputStreamCallbackData *pingInputData;
+} StreamFunctionTable;
 
-struct App_State
+struct AppState
 {
-	Stream_Function_Table *stream_function_table;
-	f32 *tick_ms;
-	f32 *work_ms;
-	u64 *tick_count;
-	Key_States *key_states;
-	Arena arena_total;
-	Platform_Api *platform_api;
-	Arena arena_per_tick;
-	Platform_Socket socket;
-	u8 rc4_key_decoded[256];
-	i32 rc4_key_decoded_length;
-	Connection_Args connection_args;
-	i32 sessions_capacity;
-	Session_State sessions[MAX_SESSIONS_COUNT];
+	StreamFunctionTable *streamFunctionTable;
+	f32 *tickMs;
+	f32 *workMs;
+	u64 *tickCount;
+	Arena arenaTotal;
+	PlatformApi *api;
+	Arena arenaPerTick;
+	PlatformSocket socket;
+	u8 rc4Decoded[256];
+	u32 rc4DecodedLen;
+	ConnectionArgs args;
+	i32 sessionCapacity;
+	SessionState sessions[MAX_SESSIONS_COUNT];
 };
 
-INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
+InputStreamCallbackData(pingInputStreamData);
 
 #undef MESSAGE_NAMESPACE
 #define MESSAGE_NAMESPACE "Core"
-#include "soe/core_protocol.c"
+#include "soe/coreProtocol.c"
 #include "core/core.c"
 #include "core/classes/base.h"
 #include "core/entities/core_base_full_character.h"
@@ -87,236 +74,206 @@ INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data);
 
 #define MESSAGE_NAMESPACE "Login"
 #include "../schema/output/kotk_login_udp_11.c" // Packet structures
-#include "login/login_udp_11.c"					// Sending login packets structures' data
+#include "login/loginUdp_11.c"
 #undef MESSAGE_NAMESPACE
 
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT // Default
 
-INPUT_STREAM_CALLBACK_ACK(on_input_stream_ack)
+InputStreamCallbackAck(inputCallbackAck)
 {
-	Session_State *session_state = session;
-	session_state->ack_next = ack;
+	session->nextAck = ack;
 }
 
-INPUT_STREAM_CALLBACK_DATA(on_input_stream_data)
+InputStreamCallbackData(inputCallbackData)
 {
-	login_packet_handle(server, session, data, data_length);
+	LoginPacketHandle(app, session, data, dataLen);
 }
 
-// TODO(rhett): remove this later
-INPUT_STREAM_CALLBACK_DATA(on_ping_input_stream_data)
+InputStreamCallbackData(pingInputStreamData)
 {
-	UNUSED(server);
+	UNUSED(app);
 	UNUSED(session);
 	UNUSED(data);
-	UNUSED(data_length);
+	UNUSED(dataLen);
 };
 
-OUTPUT_STREAM_CALLBACK_DATA(on_output_stream_data)
+OutputStreamCallbackData(outputCallBackData)
 {
-	App_State *app_state = server;
-	Session_State *session_state = session;
+	AppState *appState = app;
+	SessionState *sessionState = session;
 
 	Data packet =
 		{
 			.sequence = (u16)sequence,
 			.data = data,
-			.data_length = data_length,
+			.dataLen = dataLen,
 		};
 
-	if (!is_fragment)
+	if (!isFragment)
 	{
-		core_packet_send(app_state->socket, app_state->platform_api, session_state->address.ip, session_state->address.port, &session_state->connection_args, Core_Packet_Kind_Data, &packet);
+		CorePacketSend(appState->socket, appState->api, sessionState->address.ip, sessionState->address.port, &sessionState->args, CoreKindData, &packet);
 	}
 	else
 	{
-		core_packet_send(app_state->socket, app_state->platform_api, session_state->address.ip, session_state->address.port, &session_state->connection_args, Core_Packet_Kind_Data_Fragment, &packet);
+		CorePacketSend(appState->socket, appState->api, sessionState->address.ip, sessionState->address.port, &sessionState->args, CoreKindDataFragment, &packet);
 	}
 }
 
-__declspec(dllexport) APP_TICK(server_tick)
+__declspec(dllexport) AppTick(serverTick)
 {
-	App_State *app_state = app_memory->app_state;
-	if (!app_state)
+	AppState *app = appMemory->app;
+	if (!app)
 	{
-		app_state = app_memory->app_state = arena_bootstrap_push_struct(app_memory->backing_memory.data,
-																		app_memory->backing_memory.size,
-																		"Total",
-																		App_State,
-																		arena_total);
-		app_state->platform_api = &app_memory->platform_api;
-		app_state->tick_ms = &app_memory->tick_ms;
-		app_state->work_ms = &app_memory->work_ms;
-		app_state->tick_count = &app_memory->tick_count;
-		app_state->key_states = &app_memory->key_states;
+		app = appMemory->app = arena_bootstrap_push_struct(appMemory->backingMemory.data,
+														   appMemory->backingMemory.size,
+														   "Total",
+														   AppState,
+														   arenaTotal);
+		app->api = &appMemory->api;
+		app->tickMs = &appMemory->tickMs;
+		app->workMs = &appMemory->workMs;
+		app->tickCount = &appMemory->tickCount;
 
-		Buffer per_tick_backing_memory =
+		Buffer perTickBackingMemory =
 			{
 				.size = MB(10),
-				.data = arena_push_size(&app_state->arena_total,
-										per_tick_backing_memory.size),
+				.data = arena_push_size(&app->arenaTotal, perTickBackingMemory.size),
 			};
 
-		app_state->stream_function_table = arena_push_struct(&app_state->arena_total, Stream_Function_Table);
-		app_state->stream_function_table->login_input_ack = on_input_stream_ack;
-		app_state->stream_function_table->login_input_data = on_input_stream_data;
-		app_state->stream_function_table->login_output_data = on_output_stream_data;
-		app_state->stream_function_table->ping_input_data = on_ping_input_stream_data;
+		app->streamFunctionTable = arena_push_struct(&app->arenaTotal, StreamFunctionTable);
+		app->streamFunctionTable->gameInputAck = inputCallbackAck;
+		app->streamFunctionTable->gameInputData = inputCallbackData;
+		app->streamFunctionTable->gameOutputData = outputCallBackData;
+		app->streamFunctionTable->pingInputData = pingInputStreamData;
 
-		app_state->arena_per_tick =
-			(Arena){
-				.buffer = per_tick_backing_memory.data,
-				.capacity = per_tick_backing_memory.size,
-				.name = "Tick",
-			};
+		app->arenaPerTick = (Arena){
+			.buffer = perTickBackingMemory.data,
+			.capacity = perTickBackingMemory.size,
+			.name = "Tick",
+		};
 
-		u8 rc4_key_encoded[] = "F70IaxuU8C/w7FPXY1ibXw==";
-		app_state->rc4_key_decoded_length = util_base64_decode((u8 *)rc4_key_encoded,
-															   sizeof(rc4_key_encoded) - 1,
-															   app_state->rc4_key_decoded);
+		u8 rc4KeyEncoded[] = "F70IaxuU8C/w7FPXY1ibXw==";
+		app->rc4DecodedLen = util_base64_decode((u8 *)rc4KeyEncoded, sizeof(rc4KeyEncoded) - 1, app->rc4Decoded);
 
-		app_state->connection_args.udp_length = MAX_PACKET_LENGTH;
-		app_state->connection_args.should_dump_core = TRUE;
-		app_state->connection_args.should_dump_login = TRUE;
-		app_state->connection_args.should_dump_tunnel = TRUE;
-		app_state->connection_args.should_dump_gateway = TRUE;
-		app_state->connection_args.should_dump_zone = TRUE;
+		app->args.udpLen = MAX_PACKET_LENGTH;
+		app->args.dumpCore = true;
+		app->args.dumpLogin = true;
+		app->args.dumpTunnel = true;
+		app->args.dumpGateway = true;
+		app->args.dumpZone = true;
 
-		app_state->sessions_capacity = MAX_SESSIONS_COUNT;
-		app_state->socket = app_state->platform_api->socket_udp_create_and_bind(LOCAL_PORT);
-		printf(MESSAGE_CONCAT_INFO("Login server socket bound to port " STRINGIFY(LOCAL_PORT) "\n\n"));
-		app_state->platform_api->folder_create("packets");
+		app->sessionCapacity = MAX_SESSIONS_COUNT;
+		app->socket = app->api->socket_udp_create_and_bind(LOCAL_PORT);
+
+		printf(MESSAGE_CONCAT_INFO("Game server socket bound to port " STRINGIFY(LOCAL_PORT) "\n\n"));
+		app->api->folder_create("packets");
 	}
 
-	global_tick_count = *app_state->tick_count;
-	u8 incoming_buffer[MAX_PACKET_LENGTH] = {0};
-	u32 from_ip;
-	u16 from_port;
+	u8 incomingBuffer[MAX_PACKET_LENGTH] = {0};
 
-	i32 receive_result = app_state->platform_api->receive_from(app_state->socket,
-															   incoming_buffer,
-															   MAX_PACKET_LENGTH,
-															   &from_ip,
-															   &from_port);
-	if (receive_result)
+	u32 fromIp;
+	u16 fromPort;
+
+	u32 receiveResult = app->api->receive_from(app->socket, incomingBuffer, MAX_PACKET_LENGTH, &fromIp, &fromPort);
+
+	if (receiveResult)
 	{
 		printf("\n\nPacket Tick Begin ============================================================\\\\\n");
 
-		Session_Address incoming_session_address =
+		SessionAddress incomingAddress =
 			{
-				.ip = from_ip,
-				.port = from_port,
+				.ip = fromIp,
+				.port = fromPort,
 			};
 
-		// TODO(rhett): will need cleaned up
-		i32 first_free_session = -1;
-		i32 known_session = -1;
-		for (i32 i = 0; i < app_state->sessions_capacity; i++)
+		i32 firstFreeSession = -1;
+		i32 knownSession = -1;
+
+		for (i32 i = 0; i < app->sessionCapacity; i++)
 		{
-			if (first_free_session == -1 && !app_state->sessions[i].address.full)
+			if (firstFreeSession == -1 && !app->sessions[i].address.full)
 			{
-				first_free_session = i;
+				firstFreeSession = i;
 			}
 
-			if (known_session == -1 && incoming_session_address.full == app_state->sessions[i].address.full)
+			if (knownSession == -1 && incomingAddress.full == app->sessions[i].address.full)
 			{
-				known_session = i;
+				knownSession = i;
 			}
 
-			if (first_free_session != -1 && known_session != -1)
+			if (firstFreeSession != -1 && knownSession != -1)
 			{
 				break;
 			}
 		}
 
-		if (core_packet_get_kind(incoming_buffer, receive_result) == Core_Packet_Kind_Session_Request)
+		if (CorePacketGetKind(incomingBuffer, receiveResult) == CoreKindSessionRequest)
 		{
-			if (known_session != -1)
+			if (knownSession != -1)
 			{
 				printf(MESSAGE_CONCAT_INFO("Known client %u.%u.%u.%u:%u re-sent SessionRequest\n"),
-					   (from_ip & 0xff000000) >> 24,
-					   (from_ip & 0x00ff0000) >> 16,
-					   (from_ip & 0x0000ff00) >> 8,
-					   (from_ip & 0x000000ff),
-					   from_port);
+					   (fromIp & 0xff000000) >> 24,
+					   (fromIp & 0x00ff0000) >> 16,
+					   (fromIp & 0x0000ff00) >> 8,
+					   (fromIp & 0x000000ff),
+					   fromPort);
 			}
 			else
 			{
 				printf(MESSAGE_CONCAT_INFO("Unknown client %u.%u.%u.%u:%u sent SessionRequest. Beginning session\n"),
-					   (from_ip & 0xff000000) >> 24,
-					   (from_ip & 0x00ff0000) >> 16,
-					   (from_ip & 0x0000ff00) >> 8,
-					   (from_ip & 0x000000ff),
-					   from_port);
+					   (fromIp & 0xff000000) >> 24,
+					   (fromIp & 0x00ff0000) >> 16,
+					   (fromIp & 0x0000ff00) >> 8,
+					   (fromIp & 0x000000ff),
+					   fromPort);
 
-				if (first_free_session == -1)
+				if (firstFreeSession == -1)
 				{
 					printf(MESSAGE_CONCAT_WARN("No free sessions avaliable\n"));
 				}
 				else
 				{
-					known_session = first_free_session;
-					app_state->sessions[first_free_session].address.full = incoming_session_address.full;
-					app_state->sessions[first_free_session].ack_next = -1;
-					app_state->sessions[first_free_session].ack_previous = -1;
+					knownSession = firstFreeSession;
 
-					base_memory_copy((void *)&app_state->sessions[first_free_session].connection_args,
-									 (void *)&app_state->connection_args,
-									 sizeof(app_state->connection_args));
+					app->sessions[firstFreeSession].address.full = incomingAddress.full;
+					app->sessions[firstFreeSession].nextAck = -1;
+					app->sessions[firstFreeSession].previousAck = -1;
 
-					// TODO(rhett): These fragment pools will leak memory. this whole system needs refactored
-					app_state->sessions[first_free_session].input_fragment_pool = fragment_pool_create(MAX_FRAGMENTS,
-																									   MAX_PACKET_LENGTH,
-																									   &app_state->arena_total);
-					app_state->sessions[first_free_session].output_fragment_pool = fragment_pool_create(MAX_FRAGMENTS,
-																										MAX_PACKET_LENGTH - DATA_HEADER_LENGTH,
-																										&app_state->arena_total);
-					app_state->sessions[first_free_session].input_stream = input_stream_init(&app_state->sessions[first_free_session].input_fragment_pool,
-																							 app_state->rc4_key_decoded,
-																							 app_state->rc4_key_decoded_length,
-																							 FALSE);
-					app_state->sessions[first_free_session].output_stream = output_stream_init(&app_state->sessions[first_free_session].output_fragment_pool,
-																							   app_state->rc4_key_decoded,
-																							   app_state->rc4_key_decoded_length,
-																							   FALSE);
-					app_state->sessions[first_free_session].input_stream.ack_callback_ptr = &app_state->stream_function_table->login_input_ack;
-					app_state->sessions[first_free_session].input_stream.data_callback_ptr = &app_state->stream_function_table->login_input_data;
-					app_state->sessions[first_free_session].output_stream.data_callback_ptr = &app_state->stream_function_table->login_output_data;
+					memcpy(&app->sessions[firstFreeSession].args, &app->args, sizeof(app->args));
+
+					app->sessions[firstFreeSession].inputPool = FragmentCreate(MAX_FRAGMENTS, MAX_PACKET_LENGTH, &app->arenaTotal);
+					app->sessions[firstFreeSession].outputPool = FragmentCreate(MAX_FRAGMENTS, MAX_PACKET_LENGTH, &app->arenaTotal);
+
+					app->sessions[firstFreeSession].inputStream = InputStreamInit(&app->sessions[firstFreeSession].inputPool, app->rc4Decoded, app->rc4DecodedLen, false);
+					app->sessions[firstFreeSession].outputStream = OutputStreamInit(&app->sessions[firstFreeSession].outputPool, app->rc4Decoded, app->rc4DecodedLen, false);
+
+					app->sessions[firstFreeSession].inputStream.ackCallbackPtr = &app->streamFunctionTable->gameInputAck;
+					app->sessions[firstFreeSession].inputStream.dataCallbackPtr = &app->streamFunctionTable->gameInputData;
+					app->sessions[firstFreeSession].outputStream.dataCallbackPtr = &app->streamFunctionTable->gameOutputData;
 				}
 			}
 		}
 
-		if (known_session != -1)
+		if (knownSession != -1)
 		{
-			core_packet_handle(app_state,
-							   app_state->platform_api,
-							   &app_state->sessions[known_session],
-							   incoming_buffer,
-							   receive_result,
-							   FALSE);
+			CorePacketHandle(app, &app->sessions[knownSession], app->api, incomingBuffer, receiveResult, false);
 
-			if (app_state->sessions[known_session].ack_previous != app_state->sessions[known_session].ack_next)
+			if (app->sessions[knownSession].previousAck != app->sessions[knownSession].nextAck)
 			{
 				printf(MESSAGE_CONCAT_INFO("Syncing ack...\n"));
-				app_state->sessions[known_session].ack_previous = app_state->sessions[known_session].ack_next;
+				app->sessions[knownSession].previousAck = app->sessions[knownSession].nextAck;
 
 				Ack ack =
 					{
-						.sequence = (u16)app_state->sessions[known_session].ack_next};
+						.sequence = (u16)app->sessions[knownSession].nextAck,
+					};
 
-				core_packet_send(app_state->socket,
-								 app_state->platform_api,
-								 app_state->sessions[known_session].address.ip,
-								 app_state->sessions[known_session].address.port,
-								 &app_state->sessions[known_session].connection_args,
-								 Core_Packet_Kind_Ack,
-								 &ack);
+				CorePacketSend(app->socket, app->api, app->sessions[knownSession].address.ip, app->sessions[knownSession].address.port, &app->sessions[knownSession].args, CoreKindAck, &ack);
 			}
 		}
 
 		printf("Packet Tick End ==============================================================//\n");
 	}
 
-	// TODO(rhett): maybe double buffer
-	arena_reset(&app_state->arena_per_tick);
+	arena_reset(&app->arenaPerTick);
 }

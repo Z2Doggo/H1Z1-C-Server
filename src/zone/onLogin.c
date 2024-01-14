@@ -1,16 +1,16 @@
-void onZoneLogin(App_State *app, Session_State *session)
+void OnLogin(AppState *app, SessionState *session)
 {
 	Zone_Packet_InitializationParameters init_params =
 		{
-			.environment_length = 9,
 			.environment = "LIVE_KOTK",
+			.environment_length = STRLEN("LIVE_KOTK"),
 		};
-	zone_packet_send(app, session, &app->arena_per_tick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
+	ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_InitializationParameters, &init_params);
 
 	Zone_Packet_SendZoneDetails send_zone_details =
 		{
-			.zone_name_length = 9,
 			.zone_name = "LoginZone",
+			.zone_name_length = STRLEN("LoginZone"),
 			.zone_type = 4,
 			.unk_bool = false,
 
@@ -36,7 +36,7 @@ void onZoneLogin(App_State *app, Session_State *session)
 			.rainMinStrength = 0,
 			.rainRampUpTimeSeconds = 1,
 			.cloudFile_length = 16,
-			.cloudFile = "sky_Z_clouds.dds",
+			.cloudFile = "sky_Z_Clouds.xml",
 			.stratusCloudTiling = 0.2f,
 			.stratusCloudScrollU = -0.002f,
 			.stratusCloudScrollV = 0,
@@ -59,7 +59,7 @@ void onZoneLogin(App_State *app, Session_State *session)
 			.unk_bool3 = false,
 			.unk_bool4 = false,
 		};
-	zone_packet_send(app, session, &app->arena_per_tick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
+	ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_SendZoneDetails, &send_zone_details);
 
 	Zone_Packet_ClientGameSettings game_settings =
 		{
@@ -71,7 +71,7 @@ void onZoneLogin(App_State *app, Session_State *session)
 			.unk_float2 = 15.,
 			.damage_multiplier = 11.,
 		};
-	zone_packet_send(app, session, &app->arena_per_tick, KB(10), Zone_Packet_Kind_ClientGameSettings, &game_settings);
+	ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_ClientGameSettings, &game_settings);
 
 	Zone_Packet_UpdateWeatherData updt_weather_data =
 		{
@@ -97,7 +97,7 @@ void onZoneLogin(App_State *app, Session_State *session)
 			.rainMinStrength = 0,
 			.rainRampUpTimeSeconds = 0,
 			.cloudFile_length = 16,
-			.cloudFile = "sky_Z_clouds.dds",
+			.cloudFile = "sky_Z_Clouds.xml",
 			.stratusCloudTiling = 0.2f,
 			.stratusCloudScrollU = -0.002f,
 			.stratusCloudScrollV = 0,
@@ -111,7 +111,7 @@ void onZoneLogin(App_State *app, Session_State *session)
 			.cloudSilverLiningBrightness = 0.5f,
 			.cloudShadows = 0.2f,
 		};
-	zone_packet_send(app, session, &app->arena_per_tick, KB(10), Zone_Packet_Kind_UpdateWeatherData, &updt_weather_data);
+	ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_UpdateWeatherData, &updt_weather_data);
 
 	Zone_Packet_ReferenceDataWeaponDefinitions weapon_defs =
 		{
@@ -474,8 +474,7 @@ void onZoneLogin(App_State *app, Session_State *session)
 						},
 				},
 		};
-	zone_packet_send(app, session, &app->arena_per_tick, KB(40), Zone_Packet_Kind_ReferenceDataWeaponDefinitions, &weapon_defs);
+	ZonePacketSend(app, session, &app->arenaPerTick, KB(40), Zone_Packet_Kind_ReferenceDataWeaponDefinitions, &weapon_defs);
 
-	loadCharacterData(app, session);
-	// pGetLightWeight(app, session);
+	SendSelfToClient(app, session);
 }

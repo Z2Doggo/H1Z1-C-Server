@@ -1,15 +1,17 @@
-typedef struct GridCell {
+typedef struct GridCell
+{
     f32 position[4];
-    BaseEntity* objects[KB(10)]; // keep like this until something breaks :P
+    BaseEntity *objects[KB(10)]; // keep like this until something breaks :P
     i32 width;
     i32 height;
 } GridCell;
 
-GridCell* GridConstruct(f32 x, f32 y, i32 width, i32 height)
+GridCell *GridConstruct(f32 x, f32 y, i32 width, i32 height)
 {
-    GridCell* gridcell = malloc(sizeof(GridCell));
-    if (!gridcell) {
-        fprintf_s(stderr, "Failed to allocate memory to GridCell struct in GridConstruct function!\n");
+    GridCell *gridcell = malloc(sizeof(GridCell));
+    if (!gridcell)
+    {
+        fprintf(stderr, "Failed to allocate memory to GridCell struct in GridConstruct function!\n");
 
         return NULL;
     }

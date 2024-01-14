@@ -1,4 +1,5 @@
-typedef enum Items {
+typedef enum Items
+{
     // #region WEAPONS
     WEAPON_AR15 = 10,
     WEAPON_AK47 = 2229,
@@ -244,9 +245,9 @@ typedef enum Items {
     BACKPACK_MILITARY_TAN = 2124,
     BACKPACK_BLUE_ORANGE = 2038,
     HELMET_MOTORCYCLE = 2170, // TODO = expand with other default helmet colors
-    HAT_CAP = 12, // TODO = expand with other cap colors
-    SHIRT_DEFAULT = 2088, // TODO = expand with other default shirts
-    PANTS_DEFAULT = 2177, // TODO = expand with other default pants
+    HAT_CAP = 12,             // TODO = expand with other cap colors
+    SHIRT_DEFAULT = 2088,     // TODO = expand with other default shirts
+    PANTS_DEFAULT = 2177,     // TODO = expand with other default pants
     SHIRT_SCRUBS_BLUE = 2553,
     PANTS_SCRUBS_BLUE = 2557,
     SURGEON_MASK_AQUA = 2569,
@@ -446,16 +447,18 @@ typedef enum Items {
     DOOMED_PUFFY_JACKET = 3977
 } Items;
 
-typedef struct LoadoutKitEntry {
+typedef struct LoadoutKitEntry
+{
     Items item;
     u32 count;
 } LoadoutKitEntry;
 
-LoadoutKitEntry* InitializeCharacterDefaultLoadout()
+LoadoutKitEntry *InitializeCharacterDefaultLoadout()
 {
-    LoadoutKitEntry* kitEntry = malloc(sizeof(LoadoutKitEntry));
-    if (!kitEntry) {
-        fprintf_s(stderr, "Failed to allocate memory to LoadoutKitEntry struct in InitializeCharacterDefaultLoadout function!\n");
+    LoadoutKitEntry *kitEntry = malloc(sizeof(LoadoutKitEntry));
+    if (!kitEntry)
+    {
+        fprintf(stderr, "Failed to allocate memory to LoadoutKitEntry struct in InitializeCharacterDefaultLoadout function!\n");
 
         return NULL;
     }
@@ -474,11 +477,12 @@ LoadoutKitEntry* InitializeCharacterDefaultLoadout()
     return kitEntry;
 }
 
-LoadoutKitEntry* CharacterDefaultLoadout()
+LoadoutKitEntry *CharacterDefaultLoadout()
 {
-    LoadoutKitEntry* kitEntry = malloc(sizeof(LoadoutKitEntry));
-    if (!kitEntry) {
-        fprintf_s(stderr, "Failed to allocate memory to LoadoutKitEntry struct in CharacterDefaultLoadout function!\n");
+    LoadoutKitEntry *kitEntry = malloc(sizeof(LoadoutKitEntry));
+    if (!kitEntry)
+    {
+        fprintf(stderr, "Failed to allocate memory to LoadoutKitEntry struct in CharacterDefaultLoadout function!\n");
 
         return NULL;
     }
@@ -497,11 +501,12 @@ LoadoutKitEntry* CharacterDefaultLoadout()
     return kitEntry;
 }
 
-LoadoutKitEntry* CharacterKitLoadout()
+LoadoutKitEntry *CharacterKitLoadout()
 {
-    LoadoutKitEntry* kitEntry = malloc(sizeof(LoadoutKitEntry));
-    if (!kitEntry) {
-        fprintf_s(stderr, "Failed to allocate memory to LoadoutKitEntry struct in CharacterKitLoadout function!\n");
+    LoadoutKitEntry *kitEntry = malloc(sizeof(LoadoutKitEntry));
+    if (!kitEntry)
+    {
+        fprintf(stderr, "Failed to allocate memory to LoadoutKitEntry struct in CharacterKitLoadout function!\n");
 
         return NULL;
     }
@@ -527,11 +532,12 @@ LoadoutKitEntry* CharacterKitLoadout()
     return kitEntry;
 }
 
-LoadoutKitEntry* CharacterSkinsLoadout()
+LoadoutKitEntry *CharacterSkinsLoadout()
 {
-    LoadoutKitEntry* kitEntry = malloc(sizeof(LoadoutKitEntry));
-    if (!kitEntry) {
-        fprintf_s(stderr, "Failed to allocate memory to LoadoutKitEntry struct in CharacterSkinsLoadout function!\n");
+    LoadoutKitEntry *kitEntry = malloc(sizeof(LoadoutKitEntry));
+    if (!kitEntry)
+    {
+        fprintf(stderr, "Failed to allocate memory to LoadoutKitEntry struct in CharacterSkinsLoadout function!\n");
 
         return NULL;
     }
@@ -599,11 +605,12 @@ LoadoutKitEntry* CharacterSkinsLoadout()
     return kitEntry;
 }
 
-LoadoutKitEntry* CharacterVehicleKit()
+LoadoutKitEntry *CharacterVehicleKit()
 {
-    LoadoutKitEntry* kitEntry = malloc(sizeof(LoadoutKitEntry));
-    if (!kitEntry) {
-        fprintf_s(stderr, "Failed to allocate memory to LoadoutKitEntry struct in CharacterVehicleKit function!\n");
+    LoadoutKitEntry *kitEntry = malloc(sizeof(LoadoutKitEntry));
+    if (!kitEntry)
+    {
+        fprintf(stderr, "Failed to allocate memory to LoadoutKitEntry struct in CharacterVehicleKit function!\n");
 
         return NULL;
     }

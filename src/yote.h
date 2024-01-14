@@ -1,23 +1,3 @@
-// TODO(rhett): actually probably don't need this
-// TODO(rhett): or maybe I do?
-// YOTE_IMPLEMENTATION
-
-// YOTE_SLOW
-// YOTE_INTERNAL
-
-// YOTE_USE_ARENA
-// YOTE_USE_STRING
-
-// TODO(rhett): maybe x86 xor x64
-// YOTE_NO_X64 ??
-
-// TODO(rhett): Sort out standard library dependence
-// TODO(rhett): size is count of bytes. length is count of contiguous elements?
-
-//====================================================================================================
-// Base - Required by all lower layers. Includes other 'Base' layers
-//====================================================================================================
-
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -35,7 +15,7 @@ typedef uint64_t u64;
 typedef uintptr_t uptr;
 typedef size_t usize;
 
-typedef i8 b8;
+typedef bool b8;
 typedef i16 b16;
 typedef i32 b32;
 typedef i64 b64;
@@ -43,6 +23,8 @@ typedef i64 b64;
 typedef unsigned char uchar;
 typedef float f32;
 typedef double f64;
+
+#define STRLEN(s) ((sizeof(s) / sizeof(s[0])) - 1)
 
 #if defined(YOTE_INTERNAL)
 // NOTE(rhett): removing static linkage to play along with superluminal
@@ -57,13 +39,8 @@ typedef double f64;
 #define local_persist static
 #define global static
 
-// TODO(rhett): windows.h will probably override this. think about it
-
 #define KB(n) ((n) * 1024)
 #define MB(n) (KB(n) * 1024)
-// TODO(rhett): integral promotion may become an issue
-#define GB(n) (MB(n) * (u64)1024)
-#define TB(n) (GB(n) * (u64)1024)
 
 #define MIN(a, b) (a < b ? a : b)
 #define MAX(a, b) (a > b ? a : b)
@@ -119,11 +96,6 @@ typedef double f64;
 		to_do;                                \
 	}
 
-// TODO(rhett): solidify distinction between args and params
-
-// NOTE(rhett): https://stackoverflow.com/a/34182426
-// TODO(rhett): Do we need STRIP_PARAMS around the UNPACK_PARAMS?
-// #define STRIP_PARENS(X)     X
 #define UNPACK_PARAMS(...) __VA_ARGS__
 #define PASS_PARAMS(X) UNPACK_PARAMS X
 
@@ -135,37 +107,6 @@ typedef double f64;
 	} name##_params;                            \
 	return_type(name)(name##_params params)
 #define PARAMS_BIND(name, defaults, ...) name((name##_params){defaults, ._ = 0, __VA_ARGS__})
-
-// #define foo(...) PARAMS_BIND(foo, PASS_PARAMS((.a=1, .b=2, .c=3, .d=4)), __VA_ARGS__)
-// PARAMS_DECLARE(foo, int a; int b; int c; int d, void)
-//{
-// printf("%d %d %d %d\n", params.a, params.b, params.c, params.d);
-//}
-
-#if 0
-// TODO(rhett): empty field at start to allow no params?
-#define PARAMS_DECLARE(return_type, name, ...) \
-	typedef struct                             \
-	{                                          \
-		u32 unused;                            \
-		__VA_ARGS__;                           \
-	} name##_params;                           \
-	return_type name##_internal(name##_params params)
-#define PARAMS_BIND(name, ...) name##_internal((name##_params){0, __VA_ARGS__})
-#define PARAMS_DEFAULT(name, value) name = params.name ? params.name : (value)
-#endif
-
-// #define test_func(...) PARAMS_BIND(test_func, __VA_ARGS__)
-// PARAMS_DECLARE(void, test_func, u32 a0; f32 a1;)
-//{
-// u32 PARAMS_DEFAULT(a0, 123);
-// f32 PARAMS_DEFAULT(a1, 321.0f);
-//
-// EVAL_PRINT_U32(a0);
-// EVAL_PRINT_F32(a1);
-//
-// DEBUG_BREAK;
-//}
 
 STATIC_ASSERT(SIZE_OF(u8) == 1);
 STATIC_ASSERT(SIZE_OF(i8) == 1);
@@ -245,8 +186,6 @@ uptr base_align_forward(uptr ptr, isize align)
 
 #if defined(YOTE_USE_ARENA)
 
-// TODO(rhett): Re-write debug/code
-// TODO(rhett): is this a fine default?
 #define ARENA_ALIGN_DEFAULT (sizeof(void *) * 2)
 #define ARENA_DEFAULT_PARAMS PASS_PARAMS((.should_clear = true, .alignment = ARENA_ALIGN_DEFAULT))
 
@@ -274,20 +213,13 @@ struct Arena_Temp
 #define arena_push_size(...) PARAMS_BIND(arena_push_size, ARENA_DEFAULT_PARAMS, __VA_ARGS__)
 PARAMS_DECLARE(void *, arena_push_size, Arena *arena; isize size; b32 should_clear; isize alignment)
 {
-	// TODO(rhett): think about if I can simplify this. probably not
-	// Arena* arena = params.arena;
-	// isize size = params.size;
 	ASSERT(params.arena);
 	ASSERT(params.size);
-	// NOTE(rhett): default must be false since false is a valid input
-	// b32 PARAMS_DEFAULT(should_skip_clear, false);
-	// isize PARAMS_DEFAULT(alignment, ARENA_ALIGN_DEFAULT);
 
 	uptr aligned_ptr = base_align_forward((uptr)params.arena->buffer + params.arena->tail_offset, params.alignment);
 	isize padding = 0;
-	padding = aligned_ptr - ((uptr)params.arena->buffer + params.arena->tail_offset);
 
-	// TODO(rhett): Assert for now. we should be able to recover from this later I think
+	padding = aligned_ptr - ((uptr)params.arena->buffer + params.arena->tail_offset);
 	ASSERT_MSG((params.size + padding) < params.arena->capacity, "Allocation excedes arena capacity");
 
 	if (params.should_clear)
@@ -302,7 +234,6 @@ PARAMS_DECLARE(void *, arena_push_size, Arena *arena; isize size; b32 should_cle
 	return (void *)aligned_ptr;
 }
 
-// TODO(rhett): preeeeeeeeeetty sure this will work right
 #define arena_push_struct(arena, type, ...) (type *)arena_push_size(arena, SIZE_OF(type), __VA_ARGS__)
 #define arena_push_array(arena, type, count, ...) (type *)arena_push_size(arena, SIZE_OF(type) * count, __VA_ARGS__)
 #define arena_bootstrap_push_struct(buffer, capacity, name, type, member, ...) arena_bootstrap_push_size(buffer, capacity, name, SIZE_OF(type), offsetof(type, member), __VA_ARGS__)
@@ -343,17 +274,16 @@ PARAMS_DECLARE(Buffer, arena_push_copy_ztstring_as_string, Arena *arena; void *s
 	ASSERT(params.arena);
 	ASSERT(params.source);
 
-	// NOTE(rhett): keeping zero-termination for functions that expect that
 	Buffer result =
 		{
 			.size = base_ztstring_size(params.source),
 			.data = arena_push_size(params.arena, result.size + 1, params.should_clear, params.alignment),
 		};
 	base_memory_copy(result.data, params.source, result.size);
+
 	return result;
 }
 
-// TODO(rhett): how should we handle names? only in mode?
 #define arena_bootstrap_push_size(...) PARAMS_BIND(arena_bootstrap_push_size, ARENA_DEFAULT_PARAMS, __VA_ARGS__)
 PARAMS_DECLARE(void *, arena_bootstrap_push_size, void *buffer; isize capacity; char *name; isize struct_size; isize offset_to_arena; b32 should_clear; isize alignment)
 {
@@ -410,7 +340,6 @@ void arena_temp_end(Arena_Temp temp)
 typedef struct Substring_List Substring_List;
 struct Substring_List
 {
-	//	String backing_string;
 	isize substrings_count;
 	Buffer *substrings;
 };
@@ -447,8 +376,6 @@ Substring_List string_ztstring_copy_and_split(char *source, char delim, isize ma
 				isize substring_size = source_pos - arg_start - was_within_quotes;
 				result.substrings[result.substrings_count].size = substring_size;
 				result.substrings[result.substrings_count].data = arena_push_copy_zero_terminate(arena, (void *)((uptr)source + arg_start), substring_size);
-				// printf("> : %lld\n", result.substrings_count);
-				// EVAL_PRINT_I64(substring_size);
 				result.substrings_count += 1;
 				was_within_quotes = false;
 			}
@@ -459,9 +386,7 @@ Substring_List string_ztstring_copy_and_split(char *source, char delim, isize ma
 			{
 				is_within_arg = true;
 				arg_start = source_pos;
-				// printf("<");
 			}
-			// printf("%c", current_char);
 		}
 	}
 
@@ -471,8 +396,6 @@ Substring_List string_ztstring_copy_and_split(char *source, char delim, isize ma
 		isize substring_size = source_pos - arg_start - was_within_quotes;
 		result.substrings[result.substrings_count].size = substring_size;
 		result.substrings[result.substrings_count].data = arena_push_copy_zero_terminate(arena, (void *)((uptr)source + arg_start), substring_size);
-		// printf("> : %lld\n", result.substrings_count);
-		// EVAL_PRINT_I64(substring_size);
 		result.substrings_count += 1;
 		was_within_quotes = false;
 	}

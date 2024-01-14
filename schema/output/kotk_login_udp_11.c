@@ -115,7 +115,7 @@ u32 raw_data_length;
 char* raw_data;
 }* account_features;
 u32 application_payload_length;
-char* application_payload;
+u8* application_payload;
 u32 error_details_count;
 struct error_details_s
 {
@@ -577,13 +577,13 @@ offset++;
 
 } // account_features
 
-// string application_payload
+// bytes application_payload
 endian_write_u32_little(buffer + offset, packet->application_payload_length);
 offset += sizeof(u32);
-printf("-- STRING_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->application_payload_length, (u64)packet->application_payload_length, (f64)packet->application_payload_length);
+printf("-- BYTES_LENGTH            \t%lld\t%llxh\t%f\n", (i64)packet->application_payload_length, (u64)packet->application_payload_length, (f64)packet->application_payload_length);
 for (u32 application_payload_iter = 0; application_payload_iter < packet->application_payload_length; application_payload_iter++)
 {
-endian_write_i8_little(buffer + offset, packet->application_payload[application_payload_iter]);
+endian_write_u8_little(buffer + offset, packet->application_payload[application_payload_iter]);
 offset++;
 }
 
@@ -2014,14 +2014,14 @@ offset++;
 
 } // account_features
 
-// string application_payload
+// bytes application_payload
 packet->application_payload_length = endian_read_u32_little(data + offset);
 offset += sizeof(u32);
 packet->application_payload = arena_push_size(arena, packet->application_payload_length);
-printf("-- STRING_LENGTH           \t%d\n", packet->application_payload_length);
+printf("-- BYTES_LENGTH            \t%d\n", packet->application_payload_length);
 for (u32 application_payload_iter = 0; application_payload_iter < packet->application_payload_length; application_payload_iter++)
 {
-packet->application_payload[application_payload_iter] = *(i8*)((uptr)data + offset);
+packet->application_payload[application_payload_iter] = *(u8*)((uptr)data + offset);
 offset++;
 }
 

@@ -1,63 +1,70 @@
-typedef struct Fragment_Entry Fragment_Entry;
-typedef struct Fragment_Pool Fragment_Pool;
-typedef struct Input_Stream Input_Stream;
-typedef struct Output_Stream Output_Stream;
-
-struct Fragment_Entry
+typedef struct FragmentEntry
 {
-    b32 is_fragment;
-    u32 data_length;
     u8 *data;
-};
+    u32 dataLen;
+    bool isFragment;
+} FragmentEntry;
 
-struct Fragment_Pool
+typedef struct FragmentPool
 {
     i32 capacity;
-    u32 packet_length;
+    u32 packetLen;
 
-    i32 sequence_base;
-    Fragment_Entry *fragments;
-    u32 fragments_count;
+    i32 sequenceBase;
+    FragmentEntry *entry;
+    u32 fragmentCount;
 
     u8 *buffer;
-    u32 buffer_tail;
-    u32 buffer_target_length;
-};
+    u32 bufferTail;
+    u32 bufferTargetLen;
+} FragmentPool;
 
-#define INPUT_STREAM_CALLBACK_ACK(name) void name(i32 ack, void *session)
-typedef INPUT_STREAM_CALLBACK_ACK(input_stream_callback_ack);
+#define InputStreamCallbackAck(name) void name(SessionState *session, i32 ack)
+typedef InputStreamCallbackAck(inputStreamCallbackAck);
 
-#define INPUT_STREAM_CALLBACK_DATA(name) void name(void *server, void *session, u8 *data, u32 data_length)
-typedef INPUT_STREAM_CALLBACK_DATA(input_stream_callback_data);
+#define InputStreamCallbackData(name) void name(AppState *app, SessionState *session, u8 *data, u32 dataLen)
+typedef InputStreamCallbackData(inputStreamCallbackData);
 
-struct Input_Stream
+typedef struct SOEInputStream
 {
-    Rc4_State rc4_state;
+    Rc4_State rc4;
+    FragmentPool *pool;
 
-    input_stream_callback_ack **ack_callback_ptr;
-    input_stream_callback_data **data_callback_ptr;
+    inputStreamCallbackAck **ackCallbackPtr;
+    inputStreamCallbackData **dataCallbackPtr;
 
-    i32 sequence_next;
-    i32 ack_previous;
-    i32 fragment_next;
-    i32 processed_fragment_previous;
-    b32 use_encryption;
+    i32 nextSequence;
+    i32 previousAck;
+    i32 nextFragment;
+    i32 previousProcessedFragment;
+    bool useEncryption;
+} SOEInputStream;
 
-    Fragment_Pool *fragment_pool;
-};
+#define OutputStreamCallbackData(name) void name(AppState *app, SessionState *session, u8 *data, u32 dataLen, i32 sequence, bool isFragment)
+typedef OutputStreamCallbackData(outputStreamCallbackData);
 
-#define OUTPUT_STREAM_CALLBACK_DATA(name) void name(void *server, void *session, u8 *data, u32 data_length, i32 sequence, b32 is_fragment)
-typedef OUTPUT_STREAM_CALLBACK_DATA(output_stream_callback_data);
-
-struct Output_Stream
+typedef struct SOEOutputStream
 {
-    Rc4_State rc4_state;
+    Rc4_State rc4;
+    FragmentPool *pool;
 
-    output_stream_callback_data **data_callback_ptr;
+    outputStreamCallbackData **dataCallbackPtr;
 
     i32 sequence;
-    i32 ack_previous;
-    b32 use_encryption;
+    i32 previousAck;
+    bool useEncryption;
+} SOEOutputStream;
 
-    Fragment_Pool *fragment_pool;
-};
+typedef struct ConnectionArgs
+{
+    u32 crcSeed;
+    u8 crcLen;
+    u8 compression;
+    u32 udpLen;
+    u8 encryption;
+    bool dumpCore;
+    bool dumpLogin;
+    bool dumpTunnel;
+    bool dumpGateway;
+    bool dumpZone;
+} ConnectionArgs;

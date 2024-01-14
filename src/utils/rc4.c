@@ -1,31 +1,3 @@
-#if 0
-void
-	crypt_rc4_generate_keystream()
-{
-	u8 array[256] = {0};
-
-	for (u32 i = 0; i < sizeof(array); i++)
-	{
-		array[i] = i;
-	}
-
-	u8 buffer[KB(4)] = {0};
-	u32 offset = 0;
-	offset += sprintf(buffer+offset, "u8 keystream[%zu] = {\n", sizeof(array));
-	for (u32 i = 0; i < sizeof(array); i++)
-	{
-		offset += sprintf(buffer+offset, "0x%02x, ", array[i]);
-		if (!((i + 1) % 8))
-		{
-			offset += sprintf(buffer+offset, "\n");
-		}
-	}
-	offset += sprintf(buffer+offset, "};");
-
-	win32_write_buffer_to_file("rc4_keystream.c", buffer, offset);
-}
-#endif
-
 // TODO(rhett): hardcoded length of 256 right now
 typedef struct Rc4_State Rc4_State;
 struct Rc4_State
@@ -70,7 +42,7 @@ void crypt_rc4_initialize(Rc4_State *state, u8 *key, u32 key_length)
                                  0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7,
                                  0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff};
 
-    base_memory_copy(state->keystream, keystream_initial, 256);
+    memcpy(state->keystream, keystream_initial, 256);
 
     // NOTE(rhett): Yes, use a temp variable for the swap.
     u8 swap;

@@ -1,9 +1,5 @@
 # Specify filepatterns you want git to ignore.
 build*/
-<<<<<<< HEAD
-=======
-schema/output/*
->>>>>>> 215f4353346507dd61aeefb9a988d9fe5b650f5f
 _IGNORE_*
 GAME_PACKETS/
 LOGIN_PACKETS/

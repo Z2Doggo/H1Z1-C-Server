@@ -1,11 +1,10 @@
-typedef enum Session_Kind
+typedef enum SessionKind
 {
-    Session_Kind_Unhandled,
-    Session_Kind_Ping_Responder,
-} Session_Kind;
+    SessionKindUnhandled,
+    SessionKindPingResponder,
+} SessionKind;
 
-typedef union Session_Address Session_Address;
-union Session_Address
+typedef union SessionAddress
 {
     u64 full;
     struct
@@ -13,7 +12,7 @@ union Session_Address
         u32 ip;
         u16 port;
     };
-};
+} SessionAddress;
 
 /*
 typedef struct oldPosition
@@ -34,9 +33,9 @@ typedef struct pvpStatsStruct
 
 typedef struct clientLogging
 {
-    u32 logLength;
+    u32 logLen;
     char *logString;
-    b8 isSuspicious;
+    bool isSuspicious;
 } clientLogging;
 
 typedef struct lastDeatherReportStruct
@@ -74,7 +73,7 @@ typedef struct DamageInfo
     u32 entity_len;
     char *entity;
     u32 damage;
-    b8 causeBleed;
+    bool causeBleed;
     u32 message_len;
     char *message;
 } DamageInfo;
@@ -83,20 +82,20 @@ typedef struct zoneClient
 {
     u64 guid;
     u32 currentPOI;
-    b8 firstLoading;      // FALSE
-    b8 isLoading;         // TRUE
-    b8 characterReleased; // FALSE
-    b8 isSynced;          // FALSE
-    b8 isInteracting;     // FALSE
-    b8 isAdmin;           // FALSE
-    b8 isDebugMode;       // FALSE
-    b8 isDecoy;           // FALSE
+    bool firstLoading;      // FALSE
+    bool isLoading;         // TRUE
+    bool characterReleased; // FALSE
+    bool isSynced;          // FALSE
+    bool isInteracting;     // FALSE
+    bool isAdmin;           // FALSE
+    bool isDebugMode;       // FALSE
+    bool isDecoy;           // FALSE
     u64 banType;
     u64 HWID;
     vec4 posAtLastRoutine; // not sure if needed
     vec4 posAtTimerStart;  // also not sure if needed either?
     oldPosition *oldPos;
-    b8 enableChecks; // TRUE
+    bool enableChecks; // TRUE
     u32 speedWarnsNumber;
     pvpStatsStruct *pvpStats;
     clientLogging *clientLogs;
@@ -106,7 +105,7 @@ typedef struct zoneClient
     dtosSpawned *spawnedDTOs;
     BaseEntity *spawnedEntities;
     BaseEntity *sentInteractionData;
-    b8 radio; // FALSE
+    bool radio; // FALSE
     u64 loginSessionId;
     // don't need pingTimer from the typescript server!
     u32 sessionId;
@@ -114,49 +113,48 @@ typedef struct zoneClient
     u32 lastKeepAliveTime; // default value is 0;
     u32 pings;
     u32 averagePing;
-    u32 averagePingLength; // default value is 4;
+    u32 averagePingLen; // default value is 4;
     u32 pingWarnings;
-    b8 isWeaponLock;     // FALSE
-    b8 averagePingReady; // FALSE
+    bool isWeaponLock;     // FALSE
+    bool averagePingReady; // FALSE
     // do I need to add chunkRenderDistance from the typescript server? probably not, but will keep this comment just in case I change my mind;
     u32 routineCounter;
     u32 zonePings;
-    b8 properlyLoggedOut; // FALSE
+    bool properlyLoggedOut; // FALSE
     u32 permisssionLvl;   // default is 0
     // wtf is fireHints on the typescript server?
-    b8 isInAir;        // FALSE
+    bool isInAir;        // FALSE
     u32 startLocation; // 0 is default;
     vec4 startingPosition;
-    b8 firstReleased;           // TRUE
-    b8 isMuted;                 // FALSE
+    bool firstReleased;           // TRUE
+    bool isMuted;                 // FALSE
     u32 blockedPositionUpdates; // 0
     u32 flaggedShots;           // 0
-    b8 isFairPlayFlagged;       // FALSE, keep in my that I will most likely do a proper version of server side anticheat than convert h1emu's fairplay method?
+    bool isFairPlayFlagged;       // FALSE, keep in my that I will most likely do a proper version of server side anticheat than convert h1emu's fairplay method?
     DamageInfo *damageInfo;
     // string array
     char **managedObjects;
     i32 managedObjectsCount;
     // end of string array
 
-    b8 initialized; // dunno what value the bool is supposed to be?
+    bool initialized; // dunno what value the bool is supposed to be?
 } zoneClient;
 */
 
-typedef struct characterName characterName;
-struct characterName
+typedef struct CharacterName
 {
-    char *nameContent;
-    u32 nameLength;
-};
+    char *name;
+    u32 nameLen;
+} CharacterName;
 
 typedef struct pGetPlayerActorData pGetPlayerActorData;
 struct pGetPlayerActorData
 {
     u32 headType;
     u32 actorModelId;
-    u32 hairModelLength;
+    u32 hairModelLen;
     char *hairModel;
-    u32 headActorLength;
+    u32 headActorLen;
     char *headActor;
     u32 gender;
 };
@@ -165,14 +163,13 @@ typedef struct CharacterCreateReply CharacterCreateReply;
 struct CharacterCreateReply
 {
     u32 status;
-    u64 character_id;
+    u64 characterId;
     u32 count;
 };
 
-typedef struct Session_State Session_State;
-struct Session_State
+struct SessionState
 {
-    Session_Address address;
+    SessionAddress address;
     u32 id;
 
     // login related structs
@@ -182,76 +179,73 @@ struct Session_State
     pGetPlayerActorData pGetPlayerActor;
 
     // gateway channel stuff & testing related
-    struct Gateway_Packet_TunnelPacket *tunnelPacket;
-    u8 gateway_channel;
-    characterName name;
+    u8 gatewayChannel;
+    CharacterName characterName;
 
-    u64 character_id;
+    u64 characterId;
     u64 guid;
-    u64 item_guid;
-    uint2b transient_id;
+    u64 itemGuid;
+    u32 transientId;
+    u32 transientIdLen;
 
     u32 selected_server_id;
-    b8 finished_loading;
-    b8 first_login;
-    b8 is_synced;
+    bool finished_loading;
+    bool first_login;
+    bool is_synced;
 
-    Session_Kind kind;
-    Connection_Args connection_args;
+    SessionKind kind;
+    ConnectionArgs args;
 
-    i32 ack_next;
-    i32 ack_previous;
-    const char *authKey;
+    i32 nextAck;
+    i32 previousAck;
 
-    Fragment_Pool input_fragment_pool;
-    // TODO(rhett): is the output fragment pool packet length supposed to match a data header?
-    //              We could probably even replace this with just a flat buffer eventually,
-    //							solving this little issue
-    Fragment_Pool output_fragment_pool;
+    // New SOE protocol related structs, WiP
+    FragmentPool inputPool;
+    FragmentPool outputPool;
 
-    Input_Stream input_stream;
-    Output_Stream output_stream;
+    SOEInputStream inputStream;
+    SOEOutputStream outputStream;
 
     // begin world_character struct
-    b8 character_released;
-    b8 is_loading;
-    b8 is_moving;
-    b8 is_running;
-    b8 is_jumping;
-    b8 is_in_air;
-    b8 is_walking;
-    b8 is_hidden;
-    b8 is_bleeding;
-    b8 is_bandaged;
-    b8 is_exhausted;
-    b8 is_alive;
-    b8 is_respawning;
-    b8 is_spectator;
-    b8 is_muted;
-    b8 is_admin;
-    b8 is_ready;
-    b8 has_god_mode;
-    b8 has_conveys;
+    bool characterReleased;
+    bool isLoading;
+    bool isMoving;
+    bool isRunning;
+    bool isJumping;
+    bool isInAir;
+    bool isWalking;
+    bool isHidden;
+    bool isBleeding;
+    bool isBandaged;
+    bool isExhausted;
+    bool isAlive;
+    bool isRespawning;
+    bool isSpectator;
+    bool isMuted;
+    bool isAdmin;
+    bool isReady;
+    bool hasGodMode;
+    bool hasConveys;
 
-    u64 creation_date;
-    u64 last_login_date;
+    u64 creationDate;
+    u64 lastLoginDate;
 
     i32 stance;
     vec4 position;
-    vec3 positionLW; // for lightweight packets
-    vec4 unknown12_f32;
+    vec3 positionLightWeight; // for lightweight packets
+    vec4 unkVec4;
     vec4 rotation;
     euler_angle rotationRaw;
     vec4 lookAt;
     f32 orientation;
     i32 direction;
-    i32 front_tilt;
-    i32 side_tilt;
-    i32 angle_change;
-    i32 vertical_speed;
-    i32 horizontal_speed;
-    i32 engine_rpm;
-    i32 sequence_time;
-    u8 unk_byte;
+    i32 frontTilt;
+    i32 sideTilt;
+    i32 angleChange;
+    i32 verticalSpeed;
+    i32 horizontalSpeed;
+    i32 engineRpm;
+    i32 sequenceTime;
+    u8 unkByte;
     // end world_character struct
 };
