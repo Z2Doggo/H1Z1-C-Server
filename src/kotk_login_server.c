@@ -75,6 +75,7 @@ InputStreamCallbackData(pingInputStreamData);
 #define MESSAGE_NAMESPACE "Login"
 #include "../schema/output/kotk_login_udp_11.c" // Packet structures
 #include "login/loginUdp_11.c"
+#include "login/loginPacketHandler.c"
 #undef MESSAGE_NAMESPACE
 
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT // Default
@@ -86,7 +87,7 @@ InputStreamCallbackAck(inputCallbackAck)
 
 InputStreamCallbackData(inputCallbackData)
 {
-	LoginPacketHandle(app, session, data, dataLen);
+	LoginPacketHandler(app, session, data, dataLen);
 }
 
 InputStreamCallbackData(pingInputStreamData)
