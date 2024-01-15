@@ -3,7 +3,7 @@
 typedef struct AppState AppState;
 typedef struct SessionState SessionState;
 
-typedef b8 KeyStates[0xff];
+typedef b32 KeyStates[0xff];
 
 typedef struct AppMemory
 {
