@@ -23,8 +23,6 @@ void LoginPacketHandler(AppState *app, SessionState *session, u8 *data, u32 data
         packetReply.result_code = 1;
         packetReply.is_member = 1;
         packetReply.is_internal = 1;
-        packetReply.namespace_name = "SOE";
-        packetReply.namespace_name_length = STRLEN("SOE");
 
         packetReply.account_features_count = 1;
         packetReply.account_features = (struct account_features_s[1]){
