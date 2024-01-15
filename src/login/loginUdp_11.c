@@ -59,6 +59,8 @@ void NameValidation(AppState *app, SessionState *session, u8 *data, u32 dataLen)
     session->characterName.name = name;
     session->characterName.nameLen = nameLen;
 
+    session->selected_server_id = packet.server_id;
+
     LoginPacketSend(app, session, &app->arenaPerTick, KB(10), Login_Packet_Kind_TunnelAppPacketServerToClient, &packetReply);
 }
 
