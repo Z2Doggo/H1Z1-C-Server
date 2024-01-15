@@ -25,21 +25,18 @@ void NameValidation(AppState *app, SessionState *session, u8 *data, u32 dataLen)
     {
         validationStatus = 3;
     }
+    else if (!isalpha((uchar)name[0]))
+    {
+        validationStatus = 3;
+    }
     else
     {
-        if (!isalpha((uchar)name[0]))
+        for (u32 i = 1; i < nameLen; i++)
         {
-            validationStatus = 3;
-        }
-        else
-        {
-            for (u32 i = 1; i < nameLen; i++)
+            if (!isalpha((uchar)name[i]))
             {
-                if (!isalpha((uchar)name[i]))
-                {
-                    validationStatus = 3;
-                    break;
-                }
+                validationStatus = 3;
+                break;
             }
         }
     }
