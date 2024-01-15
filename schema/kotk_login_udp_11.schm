@@ -109,8 +109,8 @@ u32 			unk1
 
 stream:u32 		data_server
 {
-	b8 				tunnel_op_code
-	b8 				sub_op_code
+	u8 				tunnel_op_code
+	u8 				sub_op_code
 	string:u32 		character_name
 	string:u32 		character_name2
 	u32 			status

@@ -1,4 +1,4 @@
-u32 CorePacketPack(CoreKindEnum kind, void *packetPtr, u8 *buffer, bool isSubPacket, ConnectionArgs *args)
+u32 CorePacketPack(CoreKindEnum kind, void *packetPtr, u8 *buffer, b32 isSubPacket, ConnectionArgs *args)
 {
     u32 offset = 0;
     printf("\n");
@@ -105,7 +105,7 @@ u32 CorePacketPack(CoreKindEnum kind, void *packetPtr, u8 *buffer, bool isSubPac
     return offset;
 }
 
-void CorePacketUnpack(u8 *data, i32 dataLen, CoreKindEnum kind, void *packetPtr, bool isSubPacket, ConnectionArgs *args)
+void CorePacketUnpack(u8 *data, i32 dataLen, CoreKindEnum kind, void *packetPtr, b32 isSubPacket, ConnectionArgs *args)
 {
     u32 offset = 2;
     printf("\n");
@@ -316,7 +316,7 @@ CoreKindEnum CorePacketGetKind(u8 *data, u32 dataLen)
     return CoreKindUnhandled;
 }
 
-void CorePacketHandle(AppState *app, SessionState *session, PlatformApi *api, u8 *data, u32 dataLen, bool isSubPacket)
+void CorePacketHandle(AppState *app, SessionState *session, PlatformApi *api, u8 *data, u32 dataLen, b32 isSubPacket)
 {
     CoreKindEnum kind;
     u32 offset;

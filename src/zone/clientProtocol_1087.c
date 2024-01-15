@@ -193,7 +193,7 @@ void readPositionUpdateData(AppState *app, SessionState *session, u8 *data, u32 
     ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_PlayerUpdatePosition, &obj);
 }
 
-bool IsValid(BaseItem *baseItem, u8 flag)
+b32 IsValid(BaseItem *baseItem, u8 flag)
 {
     if (flag)
     {
@@ -214,7 +214,7 @@ ItemDefinition GetItemDefinition(ItemDefinition *itemDef, u32 itemDefId)
     return itemDef[itemDefId];
 }
 
-bool IsWeapon(ItemDefinition *itemDef, u32 itemDefId)
+b32 IsWeapon(ItemDefinition *itemDef, u32 itemDefId)
 {
     if (itemDefId != 0)
     {
@@ -224,7 +224,7 @@ bool IsWeapon(ItemDefinition *itemDef, u32 itemDefId)
     return false;
 }
 
-bool IsArmor(ItemDefinition *itemDef, u32 itemDefId)
+b32 IsArmor(ItemDefinition *itemDef, u32 itemDefId)
 {
     if (itemDefId != 0)
     {
@@ -237,7 +237,7 @@ bool IsArmor(ItemDefinition *itemDef, u32 itemDefId)
     return false;
 }
 
-bool IsHelmet(ItemDefinition *itemDef, u32 itemDefId)
+b32 IsHelmet(ItemDefinition *itemDef, u32 itemDefId)
 {
     if (itemDefId != 0)
     {

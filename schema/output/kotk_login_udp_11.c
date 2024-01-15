@@ -236,8 +236,8 @@ u32 unk1;
 u32 data_server_length;
 struct data_server_s
 {
-b8 tunnel_op_code;
-b8 sub_op_code;
+u8 tunnel_op_code;
+u8 sub_op_code;
 u32 character_name_length;
 char* character_name;
 u32 character_name2_length;
@@ -1009,14 +1009,14 @@ printf("-- STREAM_LENGTH           \t%lld\t%llxh\t%f\n", (i64)packet->data_serve
 u32 will_pack_data_server = packet->data_server_length == ~(u32)0 ? 0 : 1;
 for (u32 data_server_iter = 0; data_server_iter < will_pack_data_server; data_server_iter++)
 {
-// b8 tunnel_op_code
-endian_write_b8_little(buffer + offset, packet->data_server[data_server_iter].tunnel_op_code);
-offset += sizeof(b8);
+// u8 tunnel_op_code
+endian_write_u8_little(buffer + offset, packet->data_server[data_server_iter].tunnel_op_code);
+offset += sizeof(u8);
 printf("-- tunnel_op_code          \t%lld\t%llxh\t%f\n", (i64)packet->data_server[data_server_iter].tunnel_op_code, (u64)packet->data_server[data_server_iter].tunnel_op_code, (f64)packet->data_server[data_server_iter].tunnel_op_code);
 
-// b8 sub_op_code
-endian_write_b8_little(buffer + offset, packet->data_server[data_server_iter].sub_op_code);
-offset += sizeof(b8);
+// u8 sub_op_code
+endian_write_u8_little(buffer + offset, packet->data_server[data_server_iter].sub_op_code);
+offset += sizeof(u8);
 printf("-- sub_op_code             \t%lld\t%llxh\t%f\n", (i64)packet->data_server[data_server_iter].sub_op_code, (u64)packet->data_server[data_server_iter].sub_op_code, (f64)packet->data_server[data_server_iter].sub_op_code);
 
 // string character_name
@@ -2413,14 +2413,14 @@ packet->data_server = arena_push_size(arena, packet->data_server_length * sizeof
 printf("-- STREAM_LENGTH           \t%d\n", packet->data_server_length);
 for (u32 data_server_iter = 0; data_server_iter < (packet->data_server_length > (u32)0 ? (u32)1 : (u32)0); data_server_iter++)
 {
-// b8 tunnel_op_code
-packet->data_server[data_server_iter].tunnel_op_code = endian_read_b8_little(data + offset);
-offset += sizeof(b8);
+// u8 tunnel_op_code
+packet->data_server[data_server_iter].tunnel_op_code = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
 printf("-- tunnel_op_code          \t%lld\t%llxh\t%f\n", (i64)packet->data_server[data_server_iter].tunnel_op_code, (u64)packet->data_server[data_server_iter].tunnel_op_code, (f64)packet->data_server[data_server_iter].tunnel_op_code);
 
-// b8 sub_op_code
-packet->data_server[data_server_iter].sub_op_code = endian_read_b8_little(data + offset);
-offset += sizeof(b8);
+// u8 sub_op_code
+packet->data_server[data_server_iter].sub_op_code = endian_read_u8_little(data + offset);
+offset += sizeof(u8);
 printf("-- sub_op_code             \t%lld\t%llxh\t%f\n", (i64)packet->data_server[data_server_iter].sub_op_code, (u64)packet->data_server[data_server_iter].sub_op_code, (f64)packet->data_server[data_server_iter].sub_op_code);
 
 // string character_name

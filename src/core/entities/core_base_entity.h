@@ -89,28 +89,6 @@ void OnInteractionString() {} // do nothing
 
 void OnProjectileHit() {} // do nothing
 
-bool Destroy()
-{
-    BaseEntity *entity = (BaseEntity *)malloc(sizeof(BaseEntity));
-    if (!entity)
-    {
-        fprintf(stderr, "Failed to allocate memory to BaseEntity struct in Destroy function!\n");
-
-        return NULL;
-    }
-
-    if (entity == NULL)
-    {
-        fprintf(stderr, "Failed to allocate memory for entity. Cannot destroy.\n");
-
-        return false;
-    }
-
-    printf("Destroying entity with actorModelId: %u\n", entity->actorModelId);
-
-    return true;
-}
-
 typedef struct ZoneClient2016
 {
     u64 guid;

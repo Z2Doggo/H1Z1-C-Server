@@ -37,7 +37,7 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
     break;
     case ZONE_CLIENTFINISHEDLOADING_ID:
     {
-        bool finishedLoading = session->finished_loading;
+        b8 finishedLoading = session->finished_loading;
 
         if (!finishedLoading)
         {

@@ -10,7 +10,7 @@ FragmentPool FragmentCreate(u32 capacity, u32 packetlen, Arena *arena)
     return pool;
 }
 
-void FragmentInsert(FragmentPool *pool, i32 sequence, u8 *data, u32 dataLen, bool isFragment)
+void FragmentInsert(FragmentPool *pool, i32 sequence, u8 *data, u32 dataLen, b32 isFragment)
 {
     if (sequence < pool->sequenceBase)
     {
@@ -19,7 +19,7 @@ void FragmentInsert(FragmentPool *pool, i32 sequence, u8 *data, u32 dataLen, boo
     }
 
     i32 index = sequence - pool->sequenceBase;
-    printf("[***] FragmentInsert: sequence=%d,  data=%p, data_length=%d, is_fragment=%d, index=%d\n", sequence, data, dataLen, isFragment, index);
+    printf("[***] FragmentInsert: sequence=%d,  data=%p, dataLen=%d, isFragment=%d, index=%d\n", sequence, data, dataLen, isFragment, index);
 
     ASSERT_MSG(index < pool->capacity, "exceeds pool capacity!\n");
     ASSERT_MSG(dataLen < pool->packetLen, "exceeds packet length!\n");

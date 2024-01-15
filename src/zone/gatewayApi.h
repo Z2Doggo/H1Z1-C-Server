@@ -41,7 +41,7 @@ typedef struct GatewayLoginRequest
 
 typedef struct GatewayLoginReply
 {
-    bool isLoggedIn;
+    b8 isLoggedIn;
 } GatewayLoginReply;
 
 typedef struct GatewayTunnelPacket
@@ -54,6 +54,6 @@ typedef struct GatewayTunnelPacket
 typedef struct GatewayChannelIsRoutable
 {
     u8 channel;
-    bool isRoutable;
-    bool unkBool;
+    b8 isRoutable;
+    b8 unkBool;
 } GatewayChannelIsRoutable;

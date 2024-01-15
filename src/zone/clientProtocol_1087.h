@@ -19,7 +19,7 @@ typedef struct BaseItem
     u8 debugFlag;
     u32 stackCount;
     Weapon *weapon;
-    bool hasAirdropCleareance;
+    b8 hasAirdropCleareance;
 } BaseItem;
 
 typedef struct ItemDefinition
@@ -37,19 +37,19 @@ typedef struct ItemDefinition
     u32 maxStackSize;
     u32 minStackSize;
     u32 profileOverride;
-    bool noTrade;
-    bool singleUse;
+    b8 noTrade;
+    b8 singleUse;
     char *modelName;
     u32 genderUsage;
     char *textureAlias;
     u32 shaderParamGroupId;
     u32 categoryId;
-    bool memberOnly;
-    bool nonMiniGame;
+    b8 memberOnly;
+    b8 nonMiniGame;
     u32 param1;
     u32 param2;
     u32 param3;
-    bool noSale;
+    b8 noSale;
     u32 weaponTrailEffectId;
     u32 useRequirementId;
     u32 clientUseRequirementId;
@@ -58,16 +58,16 @@ typedef struct ItemDefinition
     u32 miniProfileRank;
     u32 rarity;
     u32 contentId;
-    bool noLiveGamer;
-    bool combatOnly;
-    bool forceDisablePreview;
+    b8 noLiveGamer;
+    b8 combatOnly;
+    b8 forceDisablePreview;
     u32 memberDiscount;
     u32 raceSetId;
     u32 vipRankRequired;
     u32 persistProfileSwitch;
-    bool flagQuickUse;
-    bool flagCanEquip;
-    bool flagAccountScope;
+    b8 flagQuickUse;
+    b8 flagCanEquip;
+    b8 flagAccountScope;
     u32 uiModelCameraId;
     u32 equipCountMax;
     u32 currencyType;
@@ -91,9 +91,9 @@ typedef struct ItemDefinition
     u32 useItemReticleId;
     u32 grinderRewardSetId;
     u32 buildBarGroupId;
-    bool flagNoDragDrop;
+    b8 flagNoDragDrop;
     u32 interactionAnimationId;
-    bool isArmor;
+    b8 isArmor;
     u32 passiveEquiptSlotGroupId;
     u32 scrapValueOverride;
 
@@ -109,7 +109,7 @@ typedef struct ItemData
     u32 count;
     struct ItemSubData
     {
-        bool hasSubData;
+        b8 hasSubData;
     } *itemSubData;
     u64 containerGuid;
     u32 containerDefinitionId; // added by doggo
@@ -117,7 +117,7 @@ typedef struct ItemData
     u32 baseDurability;
     u32 currentDurability;
     u32 maxDurabilityFromDefinition;
-    bool unknownBoolean1;
+    b8 unknownBoolean1;
     u64 ownerCharacterId;
     u32 unknownDword9;
     Weapon weaponData;

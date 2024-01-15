@@ -105,7 +105,7 @@ void InputStreamFragmentProcess(AppState *app, SessionState *session, SOEInputSt
     }
 }
 
-void InputStreamWrite(AppState *app, SessionState *session, SOEInputStream *input, u8 *data, u32 dataLen, i32 sequence, bool isFragment)
+void InputStreamWrite(AppState *app, SessionState *session, SOEInputStream *input, u8 *data, u32 dataLen, i32 sequence, b32 isFragment)
 {
     if (input->nextSequence == -1)
     {
@@ -150,7 +150,7 @@ void InputStreamWrite(AppState *app, SessionState *session, SOEInputStream *inpu
     InputStreamFragmentProcess(app, session, input);
 }
 
-SOEInputStream InputStreamInit(FragmentPool *pool, u8 *rc4KeyDecoded, u32 rc4KeyLen, bool useEncryption)
+SOEInputStream InputStreamInit(FragmentPool *pool, u8 *rc4KeyDecoded, u32 rc4KeyLen, b32 useEncryption)
 {
     SOEInputStream input = {0};
 

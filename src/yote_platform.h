@@ -5,12 +5,12 @@
 #if defined(YOTE_PLATFORM_USE_SOCKETS)
 typedef struct PlatformSocket
 {
-	bool is_valid;
+	b32 is_valid;
 	uptr socket;
 } PlatformSocket;
 #endif // YOTE_PLATFORM_USE_SOCKETS
 
-#define PLATFORM_FOLDER_CREATE(name) bool name(char *folder_path)
+#define PLATFORM_FOLDER_CREATE(name) b32 name(char *folder_path)
 typedef PLATFORM_FOLDER_CREATE(platform_folder_create);
 
 #define PLATFORM_BUFFER_WRITE_TO_FILE(name) u32 name(char *file_path, void *buffer, u32 size)
@@ -205,7 +205,7 @@ PLATFORM_ELAPSED_SECONDS(platform_win_elapsed_seconds)
 }
 
 #if defined(YOTE_PLATFORM_USE_SOCKETS)
-bool platform_win_wsa_initialize()
+b32 platform_win_wsa_initialize()
 {
 	WSADATA wsa_data;
 	int error = WSAStartup(MAKEWORD(2, 2), &wsa_data);
@@ -220,7 +220,7 @@ bool platform_win_wsa_initialize()
 
 PLATFORM_SOCKET_UDP_CREATE_AND_BIND(platform_win_socket_udp_create_and_bind)
 {
-	bool is_wsa_initialized;
+	b32 is_wsa_initialized;
 	if (!is_wsa_initialized)
 	{
 		is_wsa_initialized = platform_win_wsa_initialize();

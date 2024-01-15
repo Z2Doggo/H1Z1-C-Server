@@ -16,7 +16,7 @@ typedef struct AppCode
 	HMODULE hModule;
 	FILETIME lastWriteTime;
 	appTickT *tickFunc;
-	bool isValid;
+	b32 isValid;
 } AppCode;
 
 AppTick(appTickStub)
@@ -91,14 +91,14 @@ int main(void)
 	LARGE_INTEGER performanceFrequency;
 	QueryPerformanceFrequency(&performanceFrequency);
 
-	bool isSleepGranualor = timeBeginPeriod(1) == TIMERR_NOERROR;
+	b32 isSleepGranualor = timeBeginPeriod(1) == TIMERR_NOERROR;
 	f32 tickRate = 128.0f;
 
 	f32 secondsPerTick = 1.0f / tickRate;
 	AppCode appCode = AppCodeLoad();
 
 	u64 previousCounter = platform_win_wall_clock();
-	bool isRunning = true;
+	b32 isRunning = true;
 
 	while (isRunning)
 	{

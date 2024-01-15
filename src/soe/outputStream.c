@@ -1,4 +1,4 @@
-void OutputStreamWrite(AppState *app, SessionState *session, SOEOutputStream *output, u8 *data, u32 dataLen, bool overrideEncryption)
+void OutputStreamWrite(AppState *app, SessionState *session, SOEOutputStream *output, u8 *data, u32 dataLen, b32 overrideEncryption)
 {
     if (output->useEncryption && !overrideEncryption)
     {
@@ -47,7 +47,7 @@ void OutputStreamUpdateAck(SOEOutputStream *output, i32 sequence)
     output->previousAck = sequence;
 }
 
-SOEOutputStream OutputStreamInit(FragmentPool *pool, u8 *rc4KeyDecoded, u32 rc4KeyLen, bool useEncryption)
+SOEOutputStream OutputStreamInit(FragmentPool *pool, u8 *rc4KeyDecoded, u32 rc4KeyLen, b32 useEncryption)
 {
     SOEOutputStream output = {0};
 

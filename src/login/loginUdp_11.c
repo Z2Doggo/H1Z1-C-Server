@@ -41,23 +41,25 @@ void NameValidation(AppState *app, SessionState *session, u8 *data, u32 dataLen)
         }
     }
 
-    Login_Packet_TunnelAppPacketServerToClient packetReply = {0};
+    Login_Packet_TunnelAppPacketServerToClient packetReply = {
+        .server_id = packet.server_id,
+        .data_server_length = 14 + nameLen,
 
-    packetReply.server_id = session->selected_server_id;
-    packetReply.data_server_length = 14 + nameLen;
-
-    packetReply.data_server = (struct data_server_s[1]){
-        [0] = {
-            .tunnel_op_code = 0xa7,
-            .sub_op_code = 0x02,
-            .character_name = name,
-            .character_name_length = nameLen,
-            .status = validationStatus,
+        .data_server = (struct data_server_s[1]){
+            [0] = {
+                .tunnel_op_code = 0xa7,
+                .sub_op_code = 0x02,
+                .character_name = name,
+                .character_name_length = nameLen,
+                .status = validationStatus,
+            },
         },
     };
 
     session->characterName.name = name;
     session->characterName.nameLen = nameLen;
+
+    session->selected_server_id = packet.server_id;
 
     LoginPacketSend(app, session, &app->arenaPerTick, KB(10), Login_Packet_Kind_TunnelAppPacketServerToClient, &packetReply);
 }
@@ -125,9 +127,10 @@ void CharacterCreate(AppState *app, SessionState *session)
 {
     session->characterId = generateRandomGuid();
 
-    Login_Packet_CharacterCreateReply packetReply = {0};
-    packetReply.character_id = session->characterId;
-    packetReply.status = 1;
+    Login_Packet_CharacterCreateReply packetReply = {
+        .character_id = session->characterId,
+        .status = 1,
+    };
 
     session->createReply.status = packetReply.status;
 
@@ -136,36 +139,35 @@ void CharacterCreate(AppState *app, SessionState *session)
 
 void CharacterSelectInfo(AppState *app, SessionState *session)
 {
-    Login_Packet_CharacterSelectInfoReply packetReply = {0};
+    Login_Packet_CharacterSelectInfoReply packetReply = {
+        .character_status = 1,
+        .can_bypass_server_lock = true,
 
-    packetReply.character_status = 1;
-    packetReply.can_bypass_server_lock = true;
-    packetReply.characters_count = 1;
+        .characters_count = 1,
+        .characters = (struct characters_s[1]){
+            [0] = {
+                .charId = session->characterId,
+                .serverId = session->selected_server_id,
 
-    packetReply.characters = (struct characters_s[1]){
-        [0] = {
-            .charId = session->characterId,
-            .lastLoginDate = 0x00ull,
-            .serverId = session->selected_server_id,
-        },
-    };
+                .payload = (struct payload_s[1]){
+                    [0] = {
+                        .actorModelId = session->pGetPlayerActor.actorModelId,
+                        .gender = session->pGetPlayerActor.gender,
+                        .headId = session->pGetPlayerActor.headType,
+                        .name = session->characterName.name,
+                        .name_length = session->characterName.nameLen,
 
-    packetReply.characters->payload = (struct payload_s[1]){
-        [0] = {
-            .actorModelId = session->pGetPlayerActor.actorModelId,
-            .gender = session->pGetPlayerActor.gender,
-            .headId = session->pGetPlayerActor.headType,
-            .name = session->characterName.name,
-            .name_length = session->characterName.nameLen,
-        },
-    };
-
-    packetReply.characters->payload->loadoutSlots_count = 1;
-    packetReply.characters->payload->loadoutSlots = (struct loadoutSlots_s[1]){
-        [0] = {
-            .unkByte1 = 1,
-            .unkDword1 = 22,
-            .loadoutId = 3,
+                        .loadoutSlots_count = 1,
+                        .loadoutSlots = (struct loadoutSlots_s[1]){
+                            [0] = {
+                                .unkByte1 = 1,
+                                .unkDword1 = 22,
+                                .loadoutId = 3,
+                            },
+                        },
+                    },
+                },
+            },
         },
     };
 

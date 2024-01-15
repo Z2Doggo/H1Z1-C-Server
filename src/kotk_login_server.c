@@ -83,7 +83,8 @@ InputStreamCallbackData(pingInputStreamData);
 
 InputStreamCallbackAck(inputCallbackAck)
 {
-	session->nextAck = ack;
+	SessionState *sessionState = session;
+	sessionState->nextAck = ack;
 }
 
 InputStreamCallbackData(inputCallbackData)

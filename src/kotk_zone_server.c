@@ -116,7 +116,8 @@ InputStreamCallbackData(pingInputStreamData)
 
 InputStreamCallbackAck(inputCallbackAck)
 {
-    session->nextAck = ack;
+    SessionState *sessionState = session;
+    sessionState->nextAck = ack;
 }
 
 InputStreamCallbackData(inputCallbackData)
@@ -126,6 +127,9 @@ InputStreamCallbackData(inputCallbackData)
 
 OutputStreamCallbackData(outputCallBackData)
 {
+    AppState *appState = app;
+    SessionState *sessionState = session;
+
     Data packet = {
         .sequence = (u16)sequence,
         .data = data,
@@ -134,11 +138,11 @@ OutputStreamCallbackData(outputCallBackData)
 
     if (!isFragment)
     {
-        CorePacketSend(app->socket, app->api, session->address.ip, session->address.port, &session->args, CoreKindData, &packet);
+        CorePacketSend(appState->socket, appState->api, sessionState->address.ip, sessionState->address.port, &sessionState->args, CoreKindData, &packet);
     }
     else
     {
-        CorePacketSend(app->socket, app->api, session->address.ip, session->address.port, &session->args, CoreKindDataFragment, &packet);
+        CorePacketSend(appState->socket, appState->api, sessionState->address.ip, sessionState->address.port, &sessionState->args, CoreKindDataFragment, &packet);
     }
 }
 

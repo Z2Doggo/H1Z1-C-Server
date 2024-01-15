@@ -15,7 +15,7 @@ typedef uint64_t u64;
 typedef uintptr_t uptr;
 typedef size_t usize;
 
-typedef bool b8;
+typedef i8 b8;
 typedef i16 b16;
 typedef i32 b32;
 typedef i64 b64;
