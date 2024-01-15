@@ -350,6 +350,7 @@ void CorePacketHandle(AppState *app, SessionState *session, PlatformApi *api, u8
         printf(MESSAGE_CONCAT_WARN("Ignoring connection args requested by client\n"));
 
         session->id = packet.sessionId;
+
         SessionReply sessionReply = {
             .sessionId = packet.sessionId,
             .crcSeed = session->args.crcSeed,

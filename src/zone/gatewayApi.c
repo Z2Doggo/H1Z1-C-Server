@@ -275,7 +275,7 @@ void GatewayPacketHandle(AppState *app, SessionState *session, u8 *data, u32 dat
         printf(MESSAGE_CONCAT_INFO("(%u) Handling %s...\n"), channel, gatewayKindNames[kind]);
 
         GatewayTunnelPacket tunnelPacket = {0};
-        GatewayPacketUnpack(data, dataLen, GatewayKindTunnelPacketFromExternalConnection, &tunnelPacket, &app->arenaPerTick);
+        GatewayPacketUnpack(data, dataLen, kind, &tunnelPacket, &app->arenaPerTick);
 
         GatewayOnTunnelDataFromClient(app, session, tunnelPacket.data, tunnelPacket.dataLen);
     }

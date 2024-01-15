@@ -49,6 +49,7 @@ struct AppState
     f32 *tickMs;
     f32 *workMs;
     u64 *tickCount;
+    KeyStates *keyStates;
     Arena arenaTotal;
     PlatformApi *api;
     Arena arenaPerTick;
@@ -155,6 +156,7 @@ __declspec(dllexport) AppTick(serverTick)
         app->tickMs = &appMemory->tickMs;
         app->workMs = &appMemory->workMs;
         app->tickCount = &appMemory->tickCount;
+        app->keyStates = &appMemory->keyStates;
 
         Buffer perTickBackingMemory = {
             .size = MB(10),
@@ -174,7 +176,7 @@ __declspec(dllexport) AppTick(serverTick)
         };
 
         u8 rc4KeyEncoded[] = "F70IaxuU8C/w7FPXY1ibXw==";
-        app->rc4DecodedLen = util_base64_decode((u8 *)rc4KeyEncoded, sizeof(rc4KeyEncoded) - 1, app->rc4Decoded);
+        app->rc4DecodedLen = util_base64_decode(rc4KeyEncoded, sizeof(rc4KeyEncoded) - 1, app->rc4Decoded);
 
         app->args.udpLen = MAX_PACKET_LENGTH;
         app->args.dumpCore = true;
@@ -187,7 +189,6 @@ __declspec(dllexport) AppTick(serverTick)
         app->socket = app->api->socket_udp_create_and_bind(LOCAL_PORT);
 
         printf(MESSAGE_CONCAT_INFO("Game server socket bound to port " STRINGIFY(LOCAL_PORT) "\n\n"));
-        app->api->folder_create("packets");
     }
 
     u8 incomingBuffer[MAX_PACKET_LENGTH] = {0};
@@ -195,7 +196,7 @@ __declspec(dllexport) AppTick(serverTick)
     u32 fromIp;
     u16 fromPort;
 
-    u32 receiveResult = app->api->receive_from(app->socket, incomingBuffer, MAX_PACKET_LENGTH, &fromIp, &fromPort);
+    i32 receiveResult = app->api->receive_from(app->socket, incomingBuffer, MAX_PACKET_LENGTH, &fromIp, &fromPort);
 
     if (receiveResult)
     {
