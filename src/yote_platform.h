@@ -242,12 +242,11 @@ PLATFORM_SOCKET_UDP_CREATE_AND_BIND(platform_win_socket_udp_create_and_bind)
 		goto socket_close;
 	}
 
-	SOCKADDR_IN addr =
-		{
-			.sin_family = AF_INET,
-			.sin_port = htons(port),
-			.sin_addr.s_addr = inet_addr("127.0.0.1"),
-		};
+	SOCKADDR_IN addr = {
+		.sin_family = AF_INET,
+		.sin_port = htons(port),
+		.sin_addr.s_addr = inet_addr("127.0.0.1"),
+	};
 
 	int bind_result = bind(result.socket, (SOCKADDR *)&addr, sizeof(addr));
 	if (bind_result == SOCKET_ERROR)
@@ -301,12 +300,11 @@ PLATFORM_RECEIVE_FROM(platform_win_receive_from)
 
 PLATFORM_SEND_TO(platform_win_send_to)
 {
-	SOCKADDR_IN to_address =
-		{
-			.sin_family = AF_INET,
-			.sin_addr.s_addr = htonl(to_ip),
-			.sin_port = htons(to_port),
-		};
+	SOCKADDR_IN to_address = {
+		.sin_family = AF_INET,
+		.sin_addr.s_addr = htonl(to_ip),
+		.sin_port = htons(to_port),
+	};
 
 	i32 result = sendto(sock.socket,
 						buffer,

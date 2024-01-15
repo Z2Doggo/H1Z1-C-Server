@@ -17,8 +17,8 @@ void NameValidation(AppState *app, SessionState *session, u8 *data, u32 dataLen)
     login_packet_unpack(data + offset, dataLen - offset, kind, &packet, &app->arenaPerTick);
 
     u32 validationStatus = 1;
-    u32 nameLen = packet.data_client->character_name_length;
 
+    u32 nameLen = packet.data_client->character_name_length;
     char *name = packet.data_client->character_name;
 
     if (nameLen < 3 || nameLen > 20)

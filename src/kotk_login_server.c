@@ -103,12 +103,11 @@ OutputStreamCallbackData(outputCallBackData)
 	AppState *appState = app;
 	SessionState *sessionState = session;
 
-	Data packet =
-		{
-			.sequence = (u16)sequence,
-			.data = data,
-			.dataLen = dataLen,
-		};
+	Data packet = {
+		.sequence = (u16)sequence,
+		.data = data,
+		.dataLen = dataLen,
+	};
 
 	if (!isFragment)
 	{
@@ -135,11 +134,10 @@ __declspec(dllexport) AppTick(serverTick)
 		app->workMs = &appMemory->workMs;
 		app->tickCount = &appMemory->tickCount;
 
-		Buffer perTickBackingMemory =
-			{
-				.size = MB(10),
-				.data = arena_push_size(&app->arenaTotal, perTickBackingMemory.size),
-			};
+		Buffer perTickBackingMemory = {
+			.size = MB(10),
+			.data = arena_push_size(&app->arenaTotal, perTickBackingMemory.size),
+		};
 
 		app->streamFunctionTable = arena_push_struct(&app->arenaTotal, StreamFunctionTable);
 		app->streamFunctionTable->gameInputAck = inputCallbackAck;
@@ -181,11 +179,10 @@ __declspec(dllexport) AppTick(serverTick)
 	{
 		printf("\n\nPacket Tick Begin ============================================================\\\\\n");
 
-		SessionAddress incomingAddress =
-			{
-				.ip = fromIp,
-				.port = fromPort,
-			};
+		SessionAddress incomingAddress = {
+			.ip = fromIp,
+			.port = fromPort,
+		};
 
 		i32 firstFreeSession = -1;
 		i32 knownSession = -1;
@@ -264,10 +261,9 @@ __declspec(dllexport) AppTick(serverTick)
 				printf(MESSAGE_CONCAT_INFO("Syncing ack...\n"));
 				app->sessions[knownSession].previousAck = app->sessions[knownSession].nextAck;
 
-				Ack ack =
-					{
-						.sequence = (u16)app->sessions[knownSession].nextAck,
-					};
+				Ack ack = {
+					.sequence = (u16)app->sessions[knownSession].nextAck,
+				};
 
 				CorePacketSend(app->socket, app->api, app->sessions[knownSession].address.ip, app->sessions[knownSession].address.port, &app->sessions[knownSession].args, CoreKindAck, &ack);
 			}

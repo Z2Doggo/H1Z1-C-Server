@@ -73,22 +73,20 @@ void AppCodeUnload(AppCode *AppCode)
 
 int main(void)
 {
-	AppMemory appMemory =
-		{
-			.api =
-				{
-					.folder_create = platform_win_folder_create,
-					.buffer_write_to_file = platform_win_buffer_write_to_file,
-					.buffer_load_from_file = platform_win_buffer_load_from_file,
-					.socket_udp_create_and_bind = platform_win_socket_udp_create_and_bind,
-					.receive_from = platform_win_receive_from,
-					.send_to = platform_win_send_to,
-					.wall_clock = platform_win_wall_clock,
-					.elapsed_seconds = platform_win_elapsed_seconds,
-				},
-			.backingMemory.size = MB(100),
-			.backingMemory.data = VirtualAlloc(NULL, appMemory.backingMemory.size, MEM_COMMIT, PAGE_READWRITE),
-		};
+	AppMemory appMemory = {
+		.api = {
+			.folder_create = platform_win_folder_create,
+			.buffer_write_to_file = platform_win_buffer_write_to_file,
+			.buffer_load_from_file = platform_win_buffer_load_from_file,
+			.socket_udp_create_and_bind = platform_win_socket_udp_create_and_bind,
+			.receive_from = platform_win_receive_from,
+			.send_to = platform_win_send_to,
+			.wall_clock = platform_win_wall_clock,
+			.elapsed_seconds = platform_win_elapsed_seconds,
+		},
+		.backingMemory.size = MB(100),
+		.backingMemory.data = VirtualAlloc(NULL, appMemory.backingMemory.size, MEM_COMMIT, PAGE_READWRITE),
+	};
 
 	LARGE_INTEGER performanceFrequency;
 	QueryPerformanceFrequency(&performanceFrequency);

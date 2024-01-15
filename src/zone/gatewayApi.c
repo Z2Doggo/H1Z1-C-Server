@@ -246,26 +246,23 @@ void GatewayPacketHandle(AppState *app, SessionState *session, u8 *data, u32 dat
         session->inputStream.useEncryption = true;
         session->outputStream.useEncryption = true;
 
-        GatewayLoginReply loginReply =
-            {
-                .isLoggedIn = true,
-            };
+        GatewayLoginReply loginReply = {
+            .isLoggedIn = true,
+        };
 
         GatewayPacketSend(app, session, &app->arenaPerTick, 32, GatewayKindLoginReply, &loginReply);
 
-        GatewayChannelIsRoutable channelZeroIsRoutable =
-            {
-                .channel = 0,
-                .isRoutable = true,
-            };
+        GatewayChannelIsRoutable channelZeroIsRoutable = {
+            .channel = 0,
+            .isRoutable = true,
+        };
 
         GatewayPacketSend(app, session, &app->arenaPerTick, 32, GatewayKindChannelIsRoutable, &channelZeroIsRoutable);
 
-        GatewayChannelIsRoutable channelOneIsRoutable =
-            {
-                .channel = 1,
-                .isRoutable = true,
-            };
+        GatewayChannelIsRoutable channelOneIsRoutable = {
+            .channel = 1,
+            .isRoutable = true,
+        };
 
         GatewayPacketSend(app, session, &app->arenaPerTick, 32, GatewayKindChannelIsRoutable, &channelOneIsRoutable);
 

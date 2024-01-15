@@ -350,16 +350,15 @@ void CorePacketHandle(AppState *app, SessionState *session, PlatformApi *api, u8
         printf(MESSAGE_CONCAT_WARN("Ignoring connection args requested by client\n"));
 
         session->id = packet.sessionId;
-        SessionReply sessionReply =
-            {
-                .sessionId = packet.sessionId,
-                .crcSeed = session->args.crcSeed,
-                .crcLen = session->args.crcLen,
-                .compression = session->args.compression,
-                .encryption = session->args.encryption,
-                .udpLen = session->args.udpLen,
-                .soeProtocolVersion = 3,
-            };
+        SessionReply sessionReply = {
+            .sessionId = packet.sessionId,
+            .crcSeed = session->args.crcSeed,
+            .crcLen = session->args.crcLen,
+            .compression = session->args.compression,
+            .encryption = session->args.encryption,
+            .udpLen = session->args.udpLen,
+            .soeProtocolVersion = 3,
+        };
 
         if (strcmp(packet.protocolName, "LoginUdp_11") == 0)
         {
