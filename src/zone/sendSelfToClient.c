@@ -134,7 +134,7 @@ void SendSelfToClient(AppState *app, SessionState *session)
             .character_id = session->characterId,
             .guid = session->characterId,
             .transient_id.value = 52,
-            .position = {.x = 0.f, .y = 0.f, .z = 0.f, .w = 0.f},
+            .position = {.x = -33.53f, .y = 23.48f, .z = -1050.13f, .w = 1.f},
             .rotation = {.x = 0.f, .y = 0.f, .z = 0.f, .w = 0.f},
             .head_id = 1,
             .actor_model_id = 9240,

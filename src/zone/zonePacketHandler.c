@@ -21,18 +21,26 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
         preloadDone.is_done = true;
 
         ZonePacketSend(app, session, &app->arenaPerTick, KB(30), Zone_Packet_Kind_ClientUpdate_DoneSendingPreloadCharacters, &preloadDone);
-        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_ZoneDoneSendingInitialData, 0);
         ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_ClientUpdate_NetworkProximityUpdatesComplete, 0);
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_ZoneDoneSendingInitialData, 0);
 
         Zone_Packet_Character_CharacterStateDelta stateDelta = {0};
 
-        stateDelta.guid_1 = 0x00ull;
+        stateDelta.guid_1 = session->characterId;
         stateDelta.guid_2 = 0x00ull;
         stateDelta.guid_3 = 0x40000000ull;
         stateDelta.guid_4 = 0x00ull;
         stateDelta.game_time = timer & 0x7fffffff;
 
         ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_Character_CharacterStateDelta, &stateDelta);
+
+        Zone_Packet_GameTimeSync gameTimeSync = {0};
+
+        gameTimeSync.cycle_speed = 12.f;
+        gameTimeSync.time = timer;
+        gameTimeSync.unk_bool = false;
+
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_GameTimeSync, &gameTimeSync);
     }
     break;
     case ZONE_CLIENTFINISHEDLOADING_ID:
@@ -61,7 +69,7 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
 
             setEquipment.length_1 = (struct length_1_s[1]){
                 [0] = {
-                    .character_id = 0x01ull,
+                    .character_id = session->characterId,
                     .profile_id = 5,
                 },
             };
@@ -109,6 +117,20 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
         }
     }
     break;
+    case ZONE_GAMETIMESYNC_ID:
+    {
+        kind = Zone_Packet_Kind_GameTimeSync;
+        printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
+
+        Zone_Packet_GameTimeSync gameTimeSync = {0};
+
+        gameTimeSync.cycle_speed = 12.f;
+        gameTimeSync.time = timer;
+        gameTimeSync.unk_bool = false;
+
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_GameTimeSync, &gameTimeSync);
+    }
+    break;
     case ZONE_GETCONTINENTBATTLEINFO_ID:
     {
         kind = Zone_Packet_Kind_GetContinentBattleInfo;
@@ -117,7 +139,6 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
         Zone_Packet_ContinentBattleInfo battleInfo = {0};
 
         battleInfo.zones_count = 1;
-
         battleInfo.zones = (struct zones_s[1]){
             [0] = {
                 .continent_id = 1,
@@ -203,6 +224,10 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
         printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
 
         Zone_Packet_LobbyGameDefinition_DefinitionsResponse lobbyDefReply = {0};
+
+        lobbyDefReply.definitions_data->data = "";
+        lobbyDefReply.definitions_data->data_length = STRLEN("");
+
         ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_LobbyGameDefinition_DefinitionsResponse, &lobbyDefReply);
     }
     break;
