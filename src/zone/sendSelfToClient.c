@@ -94,8 +94,7 @@ u32 GetHeadActorLen()
 }
 */
 
-char *
-GetHairModel(u32 actorModelId)
+char *GetHairModel(u32 actorModelId)
 {
     switch (actorModelId)
     {
@@ -114,7 +113,7 @@ u32 GetHairModelLen(char *hairModel)
 {
     if (hairModel)
     {
-        return (u32)strlen(hairModel);
+        return STRLEN(hairModel);
     }
     else
     {
@@ -127,6 +126,9 @@ void SendSelfToClient(AppState *app, SessionState *session)
 {
     Zone_Packet_SendSelfToClient sendSelf = {0};
 
+    u32 actorModelId = GetActorModelId(session);
+    u32 gender = GetGender(session);
+
     sendSelf.payload_self = (struct payload_self_s[1]){
         [0] = {
             .character_id = session->characterId,
@@ -134,8 +136,9 @@ void SendSelfToClient(AppState *app, SessionState *session)
             .transient_id.value = 52,
             .position = {.x = 0.f, .y = 0.f, .z = 0.f, .w = 0.f},
             .rotation = {.x = 0.f, .y = 0.f, .z = 0.f, .w = 0.f},
-            .actor_model_id = 9240,
-            .gender1 = 1,
+            .head_id = session->pGetPlayerActor.headType,
+            .actor_model_id = actorModelId,
+            .gender1 = gender,
             .head_actor = "SurvivorMale_Head_01.adr", // GetHeadActor(session),
             .head_actor_length = STRLEN("SurvivorMale_Head_01.adr"),
             .hair_model = "SurvivorMale_Hair_MediumMessy.adr", // GetHairModel(session),

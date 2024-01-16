@@ -69,6 +69,8 @@ void GetHeadTypeId(SessionState *session, void *packetPtr)
     Login_Packet_CharacterCreateRequest *characterCreateReq = packetPtr;
     u32 headId = characterCreateReq->char_payload->head_type;
 
+    memcpy(&session->pGetPlayerActor.headType, &headId, sizeof(headId));
+
     switch (headId)
     {
     case 1:
@@ -77,9 +79,9 @@ void GetHeadTypeId(SessionState *session, void *packetPtr)
         session->pGetPlayerActor.gender = 1;
         session->pGetPlayerActor.actorModelId = 9240;
         session->pGetPlayerActor.hairModel = "SurvivorMale_Hair_MediumMessy.adr";
-        session->pGetPlayerActor.hairModelLen = (u32)strlen(session->pGetPlayerActor.hairModel);
+        session->pGetPlayerActor.hairModelLen = STRLEN(session->pGetPlayerActor.hairModel);
         session->pGetPlayerActor.headActor = "SurvivorMale_Head_01.adr";
-        session->pGetPlayerActor.headActorLen = (u32)strlen(session->pGetPlayerActor.headActor);
+        session->pGetPlayerActor.headActorLen = STRLEN(session->pGetPlayerActor.headActor);
     }
     break;
     case 2:
@@ -88,9 +90,9 @@ void GetHeadTypeId(SessionState *session, void *packetPtr)
         session->pGetPlayerActor.gender = 1;
         session->pGetPlayerActor.actorModelId = 9240;
         session->pGetPlayerActor.hairModel = "SurvivorMale_Hair_MediumMessy.adr";
-        session->pGetPlayerActor.hairModelLen = (u32)strlen(session->pGetPlayerActor.hairModel);
+        session->pGetPlayerActor.hairModelLen = STRLEN(session->pGetPlayerActor.hairModel);
         session->pGetPlayerActor.headActor = "SurvivorMale_Head_02.adr";
-        session->pGetPlayerActor.headActorLen = (u32)strlen(session->pGetPlayerActor.headActor);
+        session->pGetPlayerActor.headActorLen = STRLEN(session->pGetPlayerActor.headActor);
     }
     break;
     case 5:
@@ -99,9 +101,9 @@ void GetHeadTypeId(SessionState *session, void *packetPtr)
         session->pGetPlayerActor.gender = 1;
         session->pGetPlayerActor.actorModelId = 9240;
         session->pGetPlayerActor.hairModel = "SurvivorMale_Hair_MediumMessy.adr";
-        session->pGetPlayerActor.hairModelLen = (u32)strlen(session->pGetPlayerActor.hairModel);
+        session->pGetPlayerActor.hairModelLen = STRLEN(session->pGetPlayerActor.hairModel);
         session->pGetPlayerActor.headActor = "SurvivorMale_Head_03.adr";
-        session->pGetPlayerActor.headActorLen = (u32)strlen(session->pGetPlayerActor.headActor);
+        session->pGetPlayerActor.headActorLen = STRLEN(session->pGetPlayerActor.headActor);
     }
     break;
     case 6:
@@ -110,9 +112,9 @@ void GetHeadTypeId(SessionState *session, void *packetPtr)
         session->pGetPlayerActor.gender = 1;
         session->pGetPlayerActor.actorModelId = 9240;
         session->pGetPlayerActor.hairModel = "SurvivorMale_Hair_MediumMessy.adr";
-        session->pGetPlayerActor.hairModelLen = (u32)strlen(session->pGetPlayerActor.hairModel);
+        session->pGetPlayerActor.hairModelLen = STRLEN(session->pGetPlayerActor.hairModel);
         session->pGetPlayerActor.headActor = "SurvivorMale_Head_04.adr";
-        session->pGetPlayerActor.headActorLen = (u32)strlen(session->pGetPlayerActor.headActor);
+        session->pGetPlayerActor.headActorLen = STRLEN(session->pGetPlayerActor.headActor);
     }
     break;
     default:
@@ -142,8 +144,8 @@ void CharacterSelectInfo(AppState *app, SessionState *session)
 
     packetReply.character_status = 1;
     packetReply.can_bypass_server_lock = true;
-    packetReply.characters_count = 1;
 
+    packetReply.characters_count = 1;
     packetReply.characters = (struct characters_s[1]){
         [0] = {
             .charId = session->characterId,

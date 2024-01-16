@@ -267,7 +267,7 @@ __declspec(dllexport) AppTick(serverTick)
                     memcpy(&app->sessions[firstFreeSession].args, &app->args, sizeof(app->args));
 
                     app->sessions[firstFreeSession].inputPool = FragmentCreate(MAX_FRAGMENTS, MAX_PACKET_LENGTH, &app->arenaTotal);
-                    app->sessions[firstFreeSession].outputPool = FragmentCreate(MAX_FRAGMENTS, MAX_PACKET_LENGTH, &app->arenaTotal);
+                    app->sessions[firstFreeSession].outputPool = FragmentCreate(MAX_FRAGMENTS, MAX_PACKET_LENGTH - DATA_HEADER_LENGTH, &app->arenaTotal);
 
                     app->sessions[firstFreeSession].inputStream = InputStreamInit(&app->sessions[firstFreeSession].inputPool, app->rc4Decoded, app->rc4DecodedLen, false);
                     app->sessions[firstFreeSession].outputStream = OutputStreamInit(&app->sessions[firstFreeSession].outputPool, app->rc4Decoded, app->rc4DecodedLen, false);
