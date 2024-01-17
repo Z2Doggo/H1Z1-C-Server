@@ -6,11 +6,53 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
     __time64_t timer;
     _time64(&timer);
 
-    u8 packetId = *data;
+    u32 packetId = *data;
     u8 subPacketId = data[1];
+
+    u32 tempPacket;
+    u32 packetIter;
+
+    if (dataLen > 0)
+    {
+        for (packetIter = Zone_Packet_Kind_Unhandled + 1; packetIter < Zone_Packet_Kind__End; packetIter++)
+        {
+            if (data[0] == zone_registered_ids[packetIter])
+            {
+                packetId = *data;
+                goto packetIdSwitch;
+            }
+        }
+    }
+
+    if (dataLen > 1)
+    {
+        tempPacket = (((0ul | data[0]) << 8) | data[1]);
+        for (packetIter = Zone_Packet_Kind_Unhandled + 1; packetIter < Zone_Packet_Kind__End; packetIter++)
+        {
+            if (tempPacket == zone_registered_ids[packetIter])
+            {
+                packetId = tempPacket;
+                goto packetIdSwitch;
+            }
+        }
+    }
+
+    if (dataLen > 2)
+    {
+        tempPacket = ((0ul | data[0]) << 16) | endian_read_u16_little(data + 1);
+        for (packetIter = Zone_Packet_Kind_Unhandled + 1; packetIter < Zone_Packet_Kind__End; packetIter++)
+        {
+            if (tempPacket == zone_registered_ids[packetIter])
+            {
+                packetId = tempPacket;
+                goto packetIdSwitch;
+            }
+        }
+    }
 
     i32 offset = sizeof(u8);
 
+packetIdSwitch:
     switch (packetId)
     {
     case ZONE_CLIENTISREADY_ID:
@@ -162,6 +204,39 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
         printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
     }
     break;
+    case ZONE_WALLOFDATA_UIEVENT_ID:
+    {
+        kind = Zone_Packet_Kind_WallOfData_UIEvent;
+        printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
+
+        Zone_Packet_WallOfData_UIEvent uiEvent = {0};
+        zone_packet_unpack(data, dataLen, kind, &uiEvent, &app->arenaPerTick);
+
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), kind, &uiEvent);
+    }
+    break;
+    case ZONE_WALLOFDATA_CLIENTSYSTEMINFO_ID:
+    {
+        kind = Zone_Packet_Kind_WallOfData_ClientSystemInfo;
+        printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
+
+        Zone_Packet_WallOfData_ClientSystemInfo systemInfo = {0};
+        zone_packet_unpack(data, dataLen, kind, &systemInfo, &app->arenaPerTick);
+
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), kind, &systemInfo);
+    }
+    break;
+    case ZONE_WALLOFDATA_CLIENTTRANSITION_ID:
+    {
+        kind = Zone_Packet_Kind_WallOfData_ClientTransition;
+        printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
+
+        Zone_Packet_WallOfData_ClientTransition clientTransition = {0};
+        zone_packet_unpack(data, dataLen, kind, &clientTransition, &app->arenaPerTick);
+
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), kind, &clientTransition);
+    }
+    break;
     case ZONE_SETLOCALE_ID:
     {
         kind = Zone_Packet_Kind_SetLocale;
@@ -187,6 +262,14 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
         printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
     }
     break;
+    case ZONE_LOBBYGAMEDEFINITION_DEFINITIONSREQUEST_ID:
+    {
+        kind = Zone_Packet_Kind_LobbyGameDefinition_DefinitionsRequest;
+        printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
+
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_LobbyGameDefinition_DefinitionsResponse, 0);
+    }
+    break;
     case ZONE_KEEPALIVE_ID:
     {
         kind = Zone_Packet_Kind_KeepAlive;
@@ -196,6 +279,14 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
         zone_packet_unpack(data + offset, dataLen - offset, kind, &keepAlive, &app->arenaPerTick);
 
         ZonePacketSend(app, session, &app->arenaPerTick, KB(10), kind, &keepAlive);
+    }
+    break;
+    case ZONE_STATICVIEWBASE_ID:
+    {
+        kind = Zone_Packet_Kind_StaticViewBase;
+        printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
+
+        StaticViewBase(app, session, data, dataLen);
     }
     break;
     case ZONE_PLAYERWORLDTRANSFERREQUEST_ID:
@@ -307,62 +398,5 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
     {
         printf(MESSAGE_CONCAT_WARN("Unhandled Zone packet 0x%02x 0x%02x\n"), packetId, subPacketId);
     }
-    }
-}
-
-void BasePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataLen)
-{
-    u16 packetId = *data;
-    i32 offset = sizeof(u8);
-
-    Zone_Packet_Kind kind;
-    printf("\n");
-
-    __time64_t timer;
-    _time64(&timer);
-
-    switch (packetId)
-    {
-    case ZONE_WALLOFDATA_UIEVENT_ID:
-    {
-        kind = Zone_Packet_Kind_WallOfData_UIEvent;
-        printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
-
-        Zone_Packet_WallOfData_UIEvent uiEvent = {0};
-        zone_packet_unpack(data, dataLen, kind, &uiEvent, &app->arenaPerTick);
-
-        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), kind, &uiEvent);
-    }
-    break;
-    case ZONE_WALLOFDATA_CLIENTSYSTEMINFO_ID:
-    {
-        kind = Zone_Packet_Kind_WallOfData_ClientSystemInfo;
-        printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
-
-        Zone_Packet_WallOfData_ClientSystemInfo systemInfo = {0};
-        zone_packet_unpack(data, dataLen, kind, &systemInfo, &app->arenaPerTick);
-
-        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), kind, &systemInfo);
-    }
-    break;
-    case ZONE_WALLOFDATA_CLIENTTRANSITION_ID:
-    {
-        kind = Zone_Packet_Kind_WallOfData_ClientTransition;
-        printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
-
-        Zone_Packet_WallOfData_ClientTransition clientTransition = {0};
-        zone_packet_unpack(data, dataLen, kind, &clientTransition, &app->arenaPerTick);
-
-        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), kind, &clientTransition);
-    }
-    break;
-    case ZONE_LOBBYGAMEDEFINITION_DEFINITIONSREQUEST_ID:
-    {
-        kind = Zone_Packet_Kind_LobbyGameDefinition_DefinitionsRequest;
-        printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
-
-        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_LobbyGameDefinition_DefinitionsResponse, 0);
-    }
-    break;
     }
 }

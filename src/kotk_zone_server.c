@@ -104,7 +104,6 @@ void GatewayOnLogin(AppState *app, SessionState *session, u64 characterId)
 void GatewayOnTunnelDataFromClient(AppState *app, SessionState *session, u8 *data, u32 dataLen)
 {
     ZonePacketHandler(app, session, data, dataLen);
-    BasePacketHandler(app, session, data, dataLen);
 }
 
 InputStreamCallbackData(pingInputStreamData)

@@ -346,3 +346,32 @@ void LobbyGameDefinitionsBase(AppState *app, SessionState *session, u8 *data, u3
     }
     }
 }
+
+void StaticViewBase(AppState *app, SessionState *session, u8 *data, u32 dataLen)
+{
+    i32 offset = sizeof(u8);
+
+    Zone_Packet_StaticViewRequest packet = {0};
+    zone_packet_unpack(data + offset, dataLen - offset, Zone_Packet_Kind_StaticViewRequest, &packet, &app->arenaPerTick);
+
+    Zone_Packet_StaticViewReply reply = {
+        .state = 0,
+        .position = {.x = 76.9f, .y = 201.6f, .z = 419.9f, .w = 99.02f},
+        .rotation = {.x = 199.99f, .y = 289.99999f, .z = 370.17f, .w = 7.09f},
+        .lookAt = {.x = 69.21f, 56.f, 0.f, 0.f},
+        .unk_bool_1 = true,
+        .unk_byte_1 = 255,
+    };
+    ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_StaticViewReply, &reply);
+
+    Zone_Packet_ClientUpdate_UpdateLocation updateLoc = {
+        .position = {.x = -32.26f, .y = 506.41f, .z = 280.21f, .w = 1.f},
+        .rotation = {.x = -0.11f, .y = -0.58f, .z = -0.08f, .w = 1.f},
+        .trigger_loading_screen = true,
+        .unk_u8_1 = 0,
+        .unk_bool = false,
+    };
+    ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_ClientUpdate_UpdateLocation, &updateLoc);
+
+    printf("x = %u, y = %u, z = %u , w = %u", updateLoc.position.x, updateLoc.position.y, updateLoc.position.z, updateLoc.position.w);
+}
