@@ -249,7 +249,6 @@ void GatewayPacketHandle(AppState *app, SessionState *session, u8 *data, u32 dat
         GatewayLoginReply loginReply = {
             .isLoggedIn = true,
         };
-
         GatewayPacketSend(app, session, &app->arenaPerTick, 32, GatewayKindLoginReply, &loginReply);
 
         GatewayChannelIsRoutable channelZeroIsRoutable = {
@@ -263,6 +262,12 @@ void GatewayPacketHandle(AppState *app, SessionState *session, u8 *data, u32 dat
             .isRoutable = true,
         };
         GatewayPacketSend(app, session, &app->arenaPerTick, 32, GatewayKindChannelIsRoutable, &channelOneIsRoutable);
+
+        GatewayChannelIsRoutable channelTwoIsRoutable = {
+            .channel = 2,
+            .isRoutable = true,
+        };
+        GatewayPacketSend(app, session, &app->arenaPerTick, 32, GatewayKindChannelIsRoutable, &channelTwoIsRoutable);
 
         GatewayOnLogin(app, session, loginRequest.characterId);
     }
