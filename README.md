@@ -45,7 +45,7 @@ Remove the line ~~Server=Lvshaa-liv-l02.h1z1.net:20042;Lvshaa-liv-l02.h1z1.net:2
 Add the following:
 
 - World=None
-- Server=127.0.0.1:20042
+- Server=127.0.0.1:1115
 - usenewui=1
 - SessionId=0
 
