@@ -6,8 +6,10 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
     __time64_t timer;
     _time64(&timer);
 
-    u32 packetId = *data;
-    u32 subPacketId = data[1];
+    u16 packetId = *data;
+    u8 subPacketId = data[2];
+
+    i32 offset = sizeof(u8);
 
     switch (packetId)
     {
@@ -21,8 +23,8 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
         preloadDone.is_done = true;
 
         ZonePacketSend(app, session, &app->arenaPerTick, KB(30), Zone_Packet_Kind_ClientUpdate_DoneSendingPreloadCharacters, &preloadDone);
-        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_ClientUpdate_NetworkProximityUpdatesComplete, 0);
         ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_ZoneDoneSendingInitialData, 0);
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_ClientUpdate_NetworkProximityUpdatesComplete, 0);
 
         Zone_Packet_Character_CharacterStateDelta stateDelta = {0};
 
@@ -160,37 +162,12 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
         printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
     }
     break;
-    case ZONE_WALLOFDATA_UIEVENT_ID:
+    case ZONE_WALLOFDATABASE_ID:
     {
-        kind = Zone_Packet_Kind_WallOfData_UIEvent;
+        kind = Zone_Packet_Kind_WallOfDataBase;
         printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
 
-        Zone_Packet_WallOfData_UIEvent uiEvent = {0};
-        zone_packet_unpack(data, dataLen, kind, &uiEvent, &app->arenaPerTick);
-
-        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), kind, &uiEvent);
-    }
-    break;
-    case ZONE_WALLOFDATA_CLIENTSYSTEMINFO_ID:
-    {
-        kind = Zone_Packet_Kind_WallOfData_ClientSystemInfo;
-        printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
-
-        Zone_Packet_WallOfData_ClientSystemInfo systemInfo = {0};
-        zone_packet_unpack(data, dataLen, kind, &systemInfo, &app->arenaPerTick);
-
-        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), kind, &systemInfo);
-    }
-    break;
-    case ZONE_WALLOFDATA_CLIENTTRANSITION_ID:
-    {
-        kind = Zone_Packet_Kind_WallOfData_ClientTransition;
-        printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
-
-        Zone_Packet_WallOfData_ClientTransition clientTransition = {0};
-        zone_packet_unpack(data, dataLen, kind, &clientTransition, &app->arenaPerTick);
-
-        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), kind, &clientTransition);
+        WallOfDataBase(app, session, data, dataLen);
     }
     break;
     case ZONE_SETLOCALE_ID:
@@ -218,17 +195,12 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
         printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
     }
     break;
-    case ZONE_LOBBYGAMEDEFINITION_DEFINITIONSREQUEST_ID:
+    case ZONE_LOBBYGAMEDEFINITIONBASE_ID:
     {
-        kind = Zone_Packet_Kind_LobbyGameDefinition_DefinitionsRequest;
+        kind = Zone_Packet_Kind_LobbyGameDefinitionBase;
         printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
 
-        Zone_Packet_LobbyGameDefinition_DefinitionsResponse lobbyDefReply = {0};
-
-        lobbyDefReply.definitions_data->data = "";
-        lobbyDefReply.definitions_data->data_length = STRLEN("");
-
-        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_LobbyGameDefinition_DefinitionsResponse, &lobbyDefReply);
+        LobbyGameDefinitionsBase(app, session, data, dataLen);
     }
     break;
     case ZONE_KEEPALIVE_ID:
@@ -237,14 +209,153 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
         printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
 
         Zone_Packet_KeepAlive keepAlive = {0};
-        zone_packet_unpack(data, dataLen, kind, &keepAlive, &app->arenaPerTick);
+        zone_packet_unpack(data + offset, dataLen - offset, kind, &keepAlive, &app->arenaPerTick);
 
         ZonePacketSend(app, session, &app->arenaPerTick, KB(10), kind, &keepAlive);
     }
     break;
+    case ZONE_PLAYERWORLDTRANSFERREQUEST_ID:
+    {
+        kind = Zone_Packet_Kind_PlayerWorldTransferRequest;
+        printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
+
+        Zone_Packet_PlayerWorldTransferReply tranferReply = {0};
+        tranferReply.world_id_reply = 1;
+
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_PlayerWorldTransferReply, &tranferReply);
+
+        Zone_Packet_ClientUpdate_UpdateLocation updateLocation = {
+            .position = {.x = 1000.f, .y = 1000.f, .z = 1000.f, .w = 1.f},
+            .rotation = {.x = 0.f, .y = 0.f, .z = 0.f, .w = 1.f},
+            .trigger_loading_screen = true,
+            .unk_u8_1 = 0,
+            .unk_bool = false,
+        };
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_ClientUpdate_UpdateLocation, &updateLocation);
+
+        Zone_Packet_ClientBeginZoning beginZoning = {
+            .zone_name = "Z2",
+            .zone_name_length = STRLEN("Z2"),
+            .zone_type = 4,
+            .pos = {.x = 1000.f, .y = 1000.f, .z = 1000.f, .w = 1.f},
+            .rot = {.x = 0.f, .y = 0.f, .z = 0.f, .w = 1.f},
+
+            // set skydata
+            .overcast = 0,
+            .fogDensity = 0,
+            .fogFloor = 14.8f,
+            .fogGradient = 15.25f,
+            .globalPrecipitation = 0,
+            .temperature = 75,
+            .skyClarity = 0,
+            .cloudWeight0 = 0.16f,
+            .cloudWeight1 = 0.16f,
+            .cloudWeight2 = 0.13f,
+            .cloudWeight3 = 0.13f,
+            .transitionTime = 0,
+            .sunAxisX = 40,
+            .sunAxisY = 0,
+            .sunAxisZ = 0,
+            .windDirX = -1.0f,
+            .windDirY = -0.5f,
+            .windDirZ = 1.0f,
+            .wind = 3,
+            .rainMinStrength = 0,
+            .rainRampUpTimeSeconds = 1,
+            .cloudFile = "sky_Z_Clouds.xml",
+            .cloudFile_length = STRLEN("sky_Z_Clouds.xml"),
+            .stratusCloudTiling = 0.2f,
+            .stratusCloudScrollU = -0.002f,
+            .stratusCloudScrollV = 0,
+            .stratusCloudHeight = 1000,
+            .cumulusCloudTiling = 0.2f,
+            .cumulusCloudScrollU = 0,
+            .cumulusCloudScrollV = 0.002f,
+            .cumulusCloudHeight = 8000,
+            .cloudAnimationSpeed = 0,
+            .cloudSilverLiningThickness = 0.39f,
+            .cloudSilverLiningBrightness = 0.5f,
+            .cloudShadows = 0.2f,
+
+            .unk_byte_1 = 5,
+            .zone_id_1 = 5,
+            .zone_id_2 = 0,
+            .name_id = 7699,
+            .unk_dword_1 = 674234378,
+            .unk_bool_1 = false,
+            .wait_for_zone_ready = false,
+            .unk_bool_2 = false,
+        };
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_ClientBeginZoning, &beginZoning);
+
+        Zone_Packet_Equipment_SetCharacterEquipment setEquipment = {0};
+
+        setEquipment.unk_string_1 = "Default";
+        setEquipment.unk_string_1_length = STRLEN("Default");
+        setEquipment.unk_string_2 = "#";
+        setEquipment.unk_string_2_length = STRLEN("#");
+        setEquipment.unk_bool_2 = true;
+
+        setEquipment.length_1 = (struct length_1_s[1]){
+            [0] = {
+                .character_id = session->characterId,
+                .profile_id = 5,
+            },
+        };
+
+        setEquipment.equipment_slot_array_count = 1;
+        setEquipment.equipment_slot_array = (struct equipment_slot_array_s[1]){
+            [0] = {
+                .length_2 = (struct length_2_s[1]){
+                    [0] = {
+                        .tint_alias = "Default",
+                        .tint_alias_length = STRLEN("Default"),
+                        .decal_alias = "#",
+                        .decal_alias_length = STRLEN("#"),
+                    },
+                },
+            },
+        };
+
+        setEquipment.attachments_data_1_count = 1;
+
+        setEquipment.attachments_data_1 = (struct attachments_data_1_s[1]){
+            [0] = {
+                .tint_alias = "Default",
+                .tint_alias_length = STRLEN("Default"),
+                .decal_alias = "#",
+                .decal_alias_length = STRLEN("#"),
+            },
+        };
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_Equipment_SetCharacterEquipment, &setEquipment);
+
+        Zone_Packet_Loadout_SetLoadoutSlots setLoadoutSlots = {
+            .character_id = session->characterId,
+            .loadout_id = 0,
+            .loadout_slot_data_count = 1,
+            .loadout_slot_data =
+                (struct loadout_slot_data_s[1]){
+                    [0] = {
+                        .hotbar_slot_id = 0,
+                        .loadout_id_1 = 0,
+                        .slot_id = 0,
+                        .item_def_id1 = 0,
+                        .loadout_item_guid = 0x0ull,
+                        .unk_byte_1 = 255,
+                        .unk_dword_1 = 0,
+                    },
+                },
+
+            .current_slot_id = 0,
+        };
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_Loadout_SetLoadoutSlots, &setLoadoutSlots);
+
+        SendSelfToClient(app, session);
+    }
+    break;
     default:
     {
-        printf(MESSAGE_CONCAT_WARN("Unhandled Zone packet %#x %#x\n"), packetId, subPacketId);
+        printf(MESSAGE_CONCAT_WARN("Unhandled Zone packet 0x%02x 0x%02x\n"), packetId, subPacketId);
     }
     }
 }

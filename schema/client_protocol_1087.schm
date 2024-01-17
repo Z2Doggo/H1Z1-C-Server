@@ -3109,6 +3109,9 @@ packet 0xe6 BattlEyeData
 packet 0xe7 OnlineIdBase
 packet 0xe8 Ps4PlayGoBase
 packet 0xe9 SynchronizedTeleportBase
+
+packet 0xea StaticViewBase
+
 packet 0xea 0x1:u8 StaticViewRequest
 string:u32 viewpoint
 

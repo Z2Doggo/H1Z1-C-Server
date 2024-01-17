@@ -440,6 +440,7 @@
 #define ZONE_ONLINEIDBASE_ID 0xe7
 #define ZONE_PS4PLAYGOBASE_ID 0xe8
 #define ZONE_SYNCHRONIZEDTELEPORTBASE_ID 0xe9
+#define ZONE_STATICVIEWBASE_ID 0xea
 #define ZONE_STATICVIEWREQUEST_ID 0xea01
 #define ZONE_STATICVIEWREPLY_ID 0xea02
 #define ZONE_REPLICATIONBASE_ID 0xeb
@@ -901,6 +902,7 @@ ZONE_PACKET_KIND(Zone_Packet_Kind_BattlEyeData, "BattlEyeData"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_OnlineIdBase, "OnlineIdBase"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_Ps4PlayGoBase, "Ps4PlayGoBase"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_SynchronizedTeleportBase, "SynchronizedTeleportBase"), \
+ZONE_PACKET_KIND(Zone_Packet_Kind_StaticViewBase, "StaticViewBase"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_StaticViewRequest, "StaticViewRequest"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_StaticViewReply, "StaticViewReply"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_ReplicationBase, "ReplicationBase"), \
@@ -1378,6 +1380,7 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_OnlineIdBase] = 0xe7,
 [Zone_Packet_Kind_Ps4PlayGoBase] = 0xe8,
 [Zone_Packet_Kind_SynchronizedTeleportBase] = 0xe9,
+[Zone_Packet_Kind_StaticViewBase] = 0xea,
 [Zone_Packet_Kind_StaticViewRequest] = 0xea01,
 [Zone_Packet_Kind_StaticViewReply] = 0xea02,
 [Zone_Packet_Kind_ReplicationBase] = 0xeb,
@@ -19357,6 +19360,14 @@ case Zone_Packet_Kind_SynchronizedTeleportBase:
 {
 printf(MESSAGE_CONCAT_INFO("Packing SynchronizedTeleportBase...\n"));
 endian_write_u8_little(buffer + offset, 0xe9);
+offset += sizeof(u8);
+
+} break;
+
+case Zone_Packet_Kind_StaticViewBase:
+{
+printf(MESSAGE_CONCAT_INFO("Packing StaticViewBase...\n"));
+endian_write_u8_little(buffer + offset, 0xea);
 offset += sizeof(u8);
 
 } break;

@@ -135,8 +135,8 @@ void LoginPacketHandler(AppState *app, SessionState *session, u8 *data, u32 data
 
         Login_Packet_CharacterLoginReply packetReply = {0};
 
-        packetReply.character_id = session->characterId;
-        packetReply.server_id = session->selected_server_id;
+        packetReply.character_id = packet.character_id;
+        packetReply.server_id = packet.server_id;
         packetReply.status = 1;
 
         packetReply.login_payload = (struct login_payload_s[1]){
@@ -148,7 +148,7 @@ void LoginPacketHandler(AppState *app, SessionState *session, u8 *data, u32 data
                 .encryption_key = "\x17\xbd\x08\x6b\x1b\x94\xf0\x2f\xf0\xec\x53\xd7\x63\x58\x9b\x5f",
                 .encryption_key_length = STRLEN("\x17\xbd\x08\x6b\x1b\x94\xf0\x2f\xf0\xec\x53\xd7\x63\x58\x9b\x5f"),
                 .soe_protocol_version = 3,
-                .character_id = session->characterId,
+                .character_id = packet.character_id,
                 .character_name = session->characterName.name,
                 .character_name_length = session->characterName.nameLen,
             },

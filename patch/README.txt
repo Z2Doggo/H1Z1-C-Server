@@ -1,0 +1,1 @@
+Please place the patch file "dinput8.dll" into your H1Z1 folder that contains "H1Z1.exe", where you downloaded the version of H1Z1: KotK from DepotDownloader.

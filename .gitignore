@@ -5,5 +5,5 @@ GAME_PACKETS/
 LOGIN_PACKETS/
 *.bkp
 zig/*
-GamePatch/*
+patch/H1Emu-Kotk-Patch
 src/cTesting/*

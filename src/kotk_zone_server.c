@@ -15,7 +15,7 @@
 #include "yote_platform.h"
 #include "game_server.h"
 
-#define MAX_THREADS 2 // Keep at 2 threads for testing, change to 4 threads when multiplayer works
+#define MAX_THREADS 4 // Keep at 4threads for testing, change to 4 threads when multiplayer works
 #define LOCAL_PORT 1117
 #define MAX_FRAGMENTS 12000
 #define MAX_PACKET_LENGTH 512

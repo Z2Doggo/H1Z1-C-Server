@@ -126,16 +126,13 @@ void SendSelfToClient(AppState *app, SessionState *session)
 {
     Zone_Packet_SendSelfToClient sendSelf = {0};
 
-    u32 actorModelId = GetActorModelId(session);
-    u32 gender = GetGender(session);
-
     sendSelf.payload_self = (struct payload_self_s[1]){
         [0] = {
             .character_id = session->characterId,
             .guid = session->characterId,
             .transient_id.value = 52,
-            .position = {.x = -33.53f, .y = 23.48f, .z = -1050.13f, .w = 1.f},
-            .rotation = {.x = 0.f, .y = 0.f, .z = 0.f, .w = 0.f},
+            .position = {.x = 1000.f, .y = 1000.f, .z = 1000.f, .w = 1.f},
+            .rotation = {.x = 0.f, .y = 0.f, .z = 0.f, .w = 1.f},
             .head_id = 1,
             .actor_model_id = 9240,
             .gender1 = 1,

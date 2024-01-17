@@ -295,3 +295,54 @@ ItemData GetItemData(ItemData *itemData, ItemDefinition *itemDef, u32 itemDefId)
 
     return *itemData;
 }
+
+void WallOfDataBase(AppState *app, SessionState *session, u8 *data, u32 dataLen)
+{
+    u8 subPacketId = data[2];
+    i32 offset = sizeof(u8);
+
+    switch (subPacketId)
+    {
+    case 5:
+    {
+        Zone_Packet_WallOfData_UIEvent uiEvent = {0};
+        zone_packet_unpack(data + offset, dataLen - offset, Zone_Packet_Kind_WallOfData_UIEvent, &uiEvent, &app->arenaPerTick);
+
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_WallOfData_UIEvent, 0);
+    }
+    break;
+    case 6:
+    {
+        Zone_Packet_WallOfData_ClientSystemInfo systemInfo = {0};
+        zone_packet_unpack(data + offset, dataLen - offset, Zone_Packet_Kind_WallOfData_ClientSystemInfo, &systemInfo, &app->arenaPerTick);
+
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_WallOfData_ClientSystemInfo, &systemInfo);
+    }
+    break;
+    case 0xc:
+    {
+        Zone_Packet_WallOfData_ClientTransition clientTransition = {0};
+        zone_packet_unpack(data + offset, dataLen - offset, Zone_Packet_Kind_WallOfData_ClientTransition, &clientTransition, &app->arenaPerTick);
+
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_WallOfData_ClientTransition, &clientTransition);
+    }
+    break;
+    }
+}
+
+void LobbyGameDefinitionsBase(AppState *app, SessionState *session, u8 *data, u32 dataLen)
+{
+    u8 subPacketId = data[2];
+
+    switch (subPacketId)
+    {
+    case 1:
+    {
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_LobbyGameDefinition_DefinitionsResponse, 0);
+    }
+    break;
+    default:
+    {
+    }
+    }
+}
