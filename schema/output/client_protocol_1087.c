@@ -440,7 +440,6 @@
 #define ZONE_ONLINEIDBASE_ID 0xe7
 #define ZONE_PS4PLAYGOBASE_ID 0xe8
 #define ZONE_SYNCHRONIZEDTELEPORTBASE_ID 0xe9
-#define ZONE_STATICVIEWBASE_ID 0xea
 #define ZONE_STATICVIEWREQUEST_ID 0xea01
 #define ZONE_STATICVIEWREPLY_ID 0xea02
 #define ZONE_REPLICATIONBASE_ID 0xeb
@@ -902,7 +901,6 @@ ZONE_PACKET_KIND(Zone_Packet_Kind_BattlEyeData, "BattlEyeData"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_OnlineIdBase, "OnlineIdBase"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_Ps4PlayGoBase, "Ps4PlayGoBase"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_SynchronizedTeleportBase, "SynchronizedTeleportBase"), \
-ZONE_PACKET_KIND(Zone_Packet_Kind_StaticViewBase, "StaticViewBase"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_StaticViewRequest, "StaticViewRequest"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_StaticViewReply, "StaticViewReply"), \
 ZONE_PACKET_KIND(Zone_Packet_Kind_ReplicationBase, "ReplicationBase"), \
@@ -1380,7 +1378,6 @@ u32 zone_registered_ids[] =
 [Zone_Packet_Kind_OnlineIdBase] = 0xe7,
 [Zone_Packet_Kind_Ps4PlayGoBase] = 0xe8,
 [Zone_Packet_Kind_SynchronizedTeleportBase] = 0xe9,
-[Zone_Packet_Kind_StaticViewBase] = 0xea,
 [Zone_Packet_Kind_StaticViewRequest] = 0xea01,
 [Zone_Packet_Kind_StaticViewReply] = 0xea02,
 [Zone_Packet_Kind_ReplicationBase] = 0xeb,
@@ -3017,9 +3014,9 @@ struct Zone_Packet_ClientUpdate_UpdateLocation
 {
 vec4 position;
 vec4 rotation;
-b8 unk_bool;
-u8 unk_u8_1;
 b8 trigger_loading_screen;
+u8 unk_u8_1;
+b8 unk_bool;
 };
 
 
@@ -4242,7 +4239,7 @@ vec4 position;
 vec4 rotation;
 vec4 lookAt;
 u8 unk_byte_1;
-b8 unk_bool_1;
+b8 enabled;
 };
 
 
@@ -11210,20 +11207,20 @@ endian_write_vec4_little(buffer + offset, packet->rotation);
 offset += sizeof(f32) * 4;
 printf("-- rotation                \t%f\t%f\t%f\t%f\n", (f64)packet->rotation.x, (f64)packet->rotation.y, (f64)packet->rotation.x, (f64)packet->rotation.w);
 
-// b8 unk_bool
-endian_write_b8_little(buffer + offset, packet->unk_bool);
+// b8 trigger_loading_screen
+endian_write_b8_little(buffer + offset, packet->trigger_loading_screen);
 offset += sizeof(b8);
-printf("-- unk_bool                \t%lld\t%llxh\t%f\n", (i64)packet->unk_bool, (u64)packet->unk_bool, (f64)packet->unk_bool);
+printf("-- trigger_loading_screen  \t%lld\t%llxh\t%f\n", (i64)packet->trigger_loading_screen, (u64)packet->trigger_loading_screen, (f64)packet->trigger_loading_screen);
 
 // u8 unk_u8_1
 endian_write_u8_little(buffer + offset, packet->unk_u8_1);
 offset += sizeof(u8);
 printf("-- unk_u8_1                \t%lld\t%llxh\t%f\n", (i64)packet->unk_u8_1, (u64)packet->unk_u8_1, (f64)packet->unk_u8_1);
 
-// b8 trigger_loading_screen
-endian_write_b8_little(buffer + offset, packet->trigger_loading_screen);
+// b8 unk_bool
+endian_write_b8_little(buffer + offset, packet->unk_bool);
 offset += sizeof(b8);
-printf("-- trigger_loading_screen  \t%lld\t%llxh\t%f\n", (i64)packet->trigger_loading_screen, (u64)packet->trigger_loading_screen, (f64)packet->trigger_loading_screen);
+printf("-- unk_bool                \t%lld\t%llxh\t%f\n", (i64)packet->unk_bool, (u64)packet->unk_bool, (f64)packet->unk_bool);
 
 } break;
 
@@ -19364,14 +19361,6 @@ offset += sizeof(u8);
 
 } break;
 
-case Zone_Packet_Kind_StaticViewBase:
-{
-printf(MESSAGE_CONCAT_INFO("Packing StaticViewBase...\n"));
-endian_write_u8_little(buffer + offset, 0xea);
-offset += sizeof(u8);
-
-} break;
-
 case Zone_Packet_Kind_StaticViewRequest:
 {
 printf(MESSAGE_CONCAT_INFO("Packing StaticViewRequest...\n"));
@@ -19431,10 +19420,10 @@ endian_write_u8_little(buffer + offset, packet->unk_byte_1);
 offset += sizeof(u8);
 printf("-- unk_byte_1              \t%lld\t%llxh\t%f\n", (i64)packet->unk_byte_1, (u64)packet->unk_byte_1, (f64)packet->unk_byte_1);
 
-// b8 unk_bool_1
-endian_write_b8_little(buffer + offset, packet->unk_bool_1);
+// b8 enabled
+endian_write_b8_little(buffer + offset, packet->enabled);
 offset += sizeof(b8);
-printf("-- unk_bool_1              \t%lld\t%llxh\t%f\n", (i64)packet->unk_bool_1, (u64)packet->unk_bool_1, (f64)packet->unk_bool_1);
+printf("-- enabled                 \t%lld\t%llxh\t%f\n", (i64)packet->enabled, (u64)packet->enabled, (f64)packet->enabled);
 
 } break;
 
@@ -26004,20 +25993,20 @@ packet->rotation = endian_read_vec4_little(data + offset);
 offset += sizeof(f32) * 4;
 printf("-- rotation                \t%f\t%f\t%f\t%f\n", (f64)packet->rotation.x, (f64)packet->rotation.y, (f64)packet->rotation.z, (f64)packet->rotation.w);
 
-// b8 unk_bool
-packet->unk_bool = endian_read_b8_little(data + offset);
+// b8 trigger_loading_screen
+packet->trigger_loading_screen = endian_read_b8_little(data + offset);
 offset += sizeof(b8);
-printf("-- unk_bool                \t%lld\t%llxh\t%f\n", (i64)packet->unk_bool, (u64)packet->unk_bool, (f64)packet->unk_bool);
+printf("-- trigger_loading_screen  \t%lld\t%llxh\t%f\n", (i64)packet->trigger_loading_screen, (u64)packet->trigger_loading_screen, (f64)packet->trigger_loading_screen);
 
 // u8 unk_u8_1
 packet->unk_u8_1 = endian_read_u8_little(data + offset);
 offset += sizeof(u8);
 printf("-- unk_u8_1                \t%lld\t%llxh\t%f\n", (i64)packet->unk_u8_1, (u64)packet->unk_u8_1, (f64)packet->unk_u8_1);
 
-// b8 trigger_loading_screen
-packet->trigger_loading_screen = endian_read_b8_little(data + offset);
+// b8 unk_bool
+packet->unk_bool = endian_read_b8_little(data + offset);
 offset += sizeof(b8);
-printf("-- trigger_loading_screen  \t%lld\t%llxh\t%f\n", (i64)packet->trigger_loading_screen, (u64)packet->trigger_loading_screen, (f64)packet->trigger_loading_screen);
+printf("-- unk_bool                \t%lld\t%llxh\t%f\n", (i64)packet->unk_bool, (u64)packet->unk_bool, (f64)packet->unk_bool);
 
 } break;
 
@@ -30838,10 +30827,10 @@ packet->unk_byte_1 = endian_read_u8_little(data + offset);
 offset += sizeof(u8);
 printf("-- unk_byte_1              \t%lld\t%llxh\t%f\n", (i64)packet->unk_byte_1, (u64)packet->unk_byte_1, (f64)packet->unk_byte_1);
 
-// b8 unk_bool_1
-packet->unk_bool_1 = endian_read_b8_little(data + offset);
+// b8 enabled
+packet->enabled = endian_read_b8_little(data + offset);
 offset += sizeof(b8);
-printf("-- unk_bool_1              \t%lld\t%llxh\t%f\n", (i64)packet->unk_bool_1, (u64)packet->unk_bool_1, (f64)packet->unk_bool_1);
+printf("-- enabled                 \t%lld\t%llxh\t%f\n", (i64)packet->enabled, (u64)packet->enabled, (f64)packet->enabled);
 
 } break;
 

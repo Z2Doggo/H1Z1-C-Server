@@ -7,7 +7,6 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
     _time64(&timer);
 
     u32 packetId = *data;
-    u8 subPacketId = data[1];
 
     u32 tempPacket;
     u32 packetIter;
@@ -19,7 +18,6 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
             if (data[0] == zone_registered_ids[packetIter])
             {
                 packetId = *data;
-                goto packetIdSwitch;
             }
         }
     }
@@ -27,6 +25,7 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
     if (dataLen > 1)
     {
         tempPacket = (((0ul | data[0]) << 8) | data[1]);
+
         for (packetIter = Zone_Packet_Kind_Unhandled + 1; packetIter < Zone_Packet_Kind__End; packetIter++)
         {
             if (tempPacket == zone_registered_ids[packetIter])
@@ -40,6 +39,7 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
     if (dataLen > 2)
     {
         tempPacket = ((0ul | data[0]) << 16) | endian_read_u16_little(data + 1);
+
         for (packetIter = Zone_Packet_Kind_Unhandled + 1; packetIter < Zone_Packet_Kind__End; packetIter++)
         {
             if (tempPacket == zone_registered_ids[packetIter])
@@ -49,8 +49,6 @@ void ZonePacketHandler(AppState *app, SessionState *session, u8 *data, u32 dataL
             }
         }
     }
-
-    i32 offset = sizeof(u8);
 
 packetIdSwitch:
     switch (packetId)
@@ -89,76 +87,63 @@ packetIdSwitch:
     break;
     case ZONE_CLIENTFINISHEDLOADING_ID:
     {
-        b8 finishedLoading = session->finished_loading;
+        kind = Zone_Packet_Kind_ClientFinishedLoading;
+        printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
 
-        if (!finishedLoading)
-        {
-            kind = Zone_Packet_Kind_ClientFinishedLoading;
-            printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
+        Zone_Packet_Equipment_SetCharacterEquipment setEquipment = {0};
 
-            Zone_Packet_Character_WeaponStance weaponStance = {0};
+        setEquipment.unk_string_1 = "Default";
+        setEquipment.unk_string_1_length = STRLEN("Default");
+        setEquipment.unk_string_2 = "#";
+        setEquipment.unk_string_2_length = STRLEN("#");
+        setEquipment.unk_bool_2 = true;
 
-            weaponStance.character_id = session->characterId;
-            weaponStance.stance = 1;
+        setEquipment.length_1 = (struct length_1_s[1]){
+            [0] = {
+                .character_id = session->characterId,
+                .profile_id = 5,
+            },
+        };
 
-            ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_Character_WeaponStance, &weaponStance);
-
-            Zone_Packet_Equipment_SetCharacterEquipment setEquipment = {0};
-
-            setEquipment.unk_string_1 = "Default";
-            setEquipment.unk_string_1_length = STRLEN("Default");
-            setEquipment.unk_string_2 = "#";
-            setEquipment.unk_string_2_length = STRLEN("#");
-            setEquipment.unk_bool_2 = true;
-
-            setEquipment.length_1 = (struct length_1_s[1]){
-                [0] = {
-                    .character_id = session->characterId,
-                    .profile_id = 5,
-                },
-            };
-
-            setEquipment.equipment_slot_array_count = 1;
-            setEquipment.equipment_slot_array = (struct equipment_slot_array_s[1]){
-                [0] = {
-                    .length_2 = (struct length_2_s[1]){
-                        [0] = {
-                            .tint_alias = "Default",
-                            .tint_alias_length = STRLEN("Default"),
-                            .decal_alias = "#",
-                            .decal_alias_length = STRLEN("#"),
-                        },
+        setEquipment.equipment_slot_array_count = 1;
+        setEquipment.equipment_slot_array = (struct equipment_slot_array_s[1]){
+            [0] = {
+                .length_2 = (struct length_2_s[1]){
+                    [0] = {
+                        .tint_alias = "Default",
+                        .tint_alias_length = STRLEN("Default"),
+                        .decal_alias = "#",
+                        .decal_alias_length = STRLEN("#"),
                     },
                 },
-            };
+            },
+        };
 
-            setEquipment.attachments_data_1_count = 1;
+        setEquipment.attachments_data_1_count = 1;
 
-            setEquipment.attachments_data_1 = (struct attachments_data_1_s[1]){
-                [0] = {
-                    .tint_alias = "Default",
-                    .tint_alias_length = STRLEN("Default"),
-                    .decal_alias = "#",
-                    .decal_alias_length = STRLEN("#"),
-                },
-            };
+        setEquipment.attachments_data_1 = (struct attachments_data_1_s[1]){
+            [0] = {
+                .tint_alias = "Default",
+                .tint_alias_length = STRLEN("Default"),
+                .decal_alias = "#",
+                .decal_alias_length = STRLEN("#"),
+            },
+        };
 
-            ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_Equipment_SetCharacterEquipment, &setEquipment);
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_Equipment_SetCharacterEquipment, &setEquipment);
 
-            Zone_Packet_Loadout_SetLoadoutSlots setLoadoutSlots = {0};
+        Zone_Packet_Loadout_SetLoadoutSlots setLoadoutSlots = {0};
 
-            setLoadoutSlots.character_id = 0x01ull;
-            setLoadoutSlots.loadout_slot_data_count = 1;
+        setLoadoutSlots.character_id = session->characterId;
+        setLoadoutSlots.loadout_slot_data_count = 1;
 
-            setLoadoutSlots.loadout_slot_data = (struct loadout_slot_data_s[1]){
-                [0] = {
-                    .unk_byte_1 = 255,
-                },
-            };
+        setLoadoutSlots.loadout_slot_data = (struct loadout_slot_data_s[1]){
+            [0] = {
+                .unk_byte_1 = 255,
+            },
+        };
 
-            ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_Loadout_SetLoadoutSlots, &setLoadoutSlots);
-            finishedLoading = true;
-        }
+        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_Loadout_SetLoadoutSlots, &setLoadoutSlots);
     }
     break;
     case ZONE_GAMETIMESYNC_ID:
@@ -210,7 +195,7 @@ packetIdSwitch:
         printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
 
         Zone_Packet_WallOfData_UIEvent uiEvent = {0};
-        zone_packet_unpack(data, dataLen, kind, &uiEvent, &app->arenaPerTick);
+        zone_packet_unpack(data + 2, dataLen - 2, kind, &uiEvent, &app->arenaPerTick);
 
         ZonePacketSend(app, session, &app->arenaPerTick, KB(10), kind, &uiEvent);
     }
@@ -221,7 +206,7 @@ packetIdSwitch:
         printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
 
         Zone_Packet_WallOfData_ClientSystemInfo systemInfo = {0};
-        zone_packet_unpack(data, dataLen, kind, &systemInfo, &app->arenaPerTick);
+        zone_packet_unpack(data + 2, dataLen - 2, kind, &systemInfo, &app->arenaPerTick);
 
         ZonePacketSend(app, session, &app->arenaPerTick, KB(10), kind, &systemInfo);
     }
@@ -232,7 +217,7 @@ packetIdSwitch:
         printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
 
         Zone_Packet_WallOfData_ClientTransition clientTransition = {0};
-        zone_packet_unpack(data, dataLen, kind, &clientTransition, &app->arenaPerTick);
+        zone_packet_unpack(data + 2, dataLen - 2, kind, &clientTransition, &app->arenaPerTick);
 
         ZonePacketSend(app, session, &app->arenaPerTick, KB(10), kind, &clientTransition);
     }
@@ -266,8 +251,6 @@ packetIdSwitch:
     {
         kind = Zone_Packet_Kind_LobbyGameDefinition_DefinitionsRequest;
         printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
-
-        ZonePacketSend(app, session, &app->arenaPerTick, KB(10), Zone_Packet_Kind_LobbyGameDefinition_DefinitionsResponse, 0);
     }
     break;
     case ZONE_KEEPALIVE_ID:
@@ -276,14 +259,14 @@ packetIdSwitch:
         printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
 
         Zone_Packet_KeepAlive keepAlive = {0};
-        zone_packet_unpack(data + offset, dataLen - offset, kind, &keepAlive, &app->arenaPerTick);
+        zone_packet_unpack(data + 1, dataLen - 1, kind, &keepAlive, &app->arenaPerTick);
 
         ZonePacketSend(app, session, &app->arenaPerTick, KB(10), kind, &keepAlive);
     }
     break;
-    case ZONE_STATICVIEWBASE_ID:
+    case ZONE_STATICVIEWREQUEST_ID:
     {
-        kind = Zone_Packet_Kind_StaticViewBase;
+        kind = Zone_Packet_Kind_StaticViewRequest;
         printf(MESSAGE_CONCAT_INFO("Handling %s\n"), zone_packet_names[kind]);
 
         StaticViewBase(app, session, data, dataLen);
@@ -396,7 +379,7 @@ packetIdSwitch:
     break;
     default:
     {
-        printf(MESSAGE_CONCAT_WARN("Unhandled Zone packet 0x%02x 0x%02x\n"), packetId, subPacketId);
+        printf(MESSAGE_CONCAT_WARN("Unhandled Zone packet 0x%02x\n"), packetId);
     }
     }
 }

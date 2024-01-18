@@ -7,3 +7,4 @@ LOGIN_PACKETS/
 zig/*
 patch/H1Emu-Kotk-Patch
 src/cTesting/*
+src/zone/5.bin

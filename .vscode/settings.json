@@ -1,0 +1,31 @@
+{
+    "files.associations": {
+        "*.c": "c",
+        "*.h": "c",
+        "atomic": "c",
+        "bit": "c",
+        "charconv": "c",
+        "codecvt": "c",
+        "compare": "c",
+        "cstddef": "c",
+        "deque": "c",
+        "format": "c",
+        "iterator": "c",
+        "limits": "c",
+        "memory": "c",
+        "sstream": "c",
+        "system_error": "c",
+        "type_traits": "c",
+        "vector": "c",
+        "xhash": "c",
+        "xiosbase": "c",
+        "xlocale": "c",
+        "xlocbuf": "c",
+        "xlocmon": "c",
+        "xloctime": "c",
+        "xmemory": "c",
+        "xstring": "c",
+        "xtree": "c",
+        "xutility": "c"
+    }
+}

@@ -1711,9 +1711,9 @@ packet 0x11 0x9:u16 ClientUpdate_CollectionRemoveEntry
 packet 0x11 0x0a00:u16 ClientUpdate_UpdateLocation
 vec4 position
 vec4 rotation
-b8 unk_bool
-u8 unk_u8_1
 b8 trigger_loading_screen
+u8 unk_u8_1
+b8 unk_bool
 		
 packet 0x11 0xb:u16 ClientUpdate_Mana
 packet 0x11 0xc:u16 ClientUpdate_UpdateProfileExperience
@@ -3110,18 +3110,16 @@ packet 0xe7 OnlineIdBase
 packet 0xe8 Ps4PlayGoBase
 packet 0xe9 SynchronizedTeleportBase
 
-packet 0xea StaticViewBase
-
-packet 0xea 0x1:u8 StaticViewRequest
+packet 0xea 0x01:u8 StaticViewRequest
 string:u32 viewpoint
 
-packet 0xea 0x2:u8 StaticViewReply
+packet 0xea 0x02:u8 StaticViewReply
 u32 state
 vec4 position
 vec4 rotation
 vec4 lookAt
 u8 unk_byte_1
-b8 unk_bool_1
+b8 enabled
 
 packet 0xeb ReplicationBase
 packet 0xec DatasheetsBase

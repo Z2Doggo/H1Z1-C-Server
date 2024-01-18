@@ -167,6 +167,33 @@ struct CharacterCreateReply
     u32 count;
 };
 
+typedef enum ResourceId
+{
+    HEALTHID = 1,
+    HUNGERID = 4,
+    HYDRATIONID = 5,
+    STAMINAID = 6,
+    VIRUSID = 12,
+    BLEEDINGID = 21,
+    COMFORTID = 68,
+    FUELID = 396,
+    CONDITIONID = 561,
+    CONSTRUCTION_CONDITIONID = 567,
+} ResourceId;
+
+typedef enum ResourceType
+{
+    HEALTHTYPE = 1,
+    HUNGERTYPE = 4,
+    HYDRATIONTYPE = 5,
+    STAMINATYPE = 6,
+    VIRUSTYPE = 12,
+    BLEEDINGTYPE = 21,
+    COMFORTTYPE = 68,
+    FUELTYPE = 50,
+    CONDITIONTYPE = 1,
+} ResourceType;
+
 struct SessionState
 {
     SessionAddress address;
@@ -174,6 +201,9 @@ struct SessionState
 
     // login related structs
     CharacterCreateReply createReply;
+
+    ResourceId resourceId;
+    ResourceType resourceType;
 
     // zoneClient client;
     pGetPlayerActorData pGetPlayerActor;

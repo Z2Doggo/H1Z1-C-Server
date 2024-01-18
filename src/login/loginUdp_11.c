@@ -18,22 +18,23 @@ void NameValidation(AppState *app, SessionState *session, u8 *data, u32 dataLen)
 
     u32 validationStatus = 1;
 
-    u32 nameLen = packet.data_client->character_name_length;
-    char *name = packet.data_client->character_name;
+    session->selected_server_id = packet.server_id;
+    session->characterName.nameLen = packet.data_client->character_name_length;
+    session->characterName.name = packet.data_client->character_name;
 
-    if (nameLen < 3 || nameLen > 20)
+    if (session->characterName.nameLen < 3 || session->characterName.nameLen > 20)
     {
         validationStatus = 3;
     }
-    else if (!isalpha((uchar)name[0]))
+    else if (!isalpha((uchar)session->characterName.name[0]))
     {
         validationStatus = 3;
     }
     else
     {
-        for (u32 i = 1; i < nameLen; i++)
+        for (u32 i = 1; i < session->characterName.nameLen; i++)
         {
-            if (!isalpha((uchar)name[i]))
+            if (!isalpha((uchar)session->characterName.name[i]))
             {
                 validationStatus = 3;
                 break;
@@ -44,22 +45,17 @@ void NameValidation(AppState *app, SessionState *session, u8 *data, u32 dataLen)
     Login_Packet_TunnelAppPacketServerToClient packetReply = {0};
 
     packetReply.server_id = session->selected_server_id;
-    packetReply.data_server_length = 14 + nameLen;
+    packetReply.data_server_length = 14 + session->characterName.nameLen;
 
     packetReply.data_server = (struct data_server_s[1]){
         [0] = {
             .tunnel_op_code = 0xa7,
             .sub_op_code = 0x02,
-            .character_name = name,
-            .character_name_length = nameLen,
+            .character_name = session->characterName.name,
+            .character_name_length = session->characterName.nameLen,
             .status = validationStatus,
         },
     };
-
-    session->characterName.name = name;
-    session->characterName.nameLen = nameLen;
-
-    session->selected_server_id = packet.server_id;
 
     LoginPacketSend(app, session, &app->arenaPerTick, KB(10), Login_Packet_Kind_TunnelAppPacketServerToClient, &packetReply);
 }
