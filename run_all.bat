@@ -1,10 +1,10 @@
 @echo off
-pushd build_kotk_login_server
+pushd H1Z1-LoginServer
 IF EXIST packets rmdir /S /Q packets
 start loginServer.exe
 popd
 
-pushd build_kotk_zone_server
+pushd H1Z1-ZoneServer
 IF EXIST packets rmdir /S /Q packets
 start zoneServer.exe
 popd

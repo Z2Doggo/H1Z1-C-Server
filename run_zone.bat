@@ -1,4 +1,4 @@
 IF EXIST GAME_PACKETS rmdir /S /Q GAME_PACKETS
-pushd build_kotk_zone_server
+pushd H1Z1-ZoneServer
 start zoneServer.exe
 popd

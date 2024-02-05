@@ -1,4 +1,4 @@
 IF EXIST LOGIN_PACKETS rmdir /S /Q LOGIN_PACKETS
-pushd build_kotk_login_server
+pushd H1Z1-LoginServer
 start loginServer.exe
 popd

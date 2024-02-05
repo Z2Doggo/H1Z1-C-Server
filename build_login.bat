@@ -1,7 +1,7 @@
 @echo off
 
-IF NOT EXIST build_kotk_login_server mkdir build_kotk_login_server
-pushd build_kotk_login_server
+IF NOT EXIST H1Z1-LoginServer mkdir H1Z1-LoginServer
+pushd H1Z1-LoginServer
 
 gcc -o schema_tool.exe -g -O2 ../src/schema_tool.c -lm
 schema_tool.exe ../schema/kotk_login_udp_11.schm ../schema/output/kotk_login_udp_11.c
