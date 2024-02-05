@@ -1,6 +1,8 @@
 # Specify filepatterns you want git to ignore.
 _IGNORE_*
 GAME_PACKETS/
+H1Z1-LoginServer/loginModuleTemp.dll
+H1Z1-ZoneServer/zoneModuleTemp.dll
 LOGIN_PACKETS/
 *.bkp
 zig/*
