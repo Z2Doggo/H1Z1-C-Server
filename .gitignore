@@ -1,5 +1,4 @@
 # Specify filepatterns you want git to ignore.
-build*/
 _IGNORE_*
 GAME_PACKETS/
 LOGIN_PACKETS/

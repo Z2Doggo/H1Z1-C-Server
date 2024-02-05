@@ -68,4 +68,10 @@ void FragmentAdvance(FragmentPool *pool)
     }
 
     pool->fragmentCount = 0;
+
+    if (pool->fragmentCount >= MAX_FRAGMENTS)
+    {
+        pool->fragmentCount = 0;
+        pool->sequenceBase = 0; // NOTE: double check this
+    }
 }

@@ -13,6 +13,7 @@ void LoginPacketHandler(AppState *app, SessionState *session, u8 *data, u32 data
         kind = Login_Packet_Kind_LoginRequest;
         printf(MESSAGE_CONCAT_INFO("Recieved %s\n"), login_packet_names[kind]);
 
+        /*
         Login_Packet_LoginRequest packet = {0};
         login_packet_unpack(data + offset, dataLen - offset, kind, &packet, &app->arenaPerTick);
 
@@ -39,6 +40,10 @@ void LoginPacketHandler(AppState *app, SessionState *session, u8 *data, u32 data
         };
 
         LoginPacketSend(app, session, &app->arenaPerTick, KB(10), Login_Packet_Kind_LoginReply, &packetReply);
+        */
+
+        // Send the edited raw data, captured from Z1BR to work with KotK and JS
+        LoginPacketRawFileSend(app, session, &app->arenaPerTick, KB(20), "../src/login/loginReply.bin");
     }
     break;
     case LOGIN_LOGOUT_ID:
@@ -63,7 +68,7 @@ void LoginPacketHandler(AppState *app, SessionState *session, u8 *data, u32 data
         packetReply.servers_count = 1;
 
         packetReply.servers = (struct servers_s[1]){
-            [0] = {
+            {
                 .id = 1,
                 .state = 2,
                 .is_locked = false,
@@ -140,7 +145,7 @@ void LoginPacketHandler(AppState *app, SessionState *session, u8 *data, u32 data
         packetReply.status = 1;
 
         packetReply.login_payload = (struct login_payload_s[1]){
-            [0] = {
+            {
                 .server_address = "127.0.0.1:1117",
                 .server_address_length = STRLEN("127.0.0.1:1117"),
                 .server_ticket = "7y3Bh44sKWZCYZH",

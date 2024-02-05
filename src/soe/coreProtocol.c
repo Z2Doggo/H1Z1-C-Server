@@ -326,7 +326,7 @@ void CorePacketHandle(AppState *app, SessionState *session, PlatformApi *api, u8
 
     if (isSubPacket)
     {
-        printf(MESSAGE_CONCAT_INFO("isSubPacket:\n"));
+        printf("isSubPacket: %d\n", isSubPacket);
     }
 
     switch (packetId)
