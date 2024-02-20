@@ -7,7 +7,6 @@ typedef struct FragmentEntry
 
 typedef struct FragmentPool
 {
-    i32 capacity;
     u32 packetLen;
 
     i32 sequenceBase;
