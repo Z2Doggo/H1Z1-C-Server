@@ -1,5 +1,4 @@
-typedef enum Items
-{
+typedef enum Items {
     // #region WEAPONS
     WEAPON_AR15 = 10,
     WEAPON_AK47 = 2229,
@@ -447,18 +446,16 @@ typedef enum Items
     DOOMED_PUFFY_JACKET = 3977
 } Items;
 
-typedef struct LoadoutKitEntry
-{
+typedef struct LoadoutKitEntry {
     Items item;
     u32 count;
 } LoadoutKitEntry;
 
-LoadoutKitEntry *InitializeCharacterDefaultLoadout()
-{
-    LoadoutKitEntry *kitEntry = malloc(sizeof(LoadoutKitEntry));
-    if (!kitEntry)
-    {
-        fprintf(stderr, "Failed to allocate memory to LoadoutKitEntry struct in InitializeCharacterDefaultLoadout function!\n");
+LoadoutKitEntry* InitializeCharacterDefaultLoadout() {
+    LoadoutKitEntry* kitEntry = malloc(sizeof(LoadoutKitEntry));
+    if (!kitEntry) {
+        fprintf(stderr, "Failed to allocate memory to LoadoutKitEntry struct in "
+                        "InitializeCharacterDefaultLoadout function!\n");
 
         return NULL;
     }
@@ -477,12 +474,11 @@ LoadoutKitEntry *InitializeCharacterDefaultLoadout()
     return kitEntry;
 }
 
-LoadoutKitEntry *CharacterDefaultLoadout()
-{
-    LoadoutKitEntry *kitEntry = malloc(sizeof(LoadoutKitEntry));
-    if (!kitEntry)
-    {
-        fprintf(stderr, "Failed to allocate memory to LoadoutKitEntry struct in CharacterDefaultLoadout function!\n");
+LoadoutKitEntry* CharacterDefaultLoadout() {
+    LoadoutKitEntry* kitEntry = malloc(sizeof(LoadoutKitEntry));
+    if (!kitEntry) {
+        fprintf(stderr, "Failed to allocate memory to LoadoutKitEntry struct in "
+                        "CharacterDefaultLoadout function!\n");
 
         return NULL;
     }
@@ -501,12 +497,12 @@ LoadoutKitEntry *CharacterDefaultLoadout()
     return kitEntry;
 }
 
-LoadoutKitEntry *CharacterKitLoadout()
-{
-    LoadoutKitEntry *kitEntry = malloc(sizeof(LoadoutKitEntry));
-    if (!kitEntry)
-    {
-        fprintf(stderr, "Failed to allocate memory to LoadoutKitEntry struct in CharacterKitLoadout function!\n");
+LoadoutKitEntry* CharacterKitLoadout() {
+    LoadoutKitEntry* kitEntry = malloc(sizeof(LoadoutKitEntry));
+    if (!kitEntry) {
+        fprintf(
+            stderr,
+            "Failed to allocate memory to LoadoutKitEntry struct in CharacterKitLoadout function!\n");
 
         return NULL;
     }
@@ -532,12 +528,12 @@ LoadoutKitEntry *CharacterKitLoadout()
     return kitEntry;
 }
 
-LoadoutKitEntry *CharacterSkinsLoadout()
-{
-    LoadoutKitEntry *kitEntry = malloc(sizeof(LoadoutKitEntry));
-    if (!kitEntry)
-    {
-        fprintf(stderr, "Failed to allocate memory to LoadoutKitEntry struct in CharacterSkinsLoadout function!\n");
+LoadoutKitEntry* CharacterSkinsLoadout() {
+    LoadoutKitEntry* kitEntry = malloc(sizeof(LoadoutKitEntry));
+    if (!kitEntry) {
+        fprintf(
+            stderr,
+            "Failed to allocate memory to LoadoutKitEntry struct in CharacterSkinsLoadout function!\n");
 
         return NULL;
     }
@@ -605,12 +601,12 @@ LoadoutKitEntry *CharacterSkinsLoadout()
     return kitEntry;
 }
 
-LoadoutKitEntry *CharacterVehicleKit()
-{
-    LoadoutKitEntry *kitEntry = malloc(sizeof(LoadoutKitEntry));
-    if (!kitEntry)
-    {
-        fprintf(stderr, "Failed to allocate memory to LoadoutKitEntry struct in CharacterVehicleKit function!\n");
+LoadoutKitEntry* CharacterVehicleKit() {
+    LoadoutKitEntry* kitEntry = malloc(sizeof(LoadoutKitEntry));
+    if (!kitEntry) {
+        fprintf(
+            stderr,
+            "Failed to allocate memory to LoadoutKitEntry struct in CharacterVehicleKit function!\n");
 
         return NULL;
     }
@@ -622,7 +618,6 @@ LoadoutKitEntry *CharacterVehicleKit()
     return kitEntry;
 }
 
-void CharacterBuildKitLoadout()
-{
+void CharacterBuildKitLoadout() {
     // TODO: FINISH THIS FUNCTION!
 }

@@ -15,10 +15,10 @@ typedef uint64_t u64;
 typedef uintptr_t uptr;
 typedef size_t usize;
 
-typedef i8 b8;
-typedef i16 b16;
-typedef i32 b32;
-typedef i64 b64;
+typedef u8 b8;
+typedef u16 b16;
+typedef u32 b32;
+typedef u64 b64;
 
 typedef unsigned char uchar;
 typedef float f32;
@@ -39,28 +39,27 @@ typedef double f64;
 #define local_persist static
 #define global static
 
-#define KB(n) ((n) * 1024)
+#define KB(n) ((n)*1024)
 #define MB(n) (KB(n) * 1024)
 
 #define MIN(a, b) (a < b ? a : b)
 #define MAX(a, b) (a > b ? a : b)
 
-#define OFFSET_OF(type, member) ((isize) & ((type *)0)->member)
+#define OFFSET_OF(type, member) ((isize) & ((type*)0)->member)
 #define SIZE_OF(x) ((isize)sizeof(x))
 #define UNUSED(x) (void)x
 #define IS_POWER_OF_TWO(x) ((x & (x - 1)) == 0)
 #define ARRAY_COUNT(a) (SIZE_OF(a) / SIZE_OF(a[0]))
 #define STRINGIFY_INTERNAL(x) #x
 #define STRINGIFY(x) STRINGIFY_INTERNAL(x)
-#define ABORT *(int *)0 = 0
+#define ABORT *(int*)0 = 0
 #define ABORT_MSG(msg) ABORT
 
 #if defined(YOTE_SLOW)
-#define ASSERT(expr) \
-	if (!(expr))     \
-	{                \
-		ABORT;       \
-	}
+#define ASSERT(expr)                                                                                   \
+    if (!(expr)) {                                                                                     \
+        ABORT;                                                                                         \
+    }
 // TODO(rhett): Probably don't need to wrap msg in parens or logical NOTs, right?
 #define ASSERT_MSG(expr, msg) ASSERT((expr) && msg)
 #else
@@ -78,35 +77,34 @@ typedef double f64;
 #define MESSAGE_NAMESPACE MESSAGE_NAMESPACE_DEFAULT
 #define MESSAGE_CONCAT_INFO(msg) "[*] [" MESSAGE_NAMESPACE "] " msg
 #define MESSAGE_CONCAT_WARN(msg) "[!] [" MESSAGE_NAMESPACE "] " msg
-#define MESSAGE_CONCAT_FATAL(msg) "[X] [" MESSAGE_NAMESPACE "] <" __FILE__ "(" STRINGIFY(__LINE__) ")> " msg
+#define MESSAGE_CONCAT_FATAL(msg)                                                                      \
+    "[X] [" MESSAGE_NAMESPACE "] <" __FILE__ "(" STRINGIFY(__LINE__) ")> " msg
 
 #define EVAL_PRINT_I32(x) printf("%s = %d:%x\n", #x, x, x)
 #define EVAL_PRINT_U32(x) printf("%s = %u:%x\n", #x, x, x)
 #define EVAL_PRINT_I64(x) printf("%s = %lld:%llx\n", #x, x, x)
 #define EVAL_PRINT_U64(x) printf("%s = %llu:%llx\n", #x, x, x)
-#define EVAL_PRINT_F32(x) printf("%s = %f:%x\n", #x, x, *(u32 *)&x)
-#define EVAL_PRINT_F64(x) printf("%s = %f:%x\n", #x, x, *(u64 *)&x)
+#define EVAL_PRINT_F32(x) printf("%s = %f:%x\n", #x, x, *(u32*)&x)
+#define EVAL_PRINT_F64(x) printf("%s = %f:%x\n", #x, x, *(u64*)&x)
 #define EVAL_PRINT_CSTR(x) printf("%s = \"%s\"\n", #x, x)
 
 // TODO(rhett): try this
-#define DO_ONCE(to_do)                        \
-	local_persist b32 do_once_##__LINE__ = 0; \
-	if (!do_once_##__LINE__++)                \
-	{                                         \
-		to_do;                                \
-	}
+#define DO_ONCE(to_do)                                                                                 \
+    local_persist b32 do_once_##__LINE__ = 0;                                                          \
+    if (!do_once_##__LINE__++) {                                                                       \
+        to_do;                                                                                         \
+    }
 
 #define UNPACK_PARAMS(...) __VA_ARGS__
 #define PASS_PARAMS(X) UNPACK_PARAMS X
 
-#define PARAMS_DECLARE(return_type, name, args) \
-	typedef struct name##_params                \
-	{                                           \
-		int _;                                  \
-		args;                                   \
-	} name##_params;                            \
-	return_type(name)(name##_params params)
-#define PARAMS_BIND(name, defaults, ...) name((name##_params){defaults, ._ = 0, __VA_ARGS__})
+#define PARAMS_DECLARE(return_type, name, args)                                                        \
+    typedef struct name##_params {                                                                     \
+        int _;                                                                                         \
+        args;                                                                                          \
+    } name##_params;                                                                                   \
+    return_type(name)(name##_params params)
+#define PARAMS_BIND(name, defaults, ...) name((name##_params){ defaults, ._ = 0, __VA_ARGS__ })
 
 STATIC_ASSERT(SIZE_OF(u8) == 1);
 STATIC_ASSERT(SIZE_OF(i8) == 1);
@@ -128,56 +126,48 @@ STATIC_ASSERT(SIZE_OF(isize) == 4 || SIZE_OF(isize) == 8);
 STATIC_ASSERT(SIZE_OF(isize) == 4 || SIZE_OF(isize) == 8);
 
 typedef struct Buffer Buffer;
-struct Buffer
-{
-	isize size;
-	u8 *data;
+struct Buffer {
+    isize size;
+    u8* data;
 };
 
 typedef struct Stream Stream;
-struct Stream
-{
-	Buffer buffer;
-	uptr cursor;
+struct Stream {
+    Buffer buffer;
+    uptr cursor;
 };
 
-void base_memory_fill(void *destination, u8 value, isize size)
-{
-	for (isize i = 0; i < size; i++)
-	{
-		*(u8 *)((uptr)destination + i) = value;
-	}
+void base_memory_fill(void* destination, u8 value, isize size) {
+    for (isize i = 0; i < size; i++) {
+        *(u8*)((uptr)destination + i) = value;
+    }
 }
 
-void base_memory_copy(void *destination, void *source, isize size)
-{
-	for (isize i = 0; i < size; i++)
-	{
-		*(u8 *)((uptr)destination + i) = *(u8 *)((uptr)source + i);
-	}
+void base_memory_copy(void* destination, void* source, isize size) {
+    for (isize i = 0; i < size; i++) {
+        *(u8*)((uptr)destination + i) = *(u8*)((uptr)source + i);
+    }
 }
 
-// TODO(rhett): Use length instead here? Or will that be more confusing since they're equal in this context?
-isize base_ztstring_size(u8 *data)
-{
-	isize count = 0;
-	for (; data[count] != 0; count++)
-		;
+// TODO(rhett): Use length instead here? Or will that be more confusing since they're equal in this
+// context?
+isize base_ztstring_size(u8* data) {
+    isize count = 0;
+    for (; data[count] != 0; count++)
+        ;
 
-	return count;
+    return count;
 }
 
-uptr base_align_forward(uptr ptr, isize align)
-{
-	ASSERT(IS_POWER_OF_TWO(align));
+uptr base_align_forward(uptr ptr, isize align) {
+    ASSERT(IS_POWER_OF_TWO(align));
 
-	uptr remainder = ptr & (align - 1);
-	if (remainder)
-	{
-		ptr += align - remainder;
-	}
+    uptr remainder = ptr & (align - 1);
+    if (remainder) {
+        ptr += align - remainder;
+    }
 
-	return ptr;
+    return ptr;
 }
 
 //====================================================================================================
@@ -186,147 +176,141 @@ uptr base_align_forward(uptr ptr, isize align)
 
 #if defined(YOTE_USE_ARENA)
 
-#define ARENA_ALIGN_DEFAULT (sizeof(void *) * 2)
+#define ARENA_ALIGN_DEFAULT (sizeof(void*) * 2)
 #define ARENA_DEFAULT_PARAMS PASS_PARAMS((.should_clear = true, .alignment = ARENA_ALIGN_DEFAULT))
 
 typedef struct Arena Arena;
-struct Arena
-{
-	void *buffer;
-	isize capacity;
-	isize tail_offset;
+struct Arena {
+    void* buffer;
+    isize capacity;
+    isize tail_offset;
 
-	char *name;
-	isize padding;
-	isize peak_used;
-	isize peak_padding;
-	i32 active_count;
+    char* name;
+    isize padding;
+    isize peak_used;
+    isize peak_padding;
+    i32 active_count;
 };
 
 typedef struct Arena_Temp Arena_Temp;
-struct Arena_Temp
-{
-	Arena *arena;
-	isize tail_offset;
+struct Arena_Temp {
+    Arena* arena;
+    isize tail_offset;
 };
 
 #define arena_push_size(...) PARAMS_BIND(arena_push_size, ARENA_DEFAULT_PARAMS, __VA_ARGS__)
-PARAMS_DECLARE(void *, arena_push_size, Arena *arena; isize size; b32 should_clear; isize alignment)
-{
-	ASSERT(params.arena);
-	ASSERT(params.size);
+PARAMS_DECLARE(void*, arena_push_size, Arena* arena; isize size; b32 should_clear; isize alignment) {
+    ASSERT(params.arena);
+    ASSERT(params.size);
 
-	uptr aligned_ptr = base_align_forward((uptr)params.arena->buffer + params.arena->tail_offset, params.alignment);
-	isize padding = 0;
+    uptr aligned_ptr =
+        base_align_forward((uptr)params.arena->buffer + params.arena->tail_offset, params.alignment);
+    isize padding = 0;
 
-	padding = aligned_ptr - ((uptr)params.arena->buffer + params.arena->tail_offset);
-	ASSERT_MSG((params.size + padding) < params.arena->capacity, "Allocation excedes arena capacity");
+    padding = aligned_ptr - ((uptr)params.arena->buffer + params.arena->tail_offset);
+    ASSERT_MSG((params.size + padding) < params.arena->capacity, "Allocation excedes arena capacity");
 
-	if (params.should_clear)
-	{
-		base_memory_fill((void *)aligned_ptr, 0, params.size);
-	}
+    if (params.should_clear) {
+        base_memory_fill((void*)aligned_ptr, 0, params.size);
+    }
 
-	params.arena->padding += padding;
-	params.arena->tail_offset += params.size + padding;
-	params.arena->active_count += 1;
+    params.arena->padding += padding;
+    params.arena->tail_offset += params.size + padding;
+    params.arena->active_count += 1;
 
-	return (void *)aligned_ptr;
+    return (void*)aligned_ptr;
 }
 
-#define arena_push_struct(arena, type, ...) (type *)arena_push_size(arena, SIZE_OF(type), __VA_ARGS__)
-#define arena_push_array(arena, type, count, ...) (type *)arena_push_size(arena, SIZE_OF(type) * count, __VA_ARGS__)
-#define arena_bootstrap_push_struct(buffer, capacity, name, type, member, ...) arena_bootstrap_push_size(buffer, capacity, name, SIZE_OF(type), offsetof(type, member), __VA_ARGS__)
+#define arena_push_struct(arena, type, ...) (type*)arena_push_size(arena, SIZE_OF(type), __VA_ARGS__)
+#define arena_push_array(arena, type, count, ...)                                                      \
+    (type*)arena_push_size(arena, SIZE_OF(type) * count, __VA_ARGS__)
+#define arena_bootstrap_push_struct(buffer, capacity, name, type, member, ...)                         \
+    arena_bootstrap_push_size(buffer, capacity, name, SIZE_OF(type), offsetof(type, member),           \
+                              __VA_ARGS__)
 
 #define arena_push_copy(...) PARAMS_BIND(arena_push_copy, ARENA_DEFAULT_PARAMS, __VA_ARGS__)
-PARAMS_DECLARE(void *, arena_push_copy, Arena *arena; void *source; isize source_size; b32 should_clear; isize alignment)
-{
-	ASSERT(params.arena);
-	ASSERT(params.source);
-	ASSERT(params.source_size);
+PARAMS_DECLARE(void*, arena_push_copy, Arena* arena; void* source; isize source_size; b32 should_clear;
+               isize alignment) {
+    ASSERT(params.arena);
+    ASSERT(params.source);
+    ASSERT(params.source_size);
 
-	void *result = arena_push_size(params.arena,
-								   params.source_size,
-								   params.should_clear,
-								   params.alignment);
-	base_memory_copy(result, params.source, params.source_size);
-	return result;
+    void* result =
+        arena_push_size(params.arena, params.source_size, params.should_clear, params.alignment);
+    base_memory_copy(result, params.source, params.source_size);
+    return result;
 }
 
-#define arena_push_copy_zero_terminate(...) PARAMS_BIND(arena_push_copy_zero_terminate, ARENA_DEFAULT_PARAMS, __VA_ARGS__)
-PARAMS_DECLARE(void *, arena_push_copy_zero_terminate, Arena *arena; void *source; isize source_size; b32 should_clear; isize alignment)
-{
-	ASSERT(params.arena);
-	ASSERT(params.source);
-	ASSERT(params.source_size);
+#define arena_push_copy_zero_terminate(...)                                                            \
+    PARAMS_BIND(arena_push_copy_zero_terminate, ARENA_DEFAULT_PARAMS, __VA_ARGS__)
+PARAMS_DECLARE(void*, arena_push_copy_zero_terminate, Arena* arena; void* source; isize source_size;
+               b32 should_clear; isize alignment) {
+    ASSERT(params.arena);
+    ASSERT(params.source);
+    ASSERT(params.source_size);
 
-	void *result = arena_push_size(params.arena,
-								   params.source_size + 1,
-								   params.should_clear,
-								   params.alignment);
-	base_memory_copy(result, params.source, params.source_size);
-	return result;
+    void* result =
+        arena_push_size(params.arena, params.source_size + 1, params.should_clear, params.alignment);
+    base_memory_copy(result, params.source, params.source_size);
+    return result;
 }
 
-#define arena_push_copy_ztstring_as_string(...) PARAMS_BIND(arena_push_copy_ztstring_as_string, ARENA_DEFAULT_PARAMS, __VA_ARGS__)
-PARAMS_DECLARE(Buffer, arena_push_copy_ztstring_as_string, Arena *arena; void *source; b32 should_clear; isize alignment)
-{
-	ASSERT(params.arena);
-	ASSERT(params.source);
+#define arena_push_copy_ztstring_as_string(...)                                                        \
+    PARAMS_BIND(arena_push_copy_ztstring_as_string, ARENA_DEFAULT_PARAMS, __VA_ARGS__)
+PARAMS_DECLARE(Buffer, arena_push_copy_ztstring_as_string, Arena* arena; void* source; b32 should_clear;
+               isize alignment) {
+    ASSERT(params.arena);
+    ASSERT(params.source);
 
-	Buffer result =
-		{
-			.size = base_ztstring_size(params.source),
-			.data = arena_push_size(params.arena, result.size + 1, params.should_clear, params.alignment),
-		};
-	base_memory_copy(result.data, params.source, result.size);
+    Buffer result = {
+        .size = base_ztstring_size(params.source),
+        .data = arena_push_size(params.arena, result.size + 1, params.should_clear, params.alignment),
+    };
+    base_memory_copy(result.data, params.source, result.size);
 
-	return result;
+    return result;
 }
 
-#define arena_bootstrap_push_size(...) PARAMS_BIND(arena_bootstrap_push_size, ARENA_DEFAULT_PARAMS, __VA_ARGS__)
-PARAMS_DECLARE(void *, arena_bootstrap_push_size, void *buffer; isize capacity; char *name; isize struct_size; isize offset_to_arena; b32 should_clear; isize alignment)
-{
-	ASSERT(params.buffer);
-	ASSERT(params.capacity);
-	ASSERT(params.name);
-	ASSERT(params.struct_size);
-	ASSERT(params.offset_to_arena);
+#define arena_bootstrap_push_size(...)                                                                 \
+    PARAMS_BIND(arena_bootstrap_push_size, ARENA_DEFAULT_PARAMS, __VA_ARGS__)
+PARAMS_DECLARE(void*, arena_bootstrap_push_size, void* buffer; isize capacity; char* name;
+               isize struct_size; isize offset_to_arena; b32 should_clear; isize alignment) {
+    ASSERT(params.buffer);
+    ASSERT(params.capacity);
+    ASSERT(params.name);
+    ASSERT(params.struct_size);
+    ASSERT(params.offset_to_arena);
 
-	Arena bootstrap =
-		{
-			.buffer = params.buffer,
-			.capacity = params.capacity,
-			.name = params.name,
-		};
-	void *bootstrap_struct = arena_push_size(&bootstrap, params.struct_size, params.should_clear, params.alignment);
-	*(Arena *)((uptr)bootstrap_struct + params.offset_to_arena) = bootstrap;
+    Arena bootstrap = {
+        .buffer = params.buffer,
+        .capacity = params.capacity,
+        .name = params.name,
+    };
+    void* bootstrap_struct =
+        arena_push_size(&bootstrap, params.struct_size, params.should_clear, params.alignment);
+    *(Arena*)((uptr)bootstrap_struct + params.offset_to_arena) = bootstrap;
 
-	return bootstrap_struct;
+    return bootstrap_struct;
 }
 
-void arena_rewind(Arena *arena, u32 rewind_size)
-{
-	arena->tail_offset -= rewind_size;
+void arena_rewind(Arena* arena, u32 rewind_size) {
+    arena->tail_offset -= rewind_size;
 }
 
-void arena_reset(Arena *arena)
-{
-	arena->peak_used = MAX(arena->tail_offset, arena->peak_used);
-	arena->peak_padding = MAX(arena->padding, arena->peak_padding);
-	arena->active_count = 0;
-	arena->tail_offset = 0;
-	arena->padding = 0;
+void arena_reset(Arena* arena) {
+    arena->peak_used = MAX(arena->tail_offset, arena->peak_used);
+    arena->peak_padding = MAX(arena->padding, arena->peak_padding);
+    arena->active_count = 0;
+    arena->tail_offset = 0;
+    arena->padding = 0;
 }
 
-Arena_Temp arena_temp_begin(Arena *arena)
-{
-	return (Arena_Temp){.arena = arena, .tail_offset = arena->tail_offset};
+Arena_Temp arena_temp_begin(Arena* arena) {
+    return (Arena_Temp){ .arena = arena, .tail_offset = arena->tail_offset };
 }
 
-void arena_temp_end(Arena_Temp temp)
-{
-	temp.arena->tail_offset = temp.tail_offset;
+void arena_temp_end(Arena_Temp temp) {
+    temp.arena->tail_offset = temp.tail_offset;
 }
 
 #endif // YOTE_USE_ARENA
@@ -338,69 +322,60 @@ void arena_temp_end(Arena_Temp temp)
 #if defined(YOTE_USE_STRING)
 
 typedef struct Substring_List Substring_List;
-struct Substring_List
-{
-	isize substrings_count;
-	Buffer *substrings;
+struct Substring_List {
+    isize substrings_count;
+    Buffer* substrings;
 };
 
-Substring_List string_ztstring_copy_and_split(char *source, char delim, isize max_substrings, Arena *arena)
-{
-	Substring_List result =
-		{
-			.substrings = arena_push_array(arena, Buffer, max_substrings),
-		};
+Substring_List string_ztstring_copy_and_split(char* source, char delim, isize max_substrings,
+                                              Arena* arena) {
+    Substring_List result = {
+        .substrings = arena_push_array(arena, Buffer, max_substrings),
+    };
 
-	b32 is_within_quotes = false;
-	b32 was_within_quotes = false;
-	b32 is_within_arg = false;
-	isize arg_start = 0;
+    b32 is_within_quotes = false;
+    b32 was_within_quotes = false;
+    b32 is_within_arg = false;
+    isize arg_start = 0;
 
-	isize source_size = base_ztstring_size((u8 *)source);
-	isize source_pos;
-	for (source_pos = 0; source_pos < source_size; source_pos++)
-	{
-		char current_char = source[source_pos];
+    isize source_size = base_ztstring_size((u8*)source);
+    isize source_pos;
+    for (source_pos = 0; source_pos < source_size; source_pos++) {
+        char current_char = source[source_pos];
 
-		if (current_char == '\"')
-		{
-			was_within_quotes = is_within_quotes;
-			is_within_quotes = !is_within_quotes;
-			continue;
-		}
-		else if (current_char == delim && !is_within_quotes)
-		{
-			if (is_within_arg)
-			{
-				is_within_arg = false;
-				isize substring_size = source_pos - arg_start - was_within_quotes;
-				result.substrings[result.substrings_count].size = substring_size;
-				result.substrings[result.substrings_count].data = arena_push_copy_zero_terminate(arena, (void *)((uptr)source + arg_start), substring_size);
-				result.substrings_count += 1;
-				was_within_quotes = false;
-			}
-		}
-		else
-		{
-			if (!is_within_arg)
-			{
-				is_within_arg = true;
-				arg_start = source_pos;
-			}
-		}
-	}
+        if (current_char == '\"') {
+            was_within_quotes = is_within_quotes;
+            is_within_quotes = !is_within_quotes;
+            continue;
+        } else if (current_char == delim && !is_within_quotes) {
+            if (is_within_arg) {
+                is_within_arg = false;
+                isize substring_size = source_pos - arg_start - was_within_quotes;
+                result.substrings[result.substrings_count].size = substring_size;
+                result.substrings[result.substrings_count].data = arena_push_copy_zero_terminate(
+                    arena, (void*)((uptr)source + arg_start), substring_size);
+                result.substrings_count += 1;
+                was_within_quotes = false;
+            }
+        } else {
+            if (!is_within_arg) {
+                is_within_arg = true;
+                arg_start = source_pos;
+            }
+        }
+    }
 
-	if (is_within_arg)
-	{
-		is_within_arg = false;
-		isize substring_size = source_pos - arg_start - was_within_quotes;
-		result.substrings[result.substrings_count].size = substring_size;
-		result.substrings[result.substrings_count].data = arena_push_copy_zero_terminate(arena, (void *)((uptr)source + arg_start), substring_size);
-		result.substrings_count += 1;
-		was_within_quotes = false;
-	}
+    if (is_within_arg) {
+        is_within_arg = false;
+        isize substring_size = source_pos - arg_start - was_within_quotes;
+        result.substrings[result.substrings_count].size = substring_size;
+        result.substrings[result.substrings_count].data =
+            arena_push_copy_zero_terminate(arena, (void*)((uptr)source + arg_start), substring_size);
+        result.substrings_count += 1;
+        was_within_quotes = false;
+    }
 
-	return result;
+    return result;
 }
 
 #endif // YOTE_USE_STRING

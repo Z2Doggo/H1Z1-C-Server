@@ -1,15 +1,13 @@
-typedef struct ThreadParams
-{
-    AppState *app;
-    SessionState *session;
-    Arena *arena;
+typedef struct ThreadParams {
+    AppState* app;
+    SessionState* session;
+    Arena* arena;
     u32 maxLen;
     Zone_Packet_Kind kind;
-    void *packetPtr;
+    void* packetPtr;
 } ThreadParams;
 
-typedef struct BaseItem
-{
+typedef struct BaseItem {
     u32 itemDefId;
     u32 slotId;
     u64 itemGuid;
@@ -18,15 +16,14 @@ typedef struct BaseItem
     u32 currentDurability;
     u8 debugFlag;
     u32 stackCount;
-    Weapon *weapon;
+    Weapon* weapon;
     b8 hasAirdropCleareance;
 } BaseItem;
 
-typedef struct ItemDefinition
-{
-    char *name;
+typedef struct ItemDefinition {
+    char* name;
     u32 id;
-    char *codeFactoryName;
+    char* codeFactoryName;
     u32 nameId;
     u32 descriptionId;
     u32 imageSetId;
@@ -39,9 +36,9 @@ typedef struct ItemDefinition
     u32 profileOverride;
     b8 noTrade;
     b8 singleUse;
-    char *modelName;
+    char* modelName;
     u32 genderUsage;
-    char *textureAlias;
+    char* textureAlias;
     u32 shaderParamGroupId;
     u32 categoryId;
     b8 memberOnly;
@@ -74,17 +71,17 @@ typedef struct ItemDefinition
     u32 datasheetId;
     u32 itemType;
     u32 skillSetId;
-    char *overlayTexture;
-    char *decalSlot;
+    char* overlayTexture;
+    char* decalSlot;
     u32 overlayAdjustment;
     u32 trialDurationSec;
     u32 nextTrialDelaySec;
     u32 passiveAbilitySetId;
     u32 hudImageSetId;
-    char *overrideAppearance;
+    char* overrideAppearance;
     u32 overrideCameraId;
-    char *playerStudioDisplayName;
-    char *stringParam1;
+    char* playerStudioDisplayName;
+    char* stringParam1;
     u32 bulk;
     u32 activeEquipSlotId;
     u32 passiveEquipSlotId;
@@ -98,19 +95,17 @@ typedef struct ItemDefinition
     u32 scrapValueOverride;
 
     // BaseItem struct ptr
-    BaseItem *baseItem;
+    BaseItem* baseItem;
 } ItemDefinition;
 
-typedef struct ItemData
-{
+typedef struct ItemData {
     u32 itemDefinitionId;
     u32 tintId;
     u64 guid;
     u32 count;
-    struct ItemSubData
-    {
+    struct ItemSubData {
         b8 hasSubData;
-    } *itemSubData;
+    }* itemSubData;
     u64 containerGuid;
     u32 containerDefinitionId; // added by doggo
     u32 containerSlotId;
@@ -123,5 +118,5 @@ typedef struct ItemData
     Weapon weaponData;
 
     // ItemDefinition struct ptr
-    ItemDefinition *itemDef;
+    ItemDefinition* itemDef;
 } ItemData;

@@ -17,49 +17,38 @@
 #define CoreUnknown1fId 0x1f
 #define CoreUnhandledId 0xffff
 
-#define COREKINDS                                               \
-    COREKIND(CoreKindUnhandled, "Unhandled"),                   \
-        COREKIND(CoreKindSessionRequest, "SessionRequest"),     \
-        COREKIND(CoreKindSessionReply, "SessionReply"),         \
-        COREKIND(CoreKindMultiPacket, "MultiPacket"),           \
-        COREKIND(CoreKindDisconnect, "Disconnect"),             \
-        COREKIND(CoreKindPing, "Ping"),                         \
-        COREKIND(CoreKindNetStatusRequest, "NetStatusRequest"), \
-        COREKIND(CoreKindNetStatusReply, "NetStatusReply"),     \
-        COREKIND(CoreKindData, "Data"),                         \
-        COREKIND(CoreKindDataFragment, "DataFragment"),         \
-        COREKIND(CoreKindOutOfOrder, "OutOfOrder"),             \
-        COREKIND(CoreKindAck, "Ack"),                           \
-        COREKIND(CoreKindUnknown1c, "UNKNOWN1C"),               \
-        COREKIND(CoreKindFatalError, "FatalError"),             \
-        COREKIND(CoreKindFatalErrorReply, "FatalErrorReply"),   \
-        COREKIND(CoreKindUnknown1f, "UNKNOWN1F"),               \
-        COREKIND(CoreKindEnd, "")
+#define COREKINDS                                                                                      \
+    COREKIND(CoreKindUnhandled, "Unhandled"), COREKIND(CoreKindSessionRequest, "SessionRequest"),      \
+        COREKIND(CoreKindSessionReply, "SessionReply"), COREKIND(CoreKindMultiPacket, "MultiPacket"),  \
+        COREKIND(CoreKindDisconnect, "Disconnect"), COREKIND(CoreKindPing, "Ping"),                    \
+        COREKIND(CoreKindNetStatusRequest, "NetStatusRequest"),                                        \
+        COREKIND(CoreKindNetStatusReply, "NetStatusReply"), COREKIND(CoreKindData, "Data"),            \
+        COREKIND(CoreKindDataFragment, "DataFragment"), COREKIND(CoreKindOutOfOrder, "OutOfOrder"),    \
+        COREKIND(CoreKindAck, "Ack"), COREKIND(CoreKindUnknown1c, "UNKNOWN1C"),                        \
+        COREKIND(CoreKindFatalError, "FatalError"),                                                    \
+        COREKIND(CoreKindFatalErrorReply, "FatalErrorReply"),                                          \
+        COREKIND(CoreKindUnknown1f, "UNKNOWN1F"), COREKIND(CoreKindEnd, "")
 
-typedef enum CoreKindEnum
-{
+typedef enum CoreKindEnum {
 #define COREKIND(e, s) e
     COREKINDS
 #undef COREKIND
 } CoreKindEnum;
 
-char *coreKindNames[CoreKindEnd + 1] =
-    {
+char* coreKindNames[CoreKindEnd + 1] = {
 #define COREKIND(e, s) s
-        COREKINDS
+    COREKINDS
 #undef COREKIND
 };
 
-typedef struct SessionRequest
-{
+typedef struct SessionRequest {
     u32 crcLen;
     u32 sessionId;
     u32 udpLen;
     char protocolName[32];
 } SessionRequest;
 
-typedef struct SessionReply
-{
+typedef struct SessionReply {
     u32 sessionId;
     u32 crcSeed;
     u8 crcLen;
@@ -69,15 +58,13 @@ typedef struct SessionReply
     u32 soeProtocolVersion;
 } SessionReply;
 
-typedef struct Data
-{
+typedef struct Data {
     u16 sequence;
-    u8 *data;
+    u8* data;
     u32 dataLen;
     u16 crc;
 } Data;
 
-typedef struct Ack
-{
+typedef struct Ack {
     u16 sequence;
 } Ack;

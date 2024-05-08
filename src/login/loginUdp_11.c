@@ -1,9 +1,9 @@
 // #############################################//
 // Send structured packet data via this function//
 // #############################################//
-void LoginPacketSend(AppState *app, SessionState *session, Arena *arena, u32 maxLen, Login_Packet_Kind kind, void *packetPtr)
-{
-    u8 *dataBuffer = arena_push_size(arena, maxLen);
+void LoginPacketSend(AppState* app, SessionState* session, Arena* arena, u32 maxLen,
+                     Login_Packet_Kind kind, void* packetPtr) {
+    u8* dataBuffer = arena_push_size(arena, maxLen);
     u32 dataBufferLen = login_packet_pack(kind, packetPtr, dataBuffer);
 
     OutputStreamWrite(app, session, &session->outputStream, dataBuffer, dataBufferLen, false);
@@ -12,9 +12,9 @@ void LoginPacketSend(AppState *app, SessionState *session, Arena *arena, u32 max
 // ############################################//
 //    Send raw packet data via this function   //
 // ############################################//
-void LoginPacketRawFileSend(AppState *app, SessionState *session, Arena *arena, u32 maxLen, char *path)
-{
-    u8 *baseBuffer = arena_push_size(arena, maxLen);
+void LoginPacketRawFileSend(AppState* app, SessionState* session, Arena* arena, u32 maxLen,
+                            char* path) {
+    u8* baseBuffer = arena_push_size(arena, maxLen);
 
     u32 packedLen = app->api->buffer_load_from_file(path, baseBuffer, maxLen);
     u32 totalLen = packedLen;
@@ -26,14 +26,13 @@ void LoginPacketRawFileSend(AppState *app, SessionState *session, Arena *arena, 
 // #######################################################//
 // Validates user's character name, 1 = valid 3 = invalid //
 // #######################################################//
-void NameValidation(AppState *app, SessionState *session, u8 *data, u32 dataLen)
-{
+void NameValidation(AppState* app, SessionState* session, u8* data, u32 dataLen) {
     Login_Packet_Kind kind = Login_Packet_Kind_TunnelAppPacketClientToServer;
     printf("Received %s\n", login_packet_names[kind]);
 
     i32 offset = sizeof(u8);
 
-    Login_Packet_TunnelAppPacketClientToServer packet = {0};
+    Login_Packet_TunnelAppPacketClientToServer packet = { 0 };
     login_packet_unpack(data + offset, dataLen - offset, kind, &packet, &app->arenaPerTick);
 
     u32 validationStatus = 1;
@@ -44,24 +43,19 @@ void NameValidation(AppState *app, SessionState *session, u8 *data, u32 dataLen)
 
     u32 nameLen = session->characterName.nameLen;
 
-    if (nameLen < 3 || nameLen > 20)
-    {
+    if (nameLen < 3 || nameLen > 20) {
         validationStatus = 3;
-    }
-    else
-    {
-        for (u32 i = 0; i < nameLen; i++)
-        {
+    } else {
+        for (u32 i = 0; i < nameLen; i++) {
             char c = session->characterName.name[i];
-            if (!(c >= '0' && c <= '9') && !(c >= 'a' && c <= 'z') && !(c >= 'A' && c <= 'Z'))
-            {
+            if (!(c >= '0' && c <= '9') && !(c >= 'a' && c <= 'z') && !(c >= 'A' && c <= 'Z')) {
                 validationStatus = 3;
                 break;
             }
         }
     }
 
-    Login_Packet_TunnelAppPacketServerToClient packetReply = {0};
+    Login_Packet_TunnelAppPacketServerToClient packetReply = { 0 };
 
     packetReply.server_id = session->selected_server_id;
     packetReply.data_server_length = 14 + session->characterName.nameLen;
@@ -76,95 +70,84 @@ void NameValidation(AppState *app, SessionState *session, u8 *data, u32 dataLen)
         },
     };
 
-    LoginPacketSend(app, session, &app->arenaPerTick, KB(10), Login_Packet_Kind_TunnelAppPacketServerToClient, &packetReply);
+    LoginPacketSend(app, session, &app->arenaPerTick, KB(10),
+                    Login_Packet_Kind_TunnelAppPacketServerToClient, &packetReply);
 }
 
 // ############################################//
 //   Getter for the character's head type ID   //
 // ############################################//
-void GetHeadTypeId(SessionState *session, void *packetPtr)
-{
-    Login_Packet_CharacterCreateRequest *characterCreateReq = packetPtr;
+void GetHeadTypeId(SessionState* session, void* packetPtr) {
+    Login_Packet_CharacterCreateRequest* characterCreateReq = packetPtr;
     u32 headId = characterCreateReq->char_payload->head_type;
 
     memcpy(&session->pGetPlayerActor.headType, &headId, sizeof(headId));
 
-    switch (headId)
-    {
-    case 1:
-    {
-        session->pGetPlayerActor.headType = 1;
-        session->pGetPlayerActor.gender = 1;
-        session->pGetPlayerActor.actorModelId = 9240;
-        session->pGetPlayerActor.hairModel = "SurvivorMale_Hair_MediumMessy.adr";
-        session->pGetPlayerActor.hairModelLen = STRLEN(session->pGetPlayerActor.hairModel);
-        session->pGetPlayerActor.headActor = "SurvivorMale_Head_01.adr";
-        session->pGetPlayerActor.headActorLen = STRLEN(session->pGetPlayerActor.headActor);
-    }
-    break;
-    case 2:
-    {
-        session->pGetPlayerActor.headType = 2;
-        session->pGetPlayerActor.gender = 1;
-        session->pGetPlayerActor.actorModelId = 9240;
-        session->pGetPlayerActor.hairModel = "SurvivorMale_Hair_MediumMessy.adr";
-        session->pGetPlayerActor.hairModelLen = STRLEN(session->pGetPlayerActor.hairModel);
-        session->pGetPlayerActor.headActor = "SurvivorMale_Head_02.adr";
-        session->pGetPlayerActor.headActorLen = STRLEN(session->pGetPlayerActor.headActor);
-    }
-    break;
-    case 5:
-    {
-        session->pGetPlayerActor.headType = 5;
-        session->pGetPlayerActor.gender = 1;
-        session->pGetPlayerActor.actorModelId = 9240;
-        session->pGetPlayerActor.hairModel = "SurvivorMale_Hair_MediumMessy.adr";
-        session->pGetPlayerActor.hairModelLen = STRLEN(session->pGetPlayerActor.hairModel);
-        session->pGetPlayerActor.headActor = "SurvivorMale_Head_03.adr";
-        session->pGetPlayerActor.headActorLen = STRLEN(session->pGetPlayerActor.headActor);
-    }
-    break;
-    case 6:
-    {
-        session->pGetPlayerActor.headType = 6;
-        session->pGetPlayerActor.gender = 1;
-        session->pGetPlayerActor.actorModelId = 9240;
-        session->pGetPlayerActor.hairModel = "SurvivorMale_Hair_MediumMessy.adr";
-        session->pGetPlayerActor.hairModelLen = STRLEN(session->pGetPlayerActor.hairModel);
-        session->pGetPlayerActor.headActor = "SurvivorMale_Head_04.adr";
-        session->pGetPlayerActor.headActorLen = STRLEN(session->pGetPlayerActor.headActor);
-    }
-    break;
-    default:
-    {
-        printf("Head type data is invalid!\n");
-        return;
-    }
+    switch (headId) {
+        case 1: {
+            session->pGetPlayerActor.headType = 1;
+            session->pGetPlayerActor.gender = 1;
+            session->pGetPlayerActor.actorModelId = 9240;
+            session->pGetPlayerActor.hairModel = "SurvivorMale_Hair_MediumMessy.adr";
+            session->pGetPlayerActor.hairModelLen = STRLEN(session->pGetPlayerActor.hairModel);
+            session->pGetPlayerActor.headActor = "SurvivorMale_Head_01.adr";
+            session->pGetPlayerActor.headActorLen = STRLEN(session->pGetPlayerActor.headActor);
+        } break;
+        case 2: {
+            session->pGetPlayerActor.headType = 2;
+            session->pGetPlayerActor.gender = 1;
+            session->pGetPlayerActor.actorModelId = 9240;
+            session->pGetPlayerActor.hairModel = "SurvivorMale_Hair_MediumMessy.adr";
+            session->pGetPlayerActor.hairModelLen = STRLEN(session->pGetPlayerActor.hairModel);
+            session->pGetPlayerActor.headActor = "SurvivorMale_Head_02.adr";
+            session->pGetPlayerActor.headActorLen = STRLEN(session->pGetPlayerActor.headActor);
+        } break;
+        case 5: {
+            session->pGetPlayerActor.headType = 5;
+            session->pGetPlayerActor.gender = 1;
+            session->pGetPlayerActor.actorModelId = 9240;
+            session->pGetPlayerActor.hairModel = "SurvivorMale_Hair_MediumMessy.adr";
+            session->pGetPlayerActor.hairModelLen = STRLEN(session->pGetPlayerActor.hairModel);
+            session->pGetPlayerActor.headActor = "SurvivorMale_Head_03.adr";
+            session->pGetPlayerActor.headActorLen = STRLEN(session->pGetPlayerActor.headActor);
+        } break;
+        case 6: {
+            session->pGetPlayerActor.headType = 6;
+            session->pGetPlayerActor.gender = 1;
+            session->pGetPlayerActor.actorModelId = 9240;
+            session->pGetPlayerActor.hairModel = "SurvivorMale_Hair_MediumMessy.adr";
+            session->pGetPlayerActor.hairModelLen = STRLEN(session->pGetPlayerActor.hairModel);
+            session->pGetPlayerActor.headActor = "SurvivorMale_Head_04.adr";
+            session->pGetPlayerActor.headActorLen = STRLEN(session->pGetPlayerActor.headActor);
+        } break;
+        default: {
+            printf("Head type data is invalid!\n");
+            return;
+        }
     }
 }
 
 // ############################################//
 // Character create function, self explanatory //
 // ############################################//
-void CharacterCreate(AppState *app, SessionState *session)
-{
+void CharacterCreate(AppState* app, SessionState* session) {
     session->characterId = generateRandomGuid();
 
-    Login_Packet_CharacterCreateReply packetReply = {0};
+    Login_Packet_CharacterCreateReply packetReply = { 0 };
     packetReply.character_id = session->characterId;
     packetReply.status = 1;
 
     session->createReply.status = packetReply.status;
 
-    LoginPacketSend(app, session, &app->arenaPerTick, KB(10), Login_Packet_Kind_CharacterCreateReply, &packetReply);
+    LoginPacketSend(app, session, &app->arenaPerTick, KB(10), Login_Packet_Kind_CharacterCreateReply,
+                    &packetReply);
 }
 
 // ########################################################//
 // Selected character function after you create a character//
 // ########################################################//
-void CharacterSelectInfo(AppState *app, SessionState *session)
-{
-    Login_Packet_CharacterSelectInfoReply packetReply = {0};
+void CharacterSelectInfo(AppState* app, SessionState* session) {
+    Login_Packet_CharacterSelectInfoReply packetReply = { 0 };
 
     packetReply.character_status = 1;
     packetReply.can_bypass_server_lock = true;
@@ -197,10 +180,10 @@ void CharacterSelectInfo(AppState *app, SessionState *session)
         },
     };
 
-    if (session->createReply.status == 1)
-    {
+    if (session->createReply.status == 1) {
         packetReply.characters->status = 1;
     }
 
-    LoginPacketSend(app, session, &app->arenaPerTick, KB(10), Login_Packet_Kind_CharacterSelectInfoReply, &packetReply);
+    LoginPacketSend(app, session, &app->arenaPerTick, KB(10),
+                    Login_Packet_Kind_CharacterSelectInfoReply, &packetReply);
 }

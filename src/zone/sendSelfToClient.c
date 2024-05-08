@@ -1,86 +1,60 @@
-u32 GetActorModelId(SessionState *session)
-{
+u32 GetActorModelId(SessionState* session) {
     u32 headId = session->pGetPlayerActor.headType;
 
-    switch (headId)
-    {
-    case 1:
-    {
-        session->pGetPlayerActor.actorModelId = 9240;
-        return session->pGetPlayerActor.actorModelId;
-    }
-    break;
-    case 2:
-    {
-        session->pGetPlayerActor.actorModelId = 9240;
-        return session->pGetPlayerActor.actorModelId;
-    }
-    break;
-    case 3:
-    {
-        session->pGetPlayerActor.actorModelId = 9474;
-        return session->pGetPlayerActor.actorModelId;
-    }
-    break;
-    case 4:
-    {
-        session->pGetPlayerActor.actorModelId = 9474;
-        return session->pGetPlayerActor.actorModelId;
-    }
-    break;
-    case 5:
-    {
-        session->pGetPlayerActor.actorModelId = 9240;
-        return session->pGetPlayerActor.actorModelId;
-    }
-    break;
-    case 6:
-    {
-        session->pGetPlayerActor.actorModelId = 9474;
-        return session->pGetPlayerActor.actorModelId;
-    }
-    break;
-    case 7:
-    {
-        session->pGetPlayerActor.actorModelId = 9240;
-        return session->pGetPlayerActor.actorModelId;
-    }
-    break;
-    case 8:
-    {
-        session->pGetPlayerActor.actorModelId = 9474;
-        return session->pGetPlayerActor.actorModelId;
-    }
-    break;
-    default:
-    {
-        return 0;
-    }
+    switch (headId) {
+        case 1: {
+            session->pGetPlayerActor.actorModelId = 9240;
+            return session->pGetPlayerActor.actorModelId;
+        } break;
+        case 2: {
+            session->pGetPlayerActor.actorModelId = 9240;
+            return session->pGetPlayerActor.actorModelId;
+        } break;
+        case 3: {
+            session->pGetPlayerActor.actorModelId = 9474;
+            return session->pGetPlayerActor.actorModelId;
+        } break;
+        case 4: {
+            session->pGetPlayerActor.actorModelId = 9474;
+            return session->pGetPlayerActor.actorModelId;
+        } break;
+        case 5: {
+            session->pGetPlayerActor.actorModelId = 9240;
+            return session->pGetPlayerActor.actorModelId;
+        } break;
+        case 6: {
+            session->pGetPlayerActor.actorModelId = 9474;
+            return session->pGetPlayerActor.actorModelId;
+        } break;
+        case 7: {
+            session->pGetPlayerActor.actorModelId = 9240;
+            return session->pGetPlayerActor.actorModelId;
+        } break;
+        case 8: {
+            session->pGetPlayerActor.actorModelId = 9474;
+            return session->pGetPlayerActor.actorModelId;
+        } break;
+        default: {
+            return 0;
+        }
     }
 }
 
-u32 GetGender(SessionState *session)
-{
+u32 GetGender(SessionState* session) {
     u32 actorModelId = session->pGetPlayerActor.actorModelId;
 
-    switch (actorModelId)
-    {
-    case 9240:
-    {
-        session->pGetPlayerActor.gender = 1;
-        return session->pGetPlayerActor.gender;
-    }
-    break;
-    case 9474:
-    {
-        session->pGetPlayerActor.gender = 2;
-        return session->pGetPlayerActor.gender;
-    }
-    break;
-    default:
-    {
-        return 0;
-    }
+    switch (actorModelId) {
+        case 9240: {
+            session->pGetPlayerActor.gender = 1;
+            return session->pGetPlayerActor.gender;
+        } break;
+        case 9474: {
+            session->pGetPlayerActor.gender = 2;
+            return session->pGetPlayerActor.gender;
+        } break;
+        default: {
+            return 0;
+        }
     }
 }
 
@@ -94,64 +68,55 @@ u32 GetHeadActorLen()
 }
 */
 
-char *GetHairModel(u32 actorModelId)
-{
-    switch (actorModelId)
-    {
-    case 9240:
-        printf("Male Hair Model Selected!\n");
-        return "SurvivorMale_Hair_MediumMessy.adr";
-    case 9474:
-        printf("Female Hair Model Selected!\n");
-        return "SurvivorFemale_Hair_ShortBun.adr";
-    default:
-        return "";
+char* GetHairModel(u32 actorModelId) {
+    switch (actorModelId) {
+        case 9240:
+            printf("Male Hair Model Selected!\n");
+            return "SurvivorMale_Hair_MediumMessy.adr";
+        case 9474:
+            printf("Female Hair Model Selected!\n");
+            return "SurvivorFemale_Hair_ShortBun.adr";
+        default:
+            return "";
     }
 }
 
-u32 GetHairModelLen(char *hairModel)
-{
-    if (hairModel)
-    {
+u32 GetHairModelLen(char* hairModel) {
+    if (hairModel) {
         return STRLEN(hairModel);
-    }
-    else
-    {
+    } else {
         printf("Hair Model Length IS ZERO!\n");
         return 0;
     }
 }
 
-u32 getResourceType(u32 resourceId)
-{
-    switch (resourceId)
-    {
-    case HEALTHID:
-        return HEALTHTYPE;
-    case HUNGERID:
-        return HUNGERTYPE;
-    case HYDRATIONID:
-        return HYDRATIONTYPE;
-    case STAMINAID:
-        return STAMINATYPE;
-    case VIRUSID:
-        return VIRUSTYPE;
-    case BLEEDINGID:
-        return BLEEDINGTYPE;
-    case COMFORTID:
-        return COMFORTTYPE;
-    case FUELID:
-        return FUELTYPE;
-    case CONDITIONID:
-        return CONDITIONTYPE;
-    default:
-        return 0;
+u32 getResourceType(u32 resourceId) {
+    switch (resourceId) {
+        case HEALTHID:
+            return HEALTHTYPE;
+        case HUNGERID:
+            return HUNGERTYPE;
+        case HYDRATIONID:
+            return HYDRATIONTYPE;
+        case STAMINAID:
+            return STAMINATYPE;
+        case VIRUSID:
+            return VIRUSTYPE;
+        case BLEEDINGID:
+            return BLEEDINGTYPE;
+        case COMFORTID:
+            return COMFORTTYPE;
+        case FUELID:
+            return FUELTYPE;
+        case CONDITIONID:
+            return CONDITIONTYPE;
+        default:
+            return 0;
     }
 }
 
-void SendSelfToClient(AppState *app, SessionState *session)
-{
-    Zone_Packet_SendSelfToClient sendSelf = {0};
+void SendSelfToClient(AppState* app, SessionState* session) {
+    Zone_Packet_SendSelfToClient sendSelf = { 0 };
 
     sendSelf.payload_self = (struct payload_self_s[1]){
         [0] = {
@@ -195,7 +160,9 @@ void SendSelfToClient(AppState *app, SessionState *session)
         },
     };
 
-    ZonePacketSend(app, session, &app->arenaPerTick, KB(50), Zone_Packet_Kind_SendSelfToClient, &sendSelf);
+    ZonePacketSend(app, session, &app->arenaPerTick, KB(50), Zone_Packet_Kind_SendSelfToClient,
+                   &sendSelf);
 
-    // ZonePacketRawFileSend(app, session, &app->arenaPerTick, KB(40), "H:\\H1Z1-KotK-C\\H1Z1-C-Server\\src\\zone\\5.bin");
+    // ZonePacketRawFileSend(app, session, &app->arenaPerTick, KB(40),
+    // "H:\\H1Z1-KotK-C\\H1Z1-C-Server\\src\\zone\\5.bin");
 }

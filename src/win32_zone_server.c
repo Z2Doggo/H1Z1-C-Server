@@ -9,71 +9,61 @@
 #include "game_server.h"
 
 #define ModuleFile "zoneModule.dll"
-#define ModuleFIleTemp "zoneModuleTemp.dll"
+#define ModuleFileTemp "zoneModuleTemp.dll"
 
-typedef struct AppCode
-{
-	HMODULE hModule;
-	FILETIME lastWriteTime;
-	appTickT *tickFunc;
-	b32 isValid;
+typedef struct AppCode {
+    HMODULE hModule;
+    FILETIME lastWriteTime;
+    appTickT* tickFunc;
+    b32 isValid;
 } AppCode;
 
-AppTick(appTickStub)
-{
-	UNUSED(appMemory);
+AppTick(appTickStub) {
+    UNUSED(appMemory);
 }
 
-FILETIME GetLastWriteTime(char *filename)
-{
-	FILETIME result = {0};
-	WIN32_FILE_ATTRIBUTE_DATA file_data;
+FILETIME GetLastWriteTime(char* filename) {
+    FILETIME result = { 0 };
+    WIN32_FILE_ATTRIBUTE_DATA file_data;
 
-	if (GetFileAttributesExA(filename, GetFileExInfoStandard, &file_data))
-	{
-		result = file_data.ftLastWriteTime;
-	}
+    if (GetFileAttributesExA(filename, GetFileExInfoStandard, &file_data)) {
+        result = file_data.ftLastWriteTime;
+    }
 
-	return result;
+    return result;
 }
 
-AppCode AppCodeLoad()
-{
-	AppCode result = {0};
+AppCode AppCodeLoad() {
+    AppCode result = { 0 };
 
-	result.lastWriteTime = GetLastWriteTime(ModuleFile);
-	CopyFileA(ModuleFile, ModuleFIleTemp, false);
+    result.lastWriteTime = GetLastWriteTime(ModuleFile);
+    CopyFileA(ModuleFile, ModuleFileTemp, false);
 
-	result.hModule = LoadLibraryA(ModuleFIleTemp);
-	if (result.hModule)
-	{
-		result.tickFunc = (appTickT *)GetProcAddress(result.hModule, "serverTick");
-		result.isValid = !!result.tickFunc;
-	}
+    result.hModule = LoadLibraryA(ModuleFileTemp);
+    if (result.hModule) {
+        result.tickFunc = (appTickT*)GetProcAddress(result.hModule, "serverTick");
+        result.isValid = !!result.tickFunc;
+    }
 
-	if (!result.isValid)
-	{
-		result.tickFunc = appTickStub;
-	}
+    if (!result.isValid) {
+        result.tickFunc = appTickStub;
+    }
 
-	return result;
+    return result;
 }
 
-void AppCodeUnload(AppCode *AppCode)
-{
-	if (AppCode->hModule)
-	{
-		FreeLibrary(AppCode->hModule);
-		AppCode->hModule = 0;
-	}
+void AppCodeUnload(AppCode* AppCode) {
+    if (AppCode->hModule) {
+        FreeLibrary(AppCode->hModule);
+        AppCode->hModule = 0;
+    }
 
-	AppCode->isValid = false;
-	AppCode->tickFunc = appTickStub;
+    AppCode->isValid = false;
+    AppCode->tickFunc = appTickStub;
 }
 
-int main()
-{
-	AppMemory appMemory = {
+int main() {
+    AppMemory appMemory = {
 		.api = {
 			.folder_create = platform_win_folder_create,
 			.buffer_write_to_file = platform_win_buffer_write_to_file,
@@ -88,50 +78,48 @@ int main()
 		.backingMemory.data = VirtualAlloc(NULL, appMemory.backingMemory.size, MEM_COMMIT, PAGE_READWRITE),
 	};
 
-	LARGE_INTEGER performanceFrequency;
-	QueryPerformanceFrequency(&performanceFrequency);
+    LARGE_INTEGER performanceFrequency;
+    QueryPerformanceFrequency(&performanceFrequency);
 
-	b32 isSleepGranualor = timeBeginPeriod(1) == TIMERR_NOERROR;
-	f32 tickRate = 128.0f;
+    b32 isSleepGranualor = timeBeginPeriod(1) == TIMERR_NOERROR;
+    f32 tickRate = 30.f;
 
-	f32 secondsPerTick = 1.0f / tickRate;
-	AppCode appCode = AppCodeLoad();
+    f32 secondsPerTick = 1.0f / tickRate;
+    AppCode appCode = AppCodeLoad();
 
-	u64 previousCounter = platform_win_wall_clock();
-	b32 isRunning = true;
+    u64 previousCounter = platform_win_wall_clock();
+    b32 isRunning = true;
 
-	while (isRunning)
-	{
-		appCode.tickFunc(&appMemory);
-		u64 workCounter = platform_win_wall_clock();
+    while (isRunning) {
+        appCode.tickFunc(&appMemory);
+        u64 workCounter = platform_win_wall_clock();
 
-		appMemory.workMs = 1000.0f * platform_win_elapsed_seconds(previousCounter, workCounter);
-		f32 elapsedTickSeconds = platform_win_elapsed_seconds(previousCounter, platform_win_wall_clock());
+        appMemory.workMs = 1000.0f * platform_win_elapsed_seconds(previousCounter, workCounter);
+        f32 elapsedTickSeconds =
+            platform_win_elapsed_seconds(previousCounter, platform_win_wall_clock());
 
-		if (elapsedTickSeconds < secondsPerTick)
-		{
-			if (isSleepGranualor)
-			{
-				i32 sleep_ms = (i32)(secondsPerTick * 1000.0f) - (i32)(elapsedTickSeconds * 1000.0f) - 1;
+        if (elapsedTickSeconds < secondsPerTick) {
+            if (isSleepGranualor) {
+                i32 sleep_ms =
+                    (i32)(secondsPerTick * 1000.0f) - (i32)(elapsedTickSeconds * 1000.0f) - 1;
 
-				if (sleep_ms > 0)
-				{
-					Sleep(sleep_ms);
-				}
-			}
+                if (sleep_ms > 0) {
+                    Sleep(sleep_ms);
+                }
+            }
 
-			while (elapsedTickSeconds < secondsPerTick)
-			{
-				elapsedTickSeconds = platform_win_elapsed_seconds(previousCounter, platform_win_wall_clock());
-			}
-		}
+            while (elapsedTickSeconds < secondsPerTick) {
+                elapsedTickSeconds =
+                    platform_win_elapsed_seconds(previousCounter, platform_win_wall_clock());
+            }
+        }
 
-		u64 endCounter = platform_win_wall_clock();
-		appMemory.tickMs = 1000.0f * platform_win_elapsed_seconds(previousCounter, endCounter);
+        u64 endCounter = platform_win_wall_clock();
+        appMemory.tickMs = 1000.0f * platform_win_elapsed_seconds(previousCounter, endCounter);
 
-		previousCounter = endCounter;
-		appMemory.tickCount++;
-	}
+        previousCounter = endCounter;
+        appMemory.tickCount++;
+    }
 
-	return 0;
+    return 0;
 }
