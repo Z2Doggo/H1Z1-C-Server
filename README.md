@@ -1,5 +1,3 @@
-![alt text](https://cutewallpaper.org/21/h1z1-king-of-the-kill-twitter/H1z1-King-Of-The-Kill-Wallpaper-Z1-Battle-Royale-Hd-.jpg)
-
 # An `H1Z1: King of the Kill` server made in the C programming language!
 
 ## Current Status
